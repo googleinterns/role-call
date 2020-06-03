@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { HomepageBaseComponent } from './homepage/homepage-base/homepage-base.component';
+import { SettingsBaseComponent } from './settings/settings-base/settings-base.component';
+
+
+const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomepageBaseComponent },
+  { path: 'settings', component: SettingsBaseComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
