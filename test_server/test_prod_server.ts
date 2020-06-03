@@ -7,6 +7,7 @@ let app: express.Application = express();
 app.use(express.static(path.resolve('../frontend/rolecall/dist/rolecall/')));
 
 app.get('*', (req, res) => {
+    console.log("New connection!");
     res.sendFile(path.resolve('../frontend/rolecall/dist/rolecall/index.html'));
 });
 
