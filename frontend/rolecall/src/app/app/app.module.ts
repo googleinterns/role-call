@@ -3,12 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomepageModule } from './homepage/homepage.module';
-import { SettingsModule } from './settings/settings.module';
+import { HomepageModule } from '../homepage/homepage.module';
+import { SettingsModule } from '../settings/settings.module';
+import { SiteHeaderComponent } from './site-header/site-header.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SiteHeaderComponent
   ],
   imports: [
     BrowserModule,
