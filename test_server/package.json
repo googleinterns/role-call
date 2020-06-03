@@ -1,0 +1,25 @@
+{
+  "name": "rolecall",
+  "version": "1.0.0",
+  "description": "rollcall repository",
+  "main": "test_prod_server.ts",
+  "scripts": {
+    "test": "test",
+    "build_and_test_prod": "cd ../frontend/rolecall/ && ng build --prod && cd ../../test_server && ts-node test_prod_server.ts",
+    "test_prod": "ts-node test_prod_server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RoleCallGoogle/RoleCall.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RoleCallGoogle/RoleCall/issues"
+  },
+  "homepage": "https://github.com/RoleCallGoogle/RoleCall#readme",
+  "dependencies": {
+    "@types/express": "^4.17.6",
+    "express": "^4.17.1"
+  }
+}
