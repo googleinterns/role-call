@@ -5,7 +5,9 @@ import * as path from 'path';
 let app: express.Application = express();
 
 app.use((req, res, next) => {
-    console.log(`${req.url=='/' || req.url=='' || !req.url || ((!req.url.endsWith('.js')) && (!req.url.endsWith('.css'))) ? '\n' : ''}New connection on url ${req.url}!`);
+    console.log(`${req.url=='/' || req.url=='' || !req.url || 
+    ((!req.url.endsWith('.js')) && (!req.url.endsWith('.css'))) ? '\n' : ''}
+    New connection on url ${req.url}!`);
     next();
 });
 
