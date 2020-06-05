@@ -10,7 +10,7 @@
     "build_and_test_prod": "cd ./frontend/rolecall/ && ng build --prod && cd ../../ && npm run test_prod",
     "test_prod": "cd test_server/ && ts-node test_prod_server.ts",
     "installAng": "npm i && cd ./frontend/rolecall/ && npm i",
-    "buildAng": "cd ./frontend/rolecall/ && npm run build --prod"
+    "buildAng": "cd ./frontend/rolecall/ && npm run build_prod"
   },
   "repository": {
     "type": "git",
