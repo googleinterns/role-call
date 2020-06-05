@@ -1,4 +1,16 @@
 steps:
+- id: install_packages
+  name: 'gcr.io/cloud-builders/npm'
+  args:
+  - 'run'
+  - 'installAng'
+- id: prerender_browser_files
+  name: 'gcr.io/cloud-builders/npm'
+  args:
+  - 'run'
+  - 'buildAng'
+  waitFor:
+  - install_packages
 - name: "gcr.io/cloud-builders/gcloud"
   args: ["app", "deploy", "app_dev.yaml"]
 timeout: "1600s"
