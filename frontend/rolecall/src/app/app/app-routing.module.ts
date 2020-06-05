@@ -5,8 +5,7 @@ import { SettingsBaseComponent } from '../settings/settings-base/settings-base.c
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', component: HomepageBaseComponent },
+  { path: '', component: HomepageBaseComponent },
   { path: 'settings', component: SettingsBaseComponent }
 ];
 

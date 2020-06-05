@@ -6,8 +6,8 @@
   "scripts": {
     "start": "npm run test_prod",
     "serve": "cd ./frontend/rolecall/ && ng serve",
-    "build_and_test_prod": "cd ./frontend/rolecall/ && ng build --prod && cd ../../test_server && ts-node test_prod_server.ts",
-    "test_prod": "ts-node test_server/test_prod_server.ts"
+    "build_and_test_prod": "cd ./frontend/rolecall/ && ng build --prod && cd ../../ && npm run test_prod",
+    "test_prod": "cd test_server/ && ts-node test_prod_server.ts"
   },
   "repository": {
     "type": "git",
