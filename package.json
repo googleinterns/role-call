@@ -8,7 +8,9 @@
     "deploy": "cd ./frontend/rolecall/ && ng build --prod && cd ../../ && yes | gcloud app deploy app.yaml",
     "serve": "cd ./frontend/rolecall/ && ng serve",
     "build_and_test_prod": "cd ./frontend/rolecall/ && ng build --prod && cd ../../ && npm run test_prod",
-    "test_prod": "cd test_server/ && ts-node test_prod_server.ts"
+    "test_prod": "cd test_server/ && ts-node test_prod_server.ts",
+    "installAng": "npm i && cd ./frontend/rolecall/ && npm i",
+    "buildAng": "cd ./frontend/rolecall/ && npm run build --prod"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,7 @@
     "url": "https://github.com/RoleCallGoogle/RoleCall/issues"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.13"
   },
   "homepage": "https://github.com/RoleCallGoogle/RoleCall#readme",
   "dependencies": {
@@ -30,7 +32,8 @@
     "ts-node": "^8.10.2",
     "tslib": "^1.10.0",
     "typescript": "^3.9.5",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "node": "^10.13"
   }
 }
     
