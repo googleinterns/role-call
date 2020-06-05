@@ -20,7 +20,7 @@ let serveIndex : express.RequestHandler = (req, res) => {
 app.get('', serveIndex);
 app.get('*', serveIndex);
 
-let port = 2020;
+let port = process.env.PORT || 2020;
 let server = app.listen(port, () => {
     console.log('Express listening on port ' + port);
 });
