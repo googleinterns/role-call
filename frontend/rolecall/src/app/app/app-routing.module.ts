@@ -6,7 +6,8 @@ import { SettingsBaseComponent } from '../settings/settings-base/settings-base.c
 
 const routes: Routes = [
   { path: '', component: HomepageBaseComponent },
-  { path: 'settings', component: SettingsBaseComponent }
+  { path: 'settings', component: SettingsBaseComponent },
+  {path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 
 @NgModule({
