@@ -4,8 +4,8 @@ manual_scaling:
   instances: 1
 
 handlers:
-- url: /.*
+- url: /.*\..*
+  static_dir: frontend/rolecall/dist/rolecall
+- url: /.*?
   static_files: frontend/rolecall/dist/rolecall/index.html
   upload: frontend/rolecall/dist/rolecall/index.html
-- url: /.*
-  static_dir:  frontend/rolecall/dist/rolecall
