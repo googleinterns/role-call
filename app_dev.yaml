@@ -5,9 +5,9 @@ manual_scaling:
   instances: 1
 
 handlers:
-- url: /(.*\..*)$
+- url: /(.*\.(gif|png|jpg|css|js|ico|txt)(|\.map))$
   static_files: frontend/rolecall/dist/rolecall/\1
-  upload: frontend/rolecall/dist/rolecall/(.*)
+  upload: frontend/rolecall/dist/rolecall/(.*)(|\.map)
 - url: /(.*)
   static_files: frontend/rolecall/dist/rolecall/index.html
   upload: frontend/rolecall/dist/rolecall/index.html
