@@ -1,0 +1,74 @@
+// The container that represents the entire nav bar card and is animated
+.container {
+    height: 100vh;
+    width: 30vw;
+    display: flex;
+    position: absolute;
+    right: 100vw;
+    top: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+// div styling to make the nav bar card
+.left-sharp-card {
+    background: white;
+    box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
+    border-radius: 0px 5px 5px 0px;
+}
+.left-sharp-card:hover {
+    box-shadow: 0 8px 16px 0 rgba($color: #000000, $alpha: 0.2);
+}
+
+// The div that holds the nav content inside the card
+.nav-content {
+    margin: 2vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+
+// The sideways menu button at the top of the nav bar
+.close-nav-button {
+    height: 10vh;
+    width: 10vh;
+    font-size: 5vh;
+}
+.close-nav-button-div {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+}
+.close-nav-button-icon {
+    float: right;
+    transform: rotate(90deg);
+}
+
+// The repeated child for each navigation link
+.nav-child {
+    width: 96%;
+    height: 10vh;
+    margin: 2%;
+    display: flex;
+    justify-content: space-between;
+}
+// A nav-child content div that centers the content vertically
+.nav-child-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .title {
+        margin-left: 2vh;
+        margin-top: auto;
+        margin-bottom: auto;
+        font-size: xx-large;
+        font-weight: bold;
+        line-height: 100%;
+        height: min-content;
+    }
+    .icon {
+        margin-right: 2vh;
+        font-size: 5vh;
+    }
+}

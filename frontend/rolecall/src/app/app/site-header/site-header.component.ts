@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SideNavComponent } from '../side-nav/side-nav.component';
 
 @Component({
   selector: 'app-site-header',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SiteHeaderComponent implements OnInit {
 
+  @Input() navBar: SideNavComponent;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onNavButtonClick(){
+    console.log("navBar");
+    this.navBar.navIsOpen ? this.navBar.closeNav() : this.navBar.openNav();
   }
 
 }

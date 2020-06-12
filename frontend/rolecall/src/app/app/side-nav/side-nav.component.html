@@ -1,0 +1,22 @@
+<div class="left-sharp-card container" [@openClose]="navIsOpen ? 'open' : 'closed'">
+    <div class="nav-content">
+        <div class="close-nav-button-div">
+            <button mat-icon-button class="close-nav-button" (click)="closeNav()">
+                <mat-icon [inline]="true" class="close-nav-button-icon">
+                    menu
+                </mat-icon>
+            </button>
+        </div>
+        <div *ngFor="let navEntry of sideNavChildren" class="card nav-child" 
+        [routerLink]="navEntry.routerLinkUrl" (click)="closeNav()">
+            <div class="nav-child-content">
+                <p class="title">{{navEntry.name}}</p>
+            </div>
+            <div class="nav-child-content">
+                <mat-icon class="icon" [inline]="true">
+                    {{navEntry.icon}}
+                </mat-icon>
+            </div>
+        </div>
+    </div>
+</div>

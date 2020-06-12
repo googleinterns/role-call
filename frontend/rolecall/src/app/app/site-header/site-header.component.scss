@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100vw;
+    justify-content: space-between;
+    height: 10vh;
+    background: rgba($color: #ffae00, $alpha: 1.0)
+}
+
+.subcontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width:80%;
+    height: 10%;
+}
+
+.nav-trigger-button {
+    height: 10vh;
+    width: 10vh;
+    font-size: 5vh;
+}

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { constNavBarEntries } from 'src/constants';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'rolecall';
+  navBarEntries = constNavBarEntries;
 }
