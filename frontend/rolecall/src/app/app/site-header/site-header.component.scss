@@ -1,3 +1,4 @@
+// the div that holds the entire site header
 .container {
     display: flex;
     flex-direction: row;
@@ -8,15 +9,31 @@
     background: rgba($color: #ffae00, $alpha: 1.0)
 }
 
+// the middle subcontainer that holds titles and graphics
 .subcontainer {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    width:80%;
+    width: 60%;
     height: 10%;
 }
 
+// The container for the log in button
+.log-in-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 2vw;
+}
+// The log in button
+.log-in-button {
+    height: 50%;
+    font-size: large;
+}
+
+
+// The nav trigger menu button on the left
 .nav-trigger-button {
     height: 10vh;
     width: 10vh;

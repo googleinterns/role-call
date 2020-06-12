@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AppTypes } from 'src/types';
+import { constNavBarEntries } from 'src/constants';
 import { trigger, style, state, transition, animate } from '@angular/animations';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-side-nav',
@@ -25,7 +27,9 @@ import { trigger, style, state, transition, animate } from '@angular/animations'
 })
 export class SideNavComponent implements OnInit {
 
-  @Input() sideNavChildren: AppTypes.NavBarChild[];
+  // The static side nav data from src/constants.ts to use to build the navigation panels
+  sideNavChildren: AppTypes.NavBarChild[] = constNavBarEntries;
+  // Whether the nav side bar is open or not
   navIsOpen = false;
 
   constructor() { }
@@ -33,10 +37,12 @@ export class SideNavComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  // Opens the navigation sidebar
   openNav(): void {
     this.navIsOpen = true;
   }
 
+  // Closes the navigation sidebar
   closeNav(): void {
     this.navIsOpen = false;
   }

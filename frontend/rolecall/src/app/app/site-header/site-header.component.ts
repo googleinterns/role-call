@@ -8,6 +8,7 @@ import { SideNavComponent } from '../side-nav/side-nav.component';
 })
 export class SiteHeaderComponent implements OnInit {
 
+  // Reference to the nav bar
   @Input() navBar: SideNavComponent;
 
   constructor() { }
@@ -15,8 +16,9 @@ export class SiteHeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  // Toggles the open state of the nav side bar
+  // when the menu button is clicked
   onNavButtonClick(){
-    console.log("navBar");
     this.navBar.navIsOpen ? this.navBar.closeNav() : this.navBar.openNav();
   }
 
