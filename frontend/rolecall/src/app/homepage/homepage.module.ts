@@ -9,7 +9,6 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 @NgModule({
   declarations: [HomepageHeaderComponent, HomepageBaseComponent],
   imports: [
-    CommonComponentsModule,
     CommonModule
   ],
   exports: [HomepageBaseComponent]
