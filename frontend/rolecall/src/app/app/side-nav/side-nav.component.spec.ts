@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SpyLocation } from '@angular/common/testing';
+import { cleanRouterString } from 'src/app/util';
 
 describe('SideNavComponent', () => {
   let component: SideNavComponent;
@@ -53,14 +54,8 @@ describe('SideNavComponent', () => {
       let routerLinkAttr = itemAttr.getNamedItem("ng-reflect-router-link");
       panels.item(i).dispatchEvent(new Event('click'));
       tick();
-      let cleanRouterString = (routerLinkAttr.value as string);
-      if(cleanRouterString.endsWith('/') && cleanRouterString.length > 1){
-        cleanRouterString = cleanRouterString.substr(0, cleanRouterString.length - 1);
-      }
-      if(cleanRouterString.length > 1 && !cleanRouterString.startsWith('/')){
-        cleanRouterString = "/" + cleanRouterString;
-      }
-      expect(router.url).toBe(cleanRouterString);
+      let cleanedRoute = cleanRouterString(routerLinkAttr.value as string);
+      expect(router.url).toBe(cleanedRoute);
     }
   }));
 
