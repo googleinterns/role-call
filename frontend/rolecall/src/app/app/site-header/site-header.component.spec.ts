@@ -1,14 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { SiteHeaderComponent } from './site-header.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from '../app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SideNavComponent } from '../side-nav/side-nav.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('SiteHeaderComponent', () => {
   let component: SiteHeaderComponent;
   let fixture: ComponentFixture<SiteHeaderComponent>;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -17,16 +20,19 @@ describe('SiteHeaderComponent', () => {
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        RouterTestingModule,
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    router = TestBed.get(Router);
     fixture = TestBed.createComponent(SiteHeaderComponent);
     component = fixture.componentInstance;
     component.navBar = TestBed.createComponent(SideNavComponent).componentInstance;
     fixture.detectChanges();
+    router.initialNavigation();
   });
 
   it('should create', () => {
@@ -39,6 +45,22 @@ describe('SiteHeaderComponent', () => {
     expect(component.navBar.navIsOpen).toBeTrue();
     component.onNavButtonClick();
     expect(component.navBar.navIsOpen).toBeFalse();
-  })
+  });
+
+  it('should navigate to the login page when login button is clicked', fakeAsync(() => {
+    let button = component.loginButton.nativeElement;
+    let routerLinkAttr = button.attributes.getNamedItem("ng-reflect-router-link");
+    button.dispatchEvent(new Event('click'));
+    tick();
+    let cleanRouterString = (routerLinkAttr.value as string);
+    if(cleanRouterString.endsWith('/') && cleanRouterString.length > 1){
+      cleanRouterString = cleanRouterString.substr(0, cleanRouterString.length - 1);
+    }
+    if(cleanRouterString.length > 1 && !cleanRouterString.startsWith('/')){
+      cleanRouterString = "/" + cleanRouterString;
+    }
+    expect(router.url).toBe(cleanRouterString);
+  }));
+  
 
 });

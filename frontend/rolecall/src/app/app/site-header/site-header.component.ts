@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { SideNavComponent } from '../side-nav/side-nav.component';
 
 @Component({
@@ -10,6 +10,8 @@ export class SiteHeaderComponent implements OnInit {
 
   // Reference to the nav bar
   @Input() navBar: SideNavComponent;
+  // The log in button
+  @ViewChild('loginButton') loginButton: ElementRef;
 
   constructor() { }
 

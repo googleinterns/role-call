@@ -57,6 +57,9 @@ describe('SideNavComponent', () => {
       if(cleanRouterString.endsWith('/') && cleanRouterString.length > 1){
         cleanRouterString = cleanRouterString.substr(0, cleanRouterString.length - 1);
       }
+      if(cleanRouterString.length > 1 && !cleanRouterString.startsWith('/')){
+        cleanRouterString = "/" + cleanRouterString;
+      }
       expect(router.url).toBe(cleanRouterString);
     }
   }));
