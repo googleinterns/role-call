@@ -36,7 +36,9 @@ describe('SiteHeaderComponent', () => {
     component = fixture.componentInstance;
     component.navBar = TestBed.createComponent(SideNavComponent).componentInstance;
     fixture.detectChanges();
-    router.initialNavigation();
+    fixture.ngZone.run(() => {
+      router.initialNavigation();
+    });
   });
 
   it('should create', () => {
@@ -54,8 +56,10 @@ describe('SiteHeaderComponent', () => {
   it('should navigate to the login page when login button is clicked', fakeAsync(() => {
     let button = component.loginButton.nativeElement;
     let routerLinkAttr = button.attributes.getNamedItem("ng-reflect-router-link");
-    button.dispatchEvent(new Event('click'));
-    tick();
+    fixture.ngZone.run(() => {
+      button.dispatchEvent(new Event('click'));
+      tick();
+    });
     let cleanedRoute = cleanRouterString(routerLinkAttr.value as string);
     expect(router.url).toBe(cleanedRoute);
   }));

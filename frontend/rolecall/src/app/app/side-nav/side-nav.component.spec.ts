@@ -35,7 +35,9 @@ describe('SideNavComponent', () => {
     fixture = TestBed.createComponent(SideNavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    router.initialNavigation();
+    fixture.ngZone.run(() => {
+      router.initialNavigation();
+    });
   });
 
   it('should create', () => {
@@ -55,8 +57,10 @@ describe('SideNavComponent', () => {
     for(let i = 0; i < panels.length; i++){
       let itemAttr = (panels.item(i)).attributes as NamedNodeMap;
       let routerLinkAttr = itemAttr.getNamedItem("ng-reflect-router-link");
-      panels.item(i).dispatchEvent(new Event('click'));
-      tick();
+      fixture.ngZone.run(() => {
+        panels.item(i).dispatchEvent(new Event('click'));
+        tick();
+      });
       let cleanedRoute = cleanRouterString(routerLinkAttr.value as string);
       expect(router.url).toBe(cleanedRoute);
     }
