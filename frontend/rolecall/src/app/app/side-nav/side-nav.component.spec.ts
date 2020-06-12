@@ -1,18 +1,23 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { SideNavComponent } from './side-nav.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from '../app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SpyLocation } from '@angular/common/testing';
 
 describe('SideNavComponent', () => {
   let component: SideNavComponent;
   let fixture: ComponentFixture<SideNavComponent>;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SideNavComponent ],
       imports: [
+        RouterTestingModule,
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
@@ -22,9 +27,11 @@ describe('SideNavComponent', () => {
   }));
 
   beforeEach(() => {
+    router = TestBed.get(Router);
     fixture = TestBed.createComponent(SideNavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    router.initialNavigation();
   });
 
   it('should create', () => {
@@ -38,4 +45,20 @@ describe('SideNavComponent', () => {
     component.closeNav();
     expect(component.navIsOpen).toBeFalse();
   });
+
+  it('should navigate to panel pages', fakeAsync(() => {
+    let panels = document.getElementsByClassName('nav-child');
+    for(let i = 0; i < panels.length; i++){
+      let itemAttr = (panels.item(i)).attributes as NamedNodeMap;
+      let routerLinkAttr = itemAttr.getNamedItem("ng-reflect-router-link");
+      panels.item(i).dispatchEvent(new Event('click'));
+      tick();
+      let cleanRouterString = (routerLinkAttr.value as string);
+      if(cleanRouterString.endsWith('/') && cleanRouterString.length > 1){
+        cleanRouterString = cleanRouterString.substr(0, cleanRouterString.length - 1);
+      }
+      expect(router.url).toBe(cleanRouterString);
+    }
+  }));
+
 });
