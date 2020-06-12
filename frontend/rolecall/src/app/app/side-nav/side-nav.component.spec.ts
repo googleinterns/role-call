@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SpyLocation } from '@angular/common/testing';
 import { cleanRouterString } from 'src/app/util';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('SideNavComponent', () => {
   let component: SideNavComponent;
@@ -22,6 +24,7 @@ describe('SideNavComponent', () => {
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        MatIconModule
       ]
     })
     .compileComponents();

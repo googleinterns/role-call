@@ -8,6 +8,8 @@ import { SideNavComponent } from '../side-nav/side-nav.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { cleanRouterString } from 'src/app/util';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('SiteHeaderComponent', () => {
   let component: SiteHeaderComponent;
@@ -16,12 +18,13 @@ describe('SiteHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SiteHeaderComponent, SideNavComponent ],
+      declarations: [ SiteHeaderComponent ],
       imports: [
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         RouterTestingModule,
+        MatIconModule,
       ]
     })
     .compileComponents();

@@ -1,15 +1,21 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { SideNavComponent } from './side-nav/side-nav.component';
+import { SiteHeaderComponent } from './site-header/site-header.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatIconModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        SideNavComponent,
+        SiteHeaderComponent
       ],
     }).compileComponents();
   }));
