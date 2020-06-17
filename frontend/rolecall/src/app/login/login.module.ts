@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginBaseComponent } from './login-base/login-base.component';
+import { LoginBaseComponent } from './login-base.component';
 
 
 

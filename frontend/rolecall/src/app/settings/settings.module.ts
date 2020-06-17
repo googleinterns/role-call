@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SettingsBaseComponent } from './settings-base/settings-base.component'
+import { SettingsBaseComponent } from './settings-base.component'
 
 
 @NgModule({

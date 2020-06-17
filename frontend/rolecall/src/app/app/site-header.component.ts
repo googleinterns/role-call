@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { SideNavComponent } from '../side-nav/side-nav.component';
+import { SideNavComponent } from './side-nav.component';
 
 @Component({
   selector: 'app-site-header',
