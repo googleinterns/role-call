@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core
 
 import { SideNavComponent } from './side-nav.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from '../app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -18,7 +18,7 @@ describe('SideNavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SideNavComponent ],
+      declarations: [SideNavComponent],
       imports: [
         RouterTestingModule,
         BrowserModule,
@@ -27,7 +27,7 @@ describe('SideNavComponent', () => {
         MatIconModule
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe('SideNavComponent', () => {
 
   it('should navigate to panel pages', fakeAsync(() => {
     let panels = document.getElementsByClassName('nav-child');
-    for(let i = 0; i < panels.length; i++){
+    for (let i = 0; i < panels.length; i++) {
       let itemAttr = (panels.item(i)).attributes as NamedNodeMap;
       let routerLinkAttr = itemAttr.getNamedItem("ng-reflect-router-link");
       fixture.ngZone.run(() => {
