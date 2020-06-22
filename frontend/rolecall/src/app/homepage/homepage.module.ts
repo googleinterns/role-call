@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomepageHeaderComponent } from './homepage-header.component';
-import { HomepageBaseComponent } from './homepage-base.component';
-import { CommonComponentsModule } from '../common-components/common-components.module';
+import { HomepageHeaderComponent } from './homepage_header.component';
+import { HomepageBaseComponent } from './homepage_base.component';
+import { CommonComponentsModule } from '../common_components/common_components.module';
 
 
 

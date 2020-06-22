@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { SideNavComponent } from './side-nav.component';
+import { SideNavComponent } from './side_nav.component';
 
 @Component({
   selector: 'app-site-header',
-  templateUrl: './site-header.component.html',
-  styleUrls: ['./site-header.component.scss']
+  templateUrl: './site_header.component.html',
+  styleUrls: ['./site_header.component.scss']
 })
 export class SiteHeaderComponent implements OnInit {
 
@@ -20,7 +20,7 @@ export class SiteHeaderComponent implements OnInit {
 
   // Toggles the open state of the nav side bar
   // when the menu button is clicked
-  onNavButtonClick(){
+  onNavButtonClick() {
     this.navBar.navIsOpen ? this.navBar.closeNav() : this.navBar.openNav();
   }
 

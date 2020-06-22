@@ -1,8 +1,8 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { SideNavComponent } from './side-nav.component';
-import { SiteHeaderComponent } from './site-header.component';
+import { SideNavComponent } from './side_nav.component';
+import { SiteHeaderComponent } from './site_header.component';
 import { MatIconModule } from '@angular/material/icon';
 
 describe('AppComponent', () => {

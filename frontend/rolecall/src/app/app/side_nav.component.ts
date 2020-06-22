@@ -6,8 +6,8 @@ import { from } from 'rxjs';
 
 @Component({
   selector: 'app-side-nav',
-  templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss'],
+  templateUrl: './side_nav.component.html',
+  styleUrls: ['./side_nav.component.scss'],
   animations: [
     trigger('openClose', [
       state('open', style({

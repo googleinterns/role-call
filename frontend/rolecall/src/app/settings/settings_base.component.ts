@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-settings-base',
-  templateUrl: './settings-base.component.html',
-  styleUrls: ['./settings-base.component.scss']
+  templateUrl: './settings_base.component.html',
+  styleUrls: ['./settings_base.component.scss']
 })
 export class SettingsBaseComponent implements OnInit {
 
