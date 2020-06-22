@@ -7,28 +7,34 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 
-/**
- * Tests for the /api/test enpoint via http requests to the Spring Application server.
- */
+/** Unit tests for the /api/test enpoint for the backend server. */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TestControllerHttpRequestTests {
     
-	@LocalServerPort
-	private int port;
+  @LocalServerPort
+  private int port;
 
-	@Autowired
-	private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
+
+  private String requestForm = "http://localhost:%d/api/test%s";
     
-    @Test
-	public void apiDefaultValueReturn() throws Exception {
-		assert(this.restTemplate.getForObject("http://localhost:" + port + "/api/test",
-				String.class)).equals("Hello default");
-	}
+  @Test
+  public void defaultValueReturn_success() throws Exception {
+    assert(this.restTemplate.getForObject(String.format(requestForm, port, ""),
+        String.class)).equals("Hello default");
+  }
 
-    @Test
-	public void apiParamValueReturn() throws Exception {
-        String value = "val";
-		assert(this.restTemplate.getForObject("http://localhost:" + port + "/api/test?value="+value,
-				String.class)).equals("Hello " + value);
-	}
+  @Test
+  public void paramValueReturn_success() throws Exception {
+
+    // Setup
+    String value = "val";
+    String param = String.format("?value=%s", value);
+    String expect = String.format("Hello %s", value);
+    
+    // Assert
+    assert(this.restTemplate.getForObject(String.format(requestForm,port,param),
+        String.class)).equals(expect);
+  }
 }

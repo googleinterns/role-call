@@ -1,0 +1,43 @@
+steps:
+# Use sed to set backend port to 8080 from testing port
+- id: set_backend_port
+  name: 'gcr.io/cloud-builders/npm'
+  args: ["run", "configurePort"]
+
+# Move the correct yaml files for this build
+# into the correct places for deployment
+- id: configure_yamls
+  name: 'gcr.io/cloud-builders/npm'
+  args: ["run", "configureYamls", "app_frontend_dev.yaml", "app_backend_dev.yaml"]
+
+# Clean and build the backend, then deploy to GAE backend service
+- id: build_and_deploy_backend
+  name: "gcr.io/cloud-builders/mvn"
+  args: ["-f", "backend/pom.xml", "-D", "skipTests", "clean", "package", "appengine:deploy"]
+  waitFor:
+  - configure_yamls
+
+# Install the npm packages for angular
+- id: install_packages
+  name: 'gcr.io/cloud-builders/npm'
+  args:
+  - 'run'
+  - 'installAng'
+
+# Build the angular app for production and put the compiled
+# files in the dist/ folder
+- id: prerender_browser_files
+  name: 'gcr.io/cloud-builders/npm'
+  args:
+  - 'run'
+  - 'buildAng'
+  waitFor:
+  - install_packages
+
+# Deploy the angular app under the frontend service
+- name: "gcr.io/cloud-builders/gcloud"
+  args: ["app", "deploy", "app.yaml"]
+  waitFor:
+  - configure_yamls
+  - prerender_browser_files
+timeout: "1600s"
