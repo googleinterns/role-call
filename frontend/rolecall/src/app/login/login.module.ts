@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginBaseComponent } from './login_base.component';
+import { NgModule } from '@angular/core';
+import { LoginBase } from './login_base.component';
 
 
 
 @NgModule({
-  declarations: [LoginBaseComponent],
+  declarations: [LoginBase],
   imports: [
     CommonModule
   ]

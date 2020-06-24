@@ -1,19 +1,19 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { SiteHeaderComponent } from './site_header.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { SideNavComponent } from './side_nav.component';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { App } from './app.component';
+import { SideNav } from './side_nav.component';
+import { SiteHeader } from './site_header.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SiteHeaderComponent,
-    SideNavComponent
+    App,
+    SiteHeader,
+    SideNav
   ],
   imports: [
     BrowserModule,
@@ -23,6 +23,6 @@ import { SideNavComponent } from './side_nav.component';
     MatButtonModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [App]
 })
 export class AppModule { }

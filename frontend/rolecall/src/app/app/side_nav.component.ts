@@ -1,8 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { AppTypes } from 'src/types';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component } from '@angular/core';
 import { constNavBarEntries } from 'src/constants';
-import { trigger, style, state, transition, animate } from '@angular/animations';
-import { from } from 'rxjs';
+import { AppTypes } from 'src/types';
 
 @Component({
   selector: 'app-side-nav',
@@ -25,17 +24,12 @@ import { from } from 'rxjs';
     ])
   ]
 })
-export class SideNavComponent implements OnInit {
+export class SideNav {
 
   // The static side nav data from src/constants.ts to use to build the navigation panels
   sideNavChildren: AppTypes.NavBarChild[] = constNavBarEntries;
   // Whether the nav side bar is open or not
   navIsOpen = false;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   // Opens the navigation sidebar
   openNav(): void {

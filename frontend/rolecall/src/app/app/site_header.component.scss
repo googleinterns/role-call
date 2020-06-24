@@ -1,41 +1,40 @@
 // the div that holds the entire site header
 .container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    width: 100vw;
-    justify-content: space-between;
-    height: 10vh;
-    background: rgba($color: #ffae00, $alpha: 1.0)
+  background: rgba($color: #ffae00, $alpha: 1);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 10vh;
+  justify-content: space-between;
+  width: 100vw;
 }
 
 // the middle subcontainer that holds titles and graphics
 .subcontainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    width: 60%;
-    height: 10%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 10%;
+  justify-content: space-between;
+  width: 60%;
 }
 
 // The container for the log in button
 .log-in-button-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-right: 2vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 2vw;
 }
 // The log in button
 .log-in-button {
-    height: 50%;
-    font-size: large;
+  font-size: large;
+  height: 50%;
 }
-
 
 // The nav trigger menu button on the left
 .nav-trigger-button {
-    height: 10vh;
-    width: 10vh;
-    font-size: 5vh;
+  font-size: 5vh;
+  height: 10vh;
+  width: 10vh;
 }

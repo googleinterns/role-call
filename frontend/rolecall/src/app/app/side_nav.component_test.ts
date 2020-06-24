@@ -1,24 +1,22 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
-
-import { SideNavComponent } from './side_nav.component';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SpyLocation } from '@angular/common/testing';
 import { cleanRouterString } from 'src/app/util';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { AppRoutingModule } from './app-routing.module';
+import { SideNav } from './side_nav.component';
 
-describe('SideNavComponent', () => {
-  let component: SideNavComponent;
-  let fixture: ComponentFixture<SideNavComponent>;
+
+describe('SideNav', () => {
+  let component: SideNav;
+  let fixture: ComponentFixture<SideNav>;
   let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SideNavComponent],
+      declarations: [SideNav],
       imports: [
         RouterTestingModule,
         BrowserModule,
@@ -32,7 +30,7 @@ describe('SideNavComponent', () => {
 
   beforeEach(() => {
     router = TestBed.get(Router);
-    fixture = TestBed.createComponent(SideNavComponent);
+    fixture = TestBed.createComponent(SideNav);
     component = fixture.componentInstance;
     fixture.detectChanges();
     fixture.ngZone.run(() => {
@@ -41,10 +39,12 @@ describe('SideNavComponent', () => {
   });
 
   it('should create', () => {
+
     expect(component).toBeTruthy();
   });
 
   it('should change open state', () => {
+
     expect(component.navIsOpen).toBeFalse();
     component.openNav();
     expect(component.navIsOpen).toBeTrue();

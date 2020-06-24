@@ -1,24 +1,23 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { SiteHeaderComponent } from './site_header.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SideNavComponent } from './side_nav.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
-import { cleanRouterString } from 'src/app/util';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { cleanRouterString } from 'src/app/util';
+import { AppRoutingModule } from './app-routing.module';
+import { SideNav } from './side_nav.component';
+import { SiteHeader } from './site_header.component';
 
-describe('SiteHeaderComponent', () => {
-  let component: SiteHeaderComponent;
-  let fixture: ComponentFixture<SiteHeaderComponent>;
+
+describe('SiteHeader', () => {
+  let component: SiteHeader;
+  let fixture: ComponentFixture<SiteHeader>;
   let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SiteHeaderComponent],
+      declarations: [SiteHeader],
       imports: [
         BrowserModule,
         AppRoutingModule,
@@ -32,9 +31,9 @@ describe('SiteHeaderComponent', () => {
 
   beforeEach(() => {
     router = TestBed.get(Router);
-    fixture = TestBed.createComponent(SiteHeaderComponent);
+    fixture = TestBed.createComponent(SiteHeader);
     component = fixture.componentInstance;
-    component.navBar = TestBed.createComponent(SideNavComponent).componentInstance;
+    component.navBar = TestBed.createComponent(SideNav).componentInstance;
     fixture.detectChanges();
     fixture.ngZone.run(() => {
       router.initialNavigation();
@@ -42,10 +41,12 @@ describe('SiteHeaderComponent', () => {
   });
 
   it('should create', () => {
+
     expect(component).toBeTruthy();
   });
 
   it('should toggle the nav bar when menu is clicked', () => {
+
     expect(component.navBar.navIsOpen).toBeFalse();
     component.onNavButtonClick();
     expect(component.navBar.navIsOpen).toBeTrue();
@@ -61,6 +62,7 @@ describe('SiteHeaderComponent', () => {
       tick();
     });
     let cleanedRoute = cleanRouterString(routerLinkAttr.value as string);
+
     expect(router.url).toBe(cleanedRoute);
   }));
 

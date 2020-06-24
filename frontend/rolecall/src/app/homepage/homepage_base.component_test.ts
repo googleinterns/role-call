@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HomepageBaseComponent } from './homepage_base.component';
 import { MatIconModule } from '@angular/material/icon';
+import { HomepageBase } from './homepage_base.component';
 
-describe('HomepageBaseComponent', () => {
-  let component: HomepageBaseComponent;
-  let fixture: ComponentFixture<HomepageBaseComponent>;
+
+describe('HomepageBase', () => {
+  let component: HomepageBase;
+  let fixture: ComponentFixture<HomepageBase>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [HomepageBaseComponent],
+      declarations: [HomepageBase],
       imports: [
         MatIconModule
       ]
@@ -18,12 +18,13 @@ describe('HomepageBaseComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomepageBaseComponent);
+    fixture = TestBed.createComponent(HomepageBase);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
+
     expect(component).toBeTruthy();
   });
 });

@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { HomepageBaseComponent } from '../homepage/homepage_base.component';
-import { SettingsBaseComponent } from '../settings/settings_base.component';
+import { RouterModule, Routes } from '@angular/router';
 import { HomepageModule } from '../homepage/homepage.module';
-import { SettingsModule } from '../settings/settings.module';
+import { HomepageBase } from '../homepage/homepage_base.component';
 import { LoginModule } from '../login/login.module';
-import { LoginBaseComponent } from '../login/login_base.component';
+import { LoginBase } from '../login/login_base.component';
+import { SettingsModule } from '../settings/settings.module';
+import { SettingsBase } from '../settings/settings_base.component';
 
 
 const routes: Routes = [
-  { path: '', component: HomepageBaseComponent },
-  { path: 'settings', component: SettingsBaseComponent },
-  { path: 'login', component: LoginBaseComponent },
+  { path: '', component: HomepageBase },
+  { path: 'settings', component: SettingsBase },
+  { path: 'login', component: LoginBase },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 

@@ -1,7 +1,7 @@
 export namespace AppTypes {
-    export type NavBarChild = {
-        name: string,
-        routerLinkUrl: string,
-        icon: string
-    }
+  export type NavBarChild = {
+    name: string,
+    routerLinkUrl: string,
+    icon: string
+  }
 }
