@@ -1,0 +1,15 @@
+<div class="container">
+  <button mat-icon-button aria-label="Toggle Navigation Button" class="nav-trigger-button" (click)="onNavButtonClick()">
+    <mat-icon class="icon" [inline]="true">
+      menu
+    </mat-icon>
+  </button>
+  <div class="subcontainer">
+  </div>
+  <div class="log-in-button-container">
+    <button mat-flat-button aria-label="Log In Button" class="log-in-button" #loginButton routerLink="login"
+      (click)="navBar.closeNav()">
+      Log In
+    </button>
+  </div>
+</div>

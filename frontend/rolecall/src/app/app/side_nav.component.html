@@ -1,0 +1,22 @@
+<div class="left-sharp-card container" [@openClose]="isNavOpen ? 'open' : 'closed'">
+  <div class="nav-content">
+    <div class="close-nav-button-div">
+      <button mat-icon-button aria-label="Close Navigation Button" class="close-nav-button" (click)="closeNav()">
+        <mat-icon [inline]="true" class="close-nav-button-icon">
+          menu
+        </mat-icon>
+      </button>
+    </div>
+    <div *ngFor="let navEntry of menuOptions" class="card nav-child" [routerLink]="navEntry.routerLinkUrl"
+      (click)="closeNav()">
+      <div class="nav-child-content">
+        <h2 class="title">{{navEntry.name}}</h2>
+      </div>
+      <div class="nav-child-content">
+        <mat-icon class="icon" [inline]="true">
+          {{navEntry.icon}}
+        </mat-icon>
+      </div>
+    </div>
+  </div>
+</div>

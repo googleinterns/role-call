@@ -1,15 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomepageHeaderComponent } from './homepage-header/homepage-header.component';
-import { HomepageBaseComponent } from './homepage-base/homepage-base.component';
-
+import { NgModule } from '@angular/core';
+import { HomepageBase } from './homepage_base.component';
+import { HomepageHeader } from './homepage_header.component';
 
 
 @NgModule({
-  declarations: [HomepageHeaderComponent, HomepageBaseComponent],
+  declarations: [HomepageHeader, HomepageBase],
   imports: [
     CommonModule
   ],
-  exports: [HomepageBaseComponent]
+  exports: [HomepageBase]
 })
 export class HomepageModule { }
