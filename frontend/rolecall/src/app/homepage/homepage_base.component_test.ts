@@ -24,7 +24,6 @@ describe('HomepageBase', () => {
   });
 
   it('should create', () => {
-
     expect(component).toBeTruthy();
   });
 });

@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { cleanRouterString } from 'src/app/util';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 import { SiteHeader } from './site_header.component';
 
@@ -41,17 +41,19 @@ describe('SiteHeader', () => {
   });
 
   it('should create', () => {
-
     expect(component).toBeTruthy();
   });
 
   it('should toggle the nav bar when menu is clicked', () => {
+    expect(component.navBar.isNavOpen).toBeFalse();
 
-    expect(component.navBar.navIsOpen).toBeFalse();
     component.onNavButtonClick();
-    expect(component.navBar.navIsOpen).toBeTrue();
+
+    expect(component.navBar.isNavOpen).toBeTrue();
+
     component.onNavButtonClick();
-    expect(component.navBar.navIsOpen).toBeFalse();
+
+    expect(component.navBar.isNavOpen).toBeFalse();
   });
 
   it('should navigate to the login page when login button is clicked', fakeAsync(() => {

@@ -3,6 +3,13 @@ import { Component } from '@angular/core';
 import { constNavBarEntries } from 'src/constants';
 import { AppTypes } from 'src/types';
 
+
+/**
+ * The side navigation panel component.
+ * This populates the navigation panel with
+ * router links, as well as handles animating
+ * the opening and closing.
+ */
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side_nav.component.html',
@@ -26,19 +33,22 @@ import { AppTypes } from 'src/types';
 })
 export class SideNav {
 
-  // The static side nav data from src/constants.ts to use to build the navigation panels
-  sideNavChildren: AppTypes.NavBarChild[] = constNavBarEntries;
-  // Whether the nav side bar is open or not
-  navIsOpen = false;
+  /**
+   * The static side nav data from src/constants.ts to use 
+   * to build the navigation panels
+   */
+  menuOptions: AppTypes.NavBarChild[] = constNavBarEntries;
+  /** Whether the nav side bar is open or not */
+  isNavOpen = false;
 
-  // Opens the navigation sidebar
+  /** Opens the navigation sidebar */
   openNav(): void {
-    this.navIsOpen = true;
+    this.isNavOpen = true;
   }
 
-  // Closes the navigation sidebar
+  /** Closes the navigation sidebar */
   closeNav(): void {
-    this.navIsOpen = false;
+    this.isNavOpen = false;
   }
 
 }

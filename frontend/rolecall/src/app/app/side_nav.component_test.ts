@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { cleanRouterString } from 'src/app/util';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 
 
@@ -39,17 +39,19 @@ describe('SideNav', () => {
   });
 
   it('should create', () => {
-
     expect(component).toBeTruthy();
   });
 
   it('should change open state', () => {
+    expect(component.isNavOpen).toBeFalse();
 
-    expect(component.navIsOpen).toBeFalse();
     component.openNav();
-    expect(component.navIsOpen).toBeTrue();
+
+    expect(component.isNavOpen).toBeTrue();
+
     component.closeNav();
-    expect(component.navIsOpen).toBeFalse();
+
+    expect(component.isNavOpen).toBeFalse();
   });
 
   it('should navigate to panel pages', fakeAsync(() => {
@@ -62,6 +64,7 @@ describe('SideNav', () => {
         tick();
       });
       let cleanedRoute = cleanRouterString(routerLinkAttr.value as string);
+
       expect(router.url).toBe(cleanedRoute);
     }
   }));

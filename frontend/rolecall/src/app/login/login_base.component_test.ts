@@ -20,7 +20,6 @@ describe('LoginBase', () => {
   });
 
   it('should create', () => {
-
     expect(component).toBeTruthy();
   });
 });

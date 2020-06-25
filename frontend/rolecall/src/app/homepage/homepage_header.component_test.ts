@@ -20,7 +20,6 @@ describe('HomepageHeader', () => {
   });
 
   it('should create', () => {
-
     expect(component).toBeTruthy();
   });
 });
