@@ -16,6 +16,6 @@ steps:
 - id: upload_coverage_data
   name: gcr.io/cloud-builders/git
   entrypoint: bash
-  args: ['./yaml_cloudbuild/codecov.sh']
+  args: ['./yaml_cloudbuild/codecov.sh', '-N $COMMIT_SHA']
   env:
   - 'CODECOV_TOKEN=${_CODECOV_TOKEN}'
