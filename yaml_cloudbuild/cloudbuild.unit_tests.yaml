@@ -14,7 +14,7 @@ steps:
 
 # Upload generated coverage tests data.
 - id: upload_coverage_data
-  name: 'gcr.io/cloud-builders/builder'
+  name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
   args: ['-c', 'bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -X fix']
   env:
