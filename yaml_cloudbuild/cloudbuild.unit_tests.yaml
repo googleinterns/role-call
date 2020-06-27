@@ -6,6 +6,12 @@ steps:
   args: ['clean', 'test']
   dir: "backend"
 
+  # Trigger backend unit tests
+- id: backend_coverage_report
+  name: 'gcr.io/cloud-builders/mvn'
+  args: ['jacoco:report']
+  dir: "backend"
+
 - id: upload_coverage_data
   name: gcr.io/cloud-builders/git
   entrypoint: bash
