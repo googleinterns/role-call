@@ -16,7 +16,7 @@ steps:
 - id: upload_coverage_data
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
-  args: ['-c', 'bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -X fix']
+  args: ['-c', 'bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -X fix -F unittests']
   env:
     - 'VCS_COMMIT_ID=$COMMIT_SHA'
     - 'VCS_BRANCH_NAME=$BRANCH_NAME'
