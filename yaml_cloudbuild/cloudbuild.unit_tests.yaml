@@ -14,8 +14,12 @@ steps:
 
 # Upload generated coverage tests data.
 - id: upload_coverage_data
-  name: gcr.io/cloud-builders/git
+  name: 'gcr.io/$PROJECT_ID/builder'
   entrypoint: bash
-  args: ['./yaml_cloudbuild/codecov.sh', '-N $COMMIT_SHA']
+  args: ['-c', 'bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -X fix']
   env:
-  - 'CODECOV_TOKEN=${_CODECOV_TOKEN}'
+    - 'VCS_COMMIT_ID=$COMMIT_SHA'
+    - 'VCS_BRANCH_NAME=$BRANCH_NAME'
+    - 'VCS_PULL_REQUEST=$_PR_NUMBER'
+    - 'CI_BUILD_ID=$BUILD_ID'
+    - 'CODECOV_TOKEN=$_CODECOV_TOKEN'  
