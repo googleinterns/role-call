@@ -18,7 +18,7 @@ steps:
   entrypoint: bash
   args: ['-c', 'bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -X fix']
   env:
-    - 'VCS_COMMIT_ID=$SHORT_SHA'
+    - 'VCS_COMMIT_ID=$COMMIT_SHA'
     - 'VCS_BRANCH_NAME=$BRANCH_NAME'
     - 'CI_BUILD_ID=$BUILD_ID'
     - 'CODECOV_TOKEN=$_CODECOV_TOKEN'  
