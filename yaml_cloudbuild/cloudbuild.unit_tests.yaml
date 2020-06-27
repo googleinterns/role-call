@@ -1,17 +1,18 @@
 steps:
 
-# Trigger backend unit tests
+# Trigger unit tests for the backend.
 - id: backend_unit_tests
   name: 'gcr.io/cloud-builders/mvn'
   args: ['clean', 'test']
   dir: "backend"
 
-  # Trigger backend unit tests
+# Trigger coverage tests for the backend.
 - id: backend_coverage_report
   name: 'gcr.io/cloud-builders/mvn'
   args: ['jacoco:report']
   dir: "backend"
 
+# Upload generated coverage tests data.
 - id: upload_coverage_data
   name: gcr.io/cloud-builders/git
   entrypoint: bash
