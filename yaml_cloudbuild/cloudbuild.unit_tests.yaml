@@ -5,3 +5,10 @@ steps:
   name: 'gcr.io/cloud-builders/mvn'
   args: ['clean', 'test']
   dir: "backend"
+
+- id: upload_coverage_data
+  name: gcr.io/cloud-builders/git
+  entrypoint: bash
+  args: ['./yaml_cloudbuild/codecov.sh']
+  env:
+  - 'CODECOV_TOKEN=${_CODECOV_TOKEN}'
