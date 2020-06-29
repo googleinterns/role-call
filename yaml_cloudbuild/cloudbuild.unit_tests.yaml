@@ -14,20 +14,20 @@ steps:
 
 # Prepare frontend environment for unit testing.
 - id: 'frontend_install_dependencies'
-  name: 'gcr.io/cloud-builders/npm:current'
-  args: ['install']
+  name: 'buildkite/puppeteer'
+  args: ['npm', 'install']
   dir: "frontend/rolecall"
 
 # Trigger unit tests for the front.
 - id: frontend_unit_tests
-  name: 'gcr.io/$PROJECT_ID/ng:latest'
-  args: ['test']
+  name: 'buildkite/puppeteer'
+  args: ['npm', 'run', 'test']
   dir: "frontend/rolecall"
 
 # Trigger unit tests with coverage for the front.
 - id: frontend_coverage_report
-  name: 'gcr.io/$PROJECT_ID/ng:latest'
-  args: ['test', '--code-coverage']
+  name: 'buildkite/puppeteer'
+  args: ['npm', 'run', 'coverage']
   dir: "frontend/rolecall"
 
 # Upload generated coverage tests data.
