@@ -14,7 +14,7 @@ steps:
 
 # Prepare frontend environment for unit testing.
 - id: 'frontend_install_dependencies'
-  name: 'gcr.io/cloud-builders/npm:node-10.10.0'
+  name: 'gcr.io/cloud-builders/npm:node-14.4.0'
   args: ['install']
   dir: "frontend/rolecall"
 
