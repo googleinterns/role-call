@@ -17,7 +17,7 @@ steps:
   name: 'gcr.io/cloud-builders/npm'
   args: ['install']
 
-# Trigger unit tests with coverage for the front.
+# Trigger unit tests for the front.
 - id: frontend_unit_tests
   name: 'gcr.io/$PROJECT_ID/ng:latest'
   args: ['test']
