@@ -59,7 +59,7 @@ export class LoginApi {
       authenticated: true,
       token: {
         sessionToken: "example-session-token",
-        expires: (Date.now() + 10000)
+        expires: (Date.now() + 99999999)
       },
       user: {
         firstName: "example first",
@@ -92,8 +92,11 @@ export class LoginApi {
   }
 
   /** Whether a login is required or not */
-  public requiresLogin(): boolean {
+  public requiresLogin(request: LoginRequest): boolean {
     if (this.isLoggedIn) {
+      if (this.getCurrentUser().email != request.email) {
+        return true;
+      }
       if (Date.now() > this.token.expires) {
         this.isLoggedIn = false;
         return true;
@@ -132,7 +135,7 @@ export class LoginApi {
 
   /** Determine whether or not login is needed and return */
   public login(request: LoginRequest): Observable<LoginResponse> {
-    if (this.requiresLogin()) {
+    if (this.requiresLogin(request)) {
       return this.submitLoginCredentials(request).pipe(map(res => {
         if (res.authenticated) {
           this.saveSession(res.token, res.user);
