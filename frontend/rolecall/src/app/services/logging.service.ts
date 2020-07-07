@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 /** Logging prefixes */
-const ERROR_PREFIX = "{{ ERROR }} :: ";
-const WARN_PREFIX = "{{ WARN }} :: ";
-const INFO_PREFIX = "{{ INFO }} :: ";
-const LOG_PREFIX = "{{ LOG }} :: ";
+export const ERROR_PREFIX = "{{ ERROR }} :: ";
+export const WARN_PREFIX = "{{ WARN }} :: ";
+export const INFO_PREFIX = "{{ INFO }} :: ";
+export const LOG_PREFIX = "{{ LOG }} :: ";
 
 @Injectable({
   providedIn: 'root'

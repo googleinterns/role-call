@@ -6,10 +6,30 @@
   </button>
   <div class="subcontainer">
   </div>
-  <div class="log-in-button-container">
+  <div *ngIf="this.responseRecieved; then showLoginOptions else loadingSpinner">
+  </div>
+</div>
+
+<!-- Login Templates -->
+<ng-template #showLoginOptions>
+  <div *ngIf="this.userIsLoggedIn; then profileImageTemp else loginButtonTemp">
+  </div>
+</ng-template>
+<ng-template #loginButtonTemp>
+  <div class="log-in-account-container">
     <button mat-flat-button aria-label="Log In Button" class="log-in-button" #loginButton routerLink="login"
-      (click)="navBar.closeNav()">
+      (click)="navBar.closeNav(); onLoginButtonClick()">
       Log In
     </button>
   </div>
-</div>
+</ng-template>
+<ng-template #profileImageTemp>
+  <div class="log-in-account-container">
+    <img class="profile-image" [src]="this.profileSrc">
+  </div>
+</ng-template>
+
+<!-- Loader Template -->
+<ng-template #loadingSpinner>
+  <div class="loader"></div>
+</ng-template>

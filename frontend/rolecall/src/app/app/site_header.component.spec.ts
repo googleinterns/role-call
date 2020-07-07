@@ -1,10 +1,10 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { cleanRouterString } from 'src/app/util';
+import { MockGAPI } from '../mocks/mock_gapi';
 import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 import { SiteHeader } from './site_header.component';
@@ -38,6 +38,8 @@ describe('SiteHeader', () => {
     fixture.ngZone.run(() => {
       router.initialNavigation();
     });
+    // @ts-ignore
+    window['gapi'] = new MockGAPI().mock();
   });
 
   it('should create', () => {
@@ -56,17 +58,26 @@ describe('SiteHeader', () => {
     expect(component.navBar.isNavOpen).toBeFalse();
   });
 
-  it('should navigate to the login page when login button is clicked', fakeAsync(() => {
-    let button = component.loginButton.nativeElement;
-    let routerLinkAttr = button.attributes.getNamedItem("ng-reflect-router-link");
-    fixture.ngZone.run(() => {
-      button.dispatchEvent(new Event('click'));
-      tick();
-    });
-    let cleanedRoute = cleanRouterString(routerLinkAttr.value as string);
+  it('should trigger login on login button click', async () => {
+    expect(component.responseRecieved).toBeFalse();
 
-    expect(router.url).toBe(cleanedRoute);
-  }));
+    await component.onLoginButtonClick();
 
+    expect(component.responseRecieved).toBeTrue();
+    expect(component.userIsLoggedIn).toBeTrue();
+  });
+
+  it('should unload auth then trigger login if auth instance is not null or undefined to reset auth', async () => {
+    expect(component.responseRecieved).toBeFalse();
+
+    await component.loginAPI.initGoogleAuth();
+
+    expect(component.loginAPI.isAuthLoaded).toBeTrue();
+
+    await component.onLoginButtonClick();
+
+    expect(component.responseRecieved).toBeTrue();
+    expect(component.userIsLoggedIn).toBeTrue();
+  });
 
 });

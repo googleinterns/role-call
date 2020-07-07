@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { cleanRouterString } from 'src/app/util';
+import { constNavBarEntries } from 'src/constants';
 import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 
@@ -13,6 +14,7 @@ describe('SideNav', () => {
   let component: SideNav;
   let fixture: ComponentFixture<SideNav>;
   let router: Router;
+
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -53,6 +55,22 @@ describe('SideNav', () => {
 
     expect(component.isNavOpen).toBeFalse();
   });
+
+  it('should navigate to all valid url forms', fakeAsync(() => {
+    fixture.ngZone.run(() => {
+      router.navigateByUrl(cleanRouterString(constNavBarEntries[1].routerLinkUrl));
+      tick();
+    });
+
+    expect(router.url).toBe(cleanRouterString(constNavBarEntries[1].routerLinkUrl));
+
+    fixture.ngZone.run(() => {
+      router.navigateByUrl("/" + cleanRouterString(constNavBarEntries[1].routerLinkUrl));
+      tick();
+    });
+
+    expect(router.url).toBe(cleanRouterString("/" + constNavBarEntries[1].routerLinkUrl));
+  }));
 
   it('should navigate to panel pages', fakeAsync(() => {
     let panels = document.getElementsByClassName('nav-child');

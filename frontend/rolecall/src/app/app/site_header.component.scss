@@ -20,7 +20,7 @@
 }
 
 // The container for the log in button
-.log-in-button-container {
+.log-in-account-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,10 +31,37 @@
   font-size: large;
   height: 50%;
 }
+// The profile picture
+.profile-image {
+  border-radius: 50%;
+  height: 7vh;
+  width: 7vh;
+}
 
 // The nav trigger menu button on the left
 .nav-trigger-button {
   font-size: 5vh;
   height: 10vh;
   width: 10vh;
+}
+
+// Loading spinner CSS
+.loader {
+  animation: spin 2s linear infinite;
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #d3d3d3; /* Darker grey */
+  border-radius: 50%;
+  height: 5vh;
+  margin-bottom: auto;
+  margin-right: 2vw;
+  margin-top: auto;
+  width: 5vh;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

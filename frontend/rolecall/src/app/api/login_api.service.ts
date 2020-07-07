@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { isNullOrUndefined } from 'util';
+import { environment } from 'src/environments/environment';
 import { LoggingService } from '../services/logging.service';
 
 
@@ -13,21 +11,7 @@ export type LoginRequest = {
 
 export type LoginResponse = {
   authenticated: boolean,
-  token?: SessionToken,
-  user?: UserInfo
-}
-
-/** The stored data types of the token and user */
-type SessionToken = {
-  sessionToken: string,
-  expires: number
-}
-
-type UserInfo = {
-  firstName: string,
-  lastName: string,
-  email: string,
-  uuid: string
+  user: gapi.auth2.GoogleUser
 }
 
 /** The local storage key for the token */
@@ -44,135 +28,91 @@ const USER_LOCAL_KEY = "RoleCallUser";
 })
 export class LoginApi {
 
-  /** The current session token */
-  token: SessionToken;
-  /** Whether the token and user has been loaded already */
+  /** Whether the user has been loaded already */
   isLoggedIn = false;
   /** The current user */
-  user: UserInfo;
+  user: gapi.auth2.GoogleUser;
+  /** The google OAuth2 instance */
+  authInstance: gapi.auth2.GoogleAuth;
+  /** If the google OAuth2 api is loaded */
+  isAuthLoaded: boolean = false;
 
   constructor(private loggingService: LoggingService) { }
 
-  /** Submit login credentials and await response */
-  private submitLoginCredentials(request: LoginRequest): Observable<LoginResponse> {
-    return of({
-      authenticated: true,
-      token: {
-        sessionToken: "example-session-token",
-        expires: (Date.now() + 99999999)
-      },
-      user: {
-        firstName: "example first",
-        lastName: "example last",
-        email: request.email,
-        uuid: "example_uuid"
+  /** Initialize OAuth2 */
+  public async initGoogleAuth(): Promise<void> {
+    const pload = new Promise((resolve) => {
+      gapi.load('auth2', resolve);
+    });
+    return pload.then(async () => {
+      await gapi.auth2
+        .init({ client_id: environment.oauthClientID })
+        .then(auth => {
+          this.isAuthLoaded = true;
+          this.authInstance = auth;
+        });
+    });
+  }
+
+  /** Determine whether or not login is needed and return */
+  public async login(openDialog: boolean): Promise<LoginResponse> {
+    let prom = Promise.resolve();
+    // Load OAuth2 if not already loaded
+    if (!this.isAuthLoaded) {
+      prom = prom.then(() => {
+        return this.initGoogleAuth();
+      });
+    }
+    return prom.then(() => {
+      // Return user if already signed in and token not expired
+      if (this.authInstance.isSignedIn.get()) {
+        if (Date.now() < this.authInstance.currentUser.get().getAuthResponse().expires_at) {
+          return prom.then(() => {
+            return this.getLoginResponse(true, true, this.authInstance.currentUser.get())
+          });
+        } else {
+          return prom.then(() => {
+            return this.authInstance.currentUser.get().reloadAuthResponse().then(() => {
+              return this.getLoginResponse(true, true, this.authInstance.currentUser.get());
+            })
+          });
+        }
+      }
+      if (openDialog) {
+        // Sign in and retrieve user
+        return prom.then(() => {
+          return this.authInstance.signIn().then(
+            (user => {
+              return this.getLoginResponse(true, true, user);
+            }),
+            ((reason) => {
+              this.loggingService.logError(reason);
+              return this.getLoginResponse(false, false, undefined);
+            })
+          )
+        });
+      } else {
+        return this.getLoginResponse(false, false, undefined);
       }
     });
   }
 
-  /** Save the session token */
-  private saveSession(token: SessionToken, user: UserInfo) {
-    this.token = token;
+  /** Constructs a login response and updates appropriate state */
+  private getLoginResponse(authed: boolean, isLoggedIn: boolean, user: gapi.auth2.GoogleUser): LoginResponse {
+    this.isLoggedIn = isLoggedIn;
     this.user = user;
-    localStorage.setItem(TOKEN_LOCAL_KEY, JSON.stringify(this.token));
-    localStorage.setItem(USER_LOCAL_KEY, JSON.stringify(this.user));
-    this.isLoggedIn = true;
+    return {
+      authenticated: authed,
+      user: this.user
+    };
   }
 
-  /** Grabs the token from local storage and load it */
-  private loadSession(): SessionToken {
-    let prevTokenStr = localStorage.getItem(TOKEN_LOCAL_KEY);
-    let prevToken: SessionToken = JSON.parse(prevTokenStr);
-    this.token = prevToken;
-    let prevUserStr = localStorage.getItem(USER_LOCAL_KEY);
-    let prevUser: UserInfo = JSON.parse(prevUserStr);
-    this.user = prevUser;
-    this.isLoggedIn = true;
-    return prevToken;
-  }
-
-  /** Whether a login is required or not */
-  public requiresLogin(request: LoginRequest): boolean {
+  /** Get the current user object if logged in or force a login */
+  public async getCurrentUser(): Promise<gapi.auth2.GoogleUser> {
     if (this.isLoggedIn) {
-      if (this.getCurrentUser().email != request.email) {
-        return true;
-      }
-      if (Date.now() > this.token.expires) {
-        this.isLoggedIn = false;
-        return true;
-      }
-      return false;
-    }
-    let prevSavedToken = localStorage.getItem(TOKEN_LOCAL_KEY);
-    if (isNullOrUndefined(prevSavedToken)) {
-      return true;
+      return Promise.resolve(this.user);
     } else {
-      let prevToken: SessionToken;
-      try {
-        prevToken = JSON.parse(prevSavedToken);
-      } catch (e) {
-        this.loggingService.logError(e);
-        return true;
-      }
-      if (Date.now() > prevToken.expires) {
-        return true;
-      }
-    }
-    let prevSavedUserStr = localStorage.getItem(TOKEN_LOCAL_KEY);
-    if (isNullOrUndefined(prevSavedUserStr)) {
-      return true;
-    } else {
-      let prevUser: UserInfo;
-      try {
-        prevUser = JSON.parse(prevSavedUserStr);
-      } catch (e) {
-        this.loggingService.logError(e);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /** Determine whether or not login is needed and return */
-  public login(request: LoginRequest): Observable<LoginResponse> {
-    if (this.requiresLogin(request)) {
-      return this.submitLoginCredentials(request).pipe(map(res => {
-        if (res.authenticated) {
-          this.saveSession(res.token, res.user);
-          return res;
-        } else {
-          return {
-            authenticated: false
-          };
-        }
-      }));
-    } else {
-      if (!this.isLoggedIn) {
-        this.loadSession();
-      }
-      return of({
-        authenticated: true,
-        token: this.token,
-        user: this.user
-      });
-    }
-  }
-
-  /** Get the current user object if logged in */
-  public getCurrentUser(): UserInfo {
-    if (this.isLoggedIn) {
-      return this.user;
-    } else {
-      return null;
-    }
-  }
-
-  /** Get the current session token if logged in */
-  public getCurrentSessionToken(): SessionToken {
-    if (this.isLoggedIn) {
-      return this.token;
-    } else {
-      return null;
+      return await this.login(false).then(val => val.user);
     }
   }
 

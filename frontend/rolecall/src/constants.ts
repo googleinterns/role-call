@@ -12,7 +12,7 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
   },
   {
     name: "Settings",
-    routerLinkUrl: "/settings/",
+    routerLinkUrl: "settings/",
     icon: "settings"
   },
 ];
