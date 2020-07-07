@@ -25,9 +25,8 @@
 </ng-template>
 <ng-template #profileImageTemp>
   <div class="log-in-account-container" ngbDropdown #profileDrop="ngbDropdown">
-    <a>
-      <img class="profile-image" [src]="this.profileSrc" ngbDropdownAnchor (click)="profileDrop.open()">
-    </a>
+    <img class="profile-image" [src]="this.profileSrc" ngbDropdownAnchor
+      (click)="profileDrop.isOpen() ? profileDrop.close() : profileDrop.open()">
     <div ngbDropdownMenu aria-labelledby="dropdownManual">
       <div class="profile-drop-down-item-container">
         <h3 class="profile-name">{{ this.loginAPI.user['Qt']['Bd'] }}</h3>
