@@ -82,7 +82,7 @@ describe('LoginApi', () => {
     expect(isNullOrUndefined(service.authInstance.currentUser.get())).toBeTrue();
   });
 
-  it('should not authenticate if sign in reject promise', async () => {
+  it('should not authenticate if sign in promise is rejected', async () => {
     mockObj.shouldThrowSignInError = true;
     let loginRespProm = service.login(true);
     let loginResp = await loginRespProm;
@@ -115,7 +115,7 @@ describe('LoginApi', () => {
     expect(user).toBe(service.user);
   });
 
-  it('should attempt login for current user if not signed in and return undefined if successful', async () => {
+  it('should attempt login for current user if not signed in and return undefined if unsuccessful', async () => {
     service.isLoggedIn = false;
     mockObj.shouldThrowSignInError = true;
     let user = await service.getCurrentUser();
