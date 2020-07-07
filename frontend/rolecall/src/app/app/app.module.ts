@@ -7,6 +7,7 @@ import { App } from './app.component';
 import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 import { SiteHeader } from './site_header.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { SiteHeader } from './site_header.component';
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [App]

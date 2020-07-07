@@ -1,10 +1,10 @@
-<div class="container">
+<div class="site-header-container">
   <button mat-icon-button aria-label="Toggle Navigation Button" class="nav-trigger-button" (click)="onNavButtonClick()">
     <mat-icon class="icon" [inline]="true">
       menu
     </mat-icon>
   </button>
-  <div class="subcontainer">
+  <div class="site-header-subcontainer">
   </div>
   <div *ngIf="this.responseRecieved; then showLoginOptions else loadingSpinner">
   </div>
@@ -24,8 +24,18 @@
   </div>
 </ng-template>
 <ng-template #profileImageTemp>
-  <div class="log-in-account-container">
-    <img class="profile-image" [src]="this.profileSrc">
+  <div class="log-in-account-container" ngbDropdown #profileDrop="ngbDropdown">
+    <a>
+      <img class="profile-image" [src]="this.profileSrc" ngbDropdownAnchor (click)="profileDrop.open()">
+    </a>
+    <div ngbDropdownMenu aria-labelledby="dropdownManual">
+      <div class="profile-drop-down-item-container">
+        <h3 class="profile-name">{{ this.loginAPI.user['Qt']['Bd'] }}</h3>
+      </div>
+      <div class="profile-drop-down-item-container">
+        <h3 class="profile-email">{{ this.loginAPI.user['Qt']['Au'] }}</h3>
+      </div>
+    </div>
   </div>
 </ng-template>
 
