@@ -116,4 +116,12 @@ export class LoginApi {
     }
   }
 
+  /** Sign out of Google OAuth2 */
+  public signOut() {
+    if (this.isLoggedIn) {
+      this.authInstance.signOut();
+    }
+    this.isLoggedIn = false;
+  }
+
 }

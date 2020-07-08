@@ -55,6 +55,12 @@ export class SiteHeader implements OnInit {
     });
   }
 
+  /** Sign out of google OAuth2 */
+  onSignOut() {
+    this.loginAPI.signOut();
+    this.configureHeaderForLogin({ authenticated: false, user: undefined });
+  }
+
   /** Set state and render page header depending on login state */
   configureHeaderForLogin(loginResp: LoginResponse) {
     this.responseRecieved = true;

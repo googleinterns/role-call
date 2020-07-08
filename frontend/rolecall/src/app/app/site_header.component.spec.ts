@@ -80,4 +80,24 @@ describe('SiteHeader', () => {
     expect(component.userIsLoggedIn).toBeTrue();
   });
 
+  it('should sign out on sign out click', async () => {
+    expect(component.responseRecieved).toBeFalse();
+
+    await component.onLoginButtonClick();
+
+    expect(component.responseRecieved).toBeTrue();
+    expect(component.userIsLoggedIn).toBeTrue();
+
+    let loginRespProm = component.loginAPI.login(true);
+    let loginResp = await loginRespProm;
+
+    expect(loginResp.authenticated).toBeTrue();
+
+    component.onSignOut();
+
+    expect(component.loginAPI.authInstance.isSignedIn.get()).toBeFalse();
+    expect(component.userIsLoggedIn).toBeFalse();
+    expect(component.responseRecieved).toBeTrue();
+  });
+
 });

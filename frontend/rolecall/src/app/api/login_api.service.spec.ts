@@ -123,4 +123,24 @@ describe('LoginApi', () => {
     expect(user).toBeUndefined();
   });
 
+  it('should sign out when signed in', async () => {
+    let loginRespProm = service.login(true);
+    let loginResp = await loginRespProm;
+
+    expect(loginResp.authenticated).toBeTrue();
+
+    service.signOut();
+
+    expect(service.authInstance.isSignedIn.get()).toBeFalse();
+    expect(service.isLoggedIn).toBeFalse();
+  });
+
+  it('should sign out when not signed in', async () => {
+    expect(service.isLoggedIn).toBeFalse();
+
+    service.signOut();
+
+    expect(service.isLoggedIn).toBeFalse();
+  });
+
 });
