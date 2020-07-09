@@ -14,11 +14,6 @@ export type LoginResponse = {
   user: gapi.auth2.GoogleUser
 }
 
-/** The local storage key for the token */
-const TOKEN_LOCAL_KEY = "RoleCallToken";
-
-/** The local storage key for the user */
-const USER_LOCAL_KEY = "RoleCallUser";
 
 /**
  * Service that handles logging in and obtaining the session token
