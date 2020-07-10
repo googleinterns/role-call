@@ -7,7 +7,7 @@ export function cleanRouterString(input: string) {
     input = input.substr(0, input.length - 1);
   }
   if (input.length > 1 && !input.startsWith('/')) {
-    input = "/" + input;
+    input = '/' + input;
   }
   return input;
 }

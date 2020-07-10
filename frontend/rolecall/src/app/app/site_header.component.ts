@@ -1,4 +1,6 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { isNullOrUndefined } from 'util';
+import { LoginApi, LoginResponse } from '../api/login_api.service';
 import { SideNav } from './side_nav.component';
 
 
@@ -11,12 +13,27 @@ import { SideNav } from './side_nav.component';
   templateUrl: './site_header.component.html',
   styleUrls: ['./site_header.component.scss']
 })
-export class SiteHeader {
+export class SiteHeader implements OnInit {
 
   /** Reference to the nav bar */
   @Input() navBar: SideNav;
   /** The log in button */
   @ViewChild('loginButton') loginButton: ElementRef;
+  /** The url for the profile image */
+  profileSrc: string = "";
+  /** Whether or not the user is logged in */
+  userIsLoggedIn: boolean = true;
+  /** Whether we've recieved a response from the login API */
+  responseRecieved: boolean = false;
+
+  constructor(public loginAPI: LoginApi) { }
+
+
+  ngOnInit(): void {
+    this.loginAPI.login(false).then(loginResp => {
+      this.configureHeaderForLogin(loginResp);
+    });
+  }
 
   /**
    * Toggles the open state of the nav side bar
@@ -24,6 +41,33 @@ export class SiteHeader {
    */
   onNavButtonClick() {
     this.navBar.isNavOpen ? this.navBar.closeNav() : this.navBar.openNav();
+  }
+
+  /** Initiate a google OAuth2 login when login button is clicked */
+  onLoginButtonClick() {
+    if (!isNullOrUndefined(this.loginAPI.authInstance)) {
+      this.loginAPI.authInstance.signOut();
+      this.loginAPI.authInstance.disconnect();
+      this.loginAPI.isAuthLoaded = false;
+    }
+    return this.loginAPI.login(true).then(loginResp => {
+      this.configureHeaderForLogin(loginResp);
+    });
+  }
+
+  /** Sign out of google OAuth2 */
+  onSignOut() {
+    this.loginAPI.signOut();
+    this.configureHeaderForLogin({ authenticated: false, user: undefined });
+  }
+
+  /** Set state and render page header depending on login state */
+  configureHeaderForLogin(loginResp: LoginResponse) {
+    this.responseRecieved = true;
+    this.userIsLoggedIn = this.loginAPI.isLoggedIn;
+    if (loginResp.authenticated) {
+      this.profileSrc = this.loginAPI.user['Qt']['MK']
+    }
   }
 
 }
