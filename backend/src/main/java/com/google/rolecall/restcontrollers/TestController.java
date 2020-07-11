@@ -1,14 +1,13 @@
 package com.google.rolecall.restcontrollers;
 
-import java.util.concurrent.CompletableFuture;
-
 import com.google.rolecall.restcontrollers.Annotations.Get;
 import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
-
+import com.google.rolecall.restcontrollers.RequestExceptions.UnsupportedOperationException;
+import java.util.concurrent.CompletableFuture;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/** Initial REST Controller for the RoleCall Proof of Concept (POC). */
+/* Initial REST Controller for the RoleCall Proof of Concept (POC). */
 @Endpoint("/api/test")
 public class TestController extends AsyncRestEndpoint {
   

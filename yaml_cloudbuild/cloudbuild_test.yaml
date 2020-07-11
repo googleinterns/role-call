@@ -8,14 +8,13 @@ steps:
 # into the correct places for deployment
 - id: configure_yamls
   name: 'gcr.io/cloud-builders/npm'
-  args: ["run", "configureYamls", "app_frontend_test.yaml", "app_backend_test.yaml"]
+  args: ["run", "configureYamls", "app_frontend_dev.yaml", "app_backend_dev.yaml"]
 
 # Clean and build the backend, then deploy to GAE backend service
 - id: build_and_deploy_backend
   name: "gcr.io/cloud-builders/mvn"
   args: ["-f", "backend/pom.xml", "-D", "skipTests", "clean", "package", "appengine:deploy"]
   waitFor:
-  - set_backend_port
   - configure_yamls
 
 # Install the npm packages for angular

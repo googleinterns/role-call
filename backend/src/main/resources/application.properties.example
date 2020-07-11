@@ -1,0 +1,27 @@
+# Define one set of configurations for each section labeled by number and remove any others under the same section.
+# 1. Multi-Threading Configuration
+thread.pool.size=20
+max.queue.capacity=20
+allow.core.thread.timeout=true
+wait.for.task.completion.on.shutdown=true
+await.termination=60
+thread.name.prefix=default_executor_thread
+
+# 2. Database connection configuration
+# a. GCP Cloud Sql MySql Instance Configuration
+spring.cloud.gcp.projectId=${PROJECT}
+spring.cloud.gcp.sql.instanceName=rolecall-cloudsql
+spring.cloud.gcp.sql.databaseName=rolecall_db
+spring.cloud.gcp.sql.userName=rolecall
+spring.cloud.gcp.sql.password=ThePassword
+
+# b. Local MySql Instance Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example
+spring.datasource.username=rolecall
+spring.datasource.password=ThePassword
+
+# 3. Default System Admin
+admin.first.name=System
+admin.last.name=Admin
+admin.email=admin@rolecall.com

@@ -12,24 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/** General annotations for REST Controllers and asyncronous API endpoint calls. */
+/* General annotations for REST Controllers and asyncronous API endpoint calls. */
 final class Annotations {
 
-  /** GET request methods of an @Endpoint class. */
+  /* GET request methods of an @Endpoint class. */
   @Target(ElementType.METHOD)
   @Retention(RetentionPolicy.RUNTIME)
   @Async
   @RequestMapping(method = RequestMethod.GET)
   @interface Get {}
 
-  /** POST request methods of an @Endpoint class. */
+  /* POST request methods of an @Endpoint class. */
   @Target(ElementType.METHOD)
   @Retention(RetentionPolicy.RUNTIME)
   @Async
   @RequestMapping(method = RequestMethod.POST)
   @interface Post {}
 
-  /** Describes a generic REST enpoint class for mapping to any request types. */
+  /* Describes a generic REST enpoint class for mapping to any request types. */
   @Target(ElementType.TYPE)
   @Retention(RetentionPolicy.RUNTIME)
   @RestController
