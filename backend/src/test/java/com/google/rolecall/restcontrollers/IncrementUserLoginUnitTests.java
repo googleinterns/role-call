@@ -3,7 +3,7 @@ package com.google.rolecall.restcontrollers;
 import static com.google.common.truth.Truth.assertThat;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
-import com.google.rolecall.restcontrollers.RequestExceptions.InvalidArgumentException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,7 @@ public class IncrementUserLoginUnitTests {
     // Execute
     boolean isCorrectException = controller.getUserLoginCounter(4)
         .handle((msg, ex) -> {
-          if (ex instanceof InvalidArgumentException) {
+          if (ex instanceof EntityNotFoundException) {
             return true;
           }
           return false;
@@ -76,7 +76,7 @@ public class IncrementUserLoginUnitTests {
     // Execute
     boolean isCorrectException = controller.postIncrementUserLogin(4)
         .handle((msg, ex) -> {
-          if (ex instanceof InvalidArgumentException) {
+          if (ex instanceof EntityNotFoundException) {
             return true;
           }
           return false;
