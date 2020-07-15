@@ -1,6 +1,9 @@
 package com.google.rolecall.models;
 
 import static com.google.common.truth.Truth.assertThat;
+
+import java.util.Date;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +18,16 @@ public class UserUnitTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "email@email.com";
+  private Date dateOfBirth = new Date();
+  private String emergencyContactName = "Mom";
+  private String emergencyContactNumber = "(333) 333-3333";
+  private String comments = "It's me";
+  private boolean isActive = true;
 
   @BeforeEach
   public void init() {
-    user = new User(firstName, lastName, email);
+    user = new User(firstName, lastName, email, dateOfBirth, emergencyContactName,
+        emergencyContactNumber, comments, isActive);
   }
 
   @Test

@@ -34,7 +34,7 @@ public class ApplicationLoaderUnitTests {
     userRepo = mock(UserRepository.class);
     env = mock(Environment.class);
     loader = new ApplicationLoader(env, userRepo);
-    User user = new User("admin", "admin", "adminEmail");
+    User user = new User("admin", "admin", "adminEmail", null, "", "", "", true);
     lenient().when(userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase("admin", "admin", "adminEmail")).thenReturn(Optional.of(user));
     lenient().when(userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase("new", "new", "newEmail")).thenReturn(Optional.empty());
   }

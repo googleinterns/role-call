@@ -44,7 +44,7 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   private void createAdmin() {
-    userRepo.save(new User(adminFirstName, adminLastName, adminEmail));
+    userRepo.save(new User(adminFirstName, adminLastName, adminEmail, null, "", "", "", true));
     logger.log(Level.WARNING, String.format("Admin User Created: %s %s %s", 
         adminFirstName, adminLastName, adminEmail));
   }
