@@ -14,4 +14,10 @@ public final class RequestExceptions {
       super(message);
     }
   }
+
+  public static class InvalidParameterException extends Exception {
+    public InvalidParameterException(String message) {
+      super(message);
+    }
+  }
 }

@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.util.Map;
 
+import com.google.rolecall.jsonobjects.ErrorResponse;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

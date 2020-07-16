@@ -1,6 +1,8 @@
 package com.google.rolecall.restcontrollers.exceptionhandling;
 
 import static com.google.common.truth.Truth.assertThat;
+
+import com.google.rolecall.jsonobjects.ErrorResponse;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.UnimplementedOperationException;
 import org.junit.jupiter.api.BeforeEach;

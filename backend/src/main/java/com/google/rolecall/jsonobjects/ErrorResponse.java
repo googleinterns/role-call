@@ -1,4 +1,4 @@
-package com.google.rolecall.restcontrollers.exceptionhandling;
+package com.google.rolecall.jsonobjects;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ public class ErrorResponse {
   public final String error;
   public final int status;
 
-  Map<String,Object> getMap() {
+  public Map<String,Object> getMap() {
     Map<String, Object> attr = new HashMap<>();
 
     attr.put("error", error);
@@ -19,7 +19,7 @@ public class ErrorResponse {
     return attr;
   }
 
-  ResponseEntity<Object> getResponse(HttpHeaders headers) {
+  public ResponseEntity<Object> getResponse(HttpHeaders headers) {
     return ResponseEntity.status(status).body(this);
   }
 
