@@ -39,7 +39,7 @@ public class ErrorResponseUnitTests {
     ErrorResponse error = new ErrorResponse(message, code);
 
     // Execute
-    Map<String, Object> out = error.getMap();
+    Map<String, Object> out = error.buildMap();
 
     // Assert
     assertThat(out.get("error")).isEqualTo(message);

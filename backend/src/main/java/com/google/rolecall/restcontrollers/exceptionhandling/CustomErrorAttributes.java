@@ -20,6 +20,6 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     HttpStatus status = HttpStatus.valueOf(Integer.parseInt(errorAttr.get("status").toString()));
     ErrorResponse error = new ErrorResponse(errorAttr.get("message").toString(), status.value());
 
-    return error.getMap();
+    return error.buildMap();
   }
 }

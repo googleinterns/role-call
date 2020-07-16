@@ -10,7 +10,7 @@ public class ErrorResponse {
   public final String error;
   public final int status;
 
-  public Map<String,Object> getMap() {
+  public Map<String,Object> buildMap() {
     Map<String, Object> attr = new HashMap<>();
 
     attr.put("error", error);
