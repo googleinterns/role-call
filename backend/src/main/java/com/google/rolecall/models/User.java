@@ -1,6 +1,6 @@
 package com.google.rolecall.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.persistence.Basic;
@@ -36,7 +36,7 @@ public class User {
 
   @Basic
   @Temporal(TemporalType.DATE)
-  private Date dateOfBirth;
+  private LocalDate dateOfBirth;
 
   @Basic
   private String emergencyContactName;
@@ -74,7 +74,7 @@ public class User {
     return loginCount;
   }
 
-  public Optional<Date> getDateOfBirth() {
+  public Optional<LocalDate> getDateOfBirth() {
     return dateOfBirth == null ? Optional.empty(): Optional.of(dateOfBirth);
   }
 
@@ -106,7 +106,7 @@ public class User {
     this.email = email;
   }
 
-  public void setDateOfBirth(Date dateOfBirth) {
+  public void setDateOfBirth(LocalDate dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
   }
 
@@ -130,7 +130,7 @@ public class User {
     loginCount++;
   }
 
-  public User(String firstName, String lastName, String email, Date dateOfBirth,
+  public User(String firstName, String lastName, String email, LocalDate dateOfBirth,
       String emergencyContactName, String emergencyContactNumber, String comments,
       boolean isActive) {
     this.firstName = firstName;

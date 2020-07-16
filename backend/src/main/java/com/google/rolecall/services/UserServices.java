@@ -1,9 +1,10 @@
 package com.google.rolecall.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
@@ -56,14 +57,15 @@ public class UserServices {
       missingProperties.add("'lastName' ");
     }
 
-    String email = newUser.getEmail().toLowerCase();
-    user.setEmail(email);
+    String email = newUser.getEmail();
     if(email == null) {
       missingProperties.add("'email'");
-    } else if(!validateEmail(email)) {
-      missingProperties.add("'valid email adress'");
+    } else if(!validateEmail(email.toLowerCase())) {
+      missingProperties.add("'valid email address'");
     } else if(userRepo.findByEmailIgnoreCase(email).isPresent()) {
       missingProperties.add("'unique email'");
+    } else {
+      user.setEmail(email.toLowerCase());
     }
 
     user.setDateOfBirth(newUser.getDateOfBirth());
@@ -95,7 +97,7 @@ public class UserServices {
       user.setLastName(lastName);
     }
 
-    Date dateOfBirth = newUser.getDateOfBirth(); 
+    LocalDate dateOfBirth = newUser.getDateOfBirth(); 
     if(dateOfBirth != null) {
       user.setDateOfBirth(dateOfBirth);
     }
@@ -115,9 +117,9 @@ public class UserServices {
       user.setComments(comments);
     }
 
-    boolean isActive = newUser.isActive();
-    if(emergencyContactNumber != null) {
-      user.setIsActive(isActive);;
+    Boolean isActive = newUser.isActive();
+    if(isActive != null) {
+      user.setIsActive(isActive);
     }
 
     userRepo.save(user);
@@ -130,8 +132,10 @@ public class UserServices {
 
   /* Determines if an email has a valid email format. */
   private boolean validateEmail(String email) {
-    // TODO: Implement validation logic
-    return true;
+    // Found at https://regexlib.com/REDetails.aspx?regexp_id=26
+    String pattern = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)"+
+        "|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+    return Pattern.matches(pattern, email);
   }
 
   public UserServices(UserRepository userRepo) {

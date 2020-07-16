@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Endpoint("/api/user")
-public class UserManagement {
+public class UserManagement extends AsyncRestEndpoint {
   
   private final UserServices userService;
 
