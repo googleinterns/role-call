@@ -35,15 +35,25 @@ final class Annotations {
     String[] value() default {};
   }
 
-    /* Delete request methods of an @Endpoint class. */
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    @Async
-    @RequestMapping(method = RequestMethod.POST)
-    @interface Delete {
-      @AliasFor(annotation = RequestMapping.class, attribute = "params")
-      String[] value() default {};
-    }
+  /* Patch request methods of an @Endpoint class. */
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.RUNTIME)
+  @Async
+  @RequestMapping(method = RequestMethod.PATCH)
+  @interface Patch {
+    @AliasFor(annotation = RequestMapping.class, attribute = "params")
+    String[] value() default {};
+  }
+
+  /* Delete request methods of an @Endpoint class. */
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.RUNTIME)
+  @Async
+  @RequestMapping(method = RequestMethod.POST)
+  @interface Delete {
+    @AliasFor(annotation = RequestMapping.class, attribute = "params")
+    String[] value() default {};
+  }
 
   /* Describes a generic REST enpoint class for mapping to any request types. */
   @Target(ElementType.TYPE)

@@ -10,6 +10,7 @@ import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
+import com.google.rolecall.restcontrollers.Annotations.Patch;
 import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -44,18 +45,27 @@ public class UserManagement extends AsyncRestEndpoint {
     return CompletableFuture.completedFuture(new ResponseSchema<User>(user));
   }
 
-  /* Creates or edits a user and fails on insufficient or invalid User information. */
+  /* Creates a new user and fails on insufficient or invalid User information. */
   @Post
-  public CompletableFuture<Void> createOrEditUser(@RequestBody UserInfo user) {
+  public CompletableFuture<Void> createUser(@RequestBody UserInfo user) {
     try {
-      if (user.getId() != null) {
-        userService.editUser(user);
-      } else {
-        userService.createUser(user);
-      }
-    } catch(EntityNotFoundException e) {
-      return CompletableFuture.failedFuture(e);
+      userService.createUser(user);
     } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+
+    return CompletableFuture.completedFuture(null);
+  }
+
+  /* Edits a user and fails on non existing user id. */
+  @Patch
+  public CompletableFuture<Void> editUser(@RequestBody UserInfo user) {
+    if (user.getId() == null) {
+      return CompletableFuture.failedFuture(new InvalidParameterException("Missing id"));
+    }
+    try {
+      userService.editUser(user);
+    } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
     }
 

@@ -30,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-public class userManagementServiceTests {
+public class UserServiceTests {
   
   private UserRepository userRepo;
   private UserServices userService;
