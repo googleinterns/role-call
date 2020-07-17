@@ -1,7 +1,7 @@
 package com.google.rolecall.services;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -97,7 +97,7 @@ public class UserServices {
       user.setLastName(lastName);
     }
 
-    LocalDate dateOfBirth = newUser.getDateOfBirth(); 
+    Date dateOfBirth = newUser.getDateOfBirth(); 
     if(dateOfBirth != null) {
       user.setDateOfBirth(dateOfBirth);
     }

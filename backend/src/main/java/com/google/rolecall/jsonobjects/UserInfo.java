@@ -1,6 +1,8 @@
 package com.google.rolecall.jsonobjects;
 
-import java.time.LocalDate;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /* Represents JSON information for a User recieved from a client. A null property means
  * it was not supplied in the json request body.
@@ -10,7 +12,9 @@ public class UserInfo {
   private String firstName;
   private String lastName;
   private String email;
-  private LocalDate dateOfBirth;
+
+  @JsonFormat(pattern="yyyy-MM-dd")
+  private Date dateOfBirth;
   private String emergencyContactName;
   private String emergencyContactNumber;
   private String comments;
@@ -32,7 +36,7 @@ public class UserInfo {
     return email;
   }
 
-  public LocalDate getDateOfBirth() {
+  public Date getDateOfBirth() {
     return dateOfBirth;
   }
 
@@ -64,7 +68,7 @@ public class UserInfo {
     this.email = email;
   }
 
-  public void setDateOfBirth(LocalDate dateOfBirth) {
+  public void setDateOfBirth(Date dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
   }
 

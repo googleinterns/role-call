@@ -1,6 +1,6 @@
 package com.google.rolecall.models;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 import javax.persistence.Basic;
@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import org.hibernate.annotations.NaturalId;
 
@@ -36,7 +38,8 @@ public class User {
 
   @Basic
   @Temporal(TemporalType.DATE)
-  private LocalDate dateOfBirth;
+  @JsonFormat(pattern="yyyy-MM-dd")
+  private Date dateOfBirth;
 
   @Basic
   private String emergencyContactName;
@@ -74,7 +77,7 @@ public class User {
     return loginCount;
   }
 
-  public Optional<LocalDate> getDateOfBirth() {
+  public Optional<Date> getDateOfBirth() {
     return dateOfBirth == null ? Optional.empty(): Optional.of(dateOfBirth);
   }
 
@@ -106,7 +109,7 @@ public class User {
     this.email = email;
   }
 
-  public void setDateOfBirth(LocalDate dateOfBirth) {
+  public void setDateOfBirth(Date dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
   }
 
@@ -130,7 +133,7 @@ public class User {
     loginCount++;
   }
 
-  public User(String firstName, String lastName, String email, LocalDate dateOfBirth,
+  public User(String firstName, String lastName, String email, Date dateOfBirth,
       String emergencyContactName, String emergencyContactNumber, String comments,
       boolean isActive) {
     this.firstName = firstName;

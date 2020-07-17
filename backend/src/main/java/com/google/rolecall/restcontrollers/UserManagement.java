@@ -74,9 +74,10 @@ public class UserManagement extends AsyncRestEndpoint {
 
   /* Deletes a user based on id. Does not throw an exception if the user does not exist. */
   @Delete(Constants.RequestParameters.USER_ID)
-  public void deleteUser(
+  public CompletableFuture<Void> deleteUser(
       @RequestParam(value=Constants.RequestParameters.USER_ID, required=true) int id) {
-        userService.deleteUser(id);
+    userService.deleteUser(id);
+    return CompletableFuture.completedFuture(null);
   }
 
   public UserManagement(UserServices userService) {

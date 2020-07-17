@@ -3,7 +3,6 @@ package com.google.rolecall.services;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -11,8 +10,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +40,7 @@ public class UserServiceTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "goodEmail@gmail.com";
-  private LocalDate dateOfBirth = LocalDate.of(1,1,1);
+  private Date dateOfBirth = new Date(1,1,1);
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "333-333-3333";
   private String comments = "A good boi.";
@@ -100,7 +99,7 @@ public class UserServiceTests {
   @Test
   public void createNewUserAllProperties_success() throws Exception {
     // Setup
-    LocalDate newDateOfBirth = LocalDate.of(2,2,2);
+    Date newDateOfBirth = new Date(2,2,2);
     newUser.setFirstName("Logan");
     newUser.setLastName("Hirsch");
     newUser.setEmail("email@gmail.com");
@@ -187,7 +186,7 @@ public class UserServiceTests {
   @Test
   public void editAllUserProperties_success() throws Exception {
     // Setup
-    LocalDate newDateOfBirth = LocalDate.of(2,2,2);
+    Date newDateOfBirth = new Date(2,2,2);
     newUser.setFirstName("Logan");
     newUser.setLastName("taco");
     newUser.setEmail("email@gmail.com"); // Should be ignored
