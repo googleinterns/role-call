@@ -18,5 +18,6 @@ public class Constants {
   }
 
   // Prevents object creation
-  private Constants() {}
+  private Constants() {
+  }
 }

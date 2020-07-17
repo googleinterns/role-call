@@ -1,7 +1,6 @@
 package com.google.rolecall.jsonobjects;
 
 import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /* Represents JSON information for a User recieved from a client. A null property means
@@ -92,5 +91,6 @@ public class UserInfo {
     this.isActive = isActive;
   }
 
-  public UserInfo() {}
+  public UserInfo() {
+  }
 }

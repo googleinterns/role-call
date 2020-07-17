@@ -1,9 +1,7 @@
 package com.google.rolecall.restcontrollers.exceptionhandling;
 
-import java.util.Map;
-
 import com.google.rolecall.jsonobjects.ErrorResponse;
-
+import java.util.Map;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
