@@ -39,7 +39,7 @@ public class User {
   @Basic
   @Temporal(TemporalType.DATE)
   @JsonFormat(pattern="yyyy-MM-dd")
-  private Date dateOfBirth;
+  private Date dateJoined;
 
   @Basic
   private String emergencyContactName;
@@ -77,8 +77,8 @@ public class User {
     return loginCount;
   }
 
-  public Optional<Date> getDateOfBirth() {
-    return dateOfBirth == null ? Optional.empty(): Optional.of(dateOfBirth);
+  public Optional<Date> getDateJoined() {
+    return dateJoined == null ? Optional.empty(): Optional.of(dateJoined);
   }
 
   public String getEmergencyContactName() {
@@ -109,8 +109,8 @@ public class User {
     this.email = email;
   }
 
-  public void setDateOfBirth(Date dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
+  public void setDateJoined(Date dateJoined) {
+    this.dateJoined = dateJoined;
   }
 
   public void setEmergencyContactName(String emergencyContactName) {
@@ -133,13 +133,13 @@ public class User {
     loginCount++;
   }
 
-  public User(String firstName, String lastName, String email, Date dateOfBirth,
+  public User(String firstName, String lastName, String email, Date dateJoined,
       String emergencyContactName, String emergencyContactNumber, String comments,
       boolean isActive) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.dateOfBirth = dateOfBirth;
+    this.dateJoined = dateJoined;
     this.emergencyContactName = emergencyContactName;
     this.emergencyContactNumber = emergencyContactNumber;
     this.comments = comments;

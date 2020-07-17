@@ -40,7 +40,7 @@ public class UserServiceTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "goodEmail@gmail.com";
-  private Date dateOfBirth = new Date(1,1,1);
+  private Date dateJoined = new Date(1,1,1);
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "333-333-3333";
   private String comments = "A good boi.";
@@ -51,7 +51,7 @@ public class UserServiceTests {
     userRepo = mock(UserRepository.class);
     userService = new UserServices(userRepo);
     newUser = spy(new UserInfo());
-    user = new User(firstName, lastName, email, dateOfBirth, emergencyContactName,
+    user = new User(firstName, lastName, email, dateJoined, emergencyContactName,
         emergencyContactNumber, comments, isActive);
     lenient().doReturn(Optional.of(user)).when(userRepo).findById(id);
     lenient().doReturn(Collections.singletonList(user)).when(userRepo).findAll();
@@ -79,7 +79,7 @@ public class UserServiceTests {
     assertThat(response.getFirstName()).isEqualTo(firstName);
     assertThat(response.getLastName()).isEqualTo(lastName);
     assertThat(response.getEmail()).isEqualTo(email);
-    assertThat(response.getDateOfBirth().get()).isEqualTo(dateOfBirth);
+    assertThat(response.getDateJoined().get()).isEqualTo(dateJoined);
     assertThat(response.getEmergencyContactName()).isEqualTo(emergencyContactName);
     assertThat(response.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
     assertThat(response.getComments()).isEqualTo(comments);
@@ -99,11 +99,11 @@ public class UserServiceTests {
   @Test
   public void createNewUserAllProperties_success() throws Exception {
     // Setup
-    Date newDateOfBirth = new Date(2,2,2);
+    Date newdateJoined = new Date(2,2,2);
     newUser.setFirstName("Logan");
     newUser.setLastName("Hirsch");
     newUser.setEmail("email@gmail.com");
-    newUser.setDateOfBirth(newDateOfBirth);
+    newUser.setDateJoined(newdateJoined);
     newUser.setEmergencyContactName("Mem");
     newUser.setEmergencyContactNumber("5");
     newUser.setComments("lit");
@@ -186,11 +186,11 @@ public class UserServiceTests {
   @Test
   public void editAllUserProperties_success() throws Exception {
     // Setup
-    Date newDateOfBirth = new Date(2,2,2);
+    Date newdateJoined = new Date(2,2,2);
     newUser.setFirstName("Logan");
     newUser.setLastName("taco");
     newUser.setEmail("email@gmail.com"); // Should be ignored
-    newUser.setDateOfBirth(newDateOfBirth);
+    newUser.setDateJoined(newdateJoined);
     newUser.setEmergencyContactName("Mem");
     newUser.setEmergencyContactNumber("5");
     newUser.setComments("lit");
@@ -207,7 +207,7 @@ public class UserServiceTests {
     assertThat(user.getFirstName()).isEqualTo("Logan");
     assertThat(user.getLastName()).isEqualTo("taco");
     assertThat(user.getEmail()).isEqualTo(email);
-    assertThat(user.getDateOfBirth().get()).isEqualTo(newDateOfBirth);
+    assertThat(user.getDateJoined().get()).isEqualTo(newdateJoined);
     assertThat(user.getEmergencyContactName()).isEqualTo("Mem");
     assertThat(user.getEmergencyContactNumber()).isEqualTo("5");
     assertThat(user.getComments()).isEqualTo("lit");
@@ -230,7 +230,7 @@ public class UserServiceTests {
     assertThat(user.getFirstName()).isEqualTo("Logan");
     assertThat(user.getLastName()).isEqualTo(lastName);
     assertThat(user.getEmail()).isEqualTo(email);
-    assertThat(user.getDateOfBirth().get()).isEqualTo(dateOfBirth);
+    assertThat(user.getDateJoined().get()).isEqualTo(dateJoined);
     assertThat(user.getEmergencyContactName()).isEqualTo(emergencyContactName);
     assertThat(user.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
     assertThat(user.getComments()).isEqualTo(comments);

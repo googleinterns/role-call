@@ -14,7 +14,7 @@ public class UserInfo {
   private String email;
 
   @JsonFormat(pattern="yyyy-MM-dd")
-  private Date dateOfBirth;
+  private Date dateJoined;
   private String emergencyContactName;
   private String emergencyContactNumber;
   private String comments;
@@ -36,8 +36,8 @@ public class UserInfo {
     return email;
   }
 
-  public Date getDateOfBirth() {
-    return dateOfBirth;
+  public Date getDateJoined() {
+    return dateJoined;
   }
 
   public String getEmergencyContactName() {
@@ -56,6 +56,10 @@ public class UserInfo {
     return isActive;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
   public void setFirstName(String name) {
     this.firstName = name;
   }
@@ -68,8 +72,8 @@ public class UserInfo {
     this.email = email;
   }
 
-  public void setDateOfBirth(Date dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
+  public void setDateJoined(Date dateJoined) {
+    this.dateJoined = dateJoined;
   }
 
   public void setEmergencyContactName(String emergencyContactName) {

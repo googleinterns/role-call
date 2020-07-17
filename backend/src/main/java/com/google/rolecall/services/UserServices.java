@@ -68,7 +68,7 @@ public class UserServices {
       user.setEmail(email.toLowerCase());
     }
 
-    user.setDateOfBirth(newUser.getDateOfBirth());
+    user.setDateJoined(newUser.getDateJoined());
     user.setEmergencyContactName(newUser.getEmergencyContactName());
     user.setEmergencyContactNumber(newUser.getEmergencyContactNumber());
     user.setComments(newUser.getComments());
@@ -97,9 +97,9 @@ public class UserServices {
       user.setLastName(lastName);
     }
 
-    Date dateOfBirth = newUser.getDateOfBirth(); 
-    if(dateOfBirth != null) {
-      user.setDateOfBirth(dateOfBirth);
+    Date dateJoined = newUser.getDateJoined(); 
+    if(dateJoined != null) {
+      user.setDateJoined(dateJoined);
     }
 
     String emergencyContactName = newUser.getEmergencyContactName();
