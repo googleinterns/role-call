@@ -8,7 +8,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -36,7 +36,7 @@ public class UserManagementUnitTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "goodEmail@gmail.com";
-  private Date dateOfBirth = null;
+  private Calendar dateOfBirth = null;
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "333-333-3333";
   private String comments = "A good boi.";

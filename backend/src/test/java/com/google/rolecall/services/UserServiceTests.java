@@ -11,7 +11,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Calendar.Builder;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class UserServiceTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "goodEmail@gmail.com";
-  private Date dateJoined = new Date(1,1,1);
+  private Calendar dateJoined = (new Calendar.Builder()).setDate(1, 1, 1).build();
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "333-333-3333";
   private String comments = "A good boi.";
@@ -99,7 +100,7 @@ public class UserServiceTests {
   @Test
   public void createNewUserAllProperties_success() throws Exception {
     // Setup
-    Date newdateJoined = new Date(2,2,2);
+    Calendar newdateJoined = (new Calendar.Builder()).setDate(2, 2, 2).build();;
     newUser.setFirstName("Logan");
     newUser.setLastName("Hirsch");
     newUser.setEmail("email@gmail.com");
@@ -186,7 +187,7 @@ public class UserServiceTests {
   @Test
   public void editAllUserProperties_success() throws Exception {
     // Setup
-    Date newdateJoined = new Date(2,2,2);
+    Calendar newdateJoined = (new Calendar.Builder()).setDate(2, 2, 2).build();
     newUser.setFirstName("Logan");
     newUser.setLastName("taco");
     newUser.setEmail("email@gmail.com"); // Should be ignored

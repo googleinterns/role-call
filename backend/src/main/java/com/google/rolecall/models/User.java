@@ -1,7 +1,7 @@
 package com.google.rolecall.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,8 +35,8 @@ public class User {
 
   @Basic
   @Temporal(TemporalType.DATE)
-  @JsonFormat(pattern="yyyy-MM-dd")
-  private Date dateJoined;
+  @JsonFormat(pattern="MM-dd-yyyy")
+  private Calendar dateJoined;
 
   @Basic
   private String emergencyContactName;
@@ -74,7 +74,7 @@ public class User {
     return loginCount;
   }
 
-  public Optional<Date> getDateJoined() {
+  public Optional<Calendar> getDateJoined() {
     return dateJoined == null ? Optional.empty(): Optional.of(dateJoined);
   }
 
@@ -106,7 +106,7 @@ public class User {
     this.email = email;
   }
 
-  public void setDateJoined(Date dateJoined) {
+  public void setDateJoined(Calendar dateJoined) {
     this.dateJoined = dateJoined;
   }
 
@@ -130,7 +130,7 @@ public class User {
     loginCount++;
   }
 
-  public User(String firstName, String lastName, String email, Date dateJoined,
+  public User(String firstName, String lastName, String email, Calendar dateJoined,
       String emergencyContactName, String emergencyContactNumber, String comments,
       boolean isActive) {
     this.firstName = firstName;

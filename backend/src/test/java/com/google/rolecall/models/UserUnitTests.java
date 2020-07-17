@@ -2,8 +2,7 @@ package com.google.rolecall.models;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.util.Date;
-
+import java.util.Calendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +17,7 @@ public class UserUnitTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "email@email.com";
-  private Date dateOfBirth = null;
+  private Calendar dateOfBirth = null;
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "(333) 333-3333";
   private String comments = "It's me";

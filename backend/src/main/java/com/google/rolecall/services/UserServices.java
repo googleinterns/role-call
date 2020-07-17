@@ -6,7 +6,7 @@ import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -95,7 +95,7 @@ public class UserServices {
       user.setLastName(lastName);
     }
 
-    Date dateJoined = newUser.getDateJoined(); 
+    Calendar dateJoined = newUser.getDateJoined(); 
     if(dateJoined != null) {
       user.setDateJoined(dateJoined);
     }
