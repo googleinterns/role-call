@@ -1,7 +1,7 @@
 package com.google.rolecall.jsonobjects;
 
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 
 /* Represents JSON information for a User recieved from a client. A null property means
  * it was not supplied in the json request body.
