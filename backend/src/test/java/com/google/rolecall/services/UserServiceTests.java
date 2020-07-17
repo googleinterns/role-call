@@ -238,7 +238,27 @@ public class UserServiceTests {
   }
 
   @Test
-public void editInvalidUser_failure() throws Exception {
+  public void editUserFirstNoChanges_success() throws Exception {
+    // Mock
+    lenient().doReturn(id).when(newUser).getId();
+
+    // Execute
+    userService.editUser(newUser);
+
+    // Assert
+    verify(userRepo, times(1)).save(any(User.class));
+    assertThat(user.getFirstName()).isEqualTo(firstName);
+    assertThat(user.getLastName()).isEqualTo(lastName);
+    assertThat(user.getEmail()).isEqualTo(email);
+    assertThat(user.getDateJoined().get()).isEqualTo(dateJoined);
+    assertThat(user.getEmergencyContactName()).isEqualTo(emergencyContactName);
+    assertThat(user.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
+    assertThat(user.getComments()).isEqualTo(comments);
+    assertThat(user.isActive()).isTrue();
+  }
+
+  @Test
+  public void editInvalidUser_failure() throws Exception {
     // Mock
     lenient().doReturn(invalidId).when(newUser).getId();
 
