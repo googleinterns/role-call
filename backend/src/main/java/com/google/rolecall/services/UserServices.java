@@ -34,10 +34,13 @@ public class UserServices {
     return queryResult.get();
   }
 
-  /* Creates a new User and adds it to the database with isActive set to true.
-   * Requires firstName, lastName, and email fields and validates the email.
-   * Emails are always stored as lowercase and cannot already exist in the system.
-   * Throws exception on missing properties or invalid email.
+  /** 
+   * Creates a new {@link User} and adds it to the database with isActive set to true.
+   * 
+   * @param newUser {@link UserInfo} containing information describing the new user.
+   * @return The new {@link User} created and stored.
+   * @throws InvalidParameterException When firstName, lastName, or email are null in
+   * {@link UserInfo} newUser and when the email is malformatted or already exists.
    */
   public User createUser(UserInfo newUser) throws InvalidParameterException {
     User user = User.newBuilder()
@@ -68,8 +71,15 @@ public class UserServices {
     return userRepo.save(user);
   }
 
-  /* Edits an existing User according to supplied properties. Does not change a User's email.*/
-  public User editUser(UserInfo newUser) throws EntityNotFoundException {
+  /** 
+   * Edits an existing {@link User} and updates it in the database.
+   * 
+   * @param newUser {@link UserInfo} containing information describing the user edits.
+   * @return The updated {@link User}.
+   * @throws EntityNotFoundException The id from {@link UserInfo} newUser does not exist
+   * in the database.
+   */
+    public User editUser(UserInfo newUser) throws EntityNotFoundException {
     User.Builder builder = this.getUser(newUser.id()).toBuilder()
         .setFirstName(newUser.firstName())
         .setLastName(newUser.lastName())
@@ -98,6 +108,12 @@ public class UserServices {
     return userRepo.save(user);
   }
 
+  /** 
+   * Deletes an existing {@link User} object by id.
+   * 
+   * @param id Unique id for the {@link User} object to be deleted
+   * @throws EntityNotFoundException The id from does not exist in the database.
+   */
   public void deleteUser(int id) throws EntityNotFoundException {
     getUser(id);
     userRepo.deleteById(id);
