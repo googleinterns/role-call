@@ -46,6 +46,7 @@ public class UserManagement extends AsyncRestEndpoint {
   public CompletableFuture<ResponseSchema<User>> getSingleUser(
       @RequestParam(value=Constants.RequestParameters.USER_ID, required=true) int id) {
     User user;
+
     try {
       user = userService.getUser(id);
     } catch(EntityNotFoundException e) {
@@ -67,11 +68,13 @@ public class UserManagement extends AsyncRestEndpoint {
   @Post
   public CompletableFuture<ResponseSchema<User>> createUser(@RequestBody UserInfo user) {
     User newUser;
+
     try {
       newUser = userService.createUser(user);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     }
+
     ResponseSchema<User> response = new ResponseSchema<>(newUser);
     return CompletableFuture.completedFuture(response);
   }
@@ -90,7 +93,9 @@ public class UserManagement extends AsyncRestEndpoint {
     if (user.id() == null) {
       return CompletableFuture.failedFuture(new InvalidParameterException("Missing id"));
     }
+
     User newUser;
+
     try {
       newUser = userService.editUser(user);
     } catch(EntityNotFoundException e) {
@@ -117,6 +122,7 @@ public class UserManagement extends AsyncRestEndpoint {
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
     }
+    
     return CompletableFuture.completedFuture(null);
   }
 

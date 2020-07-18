@@ -98,6 +98,7 @@ public class UserServices {
         .setManageRules(newUser.manageRules());
     
     User user;
+    
     try {
       user = builder.build();
     } catch(InvalidParameterException e) { 
