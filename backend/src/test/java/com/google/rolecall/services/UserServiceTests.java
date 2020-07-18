@@ -23,7 +23,9 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,7 +85,13 @@ public class UserServiceTests {
     lenient().doReturn(Collections.singletonList(user)).when(userRepo).findAll();
     lenient().doReturn(Optional.empty()).when(userRepo).findById(invalidId);
     lenient().doReturn(Optional.of(user)).when(userRepo).findByEmailIgnoreCase(email);
-    lenient().doReturn(user).when(userRepo).save(user);
+    lenient().when(userRepo.save(any(User.class))).thenAnswer(new Answer<User>() {
+        @Override
+        public User answer(InvocationOnMock invocation) throws Throwable {
+          Object[] args = invocation.getArguments();
+          return (User) args[0];
+        }
+    });
   }
 
   @Test
@@ -135,9 +143,8 @@ public class UserServiceTests {
         .setEmail("email@gmail.com")
         .setDateJoined(newdateJoined)
         .setEmergencyContactName("Mem")
-        .setEmergencyContactNumber("5")
-        .setComments("lit")
-        .setIsActive(true)
+        .setEmergencyContactNumber("6")
+        .setComments("5")
         .setCanLogin(false)
         .setAdmin(true)
         .setNotifications(false)
@@ -156,6 +163,22 @@ public class UserServiceTests {
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
+    assertThat(userOut.getFirstName()).isEqualTo("Logan");
+    assertThat(userOut.getLastName()).isEqualTo("Hirsch");
+    assertThat(userOut.getEmail()).isEqualTo("email@gmail.com");
+    assertThat(userOut.getDateJoined().get()).isEqualTo(newdateJoined);
+    assertThat(userOut.getEmergencyContactName()).isEqualTo("Mem");
+    assertThat(userOut.getEmergencyContactNumber()).isEqualTo("6");
+    assertThat(userOut.getComments()).isEqualTo("5");
+    assertThat(userOut.isActive()).isTrue();
+    assertThat(userOut.canLogin()).isFalse();
+    assertThat(userOut.isAdmin()).isTrue();
+    assertThat(userOut.recievesNotifications()).isFalse();
+    assertThat(userOut.canManagePerformances()).isTrue();
+    assertThat(userOut.canManageCasts()).isTrue();
+    assertThat(userOut.canManagePieces()).isTrue();
+    assertThat(userOut.canManageRoles()).isTrue();
+    assertThat(userOut.canManageRules()).isTrue();
   }
 
   @Test
@@ -175,6 +198,22 @@ public class UserServiceTests {
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
+    assertThat(userOut.getFirstName()).isEqualTo("Logan");
+    assertThat(userOut.getLastName()).isEqualTo("Hirsch");
+    assertThat(userOut.getEmail()).isEqualTo("email@gmail.com");
+    assertThat(userOut.getDateJoined().isEmpty()).isTrue();
+    assertThat(userOut.getEmergencyContactName()).isEqualTo("");
+    assertThat(userOut.getEmergencyContactNumber()).isEqualTo("");
+    assertThat(userOut.getComments()).isEqualTo("");
+    assertThat(userOut.isActive()).isTrue();
+    assertThat(userOut.canLogin()).isFalse();
+    assertThat(userOut.isAdmin()).isFalse();
+    assertThat(userOut.recievesNotifications()).isTrue();
+    assertThat(userOut.canManagePerformances()).isFalse();
+    assertThat(userOut.canManageCasts()).isFalse();
+    assertThat(userOut.canManagePieces()).isFalse();
+    assertThat(userOut.canManageRoles()).isFalse();
+    assertThat(userOut.canManageRules()).isFalse();
   }
 
   @Test
@@ -246,29 +285,37 @@ public class UserServiceTests {
         .setEmergencyContactNumber("5")
         .setComments("lit")
         .setIsActive(false)
-        .setCanLogin(true)
+        .setCanLogin(false)
         .setAdmin(false)
-        .setNotifications(false)
+        .setNotifications(true)
         .setManagePerformances(false)
-        .setManageCasts(false)
+        .setManageCasts(true)
         .setManagePieces(false)
-        .setManageRoles(false)
+        .setManageRoles(true)
         .setManageRules(false)
         .build();
 
     // Execute
-    User user = userService.editUser(newUser);
+    User userOut = userService.editUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
-    assertThat(user.getFirstName()).isEqualTo("Logan");
-    assertThat(user.getLastName()).isEqualTo("taco");
-    assertThat(user.getEmail()).isEqualTo(email);
-    assertThat(user.getDateJoined().get()).isEqualTo(newdateJoined);
-    assertThat(user.getEmergencyContactName()).isEqualTo("Mem");
-    assertThat(user.getEmergencyContactNumber()).isEqualTo("5");
-    assertThat(user.getComments()).isEqualTo("lit");
-    assertThat(user.isActive()).isFalse();
+    assertThat(userOut.getFirstName()).isEqualTo("Logan");
+    assertThat(userOut.getLastName()).isEqualTo("taco");
+    assertThat(userOut.getEmail()).isEqualTo(email);
+    assertThat(userOut.getDateJoined().get()).isEqualTo(newdateJoined);
+    assertThat(userOut.getEmergencyContactName()).isEqualTo("Mem");
+    assertThat(userOut.getEmergencyContactNumber()).isEqualTo("5");
+    assertThat(userOut.getComments()).isEqualTo("lit");
+    assertThat(userOut.isActive()).isFalse();
+    assertThat(userOut.canLogin()).isFalse();
+    assertThat(userOut.isAdmin()).isFalse();
+    assertThat(userOut.recievesNotifications()).isTrue();
+    assertThat(userOut.canManagePerformances()).isFalse();
+    assertThat(userOut.canManageCasts()).isTrue();
+    assertThat(userOut.canManagePieces()).isFalse();
+    assertThat(userOut.canManageRoles()).isTrue();
+    assertThat(userOut.canManageRules()).isFalse();
   }
 
   @Test
@@ -284,14 +331,22 @@ public class UserServiceTests {
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
-    assertThat(user.getFirstName()).isEqualTo("Logan");
-    assertThat(user.getLastName()).isEqualTo(lastName);
-    assertThat(user.getEmail()).isEqualTo(email);
-    assertThat(user.getDateJoined().get()).isEqualTo(dateJoined);
-    assertThat(user.getEmergencyContactName()).isEqualTo(emergencyContactName);
-    assertThat(user.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
-    assertThat(user.getComments()).isEqualTo(comments);
-    assertThat(user.isActive()).isTrue();
+    assertThat(userOut.getFirstName()).isEqualTo("Logan");
+    assertThat(userOut.getLastName()).isEqualTo(lastName);
+    assertThat(userOut.getEmail()).isEqualTo(email);
+    assertThat(userOut.getDateJoined().get()).isEqualTo(dateJoined);
+    assertThat(userOut.getEmergencyContactName()).isEqualTo(emergencyContactName);
+    assertThat(userOut.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
+    assertThat(userOut.getComments()).isEqualTo(comments);
+    assertThat(userOut.isActive()).isTrue();
+    assertThat(userOut.canLogin()).isTrue();
+    assertThat(userOut.isAdmin()).isTrue();
+    assertThat(userOut.recievesNotifications()).isFalse();
+    assertThat(userOut.canManagePerformances()).isTrue();
+    assertThat(userOut.canManageCasts()).isFalse();
+    assertThat(userOut.canManagePieces()).isTrue();
+    assertThat(userOut.canManageRoles()).isFalse();
+    assertThat(userOut.canManageRules()).isTrue();
   }
 
   @Test
@@ -302,18 +357,26 @@ public class UserServiceTests {
         .build();
 
     // Execute
-    User user = userService.editUser(newUser);
+    User userOut = userService.editUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
-    assertThat(user.getFirstName()).isEqualTo(firstName);
-    assertThat(user.getLastName()).isEqualTo(lastName);
-    assertThat(user.getEmail()).isEqualTo(email);
-    assertThat(user.getDateJoined().get()).isEqualTo(dateJoined);
-    assertThat(user.getEmergencyContactName()).isEqualTo(emergencyContactName);
-    assertThat(user.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
-    assertThat(user.getComments()).isEqualTo(comments);
-    assertThat(user.isActive()).isTrue();
+    assertThat(userOut.getFirstName()).isEqualTo(firstName);
+    assertThat(userOut.getLastName()).isEqualTo(lastName);
+    assertThat(userOut.getEmail()).isEqualTo(email);
+    assertThat(userOut.getDateJoined().get()).isEqualTo(dateJoined);
+    assertThat(userOut.getEmergencyContactName()).isEqualTo(emergencyContactName);
+    assertThat(userOut.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
+    assertThat(userOut.getComments()).isEqualTo(comments);
+    assertThat(userOut.isActive()).isTrue();
+    assertThat(userOut.canLogin()).isTrue();
+    assertThat(userOut.isAdmin()).isTrue();
+    assertThat(userOut.recievesNotifications()).isFalse();
+    assertThat(userOut.canManagePerformances()).isTrue();
+    assertThat(userOut.canManageCasts()).isFalse();
+    assertThat(userOut.canManagePieces()).isTrue();
+    assertThat(userOut.canManageRoles()).isFalse();
+    assertThat(userOut.canManageRules()).isTrue();
   }
 
   @Test
