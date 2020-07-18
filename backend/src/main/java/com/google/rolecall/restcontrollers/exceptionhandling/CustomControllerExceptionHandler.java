@@ -66,7 +66,7 @@ public class CustomControllerExceptionHandler extends ResponseEntityExceptionHan
 
   @ExceptionHandler(InvalidParameterException.class)
   @ResponseStatus(HttpStatus.CONFLICT)
-  protected ErrorResponse handleInvalidParameterOperation(InvalidParameterException exception) {
+  protected ErrorResponse handleInvalidParameter(InvalidParameterException exception) {
     return new ErrorResponse(exception.getMessage(), HttpStatus.CONFLICT.value());
   }
 

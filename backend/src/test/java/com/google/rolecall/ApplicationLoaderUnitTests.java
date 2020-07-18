@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -78,5 +77,20 @@ public class ApplicationLoaderUnitTests {
     
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
+  }
+
+  @Test
+  public void adminDoesNotExistsUnexpectedAdmin_failure() throws Exception {
+    // Mock
+    lenient().when(env.getProperty("admin.first.name")).thenReturn(null);
+    lenient().when(env.getProperty("admin.last.name")).thenReturn(null);
+    lenient().when(env.getProperty("admin.email")).thenReturn(null);
+    lenient().when(userRepo.save(any(User.class))).thenReturn(new User());
+
+    // Execute
+    loader.run(new DefaultApplicationArguments(new String[]{}));
+    
+    // Assert
+    verify(userRepo, never()).save(any(User.class));
   }
 }

@@ -57,7 +57,8 @@ public class ApplicationLoader implements ApplicationRunner {
     try {
       admin = builder.build();
     } catch(InvalidParameterException e) {
-      throw new Error("Insufficient admin credentials provided. Please update!");
+      logger.log(Level.SEVERE, "Unable to Create admin. Insufficient Properties.");
+      return;
     }
     userRepo.save(admin);
     logger.log(Level.WARNING, String.format("Admin User Created: %s %s %s", 
