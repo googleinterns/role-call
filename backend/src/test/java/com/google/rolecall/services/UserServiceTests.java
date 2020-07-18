@@ -406,4 +406,15 @@ public class UserServiceTests {
     // Assert
     verify(userRepo, times(1)).deleteById(id);
   }
+
+  @Test
+  public void deleteUserBadId_failure() throws Exception {
+    // Execute
+    EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+    () -> { userService.deleteUser(invalidId); });
+
+    // Assert
+    verify(userRepo, never()).deleteById(any(Integer.class));
+    assertThat(exception).hasMessageThat().contains(Integer.toString(invalidId));
+  }
 }

@@ -254,4 +254,25 @@ public class UserManagementUnitTests {
     assertThat(response.isCompletedExceptionally()).isFalse();
     verify(userService, times(1)).deleteUser(id);
   }
+
+  @Test
+  public void deleteUserBadId_failure() throws Exception {
+    // Mock
+    lenient().doThrow(new EntityNotFoundException("Bad id")).when(userService).deleteUser(id);
+
+    // Execute
+    CompletableFuture<Void> response = controller.deleteUser(id);
+
+    // Assert
+    assertThat(response.isCompletedExceptionally()).isTrue();
+    Throwable thrown = null;
+    try {
+      response.get();
+    } catch(ExecutionException e) {
+      thrown = e.getCause();
+    }
+    assertThat(thrown).isNotNull();
+    assertThat(thrown).isInstanceOf(EntityNotFoundException.class);
+    assertThat(thrown).hasMessageThat().contains("Bad id");
+  }
 }
