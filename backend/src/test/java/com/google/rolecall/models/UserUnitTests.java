@@ -3,7 +3,8 @@ package com.google.rolecall.models;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.Calendar;
-import org.junit.jupiter.api.BeforeEach;
+
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,52 +14,51 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 public class UserUnitTests {
 
-  private User user;
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "email@email.com";
-  private Calendar dateOfBirth = null;
+  private Calendar dateJoined = null;
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "(333) 333-3333";
   private String comments = "It's me";
   private boolean isActive = true;
-
-  @BeforeEach
-  public void init() {
-    user = new User(firstName, lastName, email, dateOfBirth, emergencyContactName,
-        emergencyContactNumber, comments, isActive);
-  }
-
-  @Test
-  public void setFirstName_success() throws Exception {
-    //Execute
-    user.setFirstName("NotJared");
-
-    // Assert
-    assert(user.getFirstName()).equals("NotJared");
-  }
-
-  @Test
-  public void setLastName_success() throws Exception {
-    //Execute
-    user.setLastName("NotHirsch");
-
-    // Assert
-    assertThat(user.getLastName()).isEqualTo("NotHirsch");
-  }
-
-  @Test
-  public void setEmail_success() throws Exception {
-    //Execute
-    user.setEmail("Notemail@email.com");
-
-    // Assert
-    assertThat(user.getEmail()).isEqualTo("Notemail@email.com");
-  }
-
+  private Boolean canLogin = true;
+  private Boolean admin = true;
+  private Boolean notifications = false;
+  private Boolean managePerformances = true;
+  private Boolean manageCasts = false;
+  private Boolean managePieces = true;
+  private Boolean manageRoles = false;
+  private Boolean manageRules = true;
+  
   /** A User object created but not saved to the database should not have an id. */
   @Test
   public void getId_failure() throws Exception {
+    // Setup
+    User user;
+    User.Builder builder = User.newBuilder()
+      .setFirstName(firstName)
+      .setLastName(lastName)
+      .setEmail(email)
+      .setDateJoined(dateJoined)
+      .setEmergencyContactName(emergencyContactName)
+      .setEmergencyContactNumber(emergencyContactNumber)
+      .setComments(comments)
+      .setIsActive(isActive)
+      .setCanLogin(canLogin)
+      .setAdmin(admin)
+      .setRecievesNotifications(notifications)
+      .setManagePerformances(managePerformances)
+      .setManageCasts(manageCasts)
+      .setManagePieces(managePieces)
+      .setManageRoles(manageRoles)
+      .setManageRules(manageRules);
+    try {
+      user = builder.build();
+    } catch(InvalidParameterException e) {
+      throw new Error("Unable to creat User");
+    }
+
     // Assert
     assertThat(user.getId()).isNull();
   }

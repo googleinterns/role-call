@@ -6,13 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 import java.util.Calendar;
-import java.util.Calendar.Builder;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,26 +32,53 @@ public class UserServiceTests {
   
   private UserRepository userRepo;
   private UserServices userService;
-  private UserInfo newUser;
   private User user;
   private int invalidId = 30;
   private int id = 1;
   private String firstName = "Jared";
   private String lastName = "Hirsch";
-  private String email = "goodEmail@gmail.com";
+  private String email = "goodemail@gmail.com";
   private Calendar dateJoined = (new Calendar.Builder()).setDate(1, 1, 1).build();
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "333-333-3333";
   private String comments = "A good boi.";
   private Boolean isActive = true;
+  private Boolean canLogin = true;
+  private Boolean admin = true;
+  private Boolean notifications = false;
+  private Boolean managePerformances = true;
+  private Boolean manageCasts = false;
+  private Boolean managePieces = true;
+  private Boolean manageRoles = false;
+  private Boolean manageRules = true;
+
 
   @BeforeEach
   public void init() {
     userRepo = mock(UserRepository.class);
     userService = new UserServices(userRepo);
-    newUser = spy(new UserInfo());
-    user = new User(firstName, lastName, email, dateJoined, emergencyContactName,
-        emergencyContactNumber, comments, isActive);
+    User.Builder builder = User.newBuilder()
+        .setFirstName(firstName)
+        .setLastName(lastName)
+        .setEmail(email)
+        .setDateJoined(dateJoined)
+        .setEmergencyContactName(emergencyContactName)
+        .setEmergencyContactNumber(emergencyContactNumber)
+        .setComments(comments)
+        .setIsActive(isActive)
+        .setCanLogin(canLogin)
+        .setAdmin(admin)
+        .setRecievesNotifications(notifications)
+        .setManagePerformances(managePerformances)
+        .setManageCasts(manageCasts)
+        .setManagePieces(managePieces)
+        .setManageRoles(manageRoles)
+        .setManageRules(manageRules);
+    try {
+      user = builder.build();
+    } catch(InvalidParameterException e) {
+      throw new Error("Unable to creat User");
+    }
     lenient().doReturn(Optional.of(user)).when(userRepo).findById(id);
     lenient().doReturn(Collections.singletonList(user)).when(userRepo).findAll();
     lenient().doReturn(Optional.empty()).when(userRepo).findById(invalidId);
@@ -85,6 +110,9 @@ public class UserServiceTests {
     assertThat(response.getEmergencyContactNumber()).isEqualTo(emergencyContactNumber);
     assertThat(response.getComments()).isEqualTo(comments);
     assertThat(response.isActive()).isEqualTo(isActive.booleanValue());
+    assertThat(response.canLogin()).isEqualTo(canLogin.booleanValue());
+    assertThat(response.isAdmin()).isEqualTo(admin.booleanValue());
+    assertThat(response.isActive()).isEqualTo(isActive.booleanValue());
   }
 
   @Test
@@ -100,20 +128,31 @@ public class UserServiceTests {
   @Test
   public void createNewUserAllProperties_success() throws Exception {
     // Setup
-    Calendar newdateJoined = (new Calendar.Builder()).setDate(2, 2, 2).build();;
-    newUser.setFirstName("Logan");
-    newUser.setLastName("Hirsch");
-    newUser.setEmail("email@gmail.com");
-    newUser.setDateJoined(newdateJoined);
-    newUser.setEmergencyContactName("Mem");
-    newUser.setEmergencyContactNumber("5");
-    newUser.setComments("lit");
+    Calendar newdateJoined = (new Calendar.Builder()).setDate(2, 2, 2).build();
+    UserInfo newUser = UserInfo.newBuilder()
+        .setFirstName("Logan")
+        .setLastName("Hirsch")
+        .setEmail("email@gmail.com")
+        .setDateJoined(newdateJoined)
+        .setEmergencyContactName("Mem")
+        .setEmergencyContactNumber("5")
+        .setComments("lit")
+        .setIsActive(true)
+        .setCanLogin(false)
+        .setAdmin(true)
+        .setNotifications(false)
+        .setManagePerformances(true)
+        .setManageCasts(true)
+        .setManagePieces(true)
+        .setManageRoles(true)
+        .setManageRules(true)
+        .build();
 
     // Mock
     lenient().doReturn(Optional.empty()).when(userRepo).findByEmailIgnoreCase("email@gmail.com");
 
     // Execute
-    userService.createUser(newUser);
+    User userOut = userService.createUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
@@ -122,15 +161,17 @@ public class UserServiceTests {
   @Test
   public void createNewUserMinimumProperties_success() throws Exception {
     // Setup
-    newUser.setFirstName("Logan");
-    newUser.setLastName("Hirsch");
-    newUser.setEmail("email@gmail.com");
+    UserInfo newUser = UserInfo.newBuilder()
+        .setFirstName("Logan")
+        .setLastName("Hirsch")
+        .setEmail("email@gmail.com")
+        .build();
 
     // Mock
     lenient().doReturn(Optional.empty()).when(userRepo).findByEmailIgnoreCase("email@gmail.com");
 
     // Execute
-    userService.createUser(newUser);
+    User userOut = userService.createUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
@@ -138,23 +179,28 @@ public class UserServiceTests {
 
   @Test
   public void createNewUserMissingAllProperties_failure() throws Exception {
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder().build();
+    
     // Execute
     InvalidParameterException exception = assertThrows(InvalidParameterException.class,
         () -> { userService.createUser(newUser); });
 
     // Assert
     verify(userRepo, never()).save(any(User.class));
-    assertThat(exception).hasMessageThat().contains("'email'");
-    assertThat(exception).hasMessageThat().contains("'firstName'");
-    assertThat(exception).hasMessageThat().contains("'lastName'");
+    assertThat(exception).hasMessageThat().contains("email");
+    assertThat(exception).hasMessageThat().contains("firstName");
+    assertThat(exception).hasMessageThat().contains("lastName");
   }
 
   @Test
   public void createNewUserBadEmail_failure() throws Exception {
     // Setup
-    newUser.setFirstName("Logan");
-    newUser.setLastName("Hirsch");
-    newUser.setEmail("badEmail");
+    UserInfo newUser = UserInfo.newBuilder()
+        .setFirstName("Logan")
+        .setLastName("Hirsch")
+        .setEmail("badEmail")
+        .build();
 
     // Mock
     lenient().doReturn(Optional.empty()).when(userRepo).findByEmailIgnoreCase("badEmail");
@@ -165,15 +211,17 @@ public class UserServiceTests {
 
     // Assert
     verify(userRepo, never()).save(any(User.class));
-    assertThat(exception).hasMessageThat().contains("'valid email address'");
+    assertThat(exception).hasMessageThat().contains("valid email address");
   }
 
   @Test
   public void createNewUserEmailExists_failure() throws Exception {
     // Setup
-    newUser.setFirstName("Logan");
-    newUser.setLastName("Hirsch");
-    newUser.setEmail(email);
+    UserInfo newUser = UserInfo.newBuilder()
+        .setFirstName("Logan")
+        .setLastName("Hirsch")
+        .setEmail(email)
+        .build();
 
     // Execute
     InvalidParameterException exception = assertThrows(InvalidParameterException.class,
@@ -181,27 +229,35 @@ public class UserServiceTests {
 
     // Assert
     verify(userRepo, never()).save(any(User.class));
-    assertThat(exception).hasMessageThat().contains("'unique email'");
+    assertThat(exception).hasMessageThat().contains("unique email");
   }
 
   @Test
   public void editAllUserProperties_success() throws Exception {
     // Setup
     Calendar newdateJoined = (new Calendar.Builder()).setDate(2, 2, 2).build();
-    newUser.setFirstName("Logan");
-    newUser.setLastName("taco");
-    newUser.setEmail("email@gmail.com"); // Should be ignored
-    newUser.setDateJoined(newdateJoined);
-    newUser.setEmergencyContactName("Mem");
-    newUser.setEmergencyContactNumber("5");
-    newUser.setComments("lit");
-    newUser.setIsActive(false);
-
-    // Mock
-    lenient().doReturn(id).when(newUser).getId();
+    UserInfo newUser = UserInfo.newBuilder()
+        .setId(id)
+        .setFirstName("Logan")
+        .setLastName("taco")
+        .setEmail("email@gmail.com") // Should be ignored
+        .setDateJoined(newdateJoined)
+        .setEmergencyContactName("Mem")
+        .setEmergencyContactNumber("5")
+        .setComments("lit")
+        .setIsActive(false)
+        .setCanLogin(true)
+        .setAdmin(false)
+        .setNotifications(false)
+        .setManagePerformances(false)
+        .setManageCasts(false)
+        .setManagePieces(false)
+        .setManageRoles(false)
+        .setManageRules(false)
+        .build();
 
     // Execute
-    userService.editUser(newUser);
+    User user = userService.editUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
@@ -218,13 +274,13 @@ public class UserServiceTests {
   @Test
   public void editUserFirstNameOnly_success() throws Exception {
     // Setup
-    newUser.setFirstName("Logan");
-
-    // Mock
-    lenient().doReturn(id).when(newUser).getId();
+    UserInfo newUser = UserInfo.newBuilder()
+        .setId(id)
+        .setFirstName("Logan")
+        .build();
 
     // Execute
-    userService.editUser(newUser);
+    User userOut = userService.editUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
@@ -240,11 +296,13 @@ public class UserServiceTests {
 
   @Test
   public void editUserFirstNoChanges_success() throws Exception {
-    // Mock
-    lenient().doReturn(id).when(newUser).getId();
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder()
+        .setId(id)
+        .build();
 
     // Execute
-    userService.editUser(newUser);
+    User user = userService.editUser(newUser);
 
     // Assert
     verify(userRepo, times(1)).save(any(User.class));
@@ -260,8 +318,10 @@ public class UserServiceTests {
 
   @Test
   public void editInvalidUser_failure() throws Exception {
-    // Mock
-    lenient().doReturn(invalidId).when(newUser).getId();
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder()
+        .setId(invalidId)
+        .build();
 
     // Execute
     EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
@@ -273,7 +333,7 @@ public class UserServiceTests {
 }
 
   @Test
-  public void deleteUser_success() {
+  public void deleteUser_success() throws Exception {
     // Mock
     lenient().doNothing().when(userRepo).deleteById(id);
 

@@ -36,19 +36,47 @@ public class UserManagementUnitTests {
   private String firstName = "Jared";
   private String lastName = "Hirsch";
   private String email = "goodEmail@gmail.com";
-  private Calendar dateOfBirth = null;
+  private Calendar dateJoined = null;
   private String emergencyContactName = "Mom";
   private String emergencyContactNumber = "333-333-3333";
   private String comments = "A good boi.";
   private Boolean isActive = true;
+  private Boolean canLogin = true;
+  private Boolean admin = true;
+  private Boolean notifications = false;
+  private Boolean managePerformances = true;
+  private Boolean manageCasts = false;
+  private Boolean managePieces = true;
+  private Boolean manageRoles = false;
+  private Boolean manageRules = true;
 
   @BeforeEach
   public void init() {
 
     userService = spy(new UserServices(mock(UserRepository.class)));
     controller = new UserManagement(userService);
-    user = new User(firstName, lastName, email, dateOfBirth, emergencyContactName,
-        emergencyContactNumber, comments, isActive);
+    User.Builder builder = User.newBuilder()
+        .setFirstName(firstName)
+        .setLastName(lastName)
+        .setEmail(email)
+        .setDateJoined(dateJoined)
+        .setEmergencyContactName(emergencyContactName)
+        .setEmergencyContactNumber(emergencyContactNumber)
+        .setComments(comments)
+        .setIsActive(isActive)
+        .setCanLogin(canLogin)
+        .setAdmin(admin)
+        .setRecievesNotifications(notifications)
+        .setManagePerformances(managePerformances)
+        .setManageCasts(manageCasts)
+        .setManagePieces(managePieces)
+        .setManageRoles(manageRoles)
+        .setManageRules(manageRules);
+    try {
+      user = builder.build();
+    } catch(InvalidParameterException e) {
+      throw new Error("Unable to creat User");
+    }
   }
 
   @Test
@@ -107,13 +135,14 @@ public class UserManagementUnitTests {
   @Test
   public void postCreateUser_success() throws Exception {
     // Setup
-    UserInfo newUser = new UserInfo();
+    UserInfo newUser = UserInfo.newBuilder().build();
+    User user = new User();
 
     // Mock
-    lenient().doNothing().when(userService).createUser(newUser);
+    lenient().doReturn(user).when(userService).createUser(newUser);
 
     // Execute
-    CompletableFuture<Void> response = controller.createUser(newUser);
+    CompletableFuture<ResponseSchema<User>> response = controller.createUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
@@ -123,13 +152,13 @@ public class UserManagementUnitTests {
   @Test
   public void postCreateBadUser_failure() throws Exception {
     // Setup
-    UserInfo newUser = new UserInfo();
+    UserInfo newUser = UserInfo.newBuilder().build();
 
     // Mock
     lenient().doThrow(new InvalidParameterException("Missing params")).when(userService).createUser(newUser);
 
     // Execute
-    CompletableFuture<Void> response = controller.createUser(newUser);
+    CompletableFuture<ResponseSchema<User>> response = controller.createUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -147,28 +176,32 @@ public class UserManagementUnitTests {
 
   @Test
   public void patchEditUser_success() throws Exception {
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder().setId(id).build();
+    User user = new User();
+
     // Mock
-    UserInfo newUser = mock(UserInfo.class);
-    lenient().doReturn(id).when(newUser).getId();
-    lenient().doNothing().when(userService).editUser(newUser);
+    lenient().doReturn(user).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<Void> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<User>> response = controller.editUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
     verify(userService, times(1)).editUser(newUser);
+    assertThat(response.get().getData()).isEqualTo(user);
   }
 
   @Test
   public void patchEditUserNoId_failure() throws Exception {
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder().build();
+    
     // Mock
-    UserInfo newUser = mock(UserInfo.class);
-    lenient().doReturn(null).when(newUser).getId();
     lenient().doThrow(new EntityNotFoundException("Wrong exception")).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<Void> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<User>> response = controller.editUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -186,13 +219,14 @@ public class UserManagementUnitTests {
 
   @Test
   public void patchEditUserBadId_failure() throws Exception {
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder().setId(id).build();
+
     // Mock
-    UserInfo newUser = mock(UserInfo.class);
-    lenient().doReturn(10).when(newUser).getId();
     lenient().doThrow(new EntityNotFoundException("Bad id")).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<Void> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<User>> response = controller.editUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();

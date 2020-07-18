@@ -6,7 +6,6 @@ import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -40,91 +39,67 @@ public class UserServices {
    * Emails are always stored as lowercase and cannot already exist in the system.
    * Throws exception on missing properties or invalid email.
    */
-  public void createUser(UserInfo newUser) throws InvalidParameterException {
-    User user = new User();
+  public User createUser(UserInfo newUser) throws InvalidParameterException {
+    User user = User.newBuilder()
+        .setFirstName(newUser.firstName())
+        .setLastName(newUser.lastName())
+        .setEmail(newUser.email())
+        .setDateJoined(newUser.dateJoined())
+        .setEmergencyContactName(newUser.emergencyContactName())
+        .setEmergencyContactNumber(newUser.emergencyContactNumber())
+        .setComments(newUser.comments())
+        .setIsActive(newUser.isActive())
+        .setCanLogin(newUser.canLogin())
+        .setAdmin(newUser.admin())
+        .setRecievesNotifications(newUser.notifications())
+        .setManagePerformances(newUser.managePerformances())
+        .setManageCasts(newUser.manageCasts())
+        .setManagePieces(newUser.managePieces())
+        .setManageRoles(newUser.manageRoles())
+        .setManageRules(newUser.manageRules())
+        .build();
 
-    List<String> missingProperties = new ArrayList<>();
-
-    user.setFirstName(newUser.getFirstName());
-    if(user.getFirstName() == null) {
-      missingProperties.add("'firstName' ");
+    if(!validateEmail(user.getEmail())) {
+      throw new InvalidParameterException("User requires valid email address");
+    } else if(userRepo.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
+      throw new InvalidParameterException("User requires unique email address");
     }
 
-    user.setLastName(newUser.getLastName());
-    if(newUser.getLastName() == null) {
-      missingProperties.add("'lastName' ");
-    }
-
-    String email = newUser.getEmail();
-    if(email == null) {
-      missingProperties.add("'email'");
-    } else if(!validateEmail(email.toLowerCase())) {
-      missingProperties.add("'valid email address'");
-    } else if(userRepo.findByEmailIgnoreCase(email).isPresent()) {
-      missingProperties.add("'unique email'");
-    } else {
-      user.setEmail(email.toLowerCase());
-    }
-
-    user.setDateJoined(newUser.getDateJoined());
-    user.setEmergencyContactName(newUser.getEmergencyContactName());
-    user.setEmergencyContactNumber(newUser.getEmergencyContactNumber());
-    user.setComments(newUser.getComments());
-    user.setIsActive(true);
-
-    if(missingProperties.size() > 0) {
-      StringBuilder builder = new StringBuilder().append("Missing properties: ");
-      missingProperties.forEach(builder::append);
-      throw new InvalidParameterException(builder.toString());
-    }
-
-    userRepo.save(user);
+    return userRepo.save(user);
   }
 
   /* Edits an existing User according to supplied properties. Does not change a User's email.*/
-  public void editUser(UserInfo newUser) throws EntityNotFoundException {
-    User user = this.getUser(newUser.getId());
-
-    String firstName = newUser.getFirstName();
-    if(firstName != null) {
-      user.setFirstName(firstName);
+  public User editUser(UserInfo newUser) throws EntityNotFoundException {
+    User.Builder builder = this.getUser(newUser.id()).toBuilder()
+        .setFirstName(newUser.firstName())
+        .setLastName(newUser.lastName())
+        .setDateJoined(newUser.dateJoined())
+        .setEmergencyContactName(newUser.emergencyContactName())
+        .setEmergencyContactNumber(newUser.emergencyContactNumber())
+        .setComments(newUser.comments())
+        .setIsActive(newUser.isActive())
+        .setCanLogin(newUser.canLogin())
+        .setAdmin(newUser.admin())
+        .setRecievesNotifications(newUser.notifications())
+        .setManagePerformances(newUser.managePerformances())
+        .setManageCasts(newUser.manageCasts())
+        .setManagePieces(newUser.managePieces())
+        .setManageRoles(newUser.manageRoles())
+        .setManageRules(newUser.manageRules());
+    
+    User user;
+    try {
+      user = builder.build();
+    } catch(InvalidParameterException e) { 
+      // Unreachable unless an invalid object exists in the database
+      throw new Error("Tried to edit User with invalid properties");
     }
-
-    String lastName = newUser.getLastName();
-    if(lastName != null) {
-      user.setLastName(lastName);
-    }
-
-    Calendar dateJoined = newUser.getDateJoined(); 
-    if(dateJoined != null) {
-      user.setDateJoined(dateJoined);
-    }
-
-    String emergencyContactName = newUser.getEmergencyContactName();
-    if(emergencyContactName != null) {
-      user.setEmergencyContactName(emergencyContactName);
-    }
-
-    String emergencyContactNumber = newUser.getEmergencyContactNumber();
-    if(emergencyContactNumber != null) {
-      user.setEmergencyContactNumber(emergencyContactNumber);
-    }
-
-    String comments = newUser.getComments();
-    if(emergencyContactNumber != null) {
-      user.setComments(comments);
-    }
-
-    Boolean isActive = newUser.isActive();
-    if(isActive != null) {
-      user.setIsActive(isActive);
-    }
-
-    userRepo.save(user);
+    
+    return userRepo.save(user);
   }
 
-  public void deleteUser(int id) {
-    // Todo: Update requirements as new endpoints are added
+  public void deleteUser(int id) throws EntityNotFoundException {
+    getUser(id);
     userRepo.deleteById(id);
   }
 

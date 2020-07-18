@@ -2,6 +2,8 @@ package com.google.rolecall;
 
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +46,20 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   private void createAdmin() {
-    userRepo.save(new User(adminFirstName, adminLastName, adminEmail, null, "", "", "", true));
+    User.Builder builder = User.newBuilder()
+        .setFirstName(adminFirstName)
+        .setLastName(adminLastName)
+        .setEmail(adminEmail)
+        .setIsActive(true)
+        .setCanLogin(true)
+        .setAdmin(true);
+    User admin;
+    try {
+      admin = builder.build();
+    } catch(InvalidParameterException e) {
+      throw new Error("Insufficient admin credentials provided. Please update!");
+    }
+    userRepo.save(admin);
     logger.log(Level.WARNING, String.format("Admin User Created: %s %s %s", 
         adminFirstName, adminLastName, adminEmail));
   }

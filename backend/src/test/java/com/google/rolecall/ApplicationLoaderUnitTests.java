@@ -2,6 +2,8 @@ package com.google.rolecall;
 
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +36,17 @@ public class ApplicationLoaderUnitTests {
     userRepo = mock(UserRepository.class);
     env = mock(Environment.class);
     loader = new ApplicationLoader(env, userRepo);
-    User user = new User("admin", "admin", "adminEmail", null, "", "", "", true);
+    User.Builder builder = User.newBuilder()
+        .setFirstName("admin")
+        .setLastName("admin")
+        .setEmail("adminEmail")
+        .setAdmin(true);
+    User user;
+    try {
+      user = builder.build();
+    } catch(InvalidParameterException e) {
+      throw new Error("Unable to creat User");
+    }
     lenient().when(userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase("admin", "admin", "adminEmail")).thenReturn(Optional.of(user));
     lenient().when(userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase("new", "new", "newEmail")).thenReturn(Optional.empty());
   }
@@ -55,9 +67,6 @@ public class ApplicationLoaderUnitTests {
 
   @Test
   public void adminDoesNotExists_success() throws Exception {
-    // Setup
-    ArgumentCaptor<User> arg = ArgumentCaptor.forClass(User.class);
-    
     // Mock
     lenient().when(env.getProperty("admin.first.name")).thenReturn("new1");
     lenient().when(env.getProperty("admin.last.name")).thenReturn("new2");
@@ -68,9 +77,6 @@ public class ApplicationLoaderUnitTests {
     loader.run(new DefaultApplicationArguments(new String[]{}));
     
     // Assert
-    verify(userRepo, times(1)).save(arg.capture());
-    assert(arg.getValue().getFirstName()).equals("new1");
-    assert(arg.getValue().getLastName()).equals("new2");
-    assert(arg.getValue().getEmail()).equals("newEmail");
+    verify(userRepo, times(1)).save(any(User.class));
   }
 }
