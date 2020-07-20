@@ -1,8 +1,14 @@
 package com.google.rolecall.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.collect.ImmutableList;
+import com.google.rolecall.Constants;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -145,6 +151,27 @@ public class User {
 
   public void incrementLogin() {
     loginCount++;
+  }
+
+  public String[] getRoles() {
+    List<Boolean> permissions = new ArrayList<>();
+    permissions.add(isAdmin()); // ADMIN
+    permissions.add(isAdmin() || canLogin()); // LOGIN
+    permissions.add(recievesNotifications()); // NOTIFICATIONS
+    permissions.add(isAdmin() || canManagePerformances()); // MANGAGE_PERFORMANCES
+    permissions.add(isAdmin() || canManageCasts()); // MANAGE_CASTS
+    permissions.add(isAdmin() || canManagePieces()); // MANAGE_PIECES
+    permissions.add(isAdmin() || canManageRoles()); // MANAGE_ROLES
+    permissions.add(isAdmin() || canManageRules()); // MANAGE_RULES
+
+    ArrayList<String> roles = new ArrayList<>();
+    for(int i = 0; i < Constants.Roles.ROLES.length; i++) {
+      if (permissions.get(i)) {
+        roles.add(Constants.Roles.ROLES[i]);
+      }
+    }
+    String[] out = new String[roles.size()];
+    return roles.toArray(out);
   }
 
   public Builder toBuilder() {

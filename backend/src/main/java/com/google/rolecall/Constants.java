@@ -15,6 +15,21 @@ public class Constants {
     public static final String  SECTION_ID = "sectionid";
   }
 
+  public static class Roles {
+    public static final String ADMIN = "ADMIN";
+    public static final String LOGIN = "LOGIN";
+    public static final String NOTIFICATIONS = "NOTIFICATIONS";
+    public static final String MANAGE_PERFORMANCES = "MANAGE_PERFORMANCES";
+    public static final String MANAGE_CASTS = "MANAGE_CASTS";
+    public static final String MANAGE_PIECES = "MANAGE_PIECES";
+    public static final String MANAGE_ROLES = "MANAGE_ROLES";
+    public static final String MANAGE_RULES = "MANAGE_RULES";
+    public static final String[] ROLES = new String[] {
+        ADMIN, LOGIN, NOTIFICATIONS, MANAGE_PERFORMANCES, MANAGE_CASTS, MANAGE_PIECES,
+        MANAGE_ROLES, MANAGE_RULES
+    };
+  }
+
   // Prevents object creation
   private Constants() {
   }

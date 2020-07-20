@@ -25,3 +25,6 @@ spring.datasource.password=ThePassword
 admin.first.name=System
 admin.last.name=Admin
 admin.email=admin@rolecall.com
+
+# 4. Debug Mode disables oauth authentication
+rolecall.debug=true
