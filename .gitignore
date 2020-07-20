@@ -4,3 +4,5 @@ backend/target/*
 backend/.vscode/*
 backend/.settings/*
 backend/.classpath
+backend/.factorypath
+

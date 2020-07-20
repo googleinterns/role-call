@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.util.Map;
 
+import com.google.rolecall.jsonobjects.ErrorResponse;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,7 +39,7 @@ public class ErrorResponseUnitTests {
     ErrorResponse error = new ErrorResponse(message, code);
 
     // Execute
-    Map<String, Object> out = error.getMap();
+    Map<String, Object> out = error.buildMap();
 
     // Assert
     assertThat(out.get("error")).isEqualTo(message);

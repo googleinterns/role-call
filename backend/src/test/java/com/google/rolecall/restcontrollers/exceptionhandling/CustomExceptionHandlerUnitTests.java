@@ -1,7 +1,10 @@
 package com.google.rolecall.restcontrollers.exceptionhandling;
 
 import static com.google.common.truth.Truth.assertThat;
+
+import com.google.rolecall.jsonobjects.ErrorResponse;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.UnimplementedOperationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,5 +129,19 @@ public class CustomExceptionHandlerUnitTests {
     // Assert
     assertThat(response.error).isEqualTo(message);
     assertThat(response.status).isEqualTo(HttpStatus.NOT_IMPLEMENTED.value());
+  }
+
+  @Test
+  public void handleInvalidParameterException_success() throws Exception {
+    // Setup
+    String message = "Invalid Parameter";
+    InvalidParameterException exception = new InvalidParameterException(message);
+
+    // Execute
+    ErrorResponse response = handler.handleInvalidParameter(exception);
+
+    // Assert
+    assertThat(response.error).isEqualTo(message);
+    assertThat(response.status).isEqualTo(HttpStatus.CONFLICT.value());
   }
 }

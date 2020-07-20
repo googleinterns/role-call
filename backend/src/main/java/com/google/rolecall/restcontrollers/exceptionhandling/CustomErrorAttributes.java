@@ -1,5 +1,6 @@
 package com.google.rolecall.restcontrollers.exceptionhandling;
 
+import com.google.rolecall.jsonobjects.ErrorResponse;
 import java.util.Map;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -17,6 +18,6 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     HttpStatus status = HttpStatus.valueOf(Integer.parseInt(errorAttr.get("status").toString()));
     ErrorResponse error = new ErrorResponse(errorAttr.get("message").toString(), status.value());
 
-    return error.getMap();
+    return error.buildMap();
   }
 }

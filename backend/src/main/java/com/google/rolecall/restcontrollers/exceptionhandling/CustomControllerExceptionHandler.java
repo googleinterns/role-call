@@ -1,6 +1,8 @@
 package com.google.rolecall.restcontrollers.exceptionhandling;
 
+import com.google.rolecall.jsonobjects.ErrorResponse;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.UnimplementedOperationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -61,4 +63,12 @@ public class CustomControllerExceptionHandler extends ResponseEntityExceptionHan
   protected ErrorResponse handleUnimplementedOperation(UnimplementedOperationException exception) {
     return new ErrorResponse(exception.getMessage(), HttpStatus.NOT_IMPLEMENTED.value());
   }
+
+  @ExceptionHandler(InvalidParameterException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  protected ErrorResponse handleInvalidParameter(InvalidParameterException exception) {
+    return new ErrorResponse(exception.getMessage(), HttpStatus.CONFLICT.value());
+  }
+
+  
 }
