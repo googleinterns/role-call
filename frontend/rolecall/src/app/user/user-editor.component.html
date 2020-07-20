@@ -1,1 +1,46 @@
-<p>user-editor works!</p>
+<div class="panel-container">
+  <div class="left-panel">
+    <div class="app-card card-margins left-card">
+      <h1 class="left-card-title">
+        Users
+      </h1>
+      <div class="user-select-container">
+        <div *ngFor="let user of renderingUsers" class="app-card user-select"
+          [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''" (click)="setCurrentUser(user)">
+          <h2 class="user-name">
+            {{ user.first_name + " " + user.last_name }}
+          </h2>
+        </div>
+      </div>
+      <div class="add-user-button-width-container">
+        <div class="add-user-button-height-container">
+          <button mat-icon-button aria-label="Add User Button" class="add-user-button" (click)="addUser()">
+            <mat-icon [inline]="true" class="add-user-button-icon">
+              add
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="app-card card-margins right-card">
+      <h1 class="left-card-title">
+        {{ !currentSelectedUser ? '' : currentSelectedUser.first_name + " " + currentSelectedUser.last_name }}
+      </h1>
+      <div class="name-container">
+        <div class="name-input">
+          <app-text-input (valueChange)="onTextInputChange($event)"
+            [initValue]="!currentSelectedUser ? '' : currentSelectedUser.first_name" valueName="First Name">
+          </app-text-input>
+        </div>
+        <div class="name-input">
+          <app-text-input (valueChange)="onTextInputChange($event)"
+            [initValue]="!currentSelectedUser ? '' : currentSelectedUser.first_name" valueName="Last Name">
+          </app-text-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

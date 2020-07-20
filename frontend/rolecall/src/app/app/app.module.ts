@@ -3,11 +3,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserRoutingModule } from '../user/user-routing.module';
 import { App } from './app.component';
 import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 import { SiteHeader } from './site_header.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -18,11 +19,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
     NgbModule,
+    // Routing
+    UserRoutingModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [App]

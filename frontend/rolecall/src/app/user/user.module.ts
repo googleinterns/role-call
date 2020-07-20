@@ -1,7 +1,10 @@
+import { UserEditorComponent } from './user-editor.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { UserEditorComponent } from './user-editor.component';
-import { UserRoutingModule } from './user-routing.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonComponentsModule } from '../common_components/common_components.module';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -9,7 +12,11 @@ import { UserRoutingModule } from './user-routing.module';
   declarations: [UserEditorComponent],
   imports: [
     CommonModule,
-    UserRoutingModule
+    MatButtonModule,
+    MatIconModule,
+    CommonComponentsModule,
+    MatInputModule,
   ]
 })
 export class UserModule { }
+

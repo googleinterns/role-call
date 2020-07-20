@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { MockUserBackend } from '../mocks/mock_user_backend';
@@ -8,21 +8,18 @@ import { LoggingService } from '../services/logging.service';
 
 export type User = {
   uuid: APITypes.UserUUID,
-  has_privilege_classes: APITypes.PrivilegeClassUUID[],
-  knows_positions: [
-    {
-      segment: APITypes.PieceUUID,
-      position: string
-    }
-  ],
+  has_permissions: APITypes.PermissionSet,
+  has_privilege_classes?: APITypes.PrivilegeClassUUID[],
+  knows_positions: APITypes.Position[],
   first_name: string,
   last_name: string,
   date_of_birth: number,
   contact_info: {
-    phone_number: number,
+    phone_number: string,
     email: string,
     emergency_contact: {
-      phone_number: number,
+      name: string,
+      phone_number: string,
       email: string
     }
   }
@@ -75,6 +72,9 @@ export class UserApi {
   /** All the loaded users mapped by UUID */
   users: Map<APITypes.UserUUID, User> = new Map<APITypes.UserUUID, User>();
 
+  /** Emitter that is called whenever users are loaded */
+  userEmitter: EventEmitter<User[]> = new EventEmitter();
+
   /** Takes backend response, updates data structures for all users */
   private getAllUsersResponse(): Promise<AllUsersResponse> {
     return this.requestAllUsers().then(val => {
@@ -111,12 +111,18 @@ export class UserApi {
 
   /** Gets all the users from the backend and returns them */
   getAllUsers(): Promise<User[]> {
-    return this.getAllUsersResponse().then(val => val.data.users);
+    return this.getAllUsersResponse().then(val => {
+      this.userEmitter.emit(Array.from(this.users.values()));
+      return val;
+    }).then(val => val.data.users);
   }
 
   /** Gets a specific user from the backend by UUID and returns it */
   getUser(uuid: APITypes.UserUUID): Promise<User> {
-    return this.getOneUserResponse(uuid).then(val => val.data.user);
+    return this.getOneUserResponse(uuid).then(val => {
+      this.userEmitter.emit(Array.from(this.users.values()));
+      return val;
+    }).then(val => val.data.user);
   }
 
   /** Requests an update to the backend which may or may not be successful,
@@ -127,6 +133,7 @@ export class UserApi {
     if (this.isValidUser(user)) {
       this.setUserResponse(user).then(val => {
         if (val.status == 400) {
+          this.getAllUsers();
           return {
             successful: true
           }
@@ -147,7 +154,7 @@ export class UserApi {
 
   /** Determines if the user object provided is valid for storage in the database */
   private isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.first_name) &&
+    return !isNullOrUndefined(user.contact_info.email) && !isNullOrUndefined(user.first_name) &&
       !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_privilege_classes) &&
       user.has_privilege_classes.length >= 1;
   }

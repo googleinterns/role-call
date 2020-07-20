@@ -1,0 +1,119 @@
+@import "src/colors";
+@import "src/constants";
+
+// Overall container for panels styling
+.panel-container {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 90vh;
+  width: 100%;
+}
+
+// Margins on the panel cards
+.card-margins {
+  height: 96vh;
+  margin: 2vh;
+}
+
+// Left card arrangment and styling
+.left-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 1em;
+  max-height: 86vh;
+}
+.user-select-container {
+  overflow-y: scroll;
+  width: 100%;
+}
+.user-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.user-name {
+  margin-bottom: auto;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: auto;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+.selected-user {
+  background-color: $offoffWhite;
+}
+.add-user-button-width-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  min-height: 10vh;
+}
+.add-user-button-height-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 10vh;
+}
+.add-user-button {
+  background: $white;
+  border-radius: $borderRadius;
+  height: 6vh;
+  margin-right: 1em;
+  width: 6vh;
+}
+.add-user-button-icon {
+  font-size: 6vh;
+  vertical-align: middle;
+}
+// Title styling
+.left-card-title {
+  margin: 1em;
+  font-weight: 800;
+  font-size: xx-large;
+}
+
+// Right card arrangment and styling
+.right-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 1em;
+  max-height: 86vh;
+}
+.name-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.name-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(50% - 2em);
+}
+.right-card-title {
+  margin: 1em;
+  font-weight: 800;
+  font-size: xx-large;
+}
+
+// Panels styling
+.left-panel {
+  // background: green;
+  // height: 100%;
+  width: 25%;
+}
+
+.right-panel {
+  // background: red;
+  // height: 100%;
+  width: 75%;
+}

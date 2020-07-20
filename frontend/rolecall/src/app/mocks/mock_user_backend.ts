@@ -8,17 +8,85 @@ import { AllUsersResponse, OneUserResponse, User } from "../api/user-api.service
  */
 export class MockUserBackend {
 
-  constructor() {
-    this.mockUsers();
-  }
-
   /** Mock user database */
-  mockUserDB: User[] = [];
-
-  /** Mock the user database */
-  mockUsers() {
-
-  }
+  mockUserDB: User[] = [
+    {
+      uuid: "UUID1",
+      has_permissions: {
+        isAdmin: true,
+        notifications: true,
+        canLogin: true,
+        manageCasts: true,
+        managePerformances: true,
+        managePieces: true,
+        manageRoles: true,
+        manageRules: true
+      },
+      knows_positions: [
+        {
+          segment: "PIECE1UUID",
+          position: "Lead"
+        },
+        {
+          segment: "PIECE2UUID",
+          position: "Background"
+        }
+      ],
+      has_privilege_classes: [
+        "admin"
+      ],
+      first_name: "USER1First",
+      last_name: "USER1Last",
+      contact_info: {
+        phone_number: "1234567890",
+        email: "USER1@gmail.com",
+        emergency_contact: {
+          name: "USER1 Emergency Contact Name",
+          phone_number: "1987654321",
+          email: "USER1EMG@gmail.com"
+        }
+      },
+      date_of_birth: 1
+    },
+    {
+      uuid: "UUID2",
+      has_permissions: {
+        isAdmin: false,
+        notifications: true,
+        canLogin: true,
+        manageCasts: true,
+        managePerformances: false,
+        managePieces: true,
+        manageRoles: false,
+        manageRules: false
+      },
+      knows_positions: [
+        {
+          segment: "PIECE1UUID",
+          position: "Background"
+        },
+        {
+          segment: "PIECE2UUID",
+          position: "Lead"
+        }
+      ],
+      has_privilege_classes: [
+        "choreographer"
+      ],
+      first_name: "USER1First",
+      last_name: "USER1Last",
+      contact_info: {
+        phone_number: "1234567890",
+        email: "USER1@gmail.com",
+        emergency_contact: {
+          name: "USER1 Emergency Contact Name",
+          phone_number: "1987654321",
+          email: "USER1EMG@gmail.com"
+        }
+      },
+      date_of_birth: 1
+    }
+  ];
 
   /** Mocks backend response */
   requestAllUsers(): Promise<AllUsersResponse> {

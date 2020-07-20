@@ -1,0 +1,6 @@
+<div class="app-card">
+  <mat-form-field class="input-margins fit-form">
+    <input matInput [(ngModel)]="currentValue" (ngModelChange)="valueChange.emit([valueName, currentValue])"
+      [value]="initValue" [placeholder]="valueName" [type]="type">
+  </mat-form-field>
+</div>

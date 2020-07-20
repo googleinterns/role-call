@@ -20,5 +20,19 @@ export namespace APITypes {
   export type SuccessIndicator = {
     successful: boolean,
     error?: string
-  }
+  };
+  export type PermissionSet = {
+    canLogin: boolean,
+    isAdmin: boolean,
+    notifications: boolean,
+    managePerformances: boolean,
+    manageCasts: boolean,
+    managePieces: boolean,
+    manageRoles: boolean,
+    manageRules: boolean
+  };
+  export type Position = {
+    segment: PieceUUID,
+    position: string
+  };
 }
