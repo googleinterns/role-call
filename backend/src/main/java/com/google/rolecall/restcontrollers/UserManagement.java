@@ -82,8 +82,8 @@ public class UserManagement extends AsyncRestEndpoint {
   /**
    * Edits an existing {@link User} object and updates it in the database.
    * 
-   * @param user {@Link UserInfo} object stores client inputed values for the new {@link User}.
-   * @return New {@Link User} object created and saved in the databse.
+   * @param user {@Link UserInfo} object stores client inputed values for the updated {@link User}.
+   * @return Edited {@Link User} object created and saved in the databse.
    * @throws InvalidParameterException if {@Link UserInfo} user does not contain a user id.
    * @throws EntityNotFoundException if {@Link UserInfo} user contains an id that does not exist
    * in the database.

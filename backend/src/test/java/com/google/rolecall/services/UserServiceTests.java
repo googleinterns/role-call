@@ -217,7 +217,7 @@ public class UserServiceTests {
   }
 
   @Test
-  public void createNewUserMissingAllProperties_failure() throws Exception {
+  public void createNewUserMissingEmail_failure() throws Exception {
     // Setup
     UserInfo newUser = UserInfo.newBuilder().build();
     
@@ -228,6 +228,19 @@ public class UserServiceTests {
     // Assert
     verify(userRepo, never()).save(any(User.class));
     assertThat(exception).hasMessageThat().contains("email");
+  }
+
+  @Test
+  public void createNewUserMissingAllPropertiesButEmail_failure() throws Exception {
+    // Setup
+    UserInfo newUser = UserInfo.newBuilder().setEmail("email@email.com").build();
+    
+    // Execute
+    InvalidParameterException exception = assertThrows(InvalidParameterException.class,
+        () -> { userService.createUser(newUser); });
+
+    // Assert
+    verify(userRepo, never()).save(any(User.class));
     assertThat(exception).hasMessageThat().contains("firstName");
     assertThat(exception).hasMessageThat().contains("lastName");
   }

@@ -43,6 +43,14 @@ public class UserServices {
    * {@link UserInfo} newUser and when the email is malformatted or already exists.
    */
   public User createUser(UserInfo newUser) throws InvalidParameterException {
+    if(newUser.email() == null) {
+      throw new InvalidParameterException("User requires email address");
+    } else if(!validateEmail(newUser.email())) {
+      throw new InvalidParameterException("User requires valid email address");
+    } else if(userRepo.findByEmailIgnoreCase(newUser.email()).isPresent()) {
+      throw new InvalidParameterException("User requires unique email address");
+    }
+    
     User user = User.newBuilder()
         .setFirstName(newUser.firstName())
         .setLastName(newUser.lastName())
@@ -61,12 +69,6 @@ public class UserServices {
         .setManageRoles(newUser.manageRoles())
         .setManageRules(newUser.manageRules())
         .build();
-
-    if(!validateEmail(user.getEmail())) {
-      throw new InvalidParameterException("User requires valid email address");
-    } else if(userRepo.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
-      throw new InvalidParameterException("User requires unique email address");
-    }
 
     return userRepo.save(user);
   }

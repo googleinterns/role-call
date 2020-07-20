@@ -46,16 +46,16 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   private void createAdmin() {
-    User.Builder builder = User.newBuilder()
-        .setFirstName(adminFirstName)
-        .setLastName(adminLastName)
-        .setEmail(adminEmail)
-        .setIsActive(true)
-        .setCanLogin(true)
-        .setAdmin(true);
     User admin;
     try {
-      admin = builder.build();
+      admin = User.newBuilder()
+          .setFirstName(adminFirstName)
+          .setLastName(adminLastName)
+          .setEmail(adminEmail)
+          .setIsActive(true)
+          .setCanLogin(true)
+          .setAdmin(true)
+          .build();
     } catch(InvalidParameterException e) {
       logger.log(Level.SEVERE, "Unable to Create admin. Insufficient Properties.");
       return;
