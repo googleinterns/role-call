@@ -113,7 +113,8 @@ public class UserServices {
    * Deletes an existing {@link User} object by id.
    * 
    * @param id Unique id for the {@link User} object to be deleted
-   * @throws EntityNotFoundException The id from does not exist in the database.
+   * @throws EntityNotFoundException The id does not match and existing {@link User}
+   *    in the database.
    */
   public void deleteUser(int id) throws EntityNotFoundException {
     getUser(id);

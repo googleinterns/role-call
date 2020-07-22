@@ -40,7 +40,7 @@ public class SectionServices {
    * 
    * @param id The id unique to a {@link Section} object.
    * @return A {@link Section} object associated with id.
-   * @throws EntityNotDoundException when there is not section containing the id.
+   * @throws EntityNotFoundException when there is not a Section containing the id.
    */
   public Section getSection(int id) throws EntityNotFoundException {
     Optional<Section> queryResult = sectionRepo.findById(id);
@@ -57,7 +57,7 @@ public class SectionServices {
    * 
    * @param newSection {@link SectionInfo} containing information describing the new Section.
    * @return The new {@link Section} created and stored.
-   * @throws InvalidParameterException When section is missing name, Positions are missing names,
+   * @throws InvalidParameterException When Section is missing name, Positions are missing names,
    *     or Positions have overlapping orders.
    */
   public Section createSection(SectionInfo newSection) throws InvalidParameterException {
@@ -85,12 +85,20 @@ public class SectionServices {
   }
 
   /** 
-   * Edits a {@link Section} and {@link Positions} and adds it to the database.
+   * Edits a {@link Section} and it's {@link Positions} and updates it in the database.
+   * The {@link SectionInfo} should contain an existing id of an {@link Section}. {@link Positions}
+   * can be created, edited, or deleted. The Position will be deleted if {@link PositionInfo}
+   * it contains a valid id and and delete is true. The Position will be edited if 
+   * {@link PositionInfo} contains a valid id and delete is not true. The position will be
+   * created if there is no id in {@link PositionInfo}. Only positions associated with the
+   * {@link Section} can be edited or deleted.
    * 
-   * @param newSection {@link SectionInfo} containing information describing the new user.
-   * @return The new {@link User} created and stored.
-   * @throws InvalidParameterException When firstName, lastName, or email are null in
-   *    {@link UserInfo} newUser and when the email is malformatted or already exists.
+   * @param newSection {@link SectionInfo} describes the Section and positions.
+   * @return The updated {@link Section}.
+   * @throws InvalidParameterException When new Positions are missing names,
+   *     a Position without id is deleted, or Positions have overlapping orders.
+   * @throws EntityNotFoundException When there is not Section containing the id,
+   *     when there is not a Position containg the position id in the Section.
    */
   public Section editSection(SectionInfo newSection) throws EntityNotFoundException,
       InvalidParameterException {
@@ -102,12 +110,13 @@ public class SectionServices {
     
     List<Position> positions = section.getPositions();
     for(PositionInfo info: newSection.positions()) {
+      System.out.println(info);
       Position position;
       if(info.delete() != null && info.delete()) {
         if(info.id() == null) {
-          throw new InvalidParameterException("Cannot delete Position without id.");
+          throw new InvalidParameterException("Cannot delete Position before it is created.");
         }
-        positions.remove(getPositionById(info.id(), positions));
+        section.removePosition(getPositionById(info.id(), positions));
         continue;
       } else if(info.id() != null) {
         position = getPositionById(info.id(), positions);
@@ -133,6 +142,19 @@ public class SectionServices {
     return sectionRepo.save(section);
   }
 
+  /** 
+   * Deletes an existing {@link Section} object by id and all children objects.
+   * 
+   * @param id Unique id for the {@link Section} object to be deleted
+   * @throws EntityNotFoundException The id does not match and existing {@link Section}
+   *    in the database.
+   */
+  public void deleteSection(int id) throws EntityNotFoundException {
+    getSection(id);
+    sectionRepo.deleteById(id);
+  }
+
+  /* Searches for and returns a position from a list based on id. */
   private Position getPositionById(int id, List<Position> positions)
       throws EntityNotFoundException {
     for (Position position : positions) {

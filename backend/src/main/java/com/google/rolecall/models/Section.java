@@ -1,11 +1,12 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.PositionInfo;
+import com.google.rolecall.jsonobjects.SectionInfo;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,9 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.google.rolecall.jsonobjects.PositionInfo;
-import com.google.rolecall.jsonobjects.SectionInfo;
 
 @Entity
 @Table
@@ -39,7 +37,7 @@ public class Section {
 
   // TODO: Change Fetch type by implementing lazy fetching
   @OneToMany(mappedBy = "section", 
-      cascade = CascadeType.PERSIST, 
+      cascade = CascadeType.ALL, 
       orphanRemoval = true, 
       fetch = FetchType.EAGER)
   private List<Position> positions = new ArrayList<>();

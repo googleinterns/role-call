@@ -49,6 +49,7 @@ public abstract class PositionInfo {
         .setName(name)
         .setNotes(notes)
         .setOrder(order)
+        .setDelete(delete)
         .build();
   }
 
