@@ -1,11 +1,12 @@
 package com.google.rolecall.jsonobjects;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
 import java.util.List;
 import javax.annotation.Nullable;
 
+@JsonDeserialize(builder = AutoValue_SectionInfo.Builder.class)
 @AutoValue
 public abstract class SectionInfo {
   @Nullable
@@ -40,34 +41,25 @@ public abstract class SectionInfo {
     return super.hashCode();
   }
 
-  @JsonCreator
-  public static SectionInfo create(@Nullable @JsonProperty("id") Integer id,
-      @Nullable @JsonProperty("name") String name, @Nullable @JsonProperty("notes") String notes,
-      @Nullable @JsonProperty("length") Integer length,
-      @Nullable @JsonProperty("positions") List<PositionInfo> positions) {
-    return newBuilder()
-        .setId(id)
-        .setName(name)
-        .setNotes(notes)
-        .setLength(length)
-        .setPositions(positions)
-        .build();
-  }
-
   public static Builder newBuilder() {
     return new AutoValue_SectionInfo.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder { 
+    @JsonProperty("id")
     public abstract Builder setId(Integer id);
 
+    @JsonProperty("name")
     public abstract Builder setName(String name);
 
+    @JsonProperty("notes")
     public abstract Builder setNotes(String notes);
 
+    @JsonProperty("length")
     public abstract Builder setLength(Integer length);
 
+    @JsonProperty("positions")
     public abstract Builder setPositions(List<PositionInfo> positions);
 
     public abstract SectionInfo build();

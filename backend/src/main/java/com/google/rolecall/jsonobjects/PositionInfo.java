@@ -1,11 +1,11 @@
 package com.google.rolecall.jsonobjects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.auto.value.AutoValue;
 import javax.annotation.Nullable;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.auto.value.AutoValue;
-
+@JsonDeserialize(builder = AutoValue_PositionInfo.Builder.class)
 @AutoValue
 public abstract class PositionInfo {
   @Nullable
@@ -39,34 +39,25 @@ public abstract class PositionInfo {
     return super.hashCode();
   }
 
-  @JsonCreator
-  public static PositionInfo create(@Nullable @JsonProperty("id") Integer id,
-      @Nullable @JsonProperty("name") String name, @Nullable @JsonProperty("notes") String notes,
-      @Nullable @JsonProperty("order") Integer order,
-      @Nullable @JsonProperty("delete") Boolean delete) {
-    return newBuilder()
-        .setId(id)
-        .setName(name)
-        .setNotes(notes)
-        .setOrder(order)
-        .setDelete(delete)
-        .build();
-  }
-
   public static Builder newBuilder() {
     return new AutoValue_PositionInfo.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder { 
+    @JsonProperty("id")
     public abstract Builder setId(Integer id);
 
+    @JsonProperty("name")
     public abstract Builder setName(String name);
 
+    @JsonProperty("notes")
     public abstract Builder setNotes(String notes);
 
+    @JsonProperty("order")
     public abstract Builder setOrder(Integer order);
 
+    @JsonProperty("delete")
     public abstract Builder setDelete(Boolean delete);
 
     public abstract PositionInfo build();

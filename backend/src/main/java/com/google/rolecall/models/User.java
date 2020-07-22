@@ -1,6 +1,7 @@
 package com.google.rolecall.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.Calendar;
 import java.util.Optional;
@@ -145,6 +146,27 @@ public class User {
 
   public void incrementLogin() {
     loginCount++;
+  }
+
+  public UserInfo toUserInfo() {
+    return UserInfo.newBuilder()
+        .setFirstName(firstName)
+        .setLastName(lastName)
+        .setEmail(email)
+        .setDateJoined(dateJoined)
+        .setEmergencyContactName(emergencyContactName)
+        .setEmergencyContactNumber(emergencyContactNumber)
+        .setComments(comments)
+        .setIsActive(isActive)
+        .setCanLogin(canLogin)
+        .setAdmin(admin)
+        .setNotifications(notifications)
+        .setManagePerformances(managePerformances)
+        .setManageCasts(manageCasts)
+        .setManagePieces(managePieces)
+        .setManageRoles(manageRoles)
+        .setManageRules(manageRules)
+        .build();
   }
 
   public Builder toBuilder() {

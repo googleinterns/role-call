@@ -1,12 +1,5 @@
 package com.google.rolecall.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.google.rolecall.jsonobjects.PositionInfo;
 import com.google.rolecall.jsonobjects.SectionInfo;
 import com.google.rolecall.models.Position;
@@ -14,6 +7,11 @@ import com.google.rolecall.models.Section;
 import com.google.rolecall.repos.SectionRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 

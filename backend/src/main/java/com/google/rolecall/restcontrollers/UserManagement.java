@@ -14,6 +14,7 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import com.google.rolecall.services.UserServices;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,10 +29,11 @@ public class UserManagement extends AsyncRestEndpoint {
    * @return List of {@link User} objects.
    */
   @Get
-  public CompletableFuture<ResponseSchema<List<User>>> getAllUsers() {
-    List<User> allUsers = userService.getAllUsers();
+  public CompletableFuture<ResponseSchema<List<UserInfo>>> getAllUsers() {
+    List<UserInfo> allUsers = userService.getAllUsers().stream().map(u->u.toUserInfo())
+        .collect(Collectors.toList());
 
-    ResponseSchema<List<User>> response = new ResponseSchema<>(allUsers);
+    ResponseSchema<List<UserInfo>> response = new ResponseSchema<>(allUsers);
     return CompletableFuture.completedFuture(response);
   }
 
@@ -43,7 +45,7 @@ public class UserManagement extends AsyncRestEndpoint {
    * @throws EntityNotFoundException if user is not found.
    */
   @Get(Constants.RequestParameters.USER_ID)
-  public CompletableFuture<ResponseSchema<User>> getSingleUser(
+  public CompletableFuture<ResponseSchema<UserInfo>> getSingleUser(
       @RequestParam(value=Constants.RequestParameters.USER_ID, required=true) int id) {
     User user;
 
@@ -53,7 +55,7 @@ public class UserManagement extends AsyncRestEndpoint {
       return CompletableFuture.failedFuture(e);
     }
     
-    ResponseSchema<User> response = new ResponseSchema<>(user);
+    ResponseSchema<UserInfo> response = new ResponseSchema<>(user.toUserInfo());
     return CompletableFuture.completedFuture(response);
   }
 
@@ -66,7 +68,7 @@ public class UserManagement extends AsyncRestEndpoint {
    *     or valid new user information. See {@link UserServices} for specifics.
    */
   @Post
-  public CompletableFuture<ResponseSchema<User>> createUser(@RequestBody UserInfo user) {
+  public CompletableFuture<ResponseSchema<UserInfo>> createUser(@RequestBody UserInfo user) {
     User newUser;
 
     try {
@@ -75,7 +77,7 @@ public class UserManagement extends AsyncRestEndpoint {
       return CompletableFuture.failedFuture(e);
     }
 
-    ResponseSchema<User> response = new ResponseSchema<>(newUser);
+    ResponseSchema<UserInfo> response = new ResponseSchema<>(newUser.toUserInfo());
     return CompletableFuture.completedFuture(response);
   }
 
@@ -89,7 +91,7 @@ public class UserManagement extends AsyncRestEndpoint {
    *     in the database.
    */
   @Patch
-  public CompletableFuture<ResponseSchema<User>> editUser(@RequestBody UserInfo user) {
+  public CompletableFuture<ResponseSchema<UserInfo>> editUser(@RequestBody UserInfo user) {
     if (user.id() == null) {
       return CompletableFuture.failedFuture(new InvalidParameterException("Missing id"));
     }
@@ -102,7 +104,7 @@ public class UserManagement extends AsyncRestEndpoint {
       return CompletableFuture.failedFuture(e);
     }
 
-    ResponseSchema<User> response = new ResponseSchema<>(newUser);
+    ResponseSchema<UserInfo> response = new ResponseSchema<>(newUser.toUserInfo());
     return CompletableFuture.completedFuture(response);
   }
 
