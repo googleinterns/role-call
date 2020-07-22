@@ -80,6 +80,7 @@ export class UserApi {
     return this.requestAllUsers().then(val => {
       // Update the users map
       this.users.clear();
+      console.log(val);
       for (let user of val.data.users) {
         this.users.set(user.uuid, user);
       }
@@ -131,7 +132,7 @@ export class UserApi {
    */
   setUser(user: User): Promise<APITypes.SuccessIndicator> {
     if (this.isValidUser(user)) {
-      this.setUserResponse(user).then(val => {
+      return this.setUserResponse(user).then(val => {
         if (val.status == 400) {
           this.getAllUsers();
           return {
@@ -153,10 +154,9 @@ export class UserApi {
   }
 
   /** Determines if the user object provided is valid for storage in the database */
-  private isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.contact_info.email) && !isNullOrUndefined(user.first_name) &&
-      !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_privilege_classes) &&
-      user.has_privilege_classes.length >= 1;
+  public isValidUser(user: User): boolean {
+    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.contact_info.email) && !isNullOrUndefined(user.first_name) &&
+      !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_permissions);
   }
 
 }

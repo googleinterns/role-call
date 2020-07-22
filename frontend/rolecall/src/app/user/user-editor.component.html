@@ -8,7 +8,7 @@
         <div *ngFor="let user of renderingUsers" class="app-card user-select"
           [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''" (click)="setCurrentUser(user)">
           <h2 class="user-name">
-            {{ user.first_name + " " + user.last_name }}
+            {{ (user.first_name ? user.first_name : " ") + " " + (user.last_name ? user.last_name : " ") }}
           </h2>
         </div>
       </div>
@@ -27,18 +27,64 @@
   <div class="right-panel">
     <div class="app-card card-margins right-card">
       <h1 class="left-card-title">
-        {{ !currentSelectedUser ? '' : currentSelectedUser.first_name + " " + currentSelectedUser.last_name }}
+        {{ ((currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined) + ' ' + 
+        ((currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined)}}
       </h1>
       <div class="name-container">
         <div class="name-input">
-          <app-text-input (valueChange)="onTextInputChange($event)"
-            [initValue]="!currentSelectedUser ? '' : currentSelectedUser.first_name" valueName="First Name">
+          <app-text-input (valueChange)="onInputChange($event)"
+            [initValue]="(currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined"
+            valueName="First Name">
           </app-text-input>
         </div>
         <div class="name-input">
-          <app-text-input (valueChange)="onTextInputChange($event)"
-            [initValue]="!currentSelectedUser ? '' : currentSelectedUser.first_name" valueName="Last Name">
+          <app-text-input (valueChange)="onInputChange($event)"
+            [initValue]="(currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined"
+            valueName="Last Name">
           </app-text-input>
+        </div>
+      </div>
+      <div class="email-date-container">
+        <div class="email-container">
+          <div class="email-input">
+            <app-text-input (valueChange)="onInputChange($event)"
+              [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['email'] | emptyStringIfUndefined"
+              valueName="Email">
+            </app-text-input>
+          </div>
+        </div>
+        <div class="date-input">
+          <app-date-input #birthdateIn (valueChange)="onInputChange($event)" valueName="Date of Birth"
+            [initValue]="currentSelectedUser ? currentSelectedUser.date_of_birth : getCurrentDate()">
+          </app-date-input>
+        </div>
+      </div>
+      <div class="phone-priv-class-container">
+        <div class="phone-container">
+          <div class="phone-input">
+            <app-text-input (valueChange)="onInputChange($event)"
+              [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['phone_number'] | emptyStringIfUndefined"
+              valueName="Phone">
+            </app-text-input>
+          </div>
+        </div>
+        <div class="priv-class-input">
+          <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)" valueName="Privilege Classes"
+            [setValues]="privilegeClassSet" [selectFrom]="privilegeClasses">
+          </app-multi-select-input>
+        </div>
+      </div>
+      <div class="permissions-input">
+        <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)" valueName="Permissions"
+          [setValues]="permissionsSet" [selectFrom]="getAllPerms()" [displayNameMapping]="permsNamesMap">
+        </app-multi-select-input>
+      </div>
+      <div class="save-button-container">
+        <div class="save-button-wrapper">
+          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="userSaved"
+            (click)="onSaveUser()">
+            save
+          </button>
         </div>
       </div>
     </div>

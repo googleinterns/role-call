@@ -66,7 +66,8 @@ export class SiteHeader implements OnInit {
     this.responseRecieved = true;
     this.userIsLoggedIn = this.loginAPI.isLoggedIn;
     if (loginResp.authenticated) {
-      this.profileSrc = this.loginAPI.user['Qt']['MK']
+      console.log(this.loginAPI.user);
+      this.profileSrc = this.loginAPI.user['Ot']['PK']
     }
   }
 

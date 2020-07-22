@@ -26,6 +26,7 @@
 }
 .user-select-container {
   overflow-y: scroll;
+  height: 100%;
   width: 100%;
 }
 .user-select {
@@ -93,16 +94,89 @@
   flex-direction: row;
   justify-content: space-between;
 }
+.email-date-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.phone-priv-class-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.email-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+}
+.phone-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+}
+.phone-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(100% - 2em);
+}
 .name-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(50% - 2em);
 }
+.email-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(100% - 2em);
+}
+.date-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(50% - 2em);
+}
+.priv-class-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(100% - 2em);
+}
+.permissions-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(100% - 2em);
+}
 .right-card-title {
   margin: 1em;
   font-weight: 800;
   font-size: xx-large;
+}
+.save-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: 100%;
+}
+.save-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.save-button {
+  background: $AAOrange;
+  font-size: x-large;
+  margin-right: 0.6em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
 }
 
 // Panels styling

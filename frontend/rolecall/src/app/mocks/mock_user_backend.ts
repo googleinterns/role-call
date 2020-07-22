@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
-import { AllUsersResponse, OneUserResponse, User } from "../api/user-api.service";
+import { AllUsersResponse, OneUserResponse, User } from "../api/user_api.service";
 
 /**
  * Mocks the user backend responses
@@ -38,11 +38,11 @@ export class MockUserBackend {
       first_name: "USER1First",
       last_name: "USER1Last",
       contact_info: {
-        phone_number: "1234567890",
+        phone_number: "1123456789",
         email: "USER1@gmail.com",
         emergency_contact: {
           name: "USER1 Emergency Contact Name",
-          phone_number: "1987654321",
+          phone_number: "1198765432",
           email: "USER1EMG@gmail.com"
         }
       },
@@ -73,15 +73,15 @@ export class MockUserBackend {
       has_privilege_classes: [
         "choreographer"
       ],
-      first_name: "USER1First",
-      last_name: "USER1Last",
+      first_name: "USER2First",
+      last_name: "USER2Last",
       contact_info: {
-        phone_number: "1234567890",
-        email: "USER1@gmail.com",
+        phone_number: "2123456789",
+        email: "USER2@gmail.com",
         emergency_contact: {
-          name: "USER1 Emergency Contact Name",
-          phone_number: "1987654321",
-          email: "USER1EMG@gmail.com"
+          name: "USER2 Emergency Contact Name",
+          phone_number: "2198765432",
+          email: "USER2EMG@gmail.com"
         }
       },
       date_of_birth: 1
@@ -111,6 +111,12 @@ export class MockUserBackend {
   /** Mocks user create/edit response */
   requestUserSet(user: User): Promise<HttpResponse<any>> {
     if (this.isValidUser(user)) {
+      let userInd = this.mockUserDB.findIndex((val) => val.uuid == user.uuid);
+      if (userInd == -1) {
+        this.mockUserDB.push(user);
+      } else {
+        this.mockUserDB[userInd] = user;
+      }
       return Promise.resolve({
         status: 400
       } as HttpResponse<any>);
@@ -122,10 +128,9 @@ export class MockUserBackend {
   }
 
   /** Checks if user is valid, like the backend */
-  private isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.first_name) &&
-      !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_privilege_classes) &&
-      user.has_privilege_classes.length >= 1;
+  public isValidUser(user: User): boolean {
+    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.contact_info.email) && !isNullOrUndefined(user.first_name) &&
+      !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_permissions);
   }
 
 }
