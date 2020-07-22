@@ -5,6 +5,7 @@ public class Constants {
 
   public static class Mappings {
     public static final String USER_MANAGEMENT = "/api/user";
+    public static final String SECTION_MANAGEMENT = "/api/section";
     public static final String  INCREMENT_USER_LOGIN = "/api/increment-login";
   }
 

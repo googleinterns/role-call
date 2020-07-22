@@ -77,7 +77,7 @@ public abstract class UserInfo {
 
   @AutoValue.Builder
   public abstract static class Builder {
-    public abstract Builder setId(int id);
+    public abstract Builder setId(Integer id);
 
     public abstract Builder setFirstName(String firstName);
 

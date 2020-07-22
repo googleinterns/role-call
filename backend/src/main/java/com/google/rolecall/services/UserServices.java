@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 /* Utility classes for accessing Users while mantaining database consistencies. */
-@Service
+@Service("userServices")
 public class UserServices {
   
   private final UserRepository userRepo;
