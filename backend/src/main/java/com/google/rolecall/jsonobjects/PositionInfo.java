@@ -24,6 +24,9 @@ public abstract class PositionInfo {
   @JsonProperty("order")
   public abstract Integer order();
 
+  @Nullable
+  public abstract Boolean delete();
+
     /* Every SectionInfo should be unique unless it's being comapred to itself */
   @Override
   public boolean equals(Object object) {
@@ -39,7 +42,8 @@ public abstract class PositionInfo {
   @JsonCreator
   public static PositionInfo create(@Nullable @JsonProperty("id") Integer id,
       @Nullable @JsonProperty("name") String name, @Nullable @JsonProperty("notes") String notes,
-      @Nullable @JsonProperty("order") Integer order) {
+      @Nullable @JsonProperty("order") Integer order,
+      @Nullable @JsonProperty("delete") Boolean delete) {
     return newBuilder()
         .setId(id)
         .setName(name)
@@ -61,6 +65,8 @@ public abstract class PositionInfo {
     public abstract Builder setNotes(String notes);
 
     public abstract Builder setOrder(Integer order);
+
+    public abstract Builder setDelete(Boolean delete);
 
     public abstract PositionInfo build();
   }

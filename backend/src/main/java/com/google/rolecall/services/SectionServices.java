@@ -55,13 +55,12 @@ public class SectionServices {
   /** 
    * Creates a new {@link Section} and {@link Positions} and adds it to the database.
    * 
-   * @param newSection {@link SectionInfo} containing information describing the new user.
-   * @return The new {@link User} created and stored.
-   * @throws InvalidParameterException When firstName, lastName, or email are null in
-   *    {@link UserInfo} newUser and when the email is malformatted or already exists.
+   * @param newSection {@link SectionInfo} containing information describing the new Section.
+   * @return The new {@link Section} created and stored.
+   * @throws InvalidParameterException When section is missing name, Positions are missing names,
+   *     or Positions have overlapping orders.
    */
   public Section createSection(SectionInfo newSection) throws InvalidParameterException {
-    
     Section section = Section.newBuilder()
         .setName(newSection.name())
         .setNotes(newSection.notes())
@@ -85,8 +84,67 @@ public class SectionServices {
     return sectionRepo.save(section);
   }
 
+  /** 
+   * Edits a {@link Section} and {@link Positions} and adds it to the database.
+   * 
+   * @param newSection {@link SectionInfo} containing information describing the new user.
+   * @return The new {@link User} created and stored.
+   * @throws InvalidParameterException When firstName, lastName, or email are null in
+   *    {@link UserInfo} newUser and when the email is malformatted or already exists.
+   */
+  public Section editSection(SectionInfo newSection) throws EntityNotFoundException,
+      InvalidParameterException {
+    Section section = getSection(newSection.id()).toBuilder()
+        .setName(newSection.name())
+        .setNotes(newSection.notes())
+        .setLength(newSection.length())
+        .build();
+    
+    List<Position> positions = section.getPositions();
+    for(PositionInfo info: newSection.positions()) {
+      Position position;
+      if(info.delete() != null && info.delete()) {
+        if(info.id() == null) {
+          throw new InvalidParameterException("Cannot delete Position without id.");
+        }
+        positions.remove(getPositionById(info.id(), positions));
+        continue;
+      } else if(info.id() != null) {
+        position = getPositionById(info.id(), positions);
+      } else {
+        position = new Position();
+      }
+      position = position.toBuilder()
+          .setName(info.name())
+          .setNotes(info.notes())
+          .setOrder(info.order())
+          .build();
+      section.addPosition(position);
+    }
+
+    Set<Integer> orders = new HashSet<>();
+    for(Position position: positions) {
+      if(orders.contains(position.getOrder())) {
+        throw new InvalidParameterException("Order of Positions must not be overlapping");
+      }
+      orders.add(position.getOrder());
+    }
+
+    return sectionRepo.save(section);
+  }
+
+  private Position getPositionById(int id, List<Position> positions)
+      throws EntityNotFoundException {
+    for (Position position : positions) {
+      if(position.getId() == id) {
+        return position;
+      }
+    }
+    throw new EntityNotFoundException(String.format(
+        "Position with id %d does not exist for this Section", id));
+  }
+
   public SectionServices(SectionRepository sectionRepo) {
     this.sectionRepo = sectionRepo;
   }
-  
 }
