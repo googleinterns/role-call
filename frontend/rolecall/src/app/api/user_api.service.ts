@@ -80,7 +80,6 @@ export class UserApi {
     return this.requestAllUsers().then(val => {
       // Update the users map
       this.users.clear();
-      console.log(val);
       for (let user of val.data.users) {
         this.users.set(user.uuid, user);
       }

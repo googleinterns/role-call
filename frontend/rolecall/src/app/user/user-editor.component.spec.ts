@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { EmptyStringIfUndefinedPipe } from '../common_components/empty_string_if_undefined.pipe';
-import { UserEditorComponent } from './user-editor.component';
+import { UserEditor } from './user-editor.component';
 
 let activatedRouteStub = {
   snapshot: {
@@ -12,12 +12,12 @@ let activatedRouteStub = {
 }
 
 describe('UserEditorComponent', () => {
-  let component: UserEditorComponent;
-  let fixture: ComponentFixture<UserEditorComponent>;
+  let component: UserEditor;
+  let fixture: ComponentFixture<UserEditor>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UserEditorComponent, EmptyStringIfUndefinedPipe],
+      declarations: [UserEditor, EmptyStringIfUndefinedPipe],
       providers: [
         {
           provide: ActivatedRoute,
@@ -29,7 +29,7 @@ describe('UserEditorComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserEditorComponent);
+    fixture = TestBed.createComponent(UserEditor);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

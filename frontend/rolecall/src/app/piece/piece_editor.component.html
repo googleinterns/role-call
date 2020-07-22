@@ -1,1 +1,49 @@
-<p>piece-editor works!</p>
+<div class="panel-container">
+  <div class="left-panel">
+    <div class="app-card card-margins left-card">
+      <h1 class="left-card-title">
+        Pieces
+      </h1>
+      <div class="user-select-container">
+        <div *ngFor="let piece of renderingPieces" class="app-card user-select"
+          [ngClass]="piece.uuid == currentSelectedPiece.uuid ? 'selected-user' : ''" (click)="setCurrentPiece(piece)">
+          <h2 class="user-name">
+            {{ piece.uuid }}
+          </h2>
+        </div>
+      </div>
+      <div class="add-user-button-width-container">
+        <div class="add-user-button-height-container">
+          <button mat-icon-button aria-label="Add User Button" class="add-user-button" (click)="addPiece()">
+            <mat-icon [inline]="true" class="add-user-button-icon">
+              add
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="app-card card-margins right-card">
+      <div *ngIf="currentSelectedPiece">
+        <h1 class="left-card-title">
+          {{ ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined) }}
+        </h1>
+        <div *ngIf="currentSelectedPiece.name == undefined">
+          <app-text-input (valueChange)="onInputChange($event)"
+            [initValue]="(currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined"
+            valueName="New Piece Name">
+          </app-text-input>
+          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="newPieceNameSaved"
+            (click)="onSaveNewPieceName()">
+            save piece name
+          </button>
+        </div>
+      </div>
+      <div *ngFor="let p">
+
+      </div>
+    </div>
+  </div>
+</div>

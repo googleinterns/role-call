@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PieceRoutingModule } from '../piece/piece-routing.module';
 import { UserRoutingModule } from '../user/user-routing.module';
 import { App } from './app.component';
 import { AppRoutingModule } from './app_routing.module';
@@ -24,6 +25,7 @@ import { SiteHeader } from './site_header.component';
     MatButtonModule,
     NgbModule,
     // Routing
+    PieceRoutingModule,
     UserRoutingModule,
     AppRoutingModule,
   ],

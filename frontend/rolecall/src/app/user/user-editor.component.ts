@@ -1,11 +1,9 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 import { PrivilegeClassApi } from '../api/privilege_class_api.service';
 import { User, UserApi } from '../api/user_api.service';
-import { EditableDateInput } from '../common_components/editable_date_input.component';
-import { EditableMultiSelectInput } from '../common_components/editable_multiselect_input.component';
 
 
 /**
@@ -17,13 +15,10 @@ import { EditableMultiSelectInput } from '../common_components/editable_multisel
   templateUrl: './user-editor.component.html',
   styleUrls: ['./user-editor.component.scss']
 })
-export class UserEditorComponent implements OnInit, OnDestroy {
+export class UserEditor implements OnInit, OnDestroy {
 
-  @ViewChild('birthdateIn') birthDateIn: EditableDateInput;
-  @ViewChild('permissionsIn') permissionsIn: EditableMultiSelectInput;
   permissionsSet: EventEmitter<string[]> = new EventEmitter();
   privilegeClassSet: EventEmitter<string[]> = new EventEmitter();
-
 
   currentSelectedUser: User;
   renderingUsers: User[];
@@ -54,6 +49,7 @@ export class UserEditorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userAPI.userEmitter.unsubscribe();
+    this.privilegeClassAPI.privilegeClassEmitter.unsubscribe();
   }
 
   onUserLoad(users: User[]) {
@@ -234,7 +230,6 @@ export class UserEditorComponent implements OnInit, OnDestroy {
     if (this.workingUser) {
       this.setWorkingPropertyByKey(valueName, value);
     }
-    console.log(this.workingUser);
   }
 
   setWorkingPropertyByKey(key: string, val: any) {
