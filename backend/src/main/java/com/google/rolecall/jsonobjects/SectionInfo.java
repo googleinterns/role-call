@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import java.util.List;
 import javax.annotation.Nullable;
 
+/* Json representation of Section class for serializing and deserializing. */
 @JsonDeserialize(builder = AutoValue_SectionInfo.Builder.class)
 @AutoValue
 public abstract class SectionInfo {

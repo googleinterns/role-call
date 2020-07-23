@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import java.util.Calendar;
 import javax.annotation.Nullable;
 
+/* Json representation of User class for serializing and deserializing. */
 @JsonDeserialize(builder = AutoValue_UserInfo.Builder.class)
 @AutoValue
 public abstract class UserInfo {

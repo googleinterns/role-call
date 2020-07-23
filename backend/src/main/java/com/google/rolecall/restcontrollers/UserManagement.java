@@ -26,7 +26,7 @@ public class UserManagement extends AsyncRestEndpoint {
   /**
    * Gets all {@link User} objects stored in the database.
    * 
-   * @return List of {@link User} objects.
+   * @return List of {@link UserInfo} objects.
    */
   @Get
   public CompletableFuture<ResponseSchema<List<UserInfo>>> getAllUsers() {
@@ -41,7 +41,7 @@ public class UserManagement extends AsyncRestEndpoint {
    * Gets an {@link User} object by its {@code USER_ID}.
    *
    * @param id the unique ID associate with a user.
-   * @return {@link User} object with the target ID.
+   * @return {@link UserInfo} object with the target ID.
    * @throws EntityNotFoundException if user is not found.
    */
   @Get(Constants.RequestParameters.USER_ID)
@@ -63,7 +63,7 @@ public class UserManagement extends AsyncRestEndpoint {
    * Creates a new {@link User} object and stores it in the database.
    * 
    * @param user {@Link UserInfo} object stores client inputed values for the new {@link User}.
-   * @return New {@Link User} object created and saved in the databse.
+   * @return New {@Link UserInfo} object created and saved in the databse.
    * @throws InvalidParameterException if {@Link UserInfo} user does not contain sufficient
    *     or valid new user information. See {@link UserServices} for specifics.
    */
@@ -85,7 +85,7 @@ public class UserManagement extends AsyncRestEndpoint {
    * Edits an existing {@link User} object and updates it in the database.
    * 
    * @param user {@Link UserInfo} object stores client inputed values for the updated {@link User}.
-   * @return Edited {@Link User} object created and saved in the databse.
+   * @return Edited {@Link UserInfo} object created and saved in the databse.
    * @throws InvalidParameterException if {@Link UserInfo} user does not contain a user id.
    * @throws EntityNotFoundException if {@Link UserInfo} user contains an id that does not exist
    *     in the database.

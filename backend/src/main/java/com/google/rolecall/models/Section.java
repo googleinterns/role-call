@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/* Represents a general Section of a Performance*/
 @Entity
 @Table
 public class Section {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
 import javax.annotation.Nullable;
 
+/* Json representation of Position class for serializing and deserializing. */
 @JsonDeserialize(builder = AutoValue_PositionInfo.Builder.class)
 @AutoValue
 public abstract class PositionInfo {

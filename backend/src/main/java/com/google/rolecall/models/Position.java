@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/* Represents a Position for a User in a Section. */
 @Entity
 @Table
 public class Position {
