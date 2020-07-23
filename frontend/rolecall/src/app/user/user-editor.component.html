@@ -25,7 +25,7 @@
   </div>
 
   <div class="right-panel">
-    <div class="app-card card-margins right-card">
+    <div *ngIf="renderingUsers.length > 0" class="app-card card-margins right-card">
       <h1 class="left-card-title">
         {{ ((currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined) + ' ' + 
         ((currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined)}}
@@ -79,8 +79,13 @@
           [setValues]="permissionsSet" [selectFrom]="getAllPerms()" [displayNameMapping]="permsNamesMap">
         </app-multi-select-input>
       </div>
-      <div class="save-button-container">
-        <div class="save-button-wrapper">
+      <div class="button-container">
+        <div class="button-wrapper">
+          <button mat-flat-button aria-label="Delete User" class="delete-button" (click)="deleteUser()">
+            delete
+          </button>
+        </div>
+        <div class="button-wrapper">
           <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="userSaved"
             (click)="onSaveUser()">
             save

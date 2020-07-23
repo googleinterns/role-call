@@ -108,7 +108,7 @@ export class MockUserBackend {
     });
   };
 
-  /** Mocks user create/edit response */
+
   requestUserSet(user: User): Promise<HttpResponse<any>> {
     if (this.isValidUser(user)) {
       let userInd = this.mockUserDB.findIndex((val) => val.uuid == user.uuid);
@@ -125,6 +125,14 @@ export class MockUserBackend {
         status: 200
       } as HttpResponse<any>);
     }
+  }
+
+  /** Mocks user delete response */
+  requestUserDelete(user: User): Promise<HttpResponse<any>> {
+    this.mockUserDB = this.mockUserDB.filter(val => val.uuid != user.uuid);
+    return Promise.resolve({
+      status: 400
+    } as HttpResponse<any>);
   }
 
   /** Checks if user is valid, like the backend */

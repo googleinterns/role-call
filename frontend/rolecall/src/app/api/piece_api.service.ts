@@ -49,6 +49,11 @@ export class PieceApi {
   requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     return this.mockBackend.requestPieceSet(piece);
   }
+  /** 
+   * Hits backend with delete piece POST request */
+  requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
+    return this.mockBackend.requestPieceDelete(piece);
+  }
 
   /** All the loaded pieces mapped by UUID */
   pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
@@ -90,6 +95,11 @@ export class PieceApi {
     return this.requestPieceSet(piece);
   }
 
+  /** Sends backend request and awaits reponse */
+  private deletePieceResponse(piece: Piece): Promise<HttpResponse<any>> {
+    return this.requestPieceDelete(piece);
+  }
+
   /** Gets all the pieces from the backend and returns them */
   getAllPieces(): Promise<Piece[]> {
     return this.getAllPiecesResponse().then(val => {
@@ -112,6 +122,23 @@ export class PieceApi {
    */
   setPiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.setPieceResponse(piece).then(val => {
+      if (val.status == 400) {
+        this.getAllPieces();
+        return {
+          successful: true
+        }
+      } else {
+        return {
+          successful: false,
+          error: "Server failed, try again."
+        }
+      }
+    });
+  }
+
+  /** Requests for the backend to delete the piece */
+  deletePiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
+    return this.deletePieceResponse(piece).then(val => {
       if (val.status == 400) {
         this.getAllPieces();
         return {

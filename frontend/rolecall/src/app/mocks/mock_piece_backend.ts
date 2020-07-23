@@ -78,4 +78,12 @@ export class MockPieceBackend {
     }
   }
 
+  /** Mocks piece delete response */
+  requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
+    this.mockPieceDB = this.mockPieceDB.filter(val => val.uuid != piece.uuid);
+    return Promise.resolve({
+      status: 400
+    } as HttpResponse<any>);
+  }
+
 }

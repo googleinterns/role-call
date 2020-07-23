@@ -8,13 +8,13 @@
         <div *ngFor="let piece of renderingPieces" class="app-card user-select"
           [ngClass]="piece.uuid == currentSelectedPiece.uuid ? 'selected-user' : ''" (click)="setCurrentPiece(piece)">
           <h2 class="user-name">
-            {{ piece.uuid }}
+            {{ piece.name }}
           </h2>
         </div>
       </div>
       <div class="add-user-button-width-container">
         <div class="add-user-button-height-container">
-          <button mat-icon-button aria-label="Add User Button" class="add-user-button" (click)="addPiece()">
+          <button mat-icon-button aria-label="Add Piece Button" class="add-user-button" (click)="addPiece()">
             <mat-icon [inline]="true" class="add-user-button-icon">
               add
             </mat-icon>
@@ -25,24 +25,74 @@
   </div>
 
   <div class="right-panel">
-    <div class="app-card card-margins right-card">
+    <div *ngIf="renderingPieces.length > 0" class="app-card card-margins right-card">
       <div *ngIf="currentSelectedPiece">
-        <h1 class="left-card-title">
-          {{ ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined) }}
-        </h1>
-        <div *ngIf="currentSelectedPiece.name == undefined">
-          <app-text-input (valueChange)="onInputChange($event)"
-            [initValue]="(currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined"
-            valueName="New Piece Name">
-          </app-text-input>
-          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="newPieceNameSaved"
-            (click)="onSaveNewPieceName()">
-            save piece name
-          </button>
+        <div class="right-title-edit">
+          <h1 class="left-card-title">
+            {{ ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined) }}
+          </h1>
+          <div *ngIf="currentSelectedPiece.nameSaved" class="add-user-button-width-container">
+            <div class="add-user-button-height-container">
+              <button mat-icon-button aria-label="Add Piece Button" class="add-user-button" (click)="editTitle()">
+                <mat-icon [inline]="true" class="add-user-button-icon">
+                  edit
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!currentSelectedPiece.nameSaved" class="right-title-edit">
+          <div>
+            <app-text-input (valueChange)="onInputChange($event)"
+              [initValue]="(currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined"
+              valueName="New Piece Name">
+            </app-text-input>
+          </div>
         </div>
       </div>
-      <div *ngFor="let p">
-
+      <div class="app-card positions-card">
+        <div class="position-container" *ngFor=" let position of ((currentSelectedPiece ? currentSelectedPiece : [])['positions'] ?
+          currentSelectedPiece.positions : []); let i = index;">
+          <div class="app-card">
+            <h2>{{position}}</h2>
+          </div>
+          <div class="add-user-button-height-container">
+            <button mat-icon-button aria-label="Add Piece Button" class="add-user-button" (click)="deletePosition(i)">
+              <mat-icon [inline]="true" class="add-user-button-icon">
+                delete
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="currentSelectedPiece">
+          <div *ngFor="let ind of this.currentSelectedPiece.addingPositionsIndexes; let i = index">
+            <app-text-input (valueChange)="onInputChange($event)"
+              [valueName]="'Position ' + (i + this.currentSelectedPiece.positions.length + 1)">
+            </app-text-input>
+          </div>
+        </div>
+        <div class="add-user-button-width-container">
+          <div class="add-user-button-height-container">
+            <button mat-icon-button aria-label="Add Position Button" class="add-user-button" (click)="addPosition()">
+              <mat-icon [inline]="true" class="add-user-button-icon">
+                add
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="button-container">
+        <div class="button-wrapper">
+          <button mat-flat-button aria-label="Delete User" class="delete-button" (click)="deletePiece()">
+            delete
+          </button>
+        </div>
+        <div class="button-wrapper">
+          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="pieceSaved"
+            (click)="onSavePiece()">
+            save
+          </button>
+        </div>
       </div>
     </div>
   </div>

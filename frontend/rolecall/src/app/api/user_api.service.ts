@@ -69,6 +69,11 @@ export class UserApi {
     return this.mockBackend.requestUserSet(user);
   }
 
+  /** Hits backend with delete user POST request */
+  requestUserDelete(user: User): Promise<HttpResponse<any>> {
+    return this.mockBackend.requestUserDelete(user);
+  }
+
   /** All the loaded users mapped by UUID */
   users: Map<APITypes.UserUUID, User> = new Map<APITypes.UserUUID, User>();
 
@@ -107,6 +112,11 @@ export class UserApi {
   /** Sends backend request and awaits reponse */
   private setUserResponse(user: User): Promise<HttpResponse<any>> {
     return this.requestUserSet(user);
+  }
+
+  /** Sends backend request and awaits reponse */
+  private deleteUserResponse(user: User): Promise<HttpResponse<any>> {
+    return this.requestUserDelete(user);
   }
 
   /** Gets all the users from the backend and returns them */
@@ -150,6 +160,23 @@ export class UserApi {
         error: "Invalid user object"
       });
     }
+  }
+
+  /** Requests for the backend to delete the user */
+  deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
+    return this.deleteUserResponse(user).then(val => {
+      if (val.status == 400) {
+        this.getAllUsers();
+        return {
+          successful: true
+        }
+      } else {
+        return {
+          successful: false,
+          error: "Server failed, try again."
+        }
+      }
+    });
   }
 
   /** Determines if the user object provided is valid for storage in the database */

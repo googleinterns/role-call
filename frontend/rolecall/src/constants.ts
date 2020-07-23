@@ -16,3 +16,11 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
     icon: 'settings'
   },
 ];
+
+/** Color variables */
+declare namespace Colors {
+  const white = 'white';
+  const offWhite = '#f4f4f4';
+  const offoffWhite = '#d9d9d9';
+  const AAOrange = '#ffae00';
+}

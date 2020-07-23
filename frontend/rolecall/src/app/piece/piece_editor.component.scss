@@ -24,6 +24,10 @@
   margin: 1em;
   max-height: 86vh;
 }
+.position-container {
+  height: 100%;
+  width: 100%;
+}
 .user-select-container {
   overflow-y: scroll;
   height: 100%;
@@ -60,7 +64,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 10vh;
 }
 .add-user-button {
   background: $white;
@@ -157,13 +160,13 @@
   font-weight: 800;
   font-size: xx-large;
 }
-.save-button-container {
+.button-container {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  height: 100%;
+  justify-content: space-between;
+  height: min-content;
 }
-.save-button-wrapper {
+.button-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -177,6 +180,38 @@
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 0.5em;
+}
+.delete-button {
+  background: $white;
+  color: black;
+  font-size: x-large;
+  margin-left: 0.6em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  &:hover {
+    background: red;
+    color: $white;
+  }
+}
+
+.right-title-edit {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.position-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: min-content;
+}
+
+.positions-card {
+  height: 100%;
 }
 
 // Panels styling

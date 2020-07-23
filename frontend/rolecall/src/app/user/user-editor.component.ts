@@ -141,6 +141,13 @@ export class UserEditor implements OnInit, OnDestroy {
     this.setCurrentUser(this.workingUser);
   }
 
+  deleteUser() {
+    this.prevWorkingState = undefined;
+    this.renderingUsers = this.renderingUsers.filter(val => val.uuid != this.currentSelectedUser.uuid);
+    this.userAPI.deleteUser(this.currentSelectedUser);
+    this.renderingUsers.length > 0 ? this.setCurrentUser(this.renderingUsers[0]) : this.setCurrentUser(undefined);
+  }
+
   onSaveUser() {
     this.userSaved = true;
     this.userAPI.setUser(this.workingUser).then(async val => {
