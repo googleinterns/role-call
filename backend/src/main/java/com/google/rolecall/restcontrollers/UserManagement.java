@@ -63,9 +63,9 @@ public class UserManagement extends AsyncRestEndpoint {
    * Creates a new {@link User} object and stores it in the database.
    * 
    * @param user {@Link UserInfo} object stores client inputed values for the new {@link User}.
-   * @return New {@Link UserInfo} object created and saved in the databse.
+   * @return {@Link UserInfo} object of {@link User} created and saved in the database.
    * @throws InvalidParameterException if {@Link UserInfo} user does not contain sufficient
-   *     or valid new user information. See {@link UserServices} for specifics.
+   *     or valid new user information. See {@link UserServices.createUser} for specifics.
    */
   @Post
   public CompletableFuture<ResponseSchema<UserInfo>> createUser(@RequestBody UserInfo user) {
