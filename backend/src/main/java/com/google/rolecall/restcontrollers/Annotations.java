@@ -49,7 +49,7 @@ final class Annotations {
   @Target(ElementType.METHOD)
   @Retention(RetentionPolicy.RUNTIME)
   @Async
-  @RequestMapping(method = RequestMethod.POST)
+  @RequestMapping(method = RequestMethod.DELETE)
   @interface Delete {
     @AliasFor(annotation = RequestMapping.class, attribute = "params")
     String[] value() default {};

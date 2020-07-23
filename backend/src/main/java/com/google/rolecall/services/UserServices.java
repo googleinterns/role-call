@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 /* Utility classes for accessing Users while mantaining database consistencies. */
-@Service
+@Service("userServices")
 public class UserServices {
   
   private final UserRepository userRepo;
@@ -113,7 +113,8 @@ public class UserServices {
    * Deletes an existing {@link User} object by id.
    * 
    * @param id Unique id for the {@link User} object to be deleted
-   * @throws EntityNotFoundException The id from does not exist in the database.
+   * @throws EntityNotFoundException The id does not match and existing {@link User}
+   *    in the database.
    */
   public void deleteUser(int id) throws EntityNotFoundException {
     getUser(id);

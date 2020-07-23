@@ -75,7 +75,7 @@ public class UserManagementUnitTests {
     try {
       user = builder.build();
     } catch(InvalidParameterException e) {
-      throw new Error("Unable to creat User");
+      throw new Error("Unable to create User");
     }
   }
 
@@ -85,13 +85,14 @@ public class UserManagementUnitTests {
     lenient().doReturn(Collections.singletonList(user)).when(userService).getAllUsers();
 
     // Execute
-    CompletableFuture<ResponseSchema<List<User>>> response = controller.getAllUsers();
+    CompletableFuture<ResponseSchema<List<UserInfo>>> response = controller.getAllUsers();
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
-    ResponseSchema<List<User>> schema = response.get();
+    ResponseSchema<List<UserInfo>> schema = response.get();
     assertThat(schema.getWarnings()).isEmpty();
-    assertThat(schema.getData()).containsExactly(user);
+    assertThat(schema.getData().size()).isEqualTo(1);
+    assertThat(schema.getData().toString()).contains(user.toUserInfo().toString());
   }
 
   @Test
@@ -100,13 +101,13 @@ public class UserManagementUnitTests {
     lenient().doReturn(user).when(userService).getUser(id);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.getSingleUser(id);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.getSingleUser(id);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
-    ResponseSchema<User> schema = response.get();
+    ResponseSchema<UserInfo> schema = response.get();
     assertThat(schema.getWarnings()).isEmpty();
-    assertThat(schema.getData()).isEqualTo(user);
+    assertThat(schema.getData().toString()).isEqualTo(user.toUserInfo().toString());
   }
 
   @Test
@@ -116,7 +117,7 @@ public class UserManagementUnitTests {
         .when(userService).getUser(id);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.getSingleUser(id);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.getSingleUser(id);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -142,7 +143,7 @@ public class UserManagementUnitTests {
     lenient().doReturn(user).when(userService).createUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.createUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.createUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
@@ -158,7 +159,7 @@ public class UserManagementUnitTests {
     lenient().doThrow(new InvalidParameterException("Missing params")).when(userService).createUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.createUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.createUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -184,12 +185,12 @@ public class UserManagementUnitTests {
     lenient().doReturn(user).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.editUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
     verify(userService, times(1)).editUser(newUser);
-    assertThat(response.get().getData()).isEqualTo(user);
+    assertThat(response.get().getData().toString()).isEqualTo(user.toUserInfo().toString());
   }
 
   @Test
@@ -201,7 +202,7 @@ public class UserManagementUnitTests {
     lenient().doThrow(new EntityNotFoundException("Wrong exception")).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.editUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -226,7 +227,7 @@ public class UserManagementUnitTests {
     lenient().doThrow(new EntityNotFoundException("Bad id")).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<User>> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response = controller.editUser(newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
