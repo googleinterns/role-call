@@ -29,6 +29,7 @@ export class UserEditor implements OnInit, OnDestroy {
   prevWorkingState: User;
   workingUser: User;
   userSaved: boolean = false;
+  creatingUser: boolean = false;
 
   constructor(private route: ActivatedRoute, private userAPI: UserApi,
     private privilegeClassAPI: PrivilegeClassApi,
@@ -77,6 +78,7 @@ export class UserEditor implements OnInit, OnDestroy {
   setCurrentUser(user: User, fromInputChange?: boolean) {
     if (user && this.currentSelectedUser && user.uuid !== this.currentSelectedUser.uuid) {
       this.userSaved = false;
+      this.creatingUser = false;
     }
     if (this.workingUser && user.uuid != this.workingUser.uuid) {
       this.renderingUsers = this.renderingUsers.filter(val => val.uuid != this.workingUser.uuid && this.userAPI.isValidUser(val));
@@ -107,6 +109,10 @@ export class UserEditor implements OnInit, OnDestroy {
   }
 
   addUser() {
+    if (this.creatingUser) {
+      return;
+    }
+    this.creatingUser = true;
     this.prevWorkingState = undefined;
     let newUser: User = {
       first_name: undefined,
@@ -149,9 +155,10 @@ export class UserEditor implements OnInit, OnDestroy {
   }
 
   onSaveUser() {
-    this.userSaved = true;
     this.userAPI.setUser(this.workingUser).then(async val => {
       if (val.successful) {
+        this.creatingUser = false;
+        this.userSaved = true;
         let prevUUID = this.workingUser.uuid;
         this.prevWorkingState = undefined;
         this.workingUser = undefined;
@@ -227,6 +234,7 @@ export class UserEditor implements OnInit, OnDestroy {
   }
 
   onInputChange(change: [string, any]) {
+    console.log(change);
     let valueName = change[0];
     let value = change[1];
     if (!this.workingUser) {

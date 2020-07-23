@@ -25,7 +25,7 @@
   </div>
 
   <div class="right-panel">
-    <div *ngIf="renderingUsers.length > 0" class="app-card card-margins right-card">
+    <div class="app-card card-margins right-card">
       <h1 class="left-card-title">
         {{ ((currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined) + ' ' + 
         ((currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined)}}

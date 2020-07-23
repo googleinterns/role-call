@@ -18,7 +18,7 @@ export class EditableMultiSelectInput implements OnInit {
   ngOnInit() {
     this.setValues.subscribe((val) => {
       this.update(val);
-    })
+    });
   }
 
   update(values: string[]) {
