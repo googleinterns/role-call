@@ -230,7 +230,7 @@ export class UserEditor implements OnInit {
   }
 
   onInputChange(change: [string, any]) {
-    console.log(change);
+    this.userSaved = false;
     let valueName = change[0];
     let value = change[1];
     if (!this.workingUser) {
