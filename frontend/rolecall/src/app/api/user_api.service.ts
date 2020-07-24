@@ -1,5 +1,6 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { MockUserBackend } from '../mocks/mock_user_backend';
@@ -24,6 +25,29 @@ export type User = {
     }
   }
 };
+
+type RawAllUsersResponse = {
+  data: {
+    id: number,
+    firstName: string,
+    lastName: string,
+    email: string,
+    dateJoined: string,
+    emergencyContactName: string,
+    emergencyContactNumber: string,
+    comments: string,
+    canLogin: boolean,
+    admin: boolean,
+    notifications: boolean,
+    managePerformances: boolean,
+    manageCasts: boolean,
+    managePieces: boolean,
+    manageRoles: boolean,
+    manageRules: boolean,
+    isActive: boolean
+  }[],
+  warnings: string[]
+}
 
 export type AllUsersResponse = {
   data: {
@@ -52,11 +76,58 @@ export class UserApi {
   /** Mock backend */
   mockBackend: MockUserBackend = new MockUserBackend();
 
-  constructor(private loggingService: LoggingService) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient) { }
 
   /** Hits backend with all users GET request */
   requestAllUsers(): Promise<AllUsersResponse> {
-    return this.mockBackend.requestAllUsers();
+    if (environment.mockBackend) {
+      return this.mockBackend.requestAllUsers();
+    }
+    console.log(environment.backendURL)
+    return this.http.get<RawAllUsersResponse>(environment.backendURL + "api/user").toPromise().then((val) => {
+      return {
+        data: {
+          users: val.data.map((val) => {
+            return {
+              uuid: String(val.id),
+              has_permissions: {
+                canLogin: val.canLogin,
+                isAdmin: val.admin,
+                notifications: val.notifications,
+                managePerformances: val.managePerformances,
+                manageCasts: val.manageCasts,
+                managePieces: val.managePieces,
+                manageRoles: val.manageRoles,
+                manageRules: val.manageRules
+              },
+              has_privilege_classes: [],
+              knows_positions: [],
+              first_name: val.firstName,
+              last_name: val.lastName,
+              date_of_birth: 0,
+              contact_info: {
+                phone_number: "N/A",
+                email: val.email,
+                emergency_contact: {
+                  name: val.emergencyContactName,
+                  phone_number: val.emergencyContactNumber,
+                  email: "N/A"
+                }
+              }
+            }
+          })
+        },
+        warnings: val.warnings
+      }
+    }).catch(err => {
+      this.loggingService.logError(err);
+      return Promise.resolve({
+        data: {
+          users: []
+        },
+        warnings: []
+      })
+    });
   }
 
   /** Hits backend with one user GET request */
