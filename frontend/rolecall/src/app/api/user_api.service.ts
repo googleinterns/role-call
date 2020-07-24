@@ -120,6 +120,7 @@ export class UserApi {
         warnings: val.warnings
       }
     }).catch(err => {
+      console.log(err);
       this.loggingService.logError(err);
       return Promise.resolve({
         data: {
@@ -135,6 +136,7 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestOneUser(uuid);
     }
+    return this.mockBackend.requestOneUser(uuid);
   };
 
   /** Hits backend with create/edit user POST request */
@@ -142,6 +144,7 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserSet(user);
     }
+    return this.mockBackend.requestUserSet(user);
   }
 
   /** Hits backend with delete user POST request */
@@ -149,6 +152,7 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserDelete(user);
     }
+    return this.mockBackend.requestUserDelete(user);
   }
 
   /** All the loaded users mapped by UUID */
