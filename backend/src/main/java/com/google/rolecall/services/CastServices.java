@@ -113,11 +113,12 @@ public class CastServices {
   public void deleteCast(int id) throws EntityNotFoundException {
     Cast cast = getCastById(id);
     try {
-      cast.getPosition().removeCast(cast);
+      Position position = cast.getPosition();
+      position.removeCast(cast);
+      positionService.updatePosition(position);
     } catch(InvalidParameterException e) {
       throw new Error("Database inconsitency. Cast maps to no position.");
     }
-    castRepo.deleteById(id);
   }
 
   private void addNewCastMembers(Cast cast, List<CastMemberInfo> members)

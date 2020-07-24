@@ -23,6 +23,10 @@ public class PositionServices {
     return query.get();
   }
 
+  void updatePosition(Position position) {
+    positionRepo.save(position);
+  }
+
   public PositionServices(PositionRepository positionRepo) {
     this.positionRepo = positionRepo;
   }
