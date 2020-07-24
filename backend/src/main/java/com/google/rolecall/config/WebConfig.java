@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-      registry.addMapping("/api/**").allowedOrigins(env.getProperty("rolecall.frontend.url"));
+      registry.addMapping("/api/**").allowedOrigins(env.getProperty("rolecall.frontend.url"))
+          .allowedMethods("GET", "POST", "PATCH", "DELETE");
   }
 
   public WebConfig(Environment env) {
