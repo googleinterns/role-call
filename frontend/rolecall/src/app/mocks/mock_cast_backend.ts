@@ -29,6 +29,23 @@ export class MockCastBackend {
             members: ["USERUUID1", "USERUUID2"]
           }
         ],
+      },
+      {
+        position_uuid: "piece1pos2",
+        groups: [
+          {
+            group_index: 0,
+            members: ["USERUUID1", "USERUUID1"]
+          },
+          {
+            group_index: 1,
+            members: ["USERUUID2", "USERUUID2"]
+          },
+          {
+            group_index: 2,
+            members: ["USERUUID2", "USERUUID2"]
+          }
+        ],
       }]
     },
     {

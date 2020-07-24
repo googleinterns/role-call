@@ -64,7 +64,7 @@
           <div class="select-piece-container">
             <mat-form-field appearance="fill">
               <mat-label>Filling Position</mat-label>
-              <mat-select [(value)]="currentSelectedCast.currentPositionUUID">
+              <mat-select [(value)]="currentSelectedCast.currentPositionUUID" (selectionChange)="selectPosition()">
                 <mat-option *ngFor="let position of getPositionOptions()" [value]="position">
                   {{position}}
                 </mat-option>
@@ -74,7 +74,7 @@
           <div class="select-piece-container">
             <mat-form-field appearance="fill">
               <mat-label>Filling Cast</mat-label>
-              <mat-select [(value)]="currentSelectedCast.currentCastIndex">
+              <mat-select [(value)]="currentSelectedCast.currentGroupIndex">
                 <mat-option *ngFor="let cast of getCastOptions(); let i = index;" [value]="i">
                   {{ (i+1) | numberToPlace }}
                 </mat-option>
@@ -108,10 +108,10 @@
           </div>
         </div>
         <div *ngIf="currentSelectedCast">
-          <div *ngFor="let ind of this.currentSelectedCast.addingMembersIndexes; let i = index"
-            class="adding-position-container">
+          <div *ngFor="let ind of getAddingMembers(); let i = index" class="adding-position-container">
             <div class="adding-position-input-container">
-              <app-text-input (valueChange)="onInputChange($event)" [bgColor]="offWhite">
+              <app-text-input [valueName]="'New Cast Member ' + i" (valueChange)="onAddingCastMemberInput($event, i)"
+                [bgColor]="offWhite">
               </app-text-input>
             </div>
             <div class="add-button-height-container">

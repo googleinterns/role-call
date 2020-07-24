@@ -7,12 +7,13 @@ import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
+import { LoggingService } from '../services/logging.service';
 
 
 type CastOrder = {
   position_uuid: string,
   group_index: number,
-  cast_index: number
+  adding_index: number
 };
 
 type WorkingCast = Cast & {
@@ -20,7 +21,7 @@ type WorkingCast = Cast & {
   addingMembersIndexes: CastOrder[],
   nameSaved: boolean,
   currentPositionUUID: string,
-  currentCastIndex: number
+  currentGroupIndex: number
 }
 
 @Component({
@@ -52,7 +53,7 @@ export class CastingEditor implements OnInit {
   lastPieceUUID: string;
 
   constructor(private route: ActivatedRoute, private castAPI: CastApi, private pieceAPI: PieceApi, private userAPI: UserApi,
-    private location: Location) { }
+    private location: Location, private logging: LoggingService) { }
 
   ngOnInit(): void {
     let uuid = this.route.snapshot.params.uuid;
@@ -96,8 +97,7 @@ export class CastingEditor implements OnInit {
   // }
 
   getCastOptions() {
-    let cast = this.castAPI.casts.get(this.currentSelectedCast.uuid);
-    let posCasting = cast.filled_positions.find(val => val.position_uuid == this.currentSelectedCast.currentPositionUUID);
+    let posCasting = this.currentSelectedCast.filled_positions.find(val => val.position_uuid == this.currentSelectedCast.currentPositionUUID);
     if (!posCasting)
       return [];
     return posCasting.groups;
@@ -114,6 +114,12 @@ export class CastingEditor implements OnInit {
   //   return this.castOptions.copyWithin(0, 0, 1);
   // }
 
+  getAddingMembers() {
+    return this.currentSelectedCast.addingMembersIndexes.filter(val => {
+      return val.group_index == this.currentSelectedCast.currentGroupIndex && val.position_uuid == this.currentSelectedCast.currentPositionUUID;
+    });
+  }
+
   checkIfResourcesLoaded() {
     if (this.castsLoaded && this.piecesLoaded && this.usersLoaded) {
       this.allResourcesLoaded = true;
@@ -129,6 +135,10 @@ export class CastingEditor implements OnInit {
   onUserLoad(users: User[]) {
     this.usersLoaded = true;
     this.checkIfResourcesLoaded();
+  }
+
+  selectPosition() {
+    this.currentSelectedCast.currentGroupIndex = 0;
   }
 
   selectPiece(pieceUUID: string) {
@@ -151,17 +161,32 @@ export class CastingEditor implements OnInit {
       alert('Can\'t change cast piece! Instead, create a new cast');
       this.currentSelectedCast.segment = this.lastPieceUUID;
     }
-    this.currentSelectedCast.currentCastIndex = 0;
+    this.currentSelectedCast.currentGroupIndex = 0;
   }
 
   getFilledPosition(currentPosUUID: string) {
     if (!this.checkIfResourcesLoaded() || this.creatingCast)
       return [];
-    if (!this.currentSelectedCast.currentCastIndex)
-      this.currentSelectedCast.currentCastIndex = 0;
-    let members = this.currentSelectedCast.filled_positions.find((val) => {
+    if (!this.currentSelectedCast.currentGroupIndex)
+      this.currentSelectedCast.currentGroupIndex = 0;
+    let filledPos = this.currentSelectedCast.filled_positions.find((val) => {
       return val.position_uuid == currentPosUUID;
-    }).groups.find(val => val.group_index == this.currentSelectedCast.currentCastIndex).members;
+    });
+    if (!filledPos) {
+      let groupsArr = [];
+      for (let i = 0; i <= this.currentSelectedCast.currentGroupIndex; i++) {
+        groupsArr.push({
+          group_index: i,
+          members: []
+        });
+      }
+      filledPos = {
+        position_uuid: currentPosUUID,
+        groups: groupsArr
+      };
+      this.currentSelectedCast.filled_positions.push(filledPos);
+    }
+    let members = filledPos.groups.find(val => val.group_index == this.currentSelectedCast.currentGroupIndex).members;
     return members;
   }
 
@@ -218,10 +243,12 @@ export class CastingEditor implements OnInit {
       this.prevWorkingState = undefined;
       this.workingCast = undefined;
     }
+    if (this.currentSelectedCast && this.currentSelectedCast.uuid != cast.uuid) {
+      let piece = this.pieceAPI.pieces.get(cast.segment);
+      piece ? cast.currentPositionUUID = piece.positions[0] : cast.currentPositionUUID = undefined;
+    }
     this.currentSelectedCast = cast;
     this.lastPieceUUID = this.currentSelectedCast.segment;
-    let piece = this.pieceAPI.pieces.get(this.currentSelectedCast.segment);
-    piece ? this.currentSelectedCast.currentPositionUUID = piece.positions[0] : this.currentSelectedCast.currentPositionUUID = undefined;
     if (this.location.path().endsWith("cast") || this.location.path().endsWith("cast/")) {
       this.location.replaceState(this.location.path() + "/" + cast.uuid);
     } else {
@@ -237,13 +264,13 @@ export class CastingEditor implements OnInit {
   }
 
   addNthCast() {
-    let filledPos = this.currentSelectedCast.filled_positions.find((val) => this.currentSelectedCast.currentPositionUUID);
+    let filledPos = this.currentSelectedCast.filled_positions.find((val) => val.position_uuid == this.currentSelectedCast.currentPositionUUID);
     let nextInd = filledPos.groups.length;
     filledPos.groups.push({
       group_index: nextInd,
       members: []
     });
-    this.currentSelectedCast.currentCastIndex = nextInd;
+    this.currentSelectedCast.currentGroupIndex = nextInd;
   }
 
   addCast() {
@@ -257,7 +284,7 @@ export class CastingEditor implements OnInit {
       name: undefined,
       segment: undefined,
       currentPositionUUID: undefined,
-      currentCastIndex: undefined,
+      currentGroupIndex: undefined,
       filled_positions: [],
       nameSaved: false,
       addingMembers: new Map(),
@@ -309,10 +336,17 @@ export class CastingEditor implements OnInit {
 
   addPositionIndex() {
     // this.creatingCast = true;
-    // this.castSaved = false;
-    // let nextInd = (this.currentSelectedCast.positions.length + this.currentSelectedCast.addingMembers.size + 1);
-    // this.currentSelectedCast.addingMembers.set(nextInd, "Position " + nextInd);
-    // this.currentSelectedCast.addingMembersIndexes.push(nextInd);
+    this.castSaved = false;
+    let nextInd = this.currentSelectedCast.addingMembersIndexes.filter((val) => {
+      return val.group_index == this.currentSelectedCast.currentGroupIndex && val.position_uuid == this.currentSelectedCast.currentPositionUUID;
+    }).length;
+    let co = {
+      group_index: this.currentSelectedCast.currentGroupIndex,
+      position_uuid: this.currentSelectedCast.currentPositionUUID,
+      adding_index: nextInd
+    };
+    this.currentSelectedCast.addingMembers.set(co, "New Cast Member " + this.currentSelectedCast.addingMembersIndexes.length);
+    this.currentSelectedCast.addingMembersIndexes.push(co);
   }
 
   deleteAddingPositionIndex(index: number) {
@@ -323,7 +357,7 @@ export class CastingEditor implements OnInit {
   }
   deletePositionIndex(index: number) {
     let filledPos = this.currentSelectedCast.filled_positions.find(val => val.position_uuid == this.currentSelectedCast.currentPositionUUID);
-    let group = filledPos.groups.find(val => val.group_index == this.currentSelectedCast.currentCastIndex);
+    let group = filledPos.groups.find(val => val.group_index == this.currentSelectedCast.currentGroupIndex);
     group.members = group.members.filter((val, ind) => ind != index);
     // this.currentSelectedCast.positions = this.currentSelectedCast.positions.filter((val, ind) => ind != index);
   }
@@ -348,30 +382,26 @@ export class CastingEditor implements OnInit {
       key: "name",
       type: "string"
     },
-    "Last Name": {
-      key: "last_name",
-      type: "string"
-    },
-    "Date of Birth": {
-      key: "date_of_birth",
-      type: "date"
-    },
-    "Email": {
-      key: "contact_info.email",
-      type: "string"
-    },
-    "Permissions": {
-      key: "has_permissions",
-      type: "permissions"
-    },
-    "Phone": {
-      key: "contact_info.phone_number",
-      type: "string"
-    },
-    "Privilege Classes": {
-      key: "has_privilege_classes",
-      type: "string list"
+    "New Cast Member": {
+      key: "filled_positions",
+      type: "cast member"
     }
+  }
+
+  onAddingCastMemberInput([key, value]: [string, string], index: number) {
+    let co = Array.from(this.currentSelectedCast.addingMembers.keys()).find(val => {
+      return val.adding_index == index && val.group_index == this.currentSelectedCast.currentGroupIndex && val.position_uuid == this.currentSelectedCast.currentPositionUUID
+    });
+    if (!co) {
+      // this.logging.logError("Not able to find new cast member input CO");
+      co = {
+        group_index: this.currentSelectedCast.currentGroupIndex,
+        position_uuid: this.currentSelectedCast.currentPositionUUID,
+        adding_index: index
+      };
+    }
+    this.currentSelectedCast.addingMembers.set(co, value);
+
   }
 
   onInputChange(change: [string, any]) {
