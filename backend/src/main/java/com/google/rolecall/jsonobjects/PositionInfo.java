@@ -28,7 +28,7 @@ public abstract class PositionInfo {
   @Nullable
   public abstract Boolean delete();
 
-    /* Every SectionInfo should be unique unless it's being comapred to itself */
+  /* Every PositionInfo should be unique unless it's being comapred to itself */
   @Override
   public boolean equals(Object object) {
     return this == object;

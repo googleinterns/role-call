@@ -8,8 +8,8 @@ import java.util.Calendar;
 import javax.annotation.Nullable;
 
 /* Json representation of User class for serializing and deserializing. */
-@JsonDeserialize(builder = AutoValue_UserInfo.Builder.class)
 @AutoValue
+@JsonDeserialize(builder = AutoValue_UserInfo.Builder.class)
 public abstract class UserInfo {
   @Nullable
   @JsonProperty("id")

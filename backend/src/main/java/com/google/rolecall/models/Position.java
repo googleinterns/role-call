@@ -1,7 +1,11 @@
 package com.google.rolecall.models;
 
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /* Represents a Position for a User in a Section. */
@@ -29,8 +34,14 @@ public class Position {
   @Column(name = "orderOf", nullable = false)
   private Integer order;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Section section;
+
+  @OneToMany(mappedBy = "position", 
+      cascade = CascadeType.ALL, 
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
+  private List<Cast> casts = new ArrayList<>();
 
   public Integer getId() {
     return id;
@@ -50,6 +61,18 @@ public class Position {
 
   public Section getSection() {
     return section;
+  }
+
+  public List<Cast> getCasts() {
+    return casts;
+  }
+
+  public void addCast(Cast cast) {
+
+  }
+
+  public void removeCast(Cast cast) {
+
   }
 
   void setSection(Section section) {
