@@ -26,8 +26,8 @@ public abstract class CastMemberInfo {
   public abstract Boolean delete();
 
   @JsonCreator
-  public static CastMemberInfo create(@JsonProperty("id") Integer id, 
-      @JsonProperty("userId") Integer userId, @JsonProperty("castId") Integer castId,
+  public static CastMemberInfo create(@Nullable @JsonProperty("id") Integer id, 
+      @Nullable @JsonProperty("userId") Integer userId, @Nullable @JsonProperty("castId") Integer castId,
       @Nullable @JsonProperty("delete") Boolean delete) {
     return new AutoValue_CastMemberInfo(id, userId, castId, delete);
   }

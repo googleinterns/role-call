@@ -67,12 +67,20 @@ public class Position {
     return casts;
   }
 
-  public void addCast(Cast cast) {
-
+  public void addCast(Cast cast) throws InvalidParameterException {
+    if(cast.getPosition() != null) {
+      throw new InvalidParameterException("Cannot change cast Position once it's set.");
+    }
+    cast.setPosition(this);
+    casts.add(cast);
   }
 
-  public void removeCast(Cast cast) {
-
+  public void removeCast(Cast cast) throws InvalidParameterException {
+    if(cast.getPosition() != this) {
+      throw new InvalidParameterException("Cannot remove cast from different Position once it's set.");
+    }
+    cast.setPosition(null);
+    casts.remove(cast);
   }
 
   void setSection(Section section) {

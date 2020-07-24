@@ -1,5 +1,6 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.CastMemberInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,6 +34,10 @@ public class CastMember {
 
   public Cast getCast() {
     return cast;
+  }
+
+  public CastMemberInfo toCastMemberInfo() {
+    return CastMemberInfo.create(id, user.getId(), cast.getId(), null);
   }
 
   void setCast(Cast cast) {

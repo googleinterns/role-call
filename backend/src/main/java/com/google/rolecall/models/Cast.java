@@ -1,9 +1,12 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.CastInfo;
+import com.google.rolecall.jsonobjects.CastMemberInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -55,8 +58,8 @@ public class Cast {
     return comments == null? "" : comments;
   }
 
-  public Color getColor() {
-    return new Color(color);
+  public String getColor() {
+    return String.format("#%s", Integer.toHexString(color).toUpperCase());
   }
 
   public Position getPosition() {
@@ -85,6 +88,20 @@ public class Cast {
     return new Builder(this);
   }
 
+  public CastInfo toCastInfo() {
+    List<CastMemberInfo> membersInfo = members.stream().map(c->c.toCastMemberInfo())
+        .collect(Collectors.toList());
+  
+    return CastInfo.newBuilder()
+        .setId(id)
+        .setName(name)
+        .setComments(getComments())
+        .setPositionId(position.getId())
+        .setColor(getColor())
+        .setMembers(membersInfo)
+        .build();
+  }
+
   public Cast() {
   }
 
@@ -97,7 +114,7 @@ public class Cast {
     private Cast cast;
     private String name;
     private String comments;
-    private Integer color;
+    private String color;
 
     public Builder setName(String name) {
       if(name != null) {
@@ -113,9 +130,9 @@ public class Cast {
       return this;
     }
 
-    public Builder setColor(Color color) {
+    public Builder setColor(String color) {
       if(color != null) {
-        this.color = color.getRGB();
+        this.color = color;
       }
       return this;
     }
@@ -124,9 +141,15 @@ public class Cast {
       if(name == null || color == null) {
         throw new InvalidParameterException("Cast requires a name and a color");
       }
+      try {
+        Color converted = Color.decode(color);
+        cast.color = converted.getRGB() & 0xFFFFFF;
+      } catch(NumberFormatException e) {
+        throw new InvalidParameterException(
+            "Cast color should have RGB format ranging from '#000000' to '#FFFFFF'.");
+      }
       cast.name = this.name;
       cast.comments = this.comments;
-      cast.color = this.color;
 
       return cast;
     }
@@ -135,7 +158,7 @@ public class Cast {
       this.cast = cast;
       this.name = cast.name;
       this.comments = cast.comments;
-      this.color = cast.color;
+      this.color = cast.getColor();
     }
 
     public Builder() {
