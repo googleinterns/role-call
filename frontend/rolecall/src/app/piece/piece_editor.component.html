@@ -42,7 +42,7 @@
           </div>
         </div>
         <div *ngIf="!currentSelectedPiece.nameSaved" class="right-title-edit">
-          <div>
+          <div class="edit-title-container">
             <app-text-input (valueChange)="onInputChange($event)"
               [initValue]="(currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined"
               valueName="New Piece Name">
