@@ -126,9 +126,9 @@ export class PieceEditor implements OnInit {
       return;
     }
     this.pieceSaved = true;
+    this.currentSelectedPiece.positions.push(...this.currentSelectedPiece.addingPositions.values());
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {
-        this.currentSelectedPiece.positions.push(...this.currentSelectedPiece.addingPositions.values());
         this.currentSelectedPiece.addingPositions.clear();
         this.currentSelectedPiece.addingPositionsIndexes = [];
         let prevUUID = this.currentSelectedPiece.uuid;

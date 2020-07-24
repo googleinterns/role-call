@@ -60,24 +60,25 @@ export class PieceApi {
   requestAllPieces(): Promise<AllPiecesResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPieces();
-    } else {
-      return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
-        return {
-          data: {
-            pieces: val.data.map((section) => {
-              return {
-                uuid: String(section.id),
-                name: section.name,
-                positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map((position) => {
-                  return position.name;
-                })
-              }
-            })
-          },
-          warnings: val.warnings
-        }
-      });
     }
+    return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
+      this.positions = [];
+      return {
+        data: {
+          pieces: val.data.map((section) => {
+            return {
+              uuid: String(section.id),
+              name: section.name,
+              positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map((position) => {
+                this.positions.push(position);
+                return position.name;
+              })
+            }
+          })
+        },
+        warnings: val.warnings
+      }
+    });
   }
 
   /** Hits backend with one piece GET request */
@@ -87,16 +88,74 @@ export class PieceApi {
 
   /** Hits backend with create/edit piece POST request */
   requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
-    return this.mockBackend.requestPieceSet(piece);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestPieceSet(piece);
+    }
+    if (this.pieces.has(piece.uuid)) {
+      // Do patch
+      return this.http.patch(environment.backendURL + 'api/section', {
+        name: piece.name,
+        id: piece.uuid,
+        positions: piece.positions.map((val, ind) => {
+          return {
+            id: this.positions.find(val2 => {
+              return val2.name == val;
+            }).id,
+            name: val,
+            order: ind,
+            delete: true
+          }
+        })
+      }, { observe: "response" }).toPromise().then(val => {
+        return val;
+      }).catch(val => {
+        console.log(val);
+        return {
+          status: 400
+        } as HttpResponse<any>;
+      });
+    } else {
+      // Do post
+      console.log(piece);
+      return this.http.post(environment.backendURL + 'api/section', {
+        name: piece.name,
+        positions: piece.positions.map((val, ind) => {
+          return {
+            name: val,
+            order: ind
+          }
+        })
+      }, { observe: "response" }).toPromise().then(val => {
+        console.log(val);
+        return val;
+      }).catch(val => {
+        console.log(val);
+        return {
+          status: 400
+        } as HttpResponse<any>;
+      });
+    }
   }
   /** 
    * Hits backend with delete piece POST request */
   requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
-    return this.mockBackend.requestPieceDelete(piece);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestPieceDelete(piece);
+    }
+    return this.http.delete(environment.backendURL + 'api/section?sectionid=' + piece.uuid, { observe: "response" }).toPromise().then(val => {
+      return val;
+    }).catch(val => {
+      console.log(val);
+      return {
+        status: 400
+      } as HttpResponse<any>;
+    });;
   }
 
   /** All the loaded pieces mapped by UUID */
   pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
+
+  positions: RawPosition[] = [];
 
   /** Emitter that is called whenever pieces are loaded */
   pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
