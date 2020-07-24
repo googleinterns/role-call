@@ -69,11 +69,11 @@ export class MockPieceBackend {
         this.mockPieceDB[pieceInd] = piece;
       }
       return Promise.resolve({
-        status: 400
+        status: 200
       } as HttpResponse<any>);
     } else {
       return Promise.resolve({
-        status: 200
+        status: 400
       } as HttpResponse<any>);
     }
   }
@@ -82,7 +82,7 @@ export class MockPieceBackend {
   requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
     this.mockPieceDB = this.mockPieceDB.filter(val => val.uuid != piece.uuid);
     return Promise.resolve({
-      status: 400
+      status: 200
     } as HttpResponse<any>);
   }
 

@@ -118,11 +118,11 @@ export class MockUserBackend {
         this.mockUserDB[userInd] = user;
       }
       return Promise.resolve({
-        status: 400
+        status: 200
       } as HttpResponse<any>);
     } else {
       return Promise.resolve({
-        status: 200
+        status: 400
       } as HttpResponse<any>);
     }
   }
@@ -131,7 +131,7 @@ export class MockUserBackend {
   requestUserDelete(user: User): Promise<HttpResponse<any>> {
     this.mockUserDB = this.mockUserDB.filter(val => val.uuid != user.uuid);
     return Promise.resolve({
-      status: 400
+      status: 200
     } as HttpResponse<any>);
   }
 

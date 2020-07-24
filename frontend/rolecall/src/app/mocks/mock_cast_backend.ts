@@ -137,11 +137,11 @@ export class MockCastBackend {
         this.mockCastDB[castInd] = cast;
       }
       return Promise.resolve({
-        status: 400
+        status: 200
       } as HttpResponse<any>);
     } else {
       return Promise.resolve({
-        status: 200
+        status: 400
       } as HttpResponse<any>);
     }
   }
@@ -150,7 +150,7 @@ export class MockCastBackend {
   requestCastDelete(cast: Cast): Promise<HttpResponse<any>> {
     this.mockCastDB = this.mockCastDB.filter(val => val.uuid != cast.uuid);
     return Promise.resolve({
-      status: 400
+      status: 200
     } as HttpResponse<any>);
   }
 
