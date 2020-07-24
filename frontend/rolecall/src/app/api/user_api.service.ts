@@ -83,7 +83,6 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUsers();
     }
-    console.log(environment.backendURL)
     return this.http.get<RawAllUsersResponse>(environment.backendURL + "api/user").toPromise().then((val) => {
       return {
         data: {
@@ -120,7 +119,6 @@ export class UserApi {
         warnings: val.warnings
       }
     }).catch(err => {
-      console.log(err);
       this.loggingService.logError(err);
       return Promise.resolve({
         data: {
