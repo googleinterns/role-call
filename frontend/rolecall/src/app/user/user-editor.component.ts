@@ -108,6 +108,7 @@ export class UserEditor implements OnInit {
       return;
     }
     this.creatingUser = true;
+    this.userSaved = false;
     this.prevWorkingState = undefined;
     let newUser: User = {
       first_name: undefined,

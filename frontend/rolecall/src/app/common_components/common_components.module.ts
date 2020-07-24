@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -12,7 +13,6 @@ import { EditableTextInput } from './editable_text_input.component';
 import { EmptyStringIfUndefinedPipe } from './empty_string_if_undefined.pipe';
 import { NumberToPlacePipe } from './number_to_place.pipe';
 
-
 @NgModule({
   declarations: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe, NumberToPlacePipe],
   imports: [
@@ -22,7 +22,8 @@ import { NumberToPlacePipe } from './number_to_place.pipe';
     MatButtonModule,
     MatNativeDateModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
+    MatAutocompleteModule
   ],
   exports: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe, NumberToPlacePipe]
 })

@@ -93,10 +93,10 @@
         </div>
       </div>
       <div class="app-card positions-card">
-        <div class="position-container" *ngFor=" let position of ((currentSelectedCast ? currentSelectedCast : [])['filled_positions'] ?
+        <div class="position-container" *ngFor=" let userUUID of ((currentSelectedCast ? currentSelectedCast : [])['filled_positions'] ?
           getFilledPosition(this.currentSelectedCast.currentPositionUUID) : []); let i = index;">
           <div class="app-card position-name-card">
-            <h2 class="position-name">{{position}}</h2>
+            <h2 class="position-name">{{ getUserName(userUUID) }}</h2>
           </div>
           <div class="add-button-height-container">
             <button mat-icon-button aria-label="Delete Position Button" class="add-button"
@@ -110,8 +110,8 @@
         <div *ngIf="currentSelectedCast">
           <div *ngFor="let ind of getAddingMembers(); let i = index" class="adding-position-container">
             <div class="adding-position-input-container">
-              <app-text-input [valueName]="'New Cast Member ' + i" (valueChange)="onAddingCastMemberInput($event, i)"
-                [bgColor]="offWhite">
+              <app-text-input [autoCompleteOptions]="userNameAutocompleteOptions" [valueName]="'New Cast Member ' + i"
+                (valueChange)="onAddingCastMemberInput($event, i)" [bgColor]="offWhite">
               </app-text-input>
             </div>
             <div class="add-button-height-container">

@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-text-input',
@@ -11,6 +11,7 @@ export class EditableTextInput implements OnInit {
   @Input() valueName: string;
   @Input() bgColor: string;
   @Input() type: string;
+  @Input() autoCompleteOptions: string[];
   @Output() valueChange: EventEmitter<[string, string]> = new EventEmitter();
   currentValue: string;
 

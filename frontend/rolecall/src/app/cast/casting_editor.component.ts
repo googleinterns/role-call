@@ -52,6 +52,8 @@ export class CastingEditor implements OnInit {
 
   lastPieceUUID: string;
 
+  userNameAutocompleteOptions: string[] = [];
+
   constructor(private route: ActivatedRoute, private castAPI: CastApi, private pieceAPI: PieceApi, private userAPI: UserApi,
     private location: Location, private logging: LoggingService) { }
 
@@ -79,6 +81,11 @@ export class CastingEditor implements OnInit {
   //   index: 0,
   //   name: "1st"
   // }];
+
+  getUserName(userUUID: string) {
+    let user = this.userAPI.users.get(userUUID);
+    return user.first_name + " " + user.last_name;
+  }
 
   // generateCastOptions() {
   //   let maxIndex = -1;
@@ -135,6 +142,8 @@ export class CastingEditor implements OnInit {
   onUserLoad(users: User[]) {
     this.usersLoaded = true;
     this.checkIfResourcesLoaded();
+    this.userNameAutocompleteOptions = [];
+    this.userNameAutocompleteOptions = users.map((val) => val.first_name + " " + val.last_name);
   }
 
   selectPosition() {
@@ -313,7 +322,12 @@ export class CastingEditor implements OnInit {
           if (filled_cast) {
             let group = filled_cast.groups.find((val2) => val2.group_index == member[0].group_index);
             if (group) {
-              group.members.push(member[1]);
+              let findUser = Array.from(this.userAPI.users.values()).find(val => val.first_name.toLowerCase() + " " + val.last_name.toLowerCase() == member[1].toLowerCase());
+              if (!findUser) {
+                alert("No user with that name!")
+              } else {
+                group.members.push(findUser.uuid);
+              }
             }
           }
         }
@@ -350,10 +364,18 @@ export class CastingEditor implements OnInit {
   }
 
   deleteAddingPositionIndex(index: number) {
-    // let realInd = this.currentSelectedCast.positions.length + index + 1;
-    // this.currentSelectedCast.addingMembersIndexes =
-    //   this.currentSelectedCast.addingMembersIndexes.filter((val) => val != realInd);
-    // this.currentSelectedCast.addingMembers.delete(realInd);
+    let co = Array.from(this.currentSelectedCast.addingMembers.keys()).find(val => {
+      return val.adding_index == index && val.group_index == this.currentSelectedCast.currentGroupIndex && val.position_uuid == this.currentSelectedCast.currentPositionUUID
+    });
+    Array.from(this.currentSelectedCast.addingMembers.keys()).forEach((val) => {
+      if (val.group_index == co.group_index && val.position_uuid == co.position_uuid && val.adding_index > index) {
+        this.currentSelectedCast.addingMembers.delete(val);
+        val.adding_index = val.adding_index - 1;
+        this.currentSelectedCast.addingMembers.set(val, "New Cast Member " + val.adding_index);
+      }
+    })
+    this.currentSelectedCast.addingMembers.delete(co);
+    this.currentSelectedCast.addingMembersIndexes = this.currentSelectedCast.addingMembersIndexes.filter(val => val != co);
   }
   deletePositionIndex(index: number) {
     let filledPos = this.currentSelectedCast.filled_positions.find(val => val.position_uuid == this.currentSelectedCast.currentPositionUUID);
