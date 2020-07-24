@@ -1,8 +1,29 @@
 import { HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { MockPieceBackend } from '../mocks/mock_piece_backend';
 import { LoggingService } from '../services/logging.service';
+
+type RawPosition = {
+  id: number,
+  name: string,
+  notes: string,
+  order: number
+}
+
+type RawPiece = {
+  id: number,
+  name: string,
+  notes: string,
+  length:number,
+  positions: RawPosition[]
+}
+
+type RawAllPiecesResponse = {
+  data: RawPiece[],
+  warnings: string[]
+}
 
 export type Piece = {
   uuid: string;
@@ -37,7 +58,26 @@ export class PieceApi {
 
   /** Hits backend with all pieces GET request */
   requestAllPieces(): Promise<AllPiecesResponse> {
-    return this.mockBackend.requestAllPieces();
+    if (environment.mockBackend) {
+      return this.mockBackend.requestAllPieces();
+    } else {
+      return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
+        return {
+          data: {
+            pieces: val.data.map((section) =>{
+              return {
+                uuid: String(section.id),
+                name: section.name,
+                positions: section.positions.sort((a,b) => a.order < b.order? -1: 1).map((position) => {
+                  return position.name;
+                })
+              }
+            })
+          },
+          warnings: val.warnings
+        }
+      }
+    }
   }
 
   /** Hits backend with one piece GET request */
