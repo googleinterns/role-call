@@ -33,8 +33,7 @@ public class ApplicationLoader implements ApplicationRunner {
     adminLastName = environment.getProperty("admin.last.name");
     adminEmail = environment.getProperty("admin.email");
     
-    Optional<User> possibleAdmin = userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase(
-        adminFirstName, adminLastName, adminEmail);
+    Optional<User> possibleAdmin = userRepo.findByEmailIgnoreCase(adminEmail);
         
     possibleAdmin.ifPresentOrElse(this::adminExists, this::createAdmin);
   }
