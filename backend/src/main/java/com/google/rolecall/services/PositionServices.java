@@ -17,7 +17,7 @@ public class PositionServices {
     Optional<Position> query = positionRepo.findById(id);
 
     if(query.isEmpty()) {
-      throw new EntityNotFoundException(String.format("No position with id %id", id));
+      throw new EntityNotFoundException(String.format("No position with id %d", id));
     }
 
     return query.get();
