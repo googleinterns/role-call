@@ -6,6 +6,7 @@ import { LoggingService } from '../services/logging.service';
 
 export type Cast = {
   uuid: string;
+  name: string;
   segment: string;
   filled_positions: {
     position_uuid: string,

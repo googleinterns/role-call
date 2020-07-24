@@ -1,0 +1,230 @@
+@import "src/colors";
+@import "src/constants";
+
+// Overall container for panels styling
+.panel-container {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 90vh;
+  width: 100%;
+}
+
+// Margins on the panel cards
+.card-margins {
+  height: 96vh;
+  margin: 2vh;
+}
+
+// Left card arrangment and styling
+.left-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 1em;
+  max-height: 86vh;
+}
+.position-container {
+  height: 100%;
+  width: 100%;
+}
+.cast-select-container {
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+}
+.cast-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.cast-name {
+  margin-bottom: auto;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: auto;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+.selected-cast {
+  background-color: $offoffWhite;
+}
+.add-button-width-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  min-height: 10vh;
+}
+.add-button-height-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.add-button {
+  background: $white;
+  border-radius: $borderRadius;
+  height: 6vh;
+  margin-right: 1em;
+  width: 6vh;
+}
+.add-button-icon {
+  font-size: 6vh;
+  vertical-align: middle;
+}
+// Title styling
+.left-card-title {
+  margin: 1em;
+  font-weight: 800;
+  font-size: xx-large;
+}
+
+// Right card arrangment and styling
+.right-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 1em;
+  max-height: 86vh;
+}
+.name-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.right-card-title {
+  margin: 1em;
+  font-weight: 800;
+  font-size: xx-large;
+}
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: min-content;
+}
+.button-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.save-button {
+  background: $AAOrange;
+  font-size: x-large;
+  margin-right: 0.6em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+}
+.delete-button {
+  background: $white;
+  color: black;
+  font-size: x-large;
+  margin-left: 0.6em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  &:hover {
+    background: red;
+    color: $white;
+  }
+}
+
+.right-title-edit {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.edit-title-container {
+  margin: 1em;
+  width: 100%;
+}
+
+.position-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: min-content;
+  width: 100%;
+}
+
+.positions-card {
+  height: calc(100% - 1em);
+  margin: 1em;
+  margin-top: 0em;
+  width: calc(100% - 2em);
+  overflow-y: scroll;
+}
+
+.position-name-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 1em;
+  width: 100%;
+}
+
+.position-name {
+  margin-bottom: auto;
+  margin-left: 1em;
+  margin-top: auto;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+}
+
+.adding-position-input-container {
+  margin: 1em;
+  width: 100%;
+}
+
+.adding-position-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+// Panels styling
+.left-panel {
+  width: 25%;
+}
+
+.right-panel {
+  // background: red;
+  width: 75%;
+}
+
+.select-piece-container {
+  margin-left: 1em;
+}
+
+.select-piece-position-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.add-cast-button-width-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-left: 1em;
+  width: 100%;
+}
+.add-cast-button-height-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0.25em;
+}

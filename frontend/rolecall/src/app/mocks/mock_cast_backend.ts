@@ -11,9 +11,10 @@ export class MockCastBackend {
   mockCastDB: Cast[] = [
     {
       uuid: "CAST1UUID",
+      name: "Cast 1",
       segment: "PIECE1UUID",
       filled_positions: [{
-        position_uuid: "POSITION_NAME",
+        position_uuid: "piece1pos1",
         groups: [
           {
             group_index: 0,
@@ -32,9 +33,10 @@ export class MockCastBackend {
     },
     {
       uuid: "CAST2UUID",
+      name: "Cast 2",
       segment: "PIECE2UUID",
       filled_positions: [{
-        position_uuid: "POSITION_NAME",
+        position_uuid: "piece2pos1",
         groups: [
           {
             group_index: 0,
@@ -43,6 +45,40 @@ export class MockCastBackend {
           {
             group_index: 1,
             members: ["USERUUID1", "USERUUID2"]
+          },
+          {
+            group_index: 2,
+            members: ["USERUUID2", "USERUUID1"]
+          }
+        ],
+      },
+      {
+        position_uuid: "piece2pos2",
+        groups: [
+          {
+            group_index: 0,
+            members: ["USERUUID1", "USERUUID2"]
+          },
+          {
+            group_index: 1,
+            members: ["USERUUID1", "USERUUID2"]
+          },
+          {
+            group_index: 2,
+            members: ["USERUUID2", "USERUUID1"]
+          }
+        ],
+      },
+      {
+        position_uuid: "piece2pos3",
+        groups: [
+          {
+            group_index: 0,
+            members: ["USERUUID1", "USERUUID1"]
+          },
+          {
+            group_index: 1,
+            members: ["USERUUID2", "USERUUID2"]
           },
           {
             group_index: 2,

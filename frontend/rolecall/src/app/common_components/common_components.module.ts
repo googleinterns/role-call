@@ -10,10 +10,11 @@ import { EditableDateInput } from './editable_date_input.component';
 import { EditableMultiSelectInput } from './editable_multiselect_input.component';
 import { EditableTextInput } from './editable_text_input.component';
 import { EmptyStringIfUndefinedPipe } from './empty_string_if_undefined.pipe';
+import { NumberToPlacePipe } from './number_to_place.pipe';
 
 
 @NgModule({
-  declarations: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe],
+  declarations: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe, NumberToPlacePipe],
   imports: [
     CommonModule,
     MatInputModule,
@@ -23,6 +24,6 @@ import { EmptyStringIfUndefinedPipe } from './empty_string_if_undefined.pipe';
     MatSelectModule,
     FormsModule
   ],
-  exports: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe]
+  exports: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe, NumberToPlacePipe]
 })
 export class CommonComponentsModule { }

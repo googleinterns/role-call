@@ -1,1 +1,152 @@
-<p>casting-editor works!</p>
+<div class="panel-container">
+  <div class="left-panel">
+    <div class="app-card card-margins left-card">
+      <h1 class="left-card-title">
+        Casts
+      </h1>
+      <div class="cast-select-container">
+        <div *ngFor="let cast of renderingCasts" class="app-card cast-select"
+          [ngClass]="cast.uuid == currentSelectedCast.uuid ? 'selected-cast' : ''" (click)="setCurrentCast(cast)">
+          <h2 class="cast-name">
+            {{ cast.name }}
+          </h2>
+        </div>
+      </div>
+      <div class="add-button-width-container">
+        <div class="add-button-height-container">
+          <button mat-icon-button aria-label="Add Cast Button" class="add-button" (click)="addCast()">
+            <mat-icon [inline]="true" class="add-button-icon">
+              add
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div *ngIf="renderingCasts && renderingCasts.length > 0" class="app-card card-margins right-card">
+      <div *ngIf="currentSelectedCast">
+        <div class="right-title-edit">
+          <h1 class="left-card-title">
+            {{ ((currentSelectedCast | emptyStringIfUndefined)['name'] | emptyStringIfUndefined) }}
+          </h1>
+          <div *ngIf="currentSelectedCast.nameSaved" class="add-button-width-container">
+            <div class="add-button-height-container">
+              <button mat-icon-button aria-label="Add Cast Button" class="add-button" (click)="editTitle()">
+                <mat-icon [inline]="true" class="add-button-icon">
+                  edit
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!currentSelectedCast.nameSaved" class="right-title-edit">
+          <div class="edit-title-container">
+            <app-text-input (valueChange)="onInputChange($event)"
+              [initValue]="(currentSelectedCast | emptyStringIfUndefined)['name'] | emptyStringIfUndefined"
+              valueName="New Cast Name">
+            </app-text-input>
+          </div>
+        </div>
+        <div class="select-piece-position-container">
+          <div class="select-piece-container">
+            <mat-form-field appearance="fill">
+              <mat-label>Cast Piece</mat-label>
+              <mat-select [(value)]="this.currentSelectedCast.segment" [disabled]="!creatingCast"
+                (selectionChange)="selectPiece(this.currentSelectedCast.segment)">
+                <mat-option *ngFor="let piece of getPieceOptions()" [value]="piece.uuid">
+                  {{piece.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="select-piece-container">
+            <mat-form-field appearance="fill">
+              <mat-label>Filling Position</mat-label>
+              <mat-select [(value)]="currentSelectedCast.currentPositionUUID">
+                <mat-option *ngFor="let position of getPositionOptions()" [value]="position">
+                  {{position}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="select-piece-container">
+            <mat-form-field appearance="fill">
+              <mat-label>Filling Cast</mat-label>
+              <mat-select [(value)]="currentSelectedCast.currentCastIndex">
+                <mat-option *ngFor="let cast of getCastOptions(); let i = index;" [value]="i">
+                  {{ (i+1) | numberToPlace }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="add-cast-button-width-container">
+            <div class="add-cast-button-height-container">
+              <button mat-icon-button aria-label="Add Cast Button" class="add-button" (click)="addNthCast()">
+                <mat-icon [inline]="true" class="add-button-icon">
+                  add
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-card positions-card">
+        <div class="position-container" *ngFor=" let position of ((currentSelectedCast ? currentSelectedCast : [])['filled_positions'] ?
+          getFilledPosition(this.currentSelectedCast.currentPositionUUID) : []); let i = index;">
+          <div class="app-card position-name-card">
+            <h2 class="position-name">{{position}}</h2>
+          </div>
+          <div class="add-button-height-container">
+            <button mat-icon-button aria-label="Delete Position Button" class="add-button"
+              (click)="deletePositionIndex(i)">
+              <mat-icon [inline]="true" class="add-button-icon">
+                delete
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="currentSelectedCast">
+          <div *ngFor="let ind of this.currentSelectedCast.addingMembersIndexes; let i = index"
+            class="adding-position-container">
+            <div class="adding-position-input-container">
+              <app-text-input (valueChange)="onInputChange($event)" [bgColor]="offWhite">
+              </app-text-input>
+            </div>
+            <div class="add-button-height-container">
+              <button mat-icon-button aria-label="Delete Position Button" class="add-button"
+                (click)="deleteAddingPositionIndex(i)">
+                <mat-icon [inline]="true" class="add-button-icon">
+                  delete
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="add-button-width-container">
+          <div class="add-button-height-container">
+            <button mat-icon-button aria-label="Add Position Button" class="add-button" (click)="addPositionIndex()">
+              <mat-icon [inline]="true" class="add-button-icon">
+                add
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="button-container">
+        <div class="button-wrapper">
+          <button mat-flat-button aria-label="Delete User" class="delete-button" (click)="deleteCast()">
+            delete
+          </button>
+        </div>
+        <div class="button-wrapper">
+          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="castSaved"
+            (click)="onSaveCast()">
+            save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

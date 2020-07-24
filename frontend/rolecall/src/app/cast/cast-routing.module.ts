@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CastModule } from './cast.module';
 import { CastingEditor } from './casting_editor.component';
 
 
@@ -9,7 +10,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes),
+    CastModule],
   exports: [RouterModule]
 })
 export class CastRoutingModule { }
