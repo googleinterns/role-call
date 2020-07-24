@@ -129,7 +129,7 @@ export class CastApi {
    */
   setCast(cast: Cast): Promise<APITypes.SuccessIndicator> {
     return this.setCastResponse(cast).then(val => {
-      if (val.status == 400) {
+      if (val.status == 200) {
         this.getAllCasts();
         return {
           successful: true
@@ -146,7 +146,7 @@ export class CastApi {
   /** Requests for the backend to delete the cast */
   deleteCast(cast: Cast): Promise<APITypes.SuccessIndicator> {
     return this.deleteCastResponse(cast).then(val => {
-      if (val.status == 400) {
+      if (val.status == 200) {
         this.getAllCasts();
         return {
           successful: true

@@ -162,7 +162,7 @@ export class PieceApi {
    */
   setPiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.setPieceResponse(piece).then(val => {
-      if (val.status == 400) {
+      if (val.status == 200) {
         this.getAllPieces();
         return {
           successful: true
@@ -179,7 +179,7 @@ export class PieceApi {
   /** Requests for the backend to delete the piece */
   deletePiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.deletePieceResponse(piece).then(val => {
-      if (val.status == 400) {
+      if (val.status == 200) {
         this.getAllPieces();
         return {
           successful: true

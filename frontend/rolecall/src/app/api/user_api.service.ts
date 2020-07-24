@@ -164,6 +164,7 @@ export class UserApi {
     if (this.users.has(user.uuid)) {
       // Do patch
       return this.http.patch<PatchPostUserBody>(environment.backendURL + "api/user", {
+        id: Number(user.uuid),
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.contact_info.email,
@@ -179,10 +180,11 @@ export class UserApi {
         manageRules: user.has_permissions.manageRules,
         isActive: true
       }, { observe: "response" }).toPromise().then(val => {
+        console.log(val);
         return val;
       }).catch(val => {
         return {
-          status: 200
+          status: 400
         } as HttpResponse<any>;
       })
     } else {
@@ -266,7 +268,7 @@ export class UserApi {
   setUser(user: User): Promise<APITypes.SuccessIndicator> {
     if (this.isValidUser(user)) {
       return this.setUserResponse(user).then(val => {
-        if (val.status == 400) {
+        if (val.status == 200) {
           this.getAllUsers();
           return {
             successful: true
@@ -289,7 +291,7 @@ export class UserApi {
   /** Requests for the backend to delete the user */
   deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
     return this.deleteUserResponse(user).then(val => {
-      if (val.status == 400) {
+      if (val.status == 200) {
         this.getAllUsers();
         return {
           successful: true
