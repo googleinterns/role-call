@@ -59,7 +59,7 @@ public class Cast {
   }
 
   public String getColor() {
-    return String.format("#%s", Integer.toHexString(color).toUpperCase());
+    return String.format("#%06X", color);
   }
 
   public Position getPosition() {

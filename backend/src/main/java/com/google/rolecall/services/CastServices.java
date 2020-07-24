@@ -3,7 +3,6 @@ package com.google.rolecall.services;
 import com.google.rolecall.jsonobjects.CastInfo;
 import com.google.rolecall.jsonobjects.CastMemberInfo;
 import com.google.rolecall.models.Cast;
-import com.google.rolecall.models.CastMember;
 import com.google.rolecall.models.Position;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.CastRepository;
@@ -50,16 +49,31 @@ public class CastServices {
 
   public Cast createCast(CastInfo newCast) throws InvalidParameterException,
       EntityNotFoundException {
-    // Look for valid position id
     if(newCast.positionId() == null) {
       throw new InvalidParameterException("Cast requires a Position id");
     }
-    if(newCast.members() == null) {
-      throw new InvalidParameterException("Members cannot be null");
+
+    Cast cast = Cast.newBuilder()
+        .setName(newCast.name())
+        .setComments(newCast.comments())
+        .setColor(newCast.color())
+        .build();
+    
+    Position position = positionService.getPosition(newCast.positionId());
+    position.addCast(cast);
+
+    if(newCast.members() != null && !newCast.members().isEmpty()) {
+      addNewCastMembers(cast, newCast.members());
     }
+
+    return castRepo.save(cast);
+  }
+
+  private void addNewCastMembers(Cast cast, List<CastMemberInfo> members)
+      throws EntityNotFoundException, InvalidParameterException {
     // Assert all potential users are unique
     Set<Integer> uniqueUsers = new HashSet<>();
-    for(CastMemberInfo info: newCast.members()) {
+    for(CastMemberInfo info: members) {
       if(info.userId() == null) {
         throw new InvalidParameterException("Cast member cannot have null user ID.");
       }
@@ -68,24 +82,12 @@ public class CastServices {
       }
       uniqueUsers.add(info.userId());
     }
-    // Assert valid Cast parameters
-    Cast cast = Cast.newBuilder()
-        .setName(newCast.name())
-        .setComments(newCast.comments())
-        .setColor(newCast.color())
-        .build();
-    
-    // Validate objects in the database
-    Position position = positionService.getPosition(newCast.positionId());
 
-    for(CastMemberInfo info: newCast.members()) {
+    // Assert User exist
+    for(CastMemberInfo info: members) {
       User user = userService.getUser(info.userId());
       cast.addCastMember(user);
     }
-
-    position.addCast(cast);
-
-    return castRepo.save(cast);
   }
 
   public CastServices(CastRepository castRepo, PositionServices positionService,

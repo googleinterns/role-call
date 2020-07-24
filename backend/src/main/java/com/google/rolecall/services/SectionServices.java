@@ -65,18 +65,20 @@ public class SectionServices {
         .setLength(newSection.length())
         .build();
 
-    Set<Integer> orders = new HashSet<>();
-    for(PositionInfo info: newSection.positions()) {
-      Position position = Position.newBuilder()
-          .setName(info.name())
-          .setNotes(info.notes())
-          .setOrder(info.order())
-          .build();
-      if(orders.contains(position.getOrder())) {
-        throw new InvalidParameterException("Order of Positions must not be overlapping");
+    if(newSection.positions() != null) {
+      Set<Integer> orders = new HashSet<>();
+      for(PositionInfo info: newSection.positions()) {
+        Position position = Position.newBuilder()
+            .setName(info.name())
+            .setNotes(info.notes())
+            .setOrder(info.order())
+            .build();
+        if(orders.contains(position.getOrder())) {
+          throw new InvalidParameterException("Order of Positions must not be overlapping");
+        }
+        orders.add(position.getOrder());
+        section.addPosition(position);
       }
-      orders.add(position.getOrder());
-      section.addPosition(position);
     }
 
     return sectionRepo.save(section);
@@ -106,35 +108,37 @@ public class SectionServices {
         .setLength(newSection.length())
         .build();
     
-    List<Position> positions = section.getPositions();
-    for(PositionInfo info: newSection.positions()) {
-      System.out.println(info);
-      Position position;
-      if(info.delete() != null && info.delete()) {
-        if(info.id() == null) {
-          throw new InvalidParameterException("Cannot delete Position before it is created.");
+    if(newSection.positions() != null && !newSection.positions().isEmpty()) {
+      List<Position> positions = section.getPositions();
+      for(PositionInfo info: newSection.positions()) {
+        System.out.println(info);
+        Position position;
+        if(info.delete() != null && info.delete()) {
+          if(info.id() == null) {
+            throw new InvalidParameterException("Cannot delete Position before it is created.");
+          }
+          section.removePosition(getPositionById(info.id(), positions));
+          continue;
+        } else if(info.id() != null) {
+          position = getPositionById(info.id(), positions);
+        } else {
+          position = new Position();
         }
-        section.removePosition(getPositionById(info.id(), positions));
-        continue;
-      } else if(info.id() != null) {
-        position = getPositionById(info.id(), positions);
-      } else {
-        position = new Position();
+        position = position.toBuilder()
+            .setName(info.name())
+            .setNotes(info.notes())
+            .setOrder(info.order())
+            .build();
+        section.addPosition(position);
       }
-      position = position.toBuilder()
-          .setName(info.name())
-          .setNotes(info.notes())
-          .setOrder(info.order())
-          .build();
-      section.addPosition(position);
-    }
 
-    Set<Integer> orders = new HashSet<>();
-    for(Position position: positions) {
-      if(orders.contains(position.getOrder())) {
-        throw new InvalidParameterException("Order of Positions must not be overlapping");
+      Set<Integer> orders = new HashSet<>();
+      for(Position position: positions) {
+        if(orders.contains(position.getOrder())) {
+          throw new InvalidParameterException("Order of Positions must not be overlapping");
+        }
+        orders.add(position.getOrder());
       }
-      orders.add(position.getOrder());
     }
 
     return sectionRepo.save(section);
