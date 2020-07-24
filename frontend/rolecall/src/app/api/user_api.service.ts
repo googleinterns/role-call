@@ -132,17 +132,23 @@ export class UserApi {
 
   /** Hits backend with one user GET request */
   requestOneUser(uuid: APITypes.UserUUID): Promise<OneUserResponse> {
-    return this.mockBackend.requestOneUser(uuid);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestOneUser(uuid);
+    }
   };
 
   /** Hits backend with create/edit user POST request */
   requestUserSet(user: User): Promise<HttpResponse<any>> {
-    return this.mockBackend.requestUserSet(user);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestUserSet(user);
+    }
   }
 
   /** Hits backend with delete user POST request */
   requestUserDelete(user: User): Promise<HttpResponse<any>> {
-    return this.mockBackend.requestUserDelete(user);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestUserDelete(user);
+    }
   }
 
   /** All the loaded users mapped by UUID */
