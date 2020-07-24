@@ -67,7 +67,8 @@ public class CastManagement {
   }
 
   @Delete(Constants.RequestParameters.CAST_ID)
-  public CompletableFuture<Void> deleteCast(@RequestParam(value=Constants.RequestParameters.CAST_ID, required=true) int id) {
+  public CompletableFuture<Void> deleteCast(@RequestParam(
+      value=Constants.RequestParameters.CAST_ID, required=true) int id) {
     try {
       castService.deleteCast(id);
     } catch(EntityNotFoundException e) {
