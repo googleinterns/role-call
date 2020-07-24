@@ -150,6 +150,7 @@ public class User {
 
   public UserInfo toUserInfo() {
     return UserInfo.newBuilder()
+        .setId(id)
         .setFirstName(firstName)
         .setLastName(lastName)
         .setEmail(email)

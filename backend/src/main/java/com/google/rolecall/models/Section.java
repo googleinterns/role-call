@@ -76,7 +76,7 @@ public class Section {
     SectionInfo section = SectionInfo.newBuilder()
         .setId(id)
         .setName(name)
-        .setNotes(notes)
+        .setNotes(getNotes())
         .setLength(length)
         .setPositions(positionInfos)
         .build();

@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Endpoint(Constants.Mappings.SECTION_MANAGEMENT)
-public class SectionManagement {
+public class SectionManagement extends AsyncRestEndpoint {
 
   private final SectionServices sectionService;
 
