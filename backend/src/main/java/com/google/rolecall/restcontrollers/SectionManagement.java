@@ -33,12 +33,7 @@ public class SectionManagement extends AsyncRestEndpoint {
     List<Section> allSections = sectionService.getAllSections();
 
     List<SectionInfo> sections = allSections.stream().map(s ->
-        SectionInfo.newBuilder()
-            .setId(s.getId())
-            .setName(s.getName())
-            .setNotes(s.getNotes())
-            .setLength(s.getLength().isEmpty() ? null : s.getLength().get())
-            .build()
+        s.toSectionInfo()
         ).collect(Collectors.toList());
 
     ResponseSchema<List<SectionInfo>> response = new ResponseSchema<>(sections);
