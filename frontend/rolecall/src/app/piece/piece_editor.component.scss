@@ -28,12 +28,12 @@
   height: 100%;
   width: 100%;
 }
-.user-select-container {
+.piece-select-container {
   overflow-y: scroll;
   height: 100%;
   width: 100%;
 }
-.user-select {
+.piece-select {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,7 +41,7 @@
   margin-left: 1em;
   margin-right: 1em;
 }
-.user-name {
+.piece-name {
   margin-bottom: auto;
   margin-left: 1em;
   margin-right: 1em;
@@ -51,28 +51,28 @@
   overflow-x: hidden;
   white-space: nowrap;
 }
-.selected-user {
+.selected-piece {
   background-color: $offoffWhite;
 }
-.add-user-button-width-container {
+.add-button-width-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   min-height: 10vh;
 }
-.add-user-button-height-container {
+.add-button-height-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.add-user-button {
+.add-button {
   background: $white;
   border-radius: $borderRadius;
   height: 6vh;
   margin-right: 1em;
   width: 6vh;
 }
-.add-user-button-icon {
+.add-button-icon {
   font-size: 6vh;
   vertical-align: middle;
 }
@@ -96,64 +96,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-.email-date-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.phone-priv-class-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.email-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 50%;
-}
-.phone-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 50%;
-}
-.phone-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(100% - 2em);
-}
-.name-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(50% - 2em);
-}
-.email-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(100% - 2em);
-}
-.date-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(50% - 2em);
-}
-.priv-class-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(100% - 2em);
-}
-.permissions-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(100% - 2em);
 }
 .right-card-title {
   margin: 1em;
@@ -208,21 +150,51 @@
   flex-direction: row;
   justify-content: space-between;
   height: min-content;
+  width: 100%;
 }
 
 .positions-card {
-  height: 100%;
+  height: calc(100% - 1em);
+  margin: 1em;
+  margin-top: 0em;
+  width: calc(100% - 2em);
+  overflow-y: scroll;
+}
+
+.position-name-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 1em;
+  width: 100%;
+}
+
+.position-name {
+  margin-bottom: auto;
+  margin-left: 1em;
+  margin-top: auto;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+}
+
+.adding-position-input-container {
+  margin: 1em;
+  width: 100%;
+}
+
+.adding-position-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 // Panels styling
 .left-panel {
-  // background: green;
-  // height: 100%;
   width: 25%;
 }
 
 .right-panel {
   // background: red;
-  // height: 100%;
   width: 75%;
 }

@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Colors } from 'src/constants';
 import { isNullOrUndefined } from 'util';
 import { Piece, PieceApi } from '../api/piece_api.service';
 
@@ -29,6 +30,8 @@ export class PieceEditor implements OnInit {
 
   creatingPiece: boolean = false;
 
+  offWhite: string = Colors.offWhite;
+
   constructor(private route: ActivatedRoute, private pieceAPI: PieceApi,
     private location: Location) { }
 
@@ -39,10 +42,6 @@ export class PieceEditor implements OnInit {
     }
     this.pieceAPI.pieceEmitter.subscribe((val) => { this.onPieceLoad(val) });
     this.pieceAPI.getAllPieces();
-  }
-
-  ngOnDestroy(): void {
-    this.pieceAPI.pieceEmitter.unsubscribe();
   }
 
   onPieceLoad(pieces: Piece[]) {
@@ -122,6 +121,10 @@ export class PieceEditor implements OnInit {
 
 
   onSavePiece() {
+    if (this.currentSelectedPiece && (!this.currentSelectedPiece.name || this.currentSelectedPiece.name == "")) {
+      alert("You must enter a piece name!");
+      return;
+    }
     this.pieceSaved = true;
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {
@@ -152,6 +155,8 @@ export class PieceEditor implements OnInit {
 
   deleteAddingPosition(index: number) {
     let realInd = this.currentSelectedPiece.positions.length + index + 1;
+    this.currentSelectedPiece.addingPositionsIndexes =
+      this.currentSelectedPiece.addingPositionsIndexes.filter((val) => val != realInd);
     this.currentSelectedPiece.addingPositions.delete(realInd);
   }
   deletePosition(index: number) {

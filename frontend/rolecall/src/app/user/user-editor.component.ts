@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 import { PrivilegeClassApi } from '../api/privilege_class_api.service';
@@ -15,7 +15,7 @@ import { User, UserApi } from '../api/user_api.service';
   templateUrl: './user-editor.component.html',
   styleUrls: ['./user-editor.component.scss']
 })
-export class UserEditor implements OnInit, OnDestroy {
+export class UserEditor implements OnInit {
 
   permissionsSet: EventEmitter<string[]> = new EventEmitter();
   privilegeClassSet: EventEmitter<string[]> = new EventEmitter();
@@ -46,11 +46,6 @@ export class UserEditor implements OnInit, OnDestroy {
       this.onPrivilegeClassLoad(val);
     });
     this.privilegeClassAPI.getAllPrivilegeClasses();
-  }
-
-  ngOnDestroy(): void {
-    this.userAPI.userEmitter.unsubscribe();
-    this.privilegeClassAPI.privilegeClassEmitter.unsubscribe();
   }
 
   onUserLoad(users: User[]) {

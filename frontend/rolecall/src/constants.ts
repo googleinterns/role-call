@@ -15,12 +15,27 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
     routerLinkUrl: 'settings/',
     icon: 'settings'
   },
+  {
+    name: 'Users',
+    routerLinkUrl: 'user/',
+    icon: 'person'
+  },
+  {
+    name: 'Pieces',
+    routerLinkUrl: 'piece/',
+    icon: 'extension'
+  },
+  {
+    name: 'Casts',
+    routerLinkUrl: 'cast/',
+    icon: 'group'
+  },
 ];
 
 /** Color variables */
-declare namespace Colors {
-  const white = 'white';
-  const offWhite = '#f4f4f4';
-  const offoffWhite = '#d9d9d9';
-  const AAOrange = '#ffae00';
+export let Colors = {
+  white: 'white',
+  offWhite: '#f4f4f4',
+  offoffWhite: '#d9d9d9',
+  AAOrange: '#ffae00'
 }
