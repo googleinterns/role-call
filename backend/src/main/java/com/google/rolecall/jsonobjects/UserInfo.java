@@ -111,6 +111,7 @@ public abstract class UserInfo {
     public abstract Builder setEmail(String email);
 
     @JsonProperty("dateJoined")
+    @JsonFormat(pattern="MM-dd-yyyy")
     public abstract Builder setDateJoined(Calendar dateJoined);
 
     @JsonProperty("emergencyContcatName")

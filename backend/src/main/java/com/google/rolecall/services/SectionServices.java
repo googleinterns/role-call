@@ -65,7 +65,7 @@ public class SectionServices {
         .setLength(newSection.length())
         .build();
 
-    if(newSection.positions() != null) {
+    if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       Set<Integer> orders = new HashSet<>();
       for(PositionInfo info: newSection.positions()) {
         Position position = Position.newBuilder()
