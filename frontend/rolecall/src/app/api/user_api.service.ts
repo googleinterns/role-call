@@ -49,6 +49,25 @@ type RawAllUsersResponse = {
   warnings: string[]
 }
 
+type PatchPostUserBody = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  dateJoined?: string,
+  emergencyContactName?: string,
+  emergencyContactNumber?: string,
+  comments?: string,
+  canLogin?: boolean,
+  admin?: boolean,
+  notifications?: boolean,
+  managePerformances?: boolean,
+  manageCasts?: boolean,
+  managePieces?: boolean,
+  manageRoles?: boolean,
+  manageRules?: boolean,
+  isActive?: boolean
+}
+
 export type AllUsersResponse = {
   data: {
     users: User[]
@@ -142,7 +161,33 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserSet(user);
     }
-    return this.mockBackend.requestUserSet(user);
+    if (this.users.has(user.uuid)) {
+      // Do patch
+      return this.http.patch<PatchPostUserBody>(environment.backendURL + "api/user", {
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.contact_info.email,
+        emergencyContactName: user.contact_info.emergency_contact.name,
+        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
+        canLogin: user.has_permissions.canLogin,
+        admin: user.has_permissions.isAdmin,
+        notifications: user.has_permissions.notifications,
+        managePerformances: user.has_permissions.managePerformances,
+        manageCasts: user.has_permissions.manageCasts,
+        managePieces: user.has_permissions.managePieces,
+        manageRoles: user.has_permissions.manageRoles,
+        manageRules: user.has_permissions.manageRules,
+        isActive: true
+      }, { observe: "response" }).toPromise().then(val => {
+        return val;
+      }).catch(val => {
+        return {
+          status: 200
+        } as HttpResponse<any>;
+      })
+    } else {
+      // Do pose
+    }
   }
 
   /** Hits backend with delete user POST request */

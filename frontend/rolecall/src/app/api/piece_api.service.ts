@@ -1,4 +1,4 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
@@ -16,7 +16,7 @@ type RawPiece = {
   id: number,
   name: string,
   notes: string,
-  length:number,
+  length: number,
   positions: RawPosition[]
 }
 
@@ -54,7 +54,7 @@ export class PieceApi {
   /** Mock backend */
   mockBackend: MockPieceBackend = new MockPieceBackend();
 
-  constructor(private loggingService: LoggingService) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient) { }
 
   /** Hits backend with all pieces GET request */
   requestAllPieces(): Promise<AllPiecesResponse> {
@@ -64,11 +64,11 @@ export class PieceApi {
       return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
         return {
           data: {
-            pieces: val.data.map((section) =>{
+            pieces: val.data.map((section) => {
               return {
                 uuid: String(section.id),
                 name: section.name,
-                positions: section.positions.sort((a,b) => a.order < b.order? -1: 1).map((position) => {
+                positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map((position) => {
                   return position.name;
                 })
               }
@@ -76,7 +76,7 @@ export class PieceApi {
           },
           warnings: val.warnings
         }
-      }
+      });
     }
   }
 
