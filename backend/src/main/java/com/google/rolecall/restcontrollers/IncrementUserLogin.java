@@ -5,7 +5,7 @@ import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
 import com.google.rolecall.restcontrollers.Annotations.Post;
-import com.google.rolecall.restcontrollers.RequestExceptions.InvalidArgumentException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class IncrementUserLogin extends AsyncRestEndpoint{
     Optional<User> queryResult = userRepo.findById(id);
     if (!queryResult.isPresent()) {
       return CompletableFuture.failedFuture(
-          new InvalidArgumentException(String.format("userid %d does not exist", id)));
+          new EntityNotFoundException(String.format("userid %d does not exist", id)));
     } 
 
     return CompletableFuture.completedFuture(queryResult.get().getLoginCount());
@@ -35,7 +35,7 @@ public class IncrementUserLogin extends AsyncRestEndpoint{
     Optional<User> queryResult = userRepo.findById(id);
     if (!queryResult.isPresent()) {
       return CompletableFuture.failedFuture(
-          new InvalidArgumentException(String.format("userid %d does not exist", id)));
+          new EntityNotFoundException(String.format("userid %d does not exist", id)));
     } 
 
     User user = queryResult.get();

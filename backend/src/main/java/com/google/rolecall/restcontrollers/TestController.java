@@ -3,7 +3,7 @@ package com.google.rolecall.restcontrollers;
 import com.google.rolecall.restcontrollers.Annotations.Get;
 import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
-import com.google.rolecall.restcontrollers.RequestExceptions.UnsupportedOperationException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.UnimplementedOperationException;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,6 +20,6 @@ public class TestController extends AsyncRestEndpoint {
 
   @Post
   public CompletableFuture<String> throwException() throws Exception {
-    throw new UnsupportedOperationException("POST is not defined for this endpoint");
+    throw new UnimplementedOperationException("POST is not defined for this endpoint");
   }
 }
