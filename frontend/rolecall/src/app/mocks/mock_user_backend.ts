@@ -11,7 +11,7 @@ export class MockUserBackend {
   /** Mock user database */
   mockUserDB: User[] = [
     {
-      uuid: "UUID1",
+      uuid: "USERUUID1",
       has_permissions: {
         isAdmin: true,
         notifications: true,
@@ -49,7 +49,7 @@ export class MockUserBackend {
       date_of_birth: 1
     },
     {
-      uuid: "UUID2",
+      uuid: "USERUUID2",
       has_permissions: {
         isAdmin: false,
         notifications: true,
