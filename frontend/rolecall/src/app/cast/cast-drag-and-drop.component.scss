@@ -1,0 +1,93 @@
+@import "src/colors";
+
+$cellWidth: 15rem;
+$cellHeight: 4rem;
+
+.horizontal-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.position-container {
+  margin-bottom: 3rem;
+  margin-left: 2rem;
+}
+
+.position-title {
+  font-size: x-large;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.table-container {
+  outline-color: $offoffWhite;
+  outline-width: 2px;
+  outline-style: dashed;
+  outline-offset: -1px;
+  width: fit-content;
+}
+
+.cell {
+  background: $offWhite;
+  outline-color: $offoffWhite;
+  outline-width: 2px;
+  outline-style: solid;
+  outline-offset: -1px;
+  height: $cellHeight;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding: 1em;
+  width: $cellWidth;
+  &ColHeader {
+    font-size: large;
+    font-weight: bold;
+  }
+  &RowHeader {
+    font-size: large;
+    font-weight: bold;
+  }
+  &BothHeader {
+  }
+}
+
+.empty-cell {
+  border-color: $offoffWhite;
+  border-style: dashed;
+  // @styleIngore Left must come after style by CSS standards
+  border-left: none;
+  border-top: none;
+  border-width: 2px;
+  height: $cellHeight;
+  width: $cellWidth;
+}
+
+.position-pool {
+  max-height: 65vh;
+  overflow-y: scroll;
+}
+
+.user-pool {
+  height: 25vh;
+  padding-left: 2rem;
+  padding-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  justify-content: flex-start;
+}
+
+.user-container {
+  outline-color: $offoffWhite;
+  outline-width: 2px;
+  outline-style: dashed;
+  outline-offset: -1px;
+}
+
+.user-image {
+  border-radius: 50%;
+  height: 100%;
+  margin-right: 1em;
+}

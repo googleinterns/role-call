@@ -19,8 +19,6 @@ export class SiteHeader implements OnInit {
   @Input() navBar: SideNav;
   /** The log in button */
   @ViewChild('loginButton') loginButton: ElementRef;
-  /** The url for the profile image */
-  profileSrc: string = "";
   /** Whether or not the user is logged in */
   userIsLoggedIn: boolean = true;
   /** Whether we've recieved a response from the login API */
@@ -65,10 +63,6 @@ export class SiteHeader implements OnInit {
   configureHeaderForLogin(loginResp: LoginResponse) {
     this.responseRecieved = true;
     this.userIsLoggedIn = this.loginAPI.isLoggedIn;
-    if (loginResp.authenticated) {
-      console.log(this.loginAPI.user);
-      this.profileSrc = this.loginAPI.user['Ot']['PK']
-    }
   }
 
 }

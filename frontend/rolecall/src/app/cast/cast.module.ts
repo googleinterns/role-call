@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,12 +7,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonComponentsModule } from '../common_components/common_components.module';
+import { CastDragAndDrop } from './cast-drag-and-drop.component';
+import { CastEditorV2 } from './cast-editor-v2.component';
 import { CastingEditor } from './casting_editor.component';
 
 
 
 @NgModule({
-  declarations: [CastingEditor],
+  declarations: [CastingEditor, CastDragAndDrop, CastEditorV2],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -19,7 +22,8 @@ import { CastingEditor } from './casting_editor.component';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    DragDropModule
   ]
 })
 export class CastModule { }

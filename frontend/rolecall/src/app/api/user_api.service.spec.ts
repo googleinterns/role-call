@@ -1,3 +1,4 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { MockUserBackend } from '../mocks/mock_user_backend';
 import { UserApi } from './user_api.service';
@@ -7,7 +8,9 @@ describe('UserApi', () => {
   let mockBackend: MockUserBackend;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [HttpClient, HttpHandler]
+    });
     service = TestBed.inject(UserApi);
     mockBackend = new MockUserBackend();
     service.mockBackend = mockBackend;

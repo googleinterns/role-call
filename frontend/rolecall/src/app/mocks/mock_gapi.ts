@@ -53,6 +53,14 @@ export class MockGAPI {
       nU: "TestLast",
       PK: "https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg",
       yu: this.testEmail
+    },
+    getBasicProfile: () => {
+      return {
+        getEmail: () => { return this.testUser.Ot.yu },
+        getImageUrl: () => { return this.testUser.Ot.PK },
+        getGivenName: () => { return this.testUser.Ot.nW },
+        getFamilyName: () => { return this.testUser.Ot.nU }
+      }
     }
   };
 

@@ -1,0 +1,40 @@
+<div cdkDropListGroup>
+  <div class="position-pool">
+    <div *ngFor="let position of data; let i1 = index" class="position-container">
+      <h3 class="position-title">{{positionNames[i1]}}</h3>
+      <div class="table-container">
+        <div cdkDropList cdkDropListOrientation="horizontal" class="horizontal-list" (cdkDropListDropped)="drop($event)"
+          id="col-headers">
+          <div class="cell cellBothHeader">
+          </div>
+          <div *ngFor="let header of columnHeaders[i1]" class="cell cellColHeader" cdkDrag [cdkDragDisabled]="true">
+            {{ header }}
+          </div>
+        </div>
+        <div cdkDropList cdkDropListOrientation="horizontal" class="horizontal-list" [cdkDropListData]="row"
+          *ngFor="let row of position; let i2 = index" (cdkDropListDropped)="drop($event)" [id]="i1 + ':' + i2">
+          <div class="cell cellRowHeader" cdkDrag [cdkDragDisabled]="true">
+            {{ positionNames[i1] + " " + (i2 + 1) }}
+          </div>
+          <div class="cell" *ngFor="let person of row; let i3 = index" cdkDrag [cdkDragData]="person">
+            <img class="user-image"
+              src="https://lh3.google.com/u/0/ogw/ADGmqu-cM5JpECg1WXq0oPU0ujZDWwd_uoKYRvGYU8kX=s83-c-mo">
+            {{person.first_name + " " + person.last_name}}
+          </div>
+          <!-- <div class="empty-cell" *ngFor="let empty of emptyCells[i1][i2]">
+        </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="user-container">
+    <div cdkDropList cdkDropListOrientation="horizontal" class="horizontal-list user-pool" [cdkDropListData]="allUsers"
+      (cdkDropListDropped)="drop($event)" id="user-pool">
+      <div *ngFor="let user of allUsers" class="cell" cdkDrag [cdkDragData]="user">
+        <img class="user-image"
+          src="https://lh3.google.com/u/0/ogw/ADGmqu-cM5JpECg1WXq0oPU0ujZDWwd_uoKYRvGYU8kX=s83-c-mo">
+        {{user.first_name + " " + user.last_name}}
+      </div>
+    </div>
+  </div>
+</div>
