@@ -2,6 +2,7 @@ package com.google.rolecall.services;
 
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
+import com.google.rolecall.util.CustomUserDetail;
 import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,11 +25,7 @@ public class CustomUserDetailService implements UserDetailsService {
     }
     User user = query.get();
 
-    UserDetails detailedUser = org.springframework.security.core.userdetails.User.builder()
-        .username(user.getEmail())
-        .roles(user.getRoles())
-        .accountLocked(user.isActive())
-        .build();
+    CustomUserDetail detailedUser = CustomUserDetail.build(user);
 
     return detailedUser;
   }
