@@ -18,15 +18,35 @@ export class MockCastBackend {
         groups: [
           {
             group_index: 0,
-            members: ["USERUUID1", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 0
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 1
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 2
+            }]
           },
           {
             group_index: 1,
-            members: ["USERUUID2", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID2",
+              position_number: 0
+            }, {
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           },
           {
             group_index: 2,
-            members: ["USERUUID1", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           }
         ],
       },
@@ -35,15 +55,35 @@ export class MockCastBackend {
         groups: [
           {
             group_index: 0,
-            members: ["USERUUID1", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 0
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 1
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 2
+            }]
           },
           {
             group_index: 1,
-            members: ["USERUUID2", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID2",
+              position_number: 0
+            }, {
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           },
           {
             group_index: 2,
-            members: ["USERUUID2", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           }
         ],
       }]
@@ -57,15 +97,35 @@ export class MockCastBackend {
         groups: [
           {
             group_index: 0,
-            members: ["USERUUID2", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 0
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 1
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 2
+            }]
           },
           {
             group_index: 1,
-            members: ["USERUUID1", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID2",
+              position_number: 0
+            }, {
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           },
           {
             group_index: 2,
-            members: ["USERUUID2", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           }
         ],
       },
@@ -74,15 +134,35 @@ export class MockCastBackend {
         groups: [
           {
             group_index: 0,
-            members: ["USERUUID1", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 0
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 1
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 2
+            }]
           },
           {
             group_index: 1,
-            members: ["USERUUID1", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID2",
+              position_number: 0
+            }, {
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           },
           {
             group_index: 2,
-            members: ["USERUUID2", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           }
         ],
       },
@@ -91,15 +171,35 @@ export class MockCastBackend {
         groups: [
           {
             group_index: 0,
-            members: ["USERUUID1", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 0
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 1
+            },
+            {
+              uuid: "USERUUID2",
+              position_number: 2
+            }]
           },
           {
             group_index: 1,
-            members: ["USERUUID2", "USERUUID2"]
+            members: [{
+              uuid: "USERUUID2",
+              position_number: 0
+            }, {
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           },
           {
             group_index: 2,
-            members: ["USERUUID2", "USERUUID1"]
+            members: [{
+              uuid: "USERUUID1",
+              position_number: 2
+            }]
           }
         ],
       }]

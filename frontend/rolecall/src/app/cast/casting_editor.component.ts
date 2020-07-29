@@ -326,7 +326,7 @@ export class CastingEditor implements OnInit {
               if (!findUser) {
                 alert("No user with that name!")
               } else {
-                group.members.push(findUser.uuid);
+                group.members.push({ uuid: findUser.uuid, position_number: group.members.length });
               }
             }
           }

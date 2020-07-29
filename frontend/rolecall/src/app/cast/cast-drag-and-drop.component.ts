@@ -116,6 +116,16 @@ export class CastDragAndDrop implements OnInit {
     return numSubCasts;
   }
 
+  getMaxDancerIndexForCast(positionIndex: number): number {
+    let numBackups = 0;
+    this.cast.filled_positions[positionIndex].groups.forEach((val, ind) => {
+      if (val.members.length > numBackups) {
+        numBackups = val.members.length;
+      }
+    });
+    return numBackups;
+  }
+
   getMaxNumberInSubcastForData(positionIndex: number): number {
     let numSubCasts = 0;
     if (isNullOrUndefined(this.data[positionIndex])) {
@@ -162,13 +172,15 @@ export class CastDragAndDrop implements OnInit {
     let tempData = filledPoses.map((val, posInd) => {
       let colObs = val.groups.sort((a, b) => a.group_index < b.group_index ? -1 : 1);
       let numSubCasts = this.getMaxNumberInSubcastForCast(posInd);
+      let maxInd = this.getMaxDancerIndexForCast(posInd);
       let subcastStrs: string[][] = [];
       for (let i = 0; i < numSubCasts; i++) {
         subcastStrs.push([]);
       }
       for (let col of colObs) {
         for (let i = 0; i < col.members.length; i++) {
-          subcastStrs[i].push(col.members[i]);
+          let member = col.members[i];
+          subcastStrs[member.position_number].push(member.uuid);
         }
       }
       let subcasts = subcastStrs.map(val => val.map(val2 => this.userAPI.users.get(val2)));

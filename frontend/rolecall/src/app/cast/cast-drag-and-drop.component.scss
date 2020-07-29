@@ -44,10 +44,12 @@ $cellHeight: 4rem;
   &ColHeader {
     font-size: large;
     font-weight: bold;
+    vertical-align: middle;
   }
   &RowHeader {
     font-size: large;
     font-weight: bold;
+    vertical-align: middle;
   }
   &BothHeader {
   }

@@ -12,7 +12,7 @@ export type Cast = {
     position_uuid: string,
     groups: {
       group_index: number,
-      members: string[]
+      members: { uuid: string, position_number: number }[]
     }[]
   }[];
 }
