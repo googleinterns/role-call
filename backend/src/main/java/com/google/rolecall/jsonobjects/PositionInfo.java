@@ -26,6 +26,11 @@ public abstract class PositionInfo {
   public abstract Integer order();
 
   @Nullable
+  @JsonProperty("size")
+  public abstract Integer size();
+
+
+  @Nullable
   public abstract Boolean delete();
 
   /* Every PositionInfo should be unique unless it's being comapred to itself */
@@ -57,6 +62,9 @@ public abstract class PositionInfo {
 
     @JsonProperty("order")
     public abstract Builder setOrder(Integer order);
+
+    @JsonProperty("size")
+    public abstract Builder setSize(Integer size);
 
     @JsonProperty("delete")
     public abstract Builder setDelete(Boolean delete);

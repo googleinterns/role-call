@@ -43,6 +43,12 @@ public class Section {
       fetch = FetchType.EAGER)
   private List<Position> positions = new ArrayList<>();
 
+  @OneToMany(mappedBy = "section", 
+    cascade = CascadeType.ALL, 
+    orphanRemoval = true, 
+    fetch = FetchType.LAZY)
+  private List<Cast> casts = new ArrayList<>();
+
   public Integer getId() {
     return id;
   }
@@ -63,15 +69,13 @@ public class Section {
     return positions;
   }
 
+  public List<Cast> getCasts() {
+    return casts;
+  }
+
   public SectionInfo toSectionInfo() {
     List<PositionInfo> positionInfos = positions.stream().map(p ->
-        PositionInfo.newBuilder()
-            .setId(p.getId())
-            .setName(p.getName())
-            .setNotes(p.getNotes())
-            .setOrder(p.getOrder())
-            .build()
-        ).collect(Collectors.toList());
+        p.toPositionInfo()).collect(Collectors.toList());
     
     SectionInfo section = SectionInfo.newBuilder()
         .setId(id)
@@ -89,12 +93,21 @@ public class Section {
       positions.add(position);
       position.setSection(this);
     }
-    // Throw exception here because was trying to add
   }
 
   public void removePosition(Position position) {
     positions.remove(position);
     position.setSection(null);
+  }
+
+  public void addCast(Cast cast) {
+    cast.setSection(this);
+    casts.add(cast);
+  }
+
+  public void removeCast(Cast cast) {
+    cast.setSection(null);
+    casts.remove(cast);
   }
 
   public Builder toBuilder() {

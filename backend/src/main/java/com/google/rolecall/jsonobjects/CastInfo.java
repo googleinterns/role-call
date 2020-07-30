@@ -2,11 +2,10 @@ package com.google.rolecall.jsonobjects;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
+import io.micrometer.core.lang.Nullable;
 
 @AutoValue
 @JsonDeserialize(builder = AutoValue_CastInfo.Builder.class)
@@ -20,22 +19,17 @@ public abstract class CastInfo {
   public abstract String name();
 
   @Nullable
-  @JsonProperty("comments")
-  public abstract String comments();
+  @JsonProperty("notes")
+  public abstract String notes();
 
   @Nullable
-  @JsonProperty("color")
-  public abstract String color();
+  @JsonProperty("sectionId")
+  public abstract Integer sectionId();
 
   @Nullable
-  @JsonProperty("positionId")
-  public abstract Integer positionId();
-
-  @Nullable
-  @JsonProperty("members")
-  public abstract List<CastMemberInfo> members();
-
-  /* Every PositionInfo should be unique unless it's being comapred to itself */
+  @JsonProperty("subCasts")
+  public abstract List<SubCastInfo> subCasts();
+  
   @Override
   public boolean equals(Object object) {
     return this == object;
@@ -59,17 +53,14 @@ public abstract class CastInfo {
     @JsonProperty("name")
     public abstract Builder setName(String name);
 
-    @JsonProperty("comments")
-    public abstract Builder setComments(String comments);
+    @JsonProperty("notes")
+    public abstract Builder setNotes(String notes);
 
-    @JsonProperty("color")
-    public abstract Builder setColor(String color);
+    @JsonProperty("sectionId")
+    public abstract Builder setSectionId(Integer sectionId);
 
-    @JsonProperty("positionId")
-    public abstract Builder setPositionId(Integer positionId);
-
-    @JsonProperty("members")
-    public abstract Builder setMembers(List<CastMemberInfo> members);
+    @JsonProperty("subCasts")
+    public abstract Builder setSubCasts(List<SubCastInfo> subCasts);
 
     public abstract CastInfo build();
   }

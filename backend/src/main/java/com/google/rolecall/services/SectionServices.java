@@ -72,6 +72,7 @@ public class SectionServices {
             .setName(info.name())
             .setNotes(info.notes())
             .setOrder(info.order())
+            .setSize(info.size())
             .build();
         if(orders.contains(position.getOrder())) {
           throw new InvalidParameterException("Order of Positions must not be overlapping");
@@ -128,6 +129,7 @@ public class SectionServices {
             .setName(info.name())
             .setNotes(info.notes())
             .setOrder(info.order())
+            .setSize(info.size())
             .build();
         section.addPosition(position);
       }
@@ -157,7 +159,7 @@ public class SectionServices {
   }
 
   /* Searches for and returns a position from a list based on id. */
-  private Position getPositionById(int id, List<Position> positions)
+  public Position getPositionById(int id, List<Position> positions)
       throws EntityNotFoundException {
     for (Position position : positions) {
       if(position.getId() == id) {
