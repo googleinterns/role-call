@@ -26,11 +26,6 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
     icon: 'extension'
   },
   {
-    name: 'Castsv1',
-    routerLinkUrl: 'castv1/',
-    icon: 'group'
-  },
-  {
     name: 'Casts',
     routerLinkUrl: 'cast/',
     icon: 'group'
