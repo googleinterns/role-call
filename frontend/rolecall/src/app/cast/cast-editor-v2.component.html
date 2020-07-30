@@ -1,11 +1,23 @@
 <div class="root-container">
   <div class="cast-selector-container">
     <div class="app-card card-margins left-card">
-      <h1 class="left-card-title">
-        Casts
-      </h1>
+      <div ngbDropdown #pieceDropdown="ngbDropdown">
+        <div class="app-card piece-select" ngbDropdownToggle>
+          <h1 class="left-card-title">
+            {{selectedPiece ? selectedPiece.name : " "}}
+          </h1>
+          <mat-icon class="dropdownArrow">
+            arrow_drop_down
+          </mat-icon>
+          <div ngbDropdownMenu aria-labelledby="Piece Dropdown" class="piece-options">
+            <button ngbDropdownItem *ngFor="let piece of allPieces" (click)="onSelectPiece(piece)">
+              {{piece.name}}
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="cast-select-container">
-        <div *ngFor="let cast of allCasts" class="app-card cast-select"
+        <div *ngFor="let cast of filteredCasts" class="app-card cast-select"
           [ngClass]="cast.uuid == castDragAndDrop.selectedCastUUID ? 'selected-cast' : ''"
           (click)="setCurrentCast(cast)">
           <h2 class="cast-name">

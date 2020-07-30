@@ -258,7 +258,7 @@ export class CastingEditor implements OnInit {
     }
     this.currentSelectedCast = cast;
     this.lastPieceUUID = this.currentSelectedCast.segment;
-    if (this.location.path().endsWith("cast") || this.location.path().endsWith("cast/")) {
+    if (this.location.path().endsWith("castv1") || this.location.path().endsWith("castv1/")) {
       this.location.replaceState(this.location.path() + "/" + cast.uuid);
     } else {
       let splits: string[] = this.location.path().split('/');

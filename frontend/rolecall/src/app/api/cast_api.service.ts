@@ -136,7 +136,9 @@ export class CastApi {
     if (!isNullOrUndefined(isWorkingCast) && isWorkingCast) {
       this.workingCasts.set(cast.uuid, cast);
       this.getAllCasts();
-      return;
+      return Promise.resolve({
+        successful: true
+      });
     }
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
@@ -161,7 +163,9 @@ export class CastApi {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
       this.getAllCasts();
-      return;
+      return Promise.resolve({
+        successful: true
+      });
     }
     return this.deleteCastResponse(cast).then(val => {
       if (val.status == 200) {

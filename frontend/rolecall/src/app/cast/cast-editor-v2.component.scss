@@ -30,20 +30,49 @@
   flex-direction: column;
   justify-content: space-between;
   margin: 1em;
+  margin-right: 0;
   max-height: 86vh;
+}
+
+.piece-select {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.piece-options {
+  font-size: large;
+  max-height: 70vh;
+  overflow-y: scroll;
 }
 .left-card-title {
   font-size: xx-large;
   font-weight: 800;
-  margin-bottom: 0.7em;
-  margin-left: 0.5em;
-  margin-top: 0.7em;
+  height: 100%;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  padding-bottom: 0.2em;
+  padding-left: 0.5em;
+  padding-top: 0.7em;
+  width: calc(100% - 1em);
+}
+.dropdownArrow {
+  font-size: 3em;
+  line-height: 0.5em;
+  position: relative;
+  right: 0.25em;
+  margin-bottom: auto;
+  margin-top: auto;
+  width: min-content;
+}
+.dropdown-toggle::after {
+  display: none;
 }
 .position-container {
   height: 100%;
   width: 100%;
 }
 .cast-select-container {
+  margin-top: 1rem;
   overflow-y: scroll;
   height: 100%;
   width: 100%;

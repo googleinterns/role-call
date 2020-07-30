@@ -6,10 +6,10 @@ import { CastingEditor } from './casting_editor.component';
 
 
 const routes: Routes = [
-  { path: 'cast/:uuid', component: CastingEditor },
-  { path: 'cast', component: CastingEditor },
-  { path: 'castv2', component: CastEditorV2 },
-  { path: 'castv2/:uuid', component: CastEditorV2 },
+  { path: 'castv1/:uuid', component: CastingEditor },
+  { path: 'castv1', component: CastingEditor },
+  { path: 'cast', component: CastEditorV2 },
+  { path: 'cast/:uuid', component: CastEditorV2 },
 ];
 
 @NgModule({

@@ -19,9 +19,15 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.cdk-focused,
+.cdk-mouse-focused {
+  border: none !important;
+  outline: none !important;
+}
+
 *:focus {
-  outline: none;
   border: none;
+  outline: none;
 }
 
 /* Importing Bootstrap SCSS file. */
