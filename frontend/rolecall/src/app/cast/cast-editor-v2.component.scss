@@ -1,0 +1,94 @@
+@import "src/colors";
+@import "src/constants";
+
+.root-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cast-selector-container {
+  width: 15vw;
+}
+
+.drag-and-drop-container {
+  width: 85vw;
+}
+
+//-------------------------
+
+// Margins on the panel cards
+.card-margins {
+  height: 96vh;
+  margin: 2vh;
+}
+
+// Left card arrangment and styling
+.left-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 1em;
+  max-height: 86vh;
+}
+.left-card-title {
+  font-size: xx-large;
+  font-weight: 800;
+  margin-bottom: 0.7em;
+  margin-left: 0.5em;
+  margin-top: 0.7em;
+}
+.position-container {
+  height: 100%;
+  width: 100%;
+}
+.cast-select-container {
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+}
+.cast-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  min-height: 3.75em;
+}
+.cast-name {
+  margin-bottom: auto;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: auto;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+.selected-cast {
+  background-color: $offoffWhite;
+}
+.add-button-width-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  min-height: 10vh;
+}
+.add-button-height-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.add-button {
+  background: $white;
+  border-radius: $borderRadius;
+  height: 6vh;
+  margin-right: 1em;
+  width: 6vh;
+}
+.add-button-icon {
+  font-size: 6vh;
+  vertical-align: middle;
+}

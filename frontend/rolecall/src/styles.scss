@@ -19,5 +19,10 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+*:focus {
+  outline: none;
+  border: none;
+}
+
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";

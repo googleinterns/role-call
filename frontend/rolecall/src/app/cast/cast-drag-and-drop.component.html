@@ -1,5 +1,6 @@
-<div cdkDropListGroup>
+<div *ngIf="dataLoaded && castSelected" cdkDropListGroup>
   <div class="position-pool">
+    <input type="text" class="name-input" (input)="onTitleInput($event)" [value]="this.cast.name" />
     <div *ngFor="let position of data; let i1 = index" class="position-container">
       <h3 class="position-title">{{positionNames[i1]}}</h3>
       <div class="table-container">
@@ -18,7 +19,7 @@
           </div>
           <div class="cell" *ngFor="let person of row; let i3 = index" cdkDrag [cdkDragData]="person">
             <img class="user-image"
-              src="https://lh3.google.com/u/0/ogw/ADGmqu-cM5JpECg1WXq0oPU0ujZDWwd_uoKYRvGYU8kX=s83-c-mo">
+              src="https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg">
             {{person.first_name + " " + person.last_name}}
           </div>
           <!-- <div class="empty-cell" *ngFor="let empty of emptyCells[i1][i2]">
@@ -30,11 +31,23 @@
   <div class="user-container">
     <div cdkDropList cdkDropListOrientation="horizontal" class="horizontal-list user-pool" [cdkDropListData]="allUsers"
       (cdkDropListDropped)="drop($event)" id="user-pool">
-      <div *ngFor="let user of allUsers" class="cell" cdkDrag [cdkDragData]="user">
+      <div *ngFor="let user of allUsers" class="cell user-cell" cdkDrag [cdkDragData]="user">
         <img class="user-image"
-          src="https://lh3.google.com/u/0/ogw/ADGmqu-cM5JpECg1WXq0oPU0ujZDWwd_uoKYRvGYU8kX=s83-c-mo">
+          src="https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg">
         {{user.first_name + " " + user.last_name}}
       </div>
+    </div>
+    <div class="buttons-container">
+      <button mat-icon-button class="save-delete-button" (click)="deleteCast()">
+        <mat-icon class="save-delete-button-icon">
+          delete
+        </mat-icon>
+      </button>
+      <button mat-icon-button class="save-delete-button" (click)="saveCast()">
+        <mat-icon class="save-delete-button-icon">
+          save
+        </mat-icon>
+      </button>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { APITypes } from 'src/types';
+import { isNullOrUndefined } from 'util';
 import { MockCastBackend } from '../mocks/mock_cast_backend';
 import { LoggingService } from '../services/logging.service';
 
@@ -39,6 +40,8 @@ export class CastApi {
 
   /** Mock backend */
   mockBackend: MockCastBackend = new MockCastBackend();
+
+  workingCasts: Map<APITypes.CastUUID, Cast> = new Map();
 
   constructor(private loggingService: LoggingService) { }
 
@@ -110,24 +113,34 @@ export class CastApi {
   /** Gets all the casts from the backend and returns them */
   getAllCasts(): Promise<Cast[]> {
     return this.getAllCastsResponse().then(val => {
-      this.castEmitter.emit(Array.from(this.casts.values()));
-      return val;
-    }).then(val => val.data.casts);
+      let allCasts = Array.from(this.casts.values()).concat(...this.workingCasts.values());
+      this.castEmitter.emit(allCasts);
+      return allCasts;
+    });
   }
 
   /** Gets a specific cast from the backend by UUID and returns it */
   getCast(uuid: APITypes.CastUUID): Promise<Cast> {
     return this.getOneCastResponse(uuid).then(val => {
-      this.castEmitter.emit(Array.from(this.casts.values()));
-      return val;
-    }).then(val => val.data.cast);
+      let allCasts = Array.from(this.casts.values()).concat(...this.workingCasts.values());
+      this.castEmitter.emit(allCasts);
+      return val.data.cast;
+    });
   }
 
   /** Requests an update to the backend which may or may not be successful,
    * depending on whether or not the cast is valid, as well as if the backend
    * request fails for some other reason.
    */
-  setCast(cast: Cast): Promise<APITypes.SuccessIndicator> {
+  setCast(cast: Cast, isWorkingCast?: boolean): Promise<APITypes.SuccessIndicator> {
+    if (!isNullOrUndefined(isWorkingCast) && isWorkingCast) {
+      this.workingCasts.set(cast.uuid, cast);
+      this.getAllCasts();
+      return;
+    }
+    if (this.workingCasts.has(cast.uuid)) {
+      this.workingCasts.delete(cast.uuid);
+    }
     return this.setCastResponse(cast).then(val => {
       if (val.status == 200) {
         this.getAllCasts();
@@ -145,6 +158,11 @@ export class CastApi {
 
   /** Requests for the backend to delete the cast */
   deleteCast(cast: Cast): Promise<APITypes.SuccessIndicator> {
+    if (this.workingCasts.has(cast.uuid)) {
+      this.workingCasts.delete(cast.uuid);
+      this.getAllCasts();
+      return;
+    }
     return this.deleteCastResponse(cast).then(val => {
       if (val.status == 200) {
         this.getAllCasts();
@@ -160,5 +178,18 @@ export class CastApi {
     });
   }
 
+  hasCast(castUUID: APITypes.CastUUID) {
+    return this.casts.has(castUUID) || this.workingCasts.has(castUUID);
+  }
+
+  castFromUUID(castUUID: APITypes.CastUUID) {
+    if (this.casts.has(castUUID)) {
+      return this.casts.get(castUUID);
+    }
+    if (this.workingCasts.has(castUUID)) {
+      return this.workingCasts.get(castUUID);
+    }
+    return undefined;
+  }
 
 }

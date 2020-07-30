@@ -1,6 +1,6 @@
 @import "src/colors";
 
-$cellWidth: 15rem;
+$cellWidth: 14rem;
 $cellHeight: 4rem;
 
 .horizontal-list {
@@ -15,6 +15,7 @@ $cellHeight: 4rem;
 }
 
 .position-title {
+  color: $gray;
   font-size: x-large;
   font-weight: bold;
   margin-top: 1em;
@@ -40,18 +41,34 @@ $cellHeight: 4rem;
   overflow-x: hidden;
   overflow-y: hidden;
   padding: 1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   width: $cellWidth;
   &ColHeader {
+    color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
   &RowHeader {
+    color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
   &BothHeader {
+  }
+}
+
+.name-input {
+  border: none;
+  color: black;
+  font-size: xx-large;
+  font-weight: bold;
+  margin-left: 2rem;
+  margin-top: 1em;
+  &:focus {
+    border: none;
   }
 }
 
@@ -82,14 +99,44 @@ $cellHeight: 4rem;
 }
 
 .user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   outline-color: $offoffWhite;
   outline-width: 2px;
   outline-style: dashed;
   outline-offset: -1px;
 }
 
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  height: 25vh;
+  justify-content: space-evenly;
+  width: min-content;
+}
+
+.save-delete-button {
+  width: 5rem;
+}
+
+.save-delete-button-icon {
+  color: $gray;
+  font-size: 3rem;
+  height: 3rem;
+  line-height: 3rem;
+  vertical-align: middle;
+  width: 3rem;
+}
+
 .user-image {
   border-radius: 50%;
   height: 100%;
-  margin-right: 1em;
+  margin-left: 0;
+  margin-right: 0.6em;
+}
+
+.user-cell {
+  min-width: $cellWidth;
+  width: 16.6666%;
 }
