@@ -1,3 +1,4 @@
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -18,6 +19,7 @@ type WorkingPiece = Piece & {
 })
 export class PieceEditor implements OnInit {
 
+  dragAndDropData: { type: "adding" | "added", index: number, value: string }[] = [];
   currentSelectedPiece: WorkingPiece;
   renderingPieces: WorkingPiece[];
   urlPointingUUID: string;
@@ -97,6 +99,7 @@ export class PieceEditor implements OnInit {
     }
     this.urlPointingUUID = piece.uuid;
     this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
+    this.updateDragAndDropData();
   }
 
   addPiece() {
@@ -146,11 +149,17 @@ export class PieceEditor implements OnInit {
   }
 
   addPosition() {
+    if (!this.workingPiece) {
+      this.prevWorkingState = this.currentSelectedPiece;
+      this.workingPiece = this.currentSelectedPiece;
+      this.setCurrentPiece(this.workingPiece);
+    }
     this.creatingPiece = true;
     this.pieceSaved = false;
     let nextInd = (this.currentSelectedPiece.positions.length + this.currentSelectedPiece.addingPositions.size + 1);
     this.currentSelectedPiece.addingPositions.set(nextInd, "Position " + nextInd);
     this.currentSelectedPiece.addingPositionsIndexes.push(nextInd);
+    this.updateDragAndDropData();
   }
 
   deleteAddingPosition(index: number) {
@@ -158,9 +167,16 @@ export class PieceEditor implements OnInit {
     this.currentSelectedPiece.addingPositionsIndexes =
       this.currentSelectedPiece.addingPositionsIndexes.filter((val) => val != realInd);
     this.currentSelectedPiece.addingPositions.delete(realInd);
+    this.updateDragAndDropData();
   }
   deletePosition(index: number) {
+    if (!this.workingPiece) {
+      this.prevWorkingState = this.currentSelectedPiece;
+      this.workingPiece = this.currentSelectedPiece;
+      this.setCurrentPiece(this.workingPiece);
+    }
     this.currentSelectedPiece.positions = this.currentSelectedPiece.positions.filter((val, ind) => ind != index);
+    this.updateDragAndDropData();
   }
 
   editTitle() {
@@ -199,5 +215,28 @@ export class PieceEditor implements OnInit {
     if (key == "New Piece Name") {
       this.currentSelectedPiece.name = val;
     }
+  }
+
+  updateDragAndDropData() {
+    this.dragAndDropData = [];
+    for (let i = 0; i < this.currentSelectedPiece.positions.length; i++) {
+      this.dragAndDropData.push({
+        type: "added",
+        index: i,
+        value: this.currentSelectedPiece.positions[i]
+      });
+    }
+    let addingPoses = Array.from(this.currentSelectedPiece.addingPositions.values());
+    for (let i = 0; i < addingPoses.length; i++) {
+      this.dragAndDropData.push({
+        type: "adding",
+        index: i + this.currentSelectedPiece.positions.length,
+        value: addingPoses[i]
+      });
+    }
+  }
+
+  drop(event: CdkDragDrop<any>) {
+    transferArrayItem(this.dragAndDropData, this.dragAndDropData, event.previousIndex, event.currentIndex);
   }
 }
