@@ -72,8 +72,8 @@
               <ng-template #addingPosition>
                 <div cdkDrag class="adding-position-container">
                   <div class="adding-position-input-container">
-                    <app-text-input (valueChange)="onInputChange($event)" [bgColor]="offWhite"
-                      [valueName]="'Position ' + (data.index + 1)" [initValue]="data.value">
+                    <app-text-input (valueChange)="onInputChange($event, data)" [bgColor]="offWhite"
+                      [valueName]="'New Position'" [initValue]="data.value">
                     </app-text-input>
                   </div>
                   <div class="add-button-height-container">

@@ -107,6 +107,7 @@ export class PieceEditor implements OnInit {
     this.currentSelectedPiece = newPiece;
     this.renderingPieces.push(newPiece);
     this.workingPiece = newPiece;
+    this.pieceSaved = false;
     this.setCurrentPiece(this.workingPiece);
   }
 
@@ -116,8 +117,8 @@ export class PieceEditor implements OnInit {
       alert("You must enter a piece name!");
       return;
     }
+    this.updateDragAndDropData(true);
     this.pieceSaved = true;
-    this.currentSelectedPiece.positions.push(...this.currentSelectedPiece.addingPositions.map(val => val.value));
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {
         this.currentSelectedPiece.addingPositions = [];
@@ -144,13 +145,13 @@ export class PieceEditor implements OnInit {
     this.creatingPiece = true;
     this.pieceSaved = false;
     let nextInd = (this.currentSelectedPiece.positions.length + this.currentSelectedPiece.addingPositions.length);
-    this.currentSelectedPiece.addingPositions.push({ index: nextInd, value: "New Position" });
+    this.dragAndDropData.push({ index: nextInd, value: "New Position", type: "adding" });
     this.updateDragAndDropData();
   }
 
   deleteAddingPosition(index: number) {
-    let realInd = index;
-    this.currentSelectedPiece.addingPositions = this.currentSelectedPiece.addingPositions.filter((val, ind) => val.index != realInd);
+    this.dragAndDropData = this.dragAndDropData.filter((val, ind) => val.index != index);
+    this.pieceSaved = false;
     this.updateDragAndDropData();
   }
   deletePosition(index: number) {
@@ -159,9 +160,9 @@ export class PieceEditor implements OnInit {
       this.workingPiece = this.currentSelectedPiece;
       this.setCurrentPiece(this.workingPiece);
     }
-    this.currentSelectedPiece.positions = this.currentSelectedPiece.positions.filter((val, ind) => ind != index);
-    this.updateDragAndDropData();
+    this.dragAndDropData = this.dragAndDropData.filter((val, ind) => val.index != index);
     this.pieceSaved = false;
+    this.updateDragAndDropData();
   }
 
   editTitle() {
@@ -180,7 +181,7 @@ export class PieceEditor implements OnInit {
     this.pieceSaved = false;
   }
 
-  onInputChange(change: [string, any]) {
+  onInputChange(change: [string, any], data?: any) {
     let valueName = change[0];
     let value = change[1];
     if (!this.workingPiece) {
@@ -189,15 +190,13 @@ export class PieceEditor implements OnInit {
       this.setCurrentPiece(this.workingPiece);
     }
     if (this.workingPiece) {
-      this.setWorkingPropertyByKey(valueName, value);
+      this.setWorkingPropertyByKey(valueName, value, data);
     }
   }
 
-  setWorkingPropertyByKey(key: string, val: string) {
-    if (key.startsWith("Position")) {
-      let index = Number(key.split(" ")[1]);
-      let found = this.currentSelectedPiece.addingPositions.find(val => val.index == index);
-      console.log(found);
+  setWorkingPropertyByKey(key: string, val: string, data?: any) {
+    if (key.startsWith("New Position")) {
+      let found = this.currentSelectedPiece.addingPositions.find(val => val.index == data.index);
       if (found)
         found.value = val;
     }
@@ -206,27 +205,51 @@ export class PieceEditor implements OnInit {
     }
   }
 
-  updateDragAndDropData() {
-    console.log(this.dragAndDropData)
-    console.log(this.currentSelectedPiece.addingPositions, this.currentSelectedPiece.positions);
-    this.dragAndDropData = [];
-    for (let i = 0; i < this.currentSelectedPiece.positions.length; i++) {
-      this.dragAndDropData.push({
-        type: "added",
-        index: i,
-        value: this.currentSelectedPiece.positions[i]
+  updateDragAndDropData(writeThru?: boolean) {
+    if (this.pieceSaved) {
+      this.dragAndDropData = this.currentSelectedPiece.positions.map((val, ind) => {
+        return {
+          index: ind,
+          value: val,
+          type: "added"
+        };
       });
+      return;
     }
-    for (let i = 0; i < this.currentSelectedPiece.addingPositions.length; i++) {
-      this.dragAndDropData.push({
-        type: "adding",
-        index: this.currentSelectedPiece.addingPositions[i].index,
-        value: this.currentSelectedPiece.addingPositions[i].value
-      });
+    let newDDData = [];
+    this.currentSelectedPiece.positions = [];
+    this.currentSelectedPiece.addingPositions = [];
+    for (let i = 0; i < this.dragAndDropData.length; i++) {
+      let data = this.dragAndDropData[i];
+      if (data.type == "added") {
+        let struct = {
+          type: "added",
+          index: i,
+          value: data.value
+        };
+        newDDData.push(struct);
+        this.currentSelectedPiece.positions.push(struct.value);
+      } else {
+        let struct = {
+          type: "adding",
+          index: i,
+          value: data.value
+        };
+        newDDData.push(struct);
+        this.currentSelectedPiece.addingPositions.push(struct);
+      }
+    }
+    this.dragAndDropData = newDDData;
+    if (writeThru && writeThru) {
+      console.log(this.dragAndDropData);
+      this.currentSelectedPiece.positions = this.dragAndDropData.sort((a, b) => a.index - b.index).map(val => val.value);
+      this.currentSelectedPiece.addingPositions = [];
     }
   }
 
   drop(event: CdkDragDrop<any>) {
+    this.dragAndDropData[event.previousIndex].index = event.currentIndex;
+    this.dragAndDropData[event.currentIndex].index = event.previousIndex;
     transferArrayItem(this.dragAndDropData, this.dragAndDropData, event.previousIndex, event.currentIndex);
     this.pieceSaved = false;
   }
