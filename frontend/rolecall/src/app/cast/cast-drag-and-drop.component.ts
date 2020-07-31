@@ -5,6 +5,7 @@ import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
+import { NumberToPlacePipe } from '../common_components/number_to_place.pipe';
 import { LoggingService } from '../services/logging.service';
 
 @Component({
@@ -154,7 +155,8 @@ export class CastDragAndDrop implements OnInit {
 
   setColumnHeaders(positionIndex: number) {
     this.columnHeaders[positionIndex] = [];
-    this.columnHeaders[positionIndex] = Array(this.getMaxNumberInDancerPositionForData(positionIndex) + 1).fill(0).map((x, i) => "Subcast " + (i + 1));
+    let pipe = new NumberToPlacePipe();
+    this.columnHeaders[positionIndex] = Array(this.getMaxNumberInDancerPositionForData(positionIndex) + 1).fill(0).map((x, i) => pipe.transform(i + 1) + " Cast");
   }
 
   ensureEmptyArrayAtEnd(positionIndex: number) {
