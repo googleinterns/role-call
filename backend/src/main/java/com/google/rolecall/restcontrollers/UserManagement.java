@@ -123,6 +123,8 @@ public class UserManagement extends AsyncRestEndpoint {
       userService.deleteUser(id);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
     }
     
     return CompletableFuture.completedFuture(null);
