@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
+import com.google.rolecall.repos.CastMemberRepository;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -53,7 +54,8 @@ public class UserManagementUnitTests {
   @BeforeEach
   public void init() {
 
-    userService = spy(new UserServices(mock(UserRepository.class)));
+    userService = spy(new UserServices(mock(UserRepository.class),
+        mock(CastMemberRepository.class)));
     controller = new UserManagement(userService);
     User.Builder builder = User.newBuilder()
         .setFirstName(firstName)
