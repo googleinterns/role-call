@@ -253,7 +253,7 @@ export class CastDragAndDrop implements OnInit {
     let prevPosRowInd: [number, number] = [Number(prevIdSplits[0]), Number(prevIdSplits[1])];
     if (event.container.id == "user-pool") {
       this.data[prevPosRowInd[0]][prevPosRowInd[1]] =
-        this.data[prevPosRowInd[0]][prevPosRowInd[1]].filter((val, ind) => (val.uuid != event.item.data.uuid || ind != event.previousIndex - 1));
+        this.data[prevPosRowInd[0]][prevPosRowInd[1]].filter((val, ind) => (val.uuid != event.item.data.uuid || ind != event.previousIndex));
       this.setColumnHeaders(prevPosRowInd[0]);
       this.ensureEmptyArrayAtEnd(prevPosRowInd[0]);
       this.updateEmptyRows(prevPosRowInd[0]);
@@ -265,7 +265,7 @@ export class CastDragAndDrop implements OnInit {
     if (!event.isPointerOverContainer) {
       // Remove person from the cast
       this.data[prevPosRowInd[0]][prevPosRowInd[1]] =
-        this.data[prevPosRowInd[0]][prevPosRowInd[1]].filter((val, ind) => (val.uuid != event.item.data.uuid || ind != event.previousIndex - 1));
+        this.data[prevPosRowInd[0]][prevPosRowInd[1]].filter((val, ind) => (val.uuid != event.item.data.uuid || ind != event.previousIndex));
     } else {
       // Move person
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
