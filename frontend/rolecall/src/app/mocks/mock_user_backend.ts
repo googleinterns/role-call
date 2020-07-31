@@ -46,7 +46,7 @@ export class MockUserBackend {
           email: "USER1EMG@gmail.com"
         }
       },
-      date_of_birth: 1
+      date_joined: 1000000000
     },
     {
       uuid: "USERUUID2",
@@ -84,7 +84,7 @@ export class MockUserBackend {
           email: "USER2EMG@gmail.com"
         }
       },
-      date_of_birth: 1
+      date_joined: 1000000000
     }
   ];
 

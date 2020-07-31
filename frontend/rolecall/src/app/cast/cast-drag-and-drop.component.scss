@@ -145,3 +145,16 @@ $cellHeight: 4rem;
   min-width: $cellWidth;
   width: 16.6666%;
 }
+
+.cdk-drag-placeholder {
+  opacity: 0.4;
+}
+.cdk-drag-animating {
+  transition: transform 75ms cubic-bezier(0, 0, 0.2, 1);
+}
+.cdk-drop-list-dragging :not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.cdk-drop-list-receiving {
+  transition: transform 100ms cubic-bezier(0, 0, 0.2, 1);
+}

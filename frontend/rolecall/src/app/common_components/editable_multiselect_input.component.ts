@@ -26,6 +26,8 @@ export class EditableMultiSelectInput implements OnInit {
   }
 
   onChangeSelection(selectedString: string, event: any) {
+    if (!event.isUserInput)
+      return;
     if (event.source.selected) {
       this.valueChange.emit([this.valueName, [...this.currentlySelected, selectedString]]);
     } else {

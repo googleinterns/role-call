@@ -14,7 +14,7 @@ export type User = {
   knows_positions: APITypes.Position[],
   first_name: string,
   last_name: string,
-  date_of_birth: number,
+  date_joined: number,
   contact_info: {
     phone_number: string,
     email: string,
@@ -122,7 +122,7 @@ export class UserApi {
               knows_positions: [],
               first_name: val.firstName,
               last_name: val.lastName,
-              date_of_birth: 0,
+              date_joined: Date.parse(val.dateJoined),
               contact_info: {
                 phone_number: "N/A",
                 email: val.email,

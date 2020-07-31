@@ -28,8 +28,12 @@ export class UserEditor implements OnInit {
 
   prevWorkingState: User;
   workingUser: User;
-  userSaved: boolean = false;
+  userSaved: boolean = true;
   creatingUser: boolean = false;
+
+  usersLoaded: boolean = false;
+  privilegeClassesLoaded: boolean = false;
+  dataLoaded: boolean = false;
 
   constructor(private route: ActivatedRoute, private userAPI: UserApi,
     private privilegeClassAPI: PrivilegeClassApi,
@@ -54,25 +58,34 @@ export class UserEditor implements OnInit {
       return;
     }
     this.renderingUsers = users;
+    this.usersLoaded = true;
+    this.dataLoaded = this.usersLoaded && this.privilegeClassesLoaded;
+    if (this.dataLoaded)
+      this.onDataLoaded()
+  }
+
+  onDataLoaded() {
     if (isNullOrUndefined(this.urlPointingUUID)) {
-      this.setCurrentUser(users[0]);
+      this.setCurrentUser(this.renderingUsers[0]);
     } else {
-      let foundUser = users.find((val) => val.uuid == this.urlPointingUUID);
+      let foundUser = this.renderingUsers.find((val) => val.uuid == this.urlPointingUUID);
       if (isNullOrUndefined(foundUser)) {
-        this.setCurrentUser(users[0]);
+        this.setCurrentUser(this.renderingUsers[0]);
       } else {
         this.setCurrentUser(foundUser);
       }
     }
   }
-
   onPrivilegeClassLoad(privilegeClassesIn: string[]) {
     this.privilegeClasses = privilegeClassesIn;
+    this.privilegeClassesLoaded = true;
+    this.dataLoaded = this.usersLoaded && this.privilegeClassesLoaded;
+    if (this.dataLoaded)
+      this.onDataLoaded()
   }
 
   setCurrentUser(user: User, fromInputChange?: boolean) {
     if (user && this.currentSelectedUser && user.uuid !== this.currentSelectedUser.uuid) {
-      this.userSaved = false;
       this.creatingUser = false;
     }
     if (this.workingUser && user.uuid != this.workingUser.uuid) {
@@ -114,16 +127,16 @@ export class UserEditor implements OnInit {
       first_name: undefined,
       last_name: undefined,
       has_permissions: {
-        canLogin: false,
+        canLogin: true,
         isAdmin: false,
-        notifications: false,
+        notifications: true,
         managePerformances: false,
         manageCasts: false,
         managePieces: false,
         manageRoles: false,
         manageRules: false
       },
-      date_of_birth: 0,
+      date_joined: Date.now(),
       has_privilege_classes: [],
       contact_info: {
         phone_number: undefined,
@@ -178,8 +191,8 @@ export class UserEditor implements OnInit {
       key: "last_name",
       type: "string"
     },
-    "Date of Birth": {
-      key: "date_of_birth",
+    "Date Joined": {
+      key: "date_joined",
       type: "date"
     },
     "Email": {
@@ -230,7 +243,6 @@ export class UserEditor implements OnInit {
   }
 
   onInputChange(change: [string, any]) {
-    this.userSaved = false;
     let valueName = change[0];
     let value = change[1];
     if (!this.workingUser) {
@@ -253,17 +265,40 @@ export class UserEditor implements OnInit {
     if (info.type == "date") {
       let date = Date.parse(val.value);
       val = date;
+      this.userSaved = false;
     }
-    if (info.type == "permissions") {
+    else if (info.type == "permissions") {
       let val2 = this.workingUser.has_permissions;
       for (let entry of Object.entries(val2)) {
         if (val.includes(entry[0])) {
+          if (!val2[entry[0]]) {
+            this.userSaved = false;
+          }
           val2[entry[0]] = true;
         } else {
+          if (val2[entry[0]]) {
+            this.userSaved = false;
+          }
           val2[entry[0]] = false;
         }
       }
       val = val2;
+    }
+    else if (key == "Privilege Classes") {
+      console.log("OOOOO", val);
+      if (this.workingUser.has_privilege_classes) {
+        let largerArr = val.length > this.workingUser.has_privilege_classes.length ? val : this.workingUser.has_privilege_classes;
+        let smallerArr = val.length <= this.workingUser.has_privilege_classes.length ? val : this.workingUser.has_privilege_classes;
+        for (let i = 0; i < largerArr.length; i++) {
+          if (largerArr[i] != smallerArr[i]) {
+            this.userSaved = false;
+            break;
+          }
+        }
+      }
+    }
+    else {
+      this.userSaved = false;
     }
     objInQuestion[splits[splits.length - 1]] = val;
   }

@@ -12,6 +12,7 @@ export class EditableTextInput implements OnInit {
   @Input() bgColor: string;
   @Input() type: string;
   @Input() autoCompleteOptions: string[];
+  @Input() isDisabled: boolean;
   @Output() valueChange: EventEmitter<[string, string]> = new EventEmitter();
   currentValue: string;
 

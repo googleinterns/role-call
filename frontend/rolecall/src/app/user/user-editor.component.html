@@ -47,15 +47,15 @@
       <div class="email-date-container">
         <div class="email-container">
           <div class="email-input">
-            <app-text-input (valueChange)="onInputChange($event)"
+            <app-text-input (valueChange)="onInputChange($event)" [isDisabled]="!creatingUser"
               [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['email'] | emptyStringIfUndefined"
               valueName="Email">
             </app-text-input>
           </div>
         </div>
         <div class="date-input">
-          <app-date-input #birthdateIn (valueChange)="onInputChange($event)" valueName="Date of Birth"
-            [initValue]="currentSelectedUser ? currentSelectedUser.date_of_birth : getCurrentDate()">
+          <app-date-input #birthdateIn (valueChange)="onInputChange($event)" valueName="Date Joined"
+            [initValue]="currentSelectedUser ? currentSelectedUser.date_joined : getCurrentDate()">
           </app-date-input>
         </div>
       </div>
