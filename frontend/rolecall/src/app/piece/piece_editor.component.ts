@@ -8,7 +8,7 @@ import { Piece, PieceApi } from '../api/piece_api.service';
 
 type WorkingPiece = Piece & {
   addingPositions: { index: number, value: string }[],
-  nameSaved: boolean
+  originalName: string
 }
 
 @Component({
@@ -52,7 +52,7 @@ export class PieceEditor implements OnInit {
     }
     let workPieces = pieces.map(val => {
       val['addingPositions'] = [];
-      val['nameSaved'] = true;
+      val['originalName'] = String(val.name);
       return val as WorkingPiece;
     });
     this.renderingPieces = workPieces;
@@ -70,6 +70,9 @@ export class PieceEditor implements OnInit {
 
   setCurrentPiece(piece: WorkingPiece) {
     if (piece && this.currentSelectedPiece && piece.uuid !== this.currentSelectedPiece.uuid) {
+      if (!this.pieceSaved) {
+        this.currentSelectedPiece.name = this.currentSelectedPiece.originalName;
+      }
       this.pieceSaved = true;
       this.creatingPiece = false;
       this.currentSelectedPiece.addingPositions = [];
@@ -100,9 +103,9 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     let newPiece: WorkingPiece = {
       uuid: "piece:" + Date.now(),
-      name: undefined,
+      name: "New Piece",
       positions: [],
-      nameSaved: false,
+      originalName: "New Piece",
       addingPositions: []
     }
     this.currentSelectedPiece = newPiece;
@@ -167,12 +170,9 @@ export class PieceEditor implements OnInit {
     this.updateDragAndDropData();
   }
 
-  editTitle() {
+  onTitleInput(event) {
     this.pieceSaved = false;
-    this.currentSelectedPiece.name = undefined;
-    this.currentSelectedPiece.nameSaved = false;
-    this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.currentSelectedPiece.uuid);
-    this.renderingPieces.push(this.currentSelectedPiece);
+    this.currentSelectedPiece.name = event.target.value;
   }
 
   deletePiece() {
@@ -243,7 +243,6 @@ export class PieceEditor implements OnInit {
     }
     this.dragAndDropData = newDDData;
     if (writeThru && writeThru) {
-      console.log(this.dragAndDropData);
       this.currentSelectedPiece.positions = this.dragAndDropData.sort((a, b) => a.index - b.index).map(val => val.value);
       this.currentSelectedPiece.addingPositions = [];
     }

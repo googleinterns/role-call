@@ -28,26 +28,8 @@
     <div *ngIf="renderingPieces && renderingPieces.length > 0" class="app-card card-margins right-card">
       <div *ngIf="currentSelectedPiece">
         <div class="right-title-edit">
-          <h1 class="left-card-title">
-            {{ ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined) }}
-          </h1>
-          <div *ngIf="currentSelectedPiece.nameSaved" class="add-button-width-container">
-            <div class="add-button-height-container">
-              <button mat-icon-button aria-label="Add Piece Button" class="add-button" (click)="editTitle()">
-                <mat-icon [inline]="true" class="add-button-icon">
-                  edit
-                </mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="!currentSelectedPiece.nameSaved" class="right-title-edit">
-          <div class="edit-title-container">
-            <app-text-input (valueChange)="onInputChange($event)"
-              [initValue]="(currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined"
-              valueName="New Piece Name">
-            </app-text-input>
-          </div>
+          <input type="text" class="name-input left-card-title" (input)="onTitleInput($event)"
+            [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)" />
         </div>
       </div>
       <div class="app-card positions-card">

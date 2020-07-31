@@ -167,6 +167,20 @@
   overflow-y: scroll;
 }
 
+.name-input {
+  background: none;
+  border: none;
+  color: black;
+  font-size: xx-large;
+  font-weight: bold;
+  margin-left: 2rem;
+  margin-top: 1em;
+  position: relative;
+  &:focus {
+    border: none;
+  }
+}
+
 .position-name-card {
   background: $offWhite;
   display: flex;
