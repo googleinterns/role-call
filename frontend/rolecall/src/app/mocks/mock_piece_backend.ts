@@ -15,7 +15,8 @@ export class MockPieceBackend {
       positions: [
         "piece1pos1",
         "piece1pos2"
-      ]
+      ],
+      deletePositions: []
     },
     {
       uuid: "PIECE2UUID",
@@ -24,7 +25,8 @@ export class MockPieceBackend {
         "piece2pos1",
         "piece2pos2",
         "piece2pos3"
-      ]
+      ],
+      deletePositions: []
     },
     {
       uuid: "PIECE3UUID",
@@ -34,7 +36,8 @@ export class MockPieceBackend {
         "piece3pos2",
         "piece3pos3",
         "piece3pos4"
-      ]
+      ],
+      deletePositions: []
     }
   ];
   shouldRejectSetRequest = false;

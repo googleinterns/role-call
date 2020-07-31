@@ -106,7 +106,8 @@ export class PieceEditor implements OnInit {
       name: "New Piece",
       positions: [],
       originalName: "New Piece",
-      addingPositions: []
+      addingPositions: [],
+      deletePositions: []
     }
     this.currentSelectedPiece = newPiece;
     this.renderingPieces.push(newPiece);
@@ -123,10 +124,11 @@ export class PieceEditor implements OnInit {
       return;
     }
     this.updateDragAndDropData(true);
-    this.pieceSaved = true;
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {
         this.currentSelectedPiece.addingPositions = [];
+        this.pieceSaved = true;
+        this.creatingPiece = false;
         let prevUUID = this.currentSelectedPiece.uuid;
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
@@ -165,6 +167,9 @@ export class PieceEditor implements OnInit {
       this.workingPiece = this.currentSelectedPiece;
       this.setCurrentPiece(this.workingPiece);
     }
+    let position = this.dragAndDropData.find((val) => val.index == index);
+    if (position)
+      this.currentSelectedPiece.deletePositions.push(position.value);
     this.dragAndDropData = this.dragAndDropData.filter((val, ind) => val.index != index);
     this.pieceSaved = false;
     this.updateDragAndDropData();
