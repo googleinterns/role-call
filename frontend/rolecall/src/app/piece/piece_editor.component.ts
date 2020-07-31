@@ -77,7 +77,7 @@ export class PieceEditor implements OnInit {
       this.creatingPiece = false;
       this.currentSelectedPiece.addingPositions = [];
     }
-    if ((this.workingPiece && piece.uuid != this.workingPiece.uuid)) {
+    if ((this.workingPiece && piece && piece.uuid != this.workingPiece.uuid)) {
       this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.workingPiece.uuid);
       if (this.prevWorkingState != undefined) {
         this.currentSelectedPiece = this.prevWorkingState;
@@ -87,10 +87,12 @@ export class PieceEditor implements OnInit {
       this.workingPiece = undefined;
     }
     this.currentSelectedPiece = piece;
+    this.urlPointingUUID = piece ? piece.uuid : "";
     if (this.location.path().startsWith("/piece") || this.location.path().startsWith("/piece/")) {
-      this.location.replaceState("/piece/" + piece.uuid);
+      if (piece) {
+        this.location.replaceState("/piece/" + this.urlPointingUUID);
+      }
     }
-    this.urlPointingUUID = piece.uuid;
     this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
     this.updateDragAndDropData();
   }
@@ -106,7 +108,8 @@ export class PieceEditor implements OnInit {
       name: "New Piece",
       positions: [],
       originalName: "New Piece",
-      addingPositions: []
+      addingPositions: [],
+      deletePositions: []
     }
     this.currentSelectedPiece = newPiece;
     this.renderingPieces.push(newPiece);
@@ -123,10 +126,11 @@ export class PieceEditor implements OnInit {
       return;
     }
     this.updateDragAndDropData(true);
-    this.pieceSaved = true;
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {
         this.currentSelectedPiece.addingPositions = [];
+        this.pieceSaved = true;
+        this.creatingPiece = false;
         let prevUUID = this.currentSelectedPiece.uuid;
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
@@ -165,6 +169,9 @@ export class PieceEditor implements OnInit {
       this.workingPiece = this.currentSelectedPiece;
       this.setCurrentPiece(this.workingPiece);
     }
+    let position = this.dragAndDropData.find((val) => val.index == index);
+    if (position)
+      this.currentSelectedPiece.deletePositions.push(position.value);
     this.dragAndDropData = this.dragAndDropData.filter((val, ind) => val.index != index);
     this.pieceSaved = false;
     this.updateDragAndDropData();
@@ -180,7 +187,8 @@ export class PieceEditor implements OnInit {
     this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.currentSelectedPiece.uuid);
     this.pieceAPI.deletePiece(this.currentSelectedPiece);
     this.renderingPieces.length > 0 ? this.setCurrentPiece(this.renderingPieces[0]) : this.setCurrentPiece(undefined);
-    this.pieceSaved = false;
+    this.pieceSaved = true;
+    this.creatingPiece = false;
   }
 
   onInputChange(change: [string, any], data?: any) {
@@ -208,6 +216,8 @@ export class PieceEditor implements OnInit {
   }
 
   updateDragAndDropData(writeThru?: boolean) {
+    if (!this.currentSelectedPiece)
+      return;
     if (this.pieceSaved) {
       this.dragAndDropData = this.currentSelectedPiece.positions.map((val, ind) => {
         return {

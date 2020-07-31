@@ -30,6 +30,7 @@ export type Piece = {
   uuid: string;
   name: string;
   positions: string[];
+  deletePositions: string[];
 }
 
 export type AllPiecesResponse = {
@@ -73,7 +74,8 @@ export class PieceApi {
               positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map((position) => {
                 this.positions.push(position);
                 return position.name;
-              })
+              }),
+              deletePositions: []
             }
           })
         },
@@ -94,19 +96,31 @@ export class PieceApi {
     }
     if (this.pieces.has(piece.uuid)) {
       // Do patch
+      console.log(piece);
       return this.http.patch(environment.backendURL + 'api/section', {
         name: piece.name,
         id: piece.uuid,
         positions: piece.positions.map((val, ind) => {
+          let prevId = this.positions.find(val2 => {
+            return val2.name == val;
+          });
           return {
-            id: this.positions.find(val2 => {
-              return val2.name == val;
-            }).id,
+            id: prevId ? prevId.id : undefined,
+            name: val,
+            order: ind,
+            delete: false
+          }
+        }).concat(piece.deletePositions.map((val, ind) => {
+          let prevId = this.positions.find(val2 => {
+            return val2.name == val;
+          });
+          return {
+            id: prevId ? prevId.id : undefined,
             name: val,
             order: ind,
             delete: true
           }
-        })
+        }))
       }, { observe: "response" }).toPromise().then(val => {
         return val;
       }).catch(val => {
@@ -117,7 +131,6 @@ export class PieceApi {
       });
     } else {
       // Do post
-      console.log(piece);
       return this.http.post(environment.backendURL + 'api/section', {
         name: piece.name,
         positions: piece.positions.map((val, ind) => {
