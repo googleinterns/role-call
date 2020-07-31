@@ -1,13 +1,13 @@
 package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.CastInfo;
-import com.google.rolecall.jsonobjects.CastMemberInfo;
-import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-import java.awt.Color;
-import java.util.ArrayList;
+import com.google.rolecall.jsonobjects.SubCastInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
+import java.security.InvalidParameterException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,7 +23,6 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class Cast {
-  
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
@@ -32,89 +31,96 @@ public class Cast {
   private String name;
 
   @Basic
-  private String comments;
+  private String notes;
 
-  @Column(nullable = false)
-  private Integer color;
-
-  @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  private Position position;
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  private Section section;
 
   @OneToMany(mappedBy = "cast", 
       cascade = CascadeType.ALL, 
       orphanRemoval = true,
       fetch = FetchType.EAGER)
-  private List<CastMember> members = new ArrayList<>();
+  private Set<SubCast> subCasts = new HashSet<>();
 
   public Integer getId() {
     return id;
   }
-  
+
   public String getName() {
     return name;
   }
 
-  public String getComments() {
-    return comments == null? "" : comments;
+  public String getNotes() {
+    return notes == null ? "" : notes;
   }
 
-  public String getColor() {
-    return String.format("#%06X", color);
+  public Section getSection() {
+    return section;
   }
 
-  public Position getPosition() {
-    return position;
+  public Set<SubCast> getSubCasts() {
+    return subCasts;
   }
 
-  public List<CastMember> getCastMembers() {
-    return members;
+  public void addSubCast(SubCast subCast) {
+    subCast.setCast(this);
+    subCasts.add(subCast);
   }
 
-  public void addCastMember(User user) throws InvalidParameterException {
-    CastMember member = new CastMember(user, this);
-    members.add(member);
+  public void removeSubCast(SubCast subCast) {
+    subCast.setCast(null);
+    subCasts.remove(subCast);
   }
 
-  public void removeCastMember(CastMember member) {
-    member.setCast(null);
-    members.remove(member);
+  /* Searches for and returns a SubCast from subCasts based on id. */
+  public SubCast getSubCastById(Integer id)
+      throws InvalidParameterException, EntityNotFoundException {
+    if(id == null) {
+      throw new InvalidParameterException("SubCastId cannot be null");
+    }
+
+    for (SubCast subCast : subCasts) {
+      if(subCast.getId() == id) {
+        return subCast;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "Sub Cast with id %d does not exist for this Cast", id));
   }
 
-  void setPosition(Position position) {
-    this.position = position;
+  public CastInfo toCastInfo() {
+    List<SubCastInfo> subCastInfos = subCasts.stream().map(c->c.toSubCastInfo())
+        .collect(Collectors.toList());
+    
+    return CastInfo.newBuilder()
+        .setId(getId())
+        .setName(getName())
+        .setNotes(getNotes())
+        .setSectionId(getSection().getId())
+        .setSubCasts(subCastInfos)
+        .build();
+  }
+
+  void setSection(Section section) {
+    this.section = section;
   }
 
   public Builder toBuilder() {
     return new Builder(this);
   }
 
-  public CastInfo toCastInfo() {
-    List<CastMemberInfo> membersInfo = members.stream().map(c->c.toCastMemberInfo())
-        .collect(Collectors.toList());
-  
-    return CastInfo.newBuilder()
-        .setId(id)
-        .setName(name)
-        .setComments(getComments())
-        .setPositionId(position.getId())
-        .setColor(getColor())
-        .setMembers(membersInfo)
-        .build();
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   public Cast() {
   }
 
-  public static Builder newBuilder() {
-    return new Builder();
-  }
-
   public static class Builder {
-
     private Cast cast;
     private String name;
-    private String comments;
-    private String color;
+    private String notes;
 
     public Builder setName(String name) {
       if(name != null) {
@@ -123,46 +129,32 @@ public class Cast {
       return this;
     }
 
-    public Builder setComments(String comments) {
-      if(comments != null) {
-        this.comments = comments;
+    public Builder setNotes(String notes) {
+      if(notes != null) {
+        this.notes = notes;
       }
       return this;
     }
 
-    public Builder setColor(String color) {
-      if(color != null) {
-        this.color = color;
+    public Cast build() {
+      if(name == null) {
+        throw new InvalidParameterException("Name is required to create a new cast.");
       }
-      return this;
-    }
 
-    public Cast build() throws InvalidParameterException {
-      if(name == null || color == null) {
-        throw new InvalidParameterException("Cast requires a name and a color");
-      }
-      try {
-        Color converted = Color.decode(color);
-        cast.color = converted.getRGB() & 0xFFFFFF;
-      } catch(NumberFormatException e) {
-        throw new InvalidParameterException(
-            "Cast color should have RGB format ranging from '#000000' to '#FFFFFF'.");
-      }
       cast.name = this.name;
-      cast.comments = this.comments;
+      cast.notes = this.notes;
 
       return cast;
+    }
+
+    public Builder() {
+      this.cast = new Cast();
     }
 
     public Builder(Cast cast) {
       this.cast = cast;
       this.name = cast.name;
-      this.comments = cast.comments;
-      this.color = cast.getColor();
-    }
-
-    public Builder() {
-      cast = new Cast();
+      this.notes = cast.notes;
     }
   }
 }

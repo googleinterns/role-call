@@ -46,8 +46,8 @@ public class ApplicationLoaderUnitTests {
     } catch(InvalidParameterException e) {
       throw new Error("Unable to creat User");
     }
-    lenient().when(userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase("admin", "admin", "adminEmail")).thenReturn(Optional.of(user));
-    lenient().when(userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase("new", "new", "newEmail")).thenReturn(Optional.empty());
+    lenient().when(userRepo.findByEmailIgnoreCase("adminEmail")).thenReturn(Optional.of(user));
+    lenient().when(userRepo.findByEmailIgnoreCase("newEmail")).thenReturn(Optional.empty());
   }
 
   @Test
@@ -69,7 +69,7 @@ public class ApplicationLoaderUnitTests {
     // Mock
     lenient().when(env.getProperty("admin.first.name")).thenReturn("new1");
     lenient().when(env.getProperty("admin.last.name")).thenReturn("new2");
-    lenient().when(env.getProperty("admin.email")).thenReturn("newEmail");
+    lenient().when(env.getProperty("admin.email")).thenReturn("newEmail@email.com");
     lenient().when(userRepo.save(any(User.class))).thenReturn(new User());
 
     // Execute

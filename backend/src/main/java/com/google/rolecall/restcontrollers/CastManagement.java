@@ -34,19 +34,35 @@ public class CastManagement {
     return CompletableFuture.completedFuture(response);
   }
 
+  @Get(Constants.RequestParameters.SECTION_ID)
+  public CompletableFuture<ResponseSchema<List<CastInfo>>> getAllCasts(@RequestParam(
+         value=Constants.RequestParameters.SECTION_ID, required=true) int id) {
+    List<CastInfo> casts;
+
+    try { 
+      casts = castService.getCastsBySectionId(id).stream().map(c->c.toCastInfo())
+          .collect(Collectors.toList());
+    } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+
+    ResponseSchema<List<CastInfo>> response = new ResponseSchema<>(casts);
+    return CompletableFuture.completedFuture(response);
+  }
+
   @Post
-  public CompletableFuture<ResponseSchema<CastInfo>> createCast(@RequestBody CastInfo cast) {
-    Cast newCast;
+  public CompletableFuture<ResponseSchema<CastInfo>> createCast(@RequestBody CastInfo newCast) {
+    Cast cast;
 
     try {
-      newCast = castService.createCast(cast);
+      cast = castService.createCast(newCast);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
     }
 
-    ResponseSchema<CastInfo> response = new ResponseSchema<>(newCast.toCastInfo());
+    ResponseSchema<CastInfo> response = new ResponseSchema<>(cast.toCastInfo());
     return CompletableFuture.completedFuture(response);
   }
 
@@ -67,7 +83,8 @@ public class CastManagement {
   }
 
   @Delete(Constants.RequestParameters.CAST_ID)
-  public CompletableFuture<Void> deleteCast(@RequestParam(value=Constants.RequestParameters.CAST_ID, required=true) int id) {
+  public CompletableFuture<Void> deleteCast(@RequestParam(
+      value=Constants.RequestParameters.CAST_ID, required=true) int id) {
     try {
       castService.deleteCast(id);
     } catch(EntityNotFoundException e) {

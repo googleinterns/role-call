@@ -2,6 +2,8 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.CastMemberInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,11 +20,14 @@ public class CastMember {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
+  @Column(name = "orderOf", nullable = false)
+  private Integer order;
+
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private User user;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  private Cast cast;
+  private SubCast cast;
 
   public Integer getId() {
     return id;
@@ -32,25 +37,35 @@ public class CastMember {
     return user;
   }
 
-  public Cast getCast() {
+  public Integer getOrder() {
+    return order;
+  }
+
+  public SubCast getSubCast() {
     return cast;
   }
 
   public CastMemberInfo toCastMemberInfo() {
-    return CastMemberInfo.create(id, user.getId(), cast.getId(), null);
+    return CastMemberInfo.create(id, user.getId(), cast.getId(), order, null);
   }
 
-  void setCast(Cast cast) {
+  public void setOrder(Integer order) {
+    if (order != null) {
+      this.order = order;
+    }
+  }
+
+  void setSubCast(SubCast cast) {
     this.cast = cast;
   }
 
-  CastMember(User user, Cast cast) throws InvalidParameterException {
-    if(user == null || cast == null) {
-      throw new InvalidParameterException("Cast Member requires existing User and Cast.");
+  public CastMember(User user, Integer order) throws InvalidParameterException {
+    if(user == null || order == null) {
+      throw new InvalidParameterException("Cast Member requires existing User Order and Cast.");
     }
 
     this.user = user;
-    this.cast = cast;
+    this.order = order;
   }
 
   public CastMember() {

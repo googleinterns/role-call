@@ -18,8 +18,12 @@ public abstract class CastMemberInfo {
   public abstract Integer userId();
 
   @Nullable
-  @JsonProperty("castId")
-  public abstract Integer castId();
+  @JsonProperty("subCastId")
+  public abstract Integer subCastId();
+
+  @Nullable
+  @JsonProperty("order")
+  public abstract Integer order();
 
   @Nullable
   @JsonIgnore
@@ -27,8 +31,10 @@ public abstract class CastMemberInfo {
 
   @JsonCreator
   public static CastMemberInfo create(@Nullable @JsonProperty("id") Integer id, 
-      @Nullable @JsonProperty("userId") Integer userId, @Nullable @JsonProperty("castId") Integer castId,
+      @Nullable @JsonProperty("userId") Integer userId,
+      @Nullable @JsonProperty("subCastId") Integer subCastId,
+      @Nullable @JsonProperty("order") Integer order,
       @Nullable @JsonProperty("delete") Boolean delete) {
-    return new AutoValue_CastMemberInfo(id, userId, castId, delete);
+    return new AutoValue_CastMemberInfo(id, userId, subCastId, order, delete);
   }
 }
