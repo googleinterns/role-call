@@ -1,5 +1,6 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.PositionInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 import java.util.ArrayList;
@@ -34,14 +35,16 @@ public class Position {
   @Column(name = "orderOf", nullable = false)
   private Integer order;
 
-  @ManyToOne(optional = false, fetch = FetchType.EAGER)
+  @Basic
+  private Integer size;
+
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Section section;
 
   @OneToMany(mappedBy = "position", 
-      cascade = CascadeType.ALL, 
-      orphanRemoval = true,
-      fetch = FetchType.EAGER)
-  private List<Cast> casts = new ArrayList<>();
+      cascade = CascadeType.REMOVE,
+      fetch = FetchType.LAZY)
+  private List<SubCast> subCasts = new ArrayList<>();
 
   public Integer getId() {
     return id;
@@ -59,28 +62,30 @@ public class Position {
     return order;
   }
 
+  public Integer getSize() {
+    return size;
+  }
+
   public Section getSection() {
     return section;
   }
 
-  public List<Cast> getCasts() {
-    return casts;
+  public void addSubCast(SubCast subCast) {
+    subCast.setPosition(this);
   }
 
-  public void addCast(Cast cast) throws InvalidParameterException {
-    if(cast.getPosition() != null) {
-      throw new InvalidParameterException("Cannot change cast Position once it's set.");
-    }
-    cast.setPosition(this);
-    casts.add(cast);
+  public void removeSubCast(SubCast subCast) {
+    subCast.setPosition(null);
   }
 
-  public void removeCast(Cast cast) throws InvalidParameterException {
-    if(cast.getPosition() != this) {
-      throw new InvalidParameterException("Cannot remove cast from different Position once it's set.");
-    }
-    cast.setPosition(null);
-    casts.remove(cast);
+  public PositionInfo toPositionInfo() {
+    return PositionInfo.newBuilder()
+        .setId(getId())
+        .setName(getName())
+        .setNotes(getNotes())
+        .setOrder(getOrder())
+        .setSize(getSize())
+        .build();
   }
 
   void setSection(Section section) {
@@ -118,6 +123,7 @@ public class Position {
     private String name;
     private String notes;
     private Integer order;
+    private Integer size;
     private Section section;
 
     public Builder setName(String name) {
@@ -141,6 +147,13 @@ public class Position {
       return this;
     }
 
+    public Builder setSize(Integer size) {
+      if(size != null) {
+        this.size = size;
+      }
+      return this;
+    }
+
     public Position build() throws InvalidParameterException {
       if(name == null || order == null) {
         throw new InvalidParameterException("All positions require a name and an order");
@@ -149,6 +162,7 @@ public class Position {
       position.name = this.name;
       position.notes = this.notes;
       position.order = this.order;
+      position.size = this.size;
       position.section = this.section;
 
       return position;
@@ -160,6 +174,7 @@ public class Position {
       this.name = position.name;
       this.notes = position.notes;
       this.order = position.order;
+      this.size = position.size;
       this.section = position.section;
     }
 

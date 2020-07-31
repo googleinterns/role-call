@@ -2,7 +2,8 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.PositionInfo;
 import com.google.rolecall.jsonobjects.SectionInfo;
-import java.security.InvalidParameterException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,12 @@ public class Section {
       fetch = FetchType.EAGER)
   private List<Position> positions = new ArrayList<>();
 
+  @OneToMany(mappedBy = "section", 
+    cascade = CascadeType.REMOVE, 
+    orphanRemoval = true, 
+    fetch = FetchType.LAZY)
+  private List<Cast> casts = new ArrayList<>();
+
   public Integer getId() {
     return id;
   }
@@ -63,15 +70,13 @@ public class Section {
     return positions;
   }
 
+  public List<Cast> getCasts() {
+    return casts;
+  }
+
   public SectionInfo toSectionInfo() {
     List<PositionInfo> positionInfos = positions.stream().map(p ->
-        PositionInfo.newBuilder()
-            .setId(p.getId())
-            .setName(p.getName())
-            .setNotes(p.getNotes())
-            .setOrder(p.getOrder())
-            .build()
-        ).collect(Collectors.toList());
+        p.toPositionInfo()).collect(Collectors.toList());
     
     SectionInfo section = SectionInfo.newBuilder()
         .setId(id)
@@ -89,12 +94,38 @@ public class Section {
       positions.add(position);
       position.setSection(this);
     }
-    // Throw exception here because was trying to add
   }
 
   public void removePosition(Position position) {
     positions.remove(position);
     position.setSection(null);
+  }
+
+  public void addCast(Cast cast) {
+    cast.setSection(this);
+    casts.add(cast);
+  }
+
+  public void removeCast(Cast cast) {
+    cast.setSection(null);
+    casts.remove(cast);
+  }
+
+  /* Searches for and returns a Position from positions based on id. */
+  public Position getPositionById(Integer id)
+      throws EntityNotFoundException, InvalidParameterException {
+    if(id == null) {
+      throw new InvalidParameterException("PositionId cannot be null");
+    }
+
+    for (Position position : positions) {
+      if(position.getId() == id) {
+        return position;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "Position with id %d does not exist for this Section", id));
   }
 
   public Builder toBuilder() {
@@ -150,7 +181,7 @@ public class Section {
       return this;
     }
 
-    public Section build() {
+    public Section build() throws InvalidParameterException {
       if(this.name == null) {
         throw new InvalidParameterException("Section requires a name");
       }

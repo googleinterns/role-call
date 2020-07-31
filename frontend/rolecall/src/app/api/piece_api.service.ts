@@ -9,7 +9,8 @@ type RawPosition = {
   id: number,
   name: string,
   notes: string,
-  order: number
+  order: number,
+  size: number
 }
 
 type RawPiece = {
