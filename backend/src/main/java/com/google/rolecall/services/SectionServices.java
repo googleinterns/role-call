@@ -14,9 +14,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /* Creates, edits, fetches and deletes position and section objects. */
 @Service("sectionServices")
+@Transactional(rollbackFor = Exception.class)
 public class SectionServices {
 
   private final SectionRepository sectionRepo;
@@ -118,10 +120,10 @@ public class SectionServices {
           if(info.id() == null) {
             throw new InvalidParameterException("Cannot delete Position before it is created.");
           }
-          section.removePosition(getPositionById(info.id(), positions));
+          section.removePosition(section.getPositionById(info.id()));
           continue;
         } else if(info.id() != null) {
-          position = getPositionById(info.id(), positions);
+          position = section.getPositionById(info.id());
         } else {
           position = new Position();
         }
@@ -156,18 +158,6 @@ public class SectionServices {
   public void deleteSection(int id) throws EntityNotFoundException {
     getSection(id);
     sectionRepo.deleteById(id);
-  }
-
-  /* Searches for and returns a position from a list based on id. */
-  public Position getPositionById(int id, List<Position> positions)
-      throws EntityNotFoundException {
-    for (Position position : positions) {
-      if(position.getId() == id) {
-        return position;
-      }
-    }
-    throw new EntityNotFoundException(String.format(
-        "Position with id %d does not exist for this Section", id));
   }
 
   public SectionServices(SectionRepository sectionRepo) {

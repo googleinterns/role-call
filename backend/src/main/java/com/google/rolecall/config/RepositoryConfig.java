@@ -51,6 +51,7 @@ public class RepositoryConfig {
     JpaTransactionManager txnManager = new JpaTransactionManager();
 
     txnManager.setEntityManagerFactory(entityManagerFactory);
+    txnManager.setRollbackOnCommitFailure(true);
 
     return txnManager;
   }

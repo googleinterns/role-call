@@ -17,18 +17,33 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("castServices")
+@Transactional(rollbackFor = Exception.class)
 public class CastServices {
   
   private final CastRepository castRepo;
   private final UserServices userService;
   private final SectionServices sectionService;
 
-  @Transactional
+  public Cast getCast(Integer id) throws EntityNotFoundException, InvalidParameterException {
+    if(id == null) {
+      throw new InvalidParameterException("Cast Requires Id");
+    }
+    Optional<Cast> query = castRepo.findById(id);
+
+    if(query.isEmpty()) {
+      throw new EntityNotFoundException(String.format("No Cast with id %d", id));
+    }
+
+    return query.get();
+  }
+
   public List<Cast> getAllCasts() {
     List<Cast> allCasts = new ArrayList<>();
     castRepo.findAll().forEach(allCasts::add);
@@ -36,20 +51,18 @@ public class CastServices {
     return allCasts;
   }
 
-  @Transactional
   public List<Cast> getCastsBySectionId(int id) throws EntityNotFoundException {
     Section section = sectionService.getSection(id);
+    List<Cast> casts = castRepo.findAllBySection(section);
 
-    return section.getCasts();
+    return casts;
   }
 
-  @Transactional
   public Cast createCast(CastInfo newCast) throws InvalidParameterException,
       EntityNotFoundException {
-    creatCastCheckCastValidity(newCast);
+    checkCastValidity(newCast);
 
     Section section = sectionService.getSection(newCast.sectionId());
-    List<Position> positions = section.getPositions();
 
     Cast cast = Cast.newBuilder()
         .setName(newCast.name())
@@ -61,8 +74,9 @@ public class CastServices {
     if(newCast.subCasts() != null) {
       for(SubCastInfo subInfo: newCast.subCasts()) {
         SubCast subCast = new SubCast(subInfo.castNumber());
-        sectionService.getPositionById(subInfo.positionId(), positions).addSubCast(subCast);
+        section.getPositionById(subInfo.positionId()).addSubCast(subCast);
         cast.addSubCast(subCast);
+
         if(subInfo.members() != null) {
           for(CastMemberInfo memberInfo: subInfo.members()) {
             User user = userService.getUser(memberInfo.userId());
@@ -76,17 +90,36 @@ public class CastServices {
     return castRepo.save(cast);
   }
 
-  private void creatCastCheckCastValidity(CastInfo newCast) throws InvalidParameterException {
+  public Cast editCast(CastInfo newCast) throws InvalidParameterException,
+      EntityNotFoundException {
+    Cast cast = getCast(newCast.id()).toBuilder()
+          .setName(newCast.name())
+          .setNotes(newCast.notes())
+          .build();
+    
+    // Update Cast Members
+    List<SubCastInfo> subCastUpdates = newCast.subCasts();
+    if(subCastUpdates != null && !subCastUpdates.isEmpty()) {
+      updateSubCasts(cast, subCastUpdates);
+      verifySubCasts(cast);
+    }
+
+    return castRepo.save(cast);
+  }
+
+  // Create Helper Functions
+
+  private void checkCastValidity(CastInfo newCast) throws InvalidParameterException {
     if(newCast.sectionId() == null) {
       throw new InvalidParameterException("Cast requires a Section");
     }
 
     if(newCast.subCasts() != null) {
-      createCastCheckSubCastValidity(newCast.subCasts());
+      checkSubCastValidity(newCast.subCasts());
     }
   }
 
-  private void createCastCheckSubCastValidity(List<SubCastInfo> subCastInfos)
+  private void checkSubCastValidity(List<SubCastInfo> subCastInfos)
       throws InvalidParameterException {
     Hashtable<Integer,HashSet<Integer>> currentPositionsToCastNumbers = new Hashtable<>();
     Hashtable<Integer,HashSet<Integer>> currentCastNumbersToUsers = new Hashtable<>();
@@ -116,14 +149,14 @@ public class CastServices {
       }
 
       if(subCast.members() != null) {
-        createCastCheckCastMemberValidity(currentCastNumbersToUsers.get(subCast.castNumber()),
+        checkCastMemberValidity(currentCastNumbersToUsers.get(subCast.castNumber()),
             subCast.members());
       }
     }
   }
 
-  private void createCastCheckCastMemberValidity(
-      HashSet<Integer> currentCastMembers, List<CastMemberInfo> members)
+  private void checkCastMemberValidity(HashSet<Integer> currentCastMembers,
+     List<CastMemberInfo> members)
       throws InvalidParameterException {
     HashSet<Integer> orders = new HashSet<>();
     for(CastMemberInfo member: members) {
@@ -139,7 +172,7 @@ public class CastServices {
       }
       orders.add(member.order());
 
-      // All Cast Members should be unique by cast number: ie: 1st cast, seconc cast
+      // All Cast Members should be unique by cast number: ie: 1st cast, 2nd cast
       if(currentCastMembers.contains(member.userId())) {
         throw new InvalidParameterException(
           "Each cast must contain only unique Users.");
@@ -148,45 +181,125 @@ public class CastServices {
     }
   }
 
-  // public Cast editCast(SubCastInfo newCast) throws InvalidParameterException,
-  //     EntityNotFoundException {
-  //   Cast cast = getCastById(newCast.id()).toBuilder()
-  //         .setName(newCast.name())
-  //         .setComments(newCast.comments())
-  //         .setColor(newCast.color())
-  //         .build();
-    
-  //   // Update Cast Members
-  //   List<CastMemberInfo> castMemberUpdates = newCast.members();
-  //   if(castMemberUpdates != null && !castMemberUpdates.isEmpty()) {
-  //     List<CastMember> currentMembers = cast.getCastMembers();
-  //     for(CastMemberInfo info: castMemberUpdates) {
-  //       if(info.delete() != null && info.delete()) {
-  //         if(info.id() == null) {
-  //           throw new InvalidParameterException("Cannot delete CastMember before it is created.");
-  //         }
-  //         cast.removeCastMember(getCastMemberById(info.id(), currentMembers));
-  //       } else {
-  //         if(info.userId() == null) {
-  //           throw new InvalidParameterException("Cast member cannot have null user ID.");
-  //         }
-  //         User user = userService.getUser(info.userId());
-  //         cast.addCastMember(user);
-  //       }
-  //     }
+  // Edit Cast Help Functions
 
-  //     Set<Integer> uniqueUsers = new HashSet<>();
-  //     for(CastMember member: currentMembers) {
-  //       Integer id = member.getUser().getId();
-  //       if(id == null) {
-  //         throw new InvalidParameterException("Cast member cannot have null user ID.");
-  //       }
-  //       uniqueUsers.add(id);
-  //     }
-  //   }
+  private void updateSubCasts(Cast cast, List<SubCastInfo> subCastUpdates) 
+      throws InvalidParameterException, EntityNotFoundException {
+    for(SubCastInfo updateInfo: subCastUpdates) {
+      SubCast subCast;
+      if(updateInfo.delete() != null && updateInfo.delete()) {
+        // Delete SubCast
+        if(updateInfo.id() == null) {
+          throw new InvalidParameterException("Cannot delete Sub Cast before it is created.");
+        }
 
-  //   return castRepo.save(cast);
-  // }
+        subCast = cast.getSubCastById(updateInfo.id());
+        cast.removeSubCast(subCast);
+        subCast.getPosition().removeSubCast(subCast);
+      } else {
+        if(updateInfo.id() == null) {
+          // Create SubCast
+          subCast = new SubCast(updateInfo.castNumber());
+          cast.getSection().getPositionById(updateInfo.positionId()).addSubCast(subCast);
+          cast.addSubCast(subCast);
+        } else {
+          // Edit SubCast
+          subCast = cast.getSubCastById(updateInfo.id());
+        }
+
+        if(updateInfo.members() != null && !updateInfo.members().isEmpty()) {
+          updateCastMembers(subCast, updateInfo.members());
+        }
+      }
+    }
+  }
+
+  private void updateCastMembers(SubCast subCast, List<CastMemberInfo> castMemberUpdates) 
+      throws InvalidParameterException, EntityNotFoundException {
+    for(CastMemberInfo updateInfo: castMemberUpdates) {
+      CastMember castMember;
+      if(subCast.getId() != null && updateInfo.delete() != null && updateInfo.delete()) {
+        // Delete CastMember 
+        if(updateInfo.id() == null) {
+          throw new InvalidParameterException("Cannot delete Cast Member before it is created.");
+        }
+
+        subCast.removeCastMember(subCast.getCastMemberById(updateInfo.id()));
+      } else {
+        if(updateInfo.id() == null) {
+          // Create CastMember
+          if(updateInfo.userId() == null || updateInfo.order() == null) {
+            throw new InvalidParameterException("Cast Member must have a User id and an Order.");
+          }
+
+          User user = userService.getUser(updateInfo.userId());
+          CastMember member = new CastMember(user, updateInfo.order());
+          subCast.addCastMember(member);
+        } else {
+          // Edit CastMember
+          castMember = subCast.getCastMemberById(updateInfo.id());
+          castMember.setOrder(updateInfo.order());
+          subCast.addCastMember(castMember);
+        }
+      }
+    }
+  }
+
+  private void verifySubCasts(Cast cast) throws EntityNotFoundException,
+      InvalidParameterException {
+    Hashtable<Position,HashSet<Integer>> currentPositionsToCastNumbers = new Hashtable<>();
+    Hashtable<Integer,HashSet<User>> currentCastNumbersToUsers = new Hashtable<>();
+    for(SubCast subCast: cast.getSubCasts()) {
+      // Check Sub Cast has position specific unique cast number
+      Position currentPosition = subCast.getPosition();
+
+      if(currentPositionsToCastNumbers.containsKey(currentPosition)) {
+        HashSet<Integer> castNumbers = currentPositionsToCastNumbers.get(currentPosition);
+
+        if(castNumbers.contains(subCast.getcastNumber())) {
+          throw new InvalidParameterException(
+              "Cannot have overlapping cast numbers for the same position.");
+        }
+
+        castNumbers.add(subCast.getcastNumber());
+      } else {
+        HashSet<Integer> newPosition = new HashSet<>();
+        newPosition.add(subCast.getcastNumber());
+        currentPositionsToCastNumbers.put(currentPosition, newPosition);
+      }
+
+      // Validate Cast Members for the Sub Cast
+      if(!currentCastNumbersToUsers.containsKey(subCast.getcastNumber())) {
+        currentCastNumbersToUsers.put(subCast.getcastNumber(), new HashSet<>());
+      }
+
+      Set<CastMember> members = subCast.getCastMembers();
+      if(members != null) {
+        verifyCastMembers(currentCastNumbersToUsers.get(subCast.getcastNumber()),
+            members);
+      }
+    }
+  }
+
+  private void verifyCastMembers(Set<User> usersInCast, Set<CastMember> members)
+      throws InvalidParameterException {
+    HashSet<Integer> orders = new HashSet<>();
+    for(CastMember member: members) {
+      // Every Cast Member should have a unique order in the sub cast
+      if(orders.contains(member.getOrder())) {
+        throw new InvalidParameterException(
+            "Order must be unique for each Cast Member in a SubCast.");
+      }
+      orders.add(member.getOrder());
+
+      // All Cast Members should be unique by cast number: ie: 1st cast, 2nd cast
+      if(usersInCast.contains(member.getUser())) {
+        throw new InvalidParameterException(
+          "Each cast must contain only unique Users.");
+      }
+      usersInCast.add(member.getUser());
+    }
+  }
 
   // public void deleteCast(int id) throws EntityNotFoundException {
   //   Cast cast = getCastById(id);
@@ -197,38 +310,6 @@ public class CastServices {
   //   } catch(InvalidParameterException e) {
   //     throw new Error("Database inconsitency. Cast maps to no position.");
   //   }
-  // }
-
-  // private void addNewCastMembers(Cast cast, List<CastMemberInfo> members)
-  //     throws EntityNotFoundException, InvalidParameterException {
-  //   // Assert all potential users are unique
-  //   Set<Integer> uniqueUsers = new HashSet<>();
-  //   for(CastMemberInfo info: members) {
-  //     if(info.userId() == null) {
-  //       throw new InvalidParameterException("Cast member cannot have null user ID.");
-  //     }
-  //     if(uniqueUsers.contains(info.userId())) {
-  //       throw new InvalidParameterException("All Users in a cast must be unique.");
-  //     }
-  //     uniqueUsers.add(info.userId());
-  //   }
-
-  //   // Assert User exist
-  //   for(CastMemberInfo info: members) {
-  //     User user = userService.getUser(info.userId());
-  //     cast.addCastMember(user);
-  //   }
-  // }
-
-  // private CastMember getCastMemberById(int id, List<CastMember> members) 
-  //     throws EntityNotFoundException {
-  //   for(CastMember member: members) {
-  //     if(member.getId() == id) {
-  //       return member;
-  //     }
-  //   }
-  //   throw new EntityNotFoundException(String.format(
-  //       "No Cast Member with id %d exists in the cast", id));
   // }
 
   public CastServices(CastRepository castRepo, SectionServices sectionService,

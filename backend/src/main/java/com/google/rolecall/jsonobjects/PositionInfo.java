@@ -29,7 +29,6 @@ public abstract class PositionInfo {
   @JsonProperty("size")
   public abstract Integer size();
 
-
   @Nullable
   public abstract Boolean delete();
 

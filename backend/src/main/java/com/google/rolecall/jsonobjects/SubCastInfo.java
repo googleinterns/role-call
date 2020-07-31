@@ -27,6 +27,9 @@ public abstract class SubCastInfo {
   @JsonProperty("members")
   public abstract List<CastMemberInfo> members();
 
+  @Nullable
+  public abstract Boolean delete();
+
   /* Every PositionInfo should be unique unless it's being comapred to itself */
   @Override
   public boolean equals(Object object) {
@@ -56,6 +59,9 @@ public abstract class SubCastInfo {
 
     @JsonProperty("members")
     public abstract Builder setMembers(List<CastMemberInfo> members);
+
+    @JsonProperty("delete")
+    public abstract Builder setDelete(Boolean delete);
 
     public abstract SubCastInfo build();
   }

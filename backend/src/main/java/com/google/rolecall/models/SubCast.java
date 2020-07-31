@@ -2,9 +2,11 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.SubCastInfo;
 import com.google.rolecall.jsonobjects.CastMemberInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,7 +40,7 @@ public class SubCast {
       cascade = CascadeType.ALL, 
       orphanRemoval = true,
       fetch = FetchType.EAGER)
-  private List<CastMember> members = new ArrayList<>();
+  private Set<CastMember> members = new HashSet<>();
 
   public Integer getId() {
     return id;
@@ -56,11 +58,14 @@ public class SubCast {
     return position;
   }
 
-  public List<CastMember> getCastMembers() {
+  public Set<CastMember> getCastMembers() {
     return members;
   }
 
   public void addCastMember(CastMember member) throws InvalidParameterException {
+    if(member.getSubCast() != null) {
+      member.getSubCast().removeCastMember(member);
+    }
     member.setSubCast(this);
     members.add(member);
   }
@@ -90,7 +95,27 @@ public class SubCast {
         .build();
   }
 
-  public SubCast(int castNumber) {
+  /* Searches for and returns a CastMember from members based on id. */
+  public CastMember getCastMemberById(Integer id)
+      throws InvalidParameterException, EntityNotFoundException {
+    if(id == null) {
+      throw new InvalidParameterException("SubCastId cannot be null");
+    }
+
+    for (CastMember member : members) {
+      if(member.getId() == id) {
+        return member;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "Cast Member with id %d does not exist for this Sub Cast", id));
+  }
+
+  public SubCast(Integer castNumber) throws InvalidParameterException {
+    if(castNumber == null) {
+      throw new InvalidParameterException("SubCast requires cast number.");
+    }
     this.castNumber = castNumber;
   }
 

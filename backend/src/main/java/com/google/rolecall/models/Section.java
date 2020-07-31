@@ -2,7 +2,8 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.PositionInfo;
 import com.google.rolecall.jsonobjects.SectionInfo;
-import java.security.InvalidParameterException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class Section {
   private List<Position> positions = new ArrayList<>();
 
   @OneToMany(mappedBy = "section", 
-    cascade = CascadeType.ALL, 
+    cascade = CascadeType.REMOVE, 
     orphanRemoval = true, 
     fetch = FetchType.LAZY)
   private List<Cast> casts = new ArrayList<>();
@@ -110,6 +111,23 @@ public class Section {
     casts.remove(cast);
   }
 
+  /* Searches for and returns a Position from positions based on id. */
+  public Position getPositionById(Integer id)
+      throws EntityNotFoundException, InvalidParameterException {
+    if(id == null) {
+      throw new InvalidParameterException("PositionId cannot be null");
+    }
+
+    for (Position position : positions) {
+      if(position.getId() == id) {
+        return position;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "Position with id %d does not exist for this Section", id));
+  }
+
   public Builder toBuilder() {
     return new Builder(this);
   }
@@ -163,7 +181,7 @@ public class Section {
       return this;
     }
 
-    public Section build() {
+    public Section build() throws InvalidParameterException {
       if(this.name == null) {
         throw new InvalidParameterException("Section requires a name");
       }

@@ -1,10 +1,13 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.CastInfo;
+import com.google.rolecall.jsonobjects.SubCastInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,9 +19,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.google.rolecall.jsonobjects.CastInfo;
-import com.google.rolecall.jsonobjects.SubCastInfo;
 
 @Entity
 @Table
@@ -40,7 +40,7 @@ public class Cast {
       cascade = CascadeType.ALL, 
       orphanRemoval = true,
       fetch = FetchType.EAGER)
-  private List<SubCast> subCasts = new ArrayList<>();
+  private Set<SubCast> subCasts = new HashSet<>();
 
   public Integer getId() {
     return id;
@@ -58,7 +58,7 @@ public class Cast {
     return section;
   }
 
-  public List<SubCast> getSubCasts() {
+  public Set<SubCast> getSubCasts() {
     return subCasts;
   }
 
@@ -68,8 +68,25 @@ public class Cast {
   }
 
   public void removeSubCast(SubCast subCast) {
-    subCast.setCast(this);
+    subCast.setCast(null);
     subCasts.remove(subCast);
+  }
+
+  /* Searches for and returns a SubCast from subCasts based on id. */
+  public SubCast getSubCastById(Integer id)
+      throws InvalidParameterException, EntityNotFoundException {
+    if(id == null) {
+      throw new InvalidParameterException("SubCastId cannot be null");
+    }
+
+    for (SubCast subCast : subCasts) {
+      if(subCast.getId() == id) {
+        return subCast;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "Sub Cast with id %d does not exist for this Cast", id));
   }
 
   public CastInfo toCastInfo() {

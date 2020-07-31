@@ -37,6 +37,10 @@ public class CastMember {
     return user;
   }
 
+  public Integer getOrder() {
+    return order;
+  }
+
   public SubCast getSubCast() {
     return cast;
   }
