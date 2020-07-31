@@ -101,11 +101,13 @@ export class LoginApi {
   private getLoginResponse(authed: boolean, isLoggedIn: boolean, user: gapi.auth2.GoogleUser): LoginResponse {
     this.isLoggedIn = isLoggedIn;
     this.user = user;
-    let basicProf = this.user.getBasicProfile();
-    this.email = basicProf.getEmail();
-    this.imageURL = basicProf.getImageUrl();
-    this.givenName = basicProf.getGivenName();
-    this.familyName = basicProf.getFamilyName();
+    if (isLoggedIn) {
+      let basicProf = this.user.getBasicProfile();
+      this.email = basicProf.getEmail();
+      this.imageURL = basicProf.getImageUrl();
+      this.givenName = basicProf.getGivenName();
+      this.familyName = basicProf.getFamilyName();
+    }
     return {
       authenticated: authed,
       user: this.user
