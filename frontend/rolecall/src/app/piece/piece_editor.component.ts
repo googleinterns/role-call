@@ -70,6 +70,7 @@ export class PieceEditor implements OnInit {
 
   setCurrentPiece(piece: WorkingPiece) {
     if (piece && this.currentSelectedPiece && piece.uuid !== this.currentSelectedPiece.uuid) {
+      this.pieceSaved = true;
       this.creatingPiece = false;
       this.currentSelectedPiece.addingPositions = [];
     }
@@ -108,6 +109,7 @@ export class PieceEditor implements OnInit {
     this.renderingPieces.push(newPiece);
     this.workingPiece = newPiece;
     this.pieceSaved = false;
+    this.dragAndDropData = [];
     this.setCurrentPiece(this.workingPiece);
   }
 
