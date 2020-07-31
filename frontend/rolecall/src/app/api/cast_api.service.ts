@@ -1,9 +1,11 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { MockCastBackend } from '../mocks/mock_cast_backend';
 import { LoggingService } from '../services/logging.service';
+import { PieceApi } from './piece_api.service';
 
 type RawCastMember = {
   id: number,
@@ -24,6 +26,11 @@ type RawCast = {
   notes: string,
   sectionId: number,
   subCasts: RawSubCast[]
+}
+
+type AllRawCastsResponse = {
+  data: RawCast[],
+  warnings: string[]
 }
 
 export type Cast = {
@@ -64,11 +71,85 @@ export class CastApi {
 
   workingCasts: Map<APITypes.CastUUID, Cast> = new Map();
 
-  constructor(private loggingService: LoggingService) { }
+  rawCasts: RawCast[] = [];
+
+  constructor(private loggingService: LoggingService, private http: HttpClient, private pieceAPI: PieceApi) { }
 
   /** Hits backend with all casts GET request */
   requestAllCasts(): Promise<AllCastsResponse> {
-    return this.mockBackend.requestAllCasts();
+    if (environment.mockBackend) {
+      return this.mockBackend.requestAllCasts();
+    }
+    return this.http.get<AllRawCastsResponse>(environment.backendURL + "api/cast").toPromise().then((val) => {
+      this.rawCasts = val.data;
+      return {
+        data: {
+          casts: val.data.map(rawCast => {
+            let groups: {
+              position_uuid: string,
+              group_index: number,
+              members: { uuid: string, position_number: number }[]
+            }[] = [];
+            for (let rawSubCast of rawCast.subCasts) {
+              let foundGroup = groups.find(g => g.position_uuid == String(rawSubCast.positionId));
+              if (foundGroup) {
+                let foundGroupIndex = groups.find(g => g.position_uuid == String(rawSubCast.positionId) && g.group_index == rawSubCast.castNumber);
+                if (foundGroupIndex) {
+                  foundGroupIndex.members = foundGroupIndex.members.concat(rawSubCast.members.map(rawMem => {
+                    return {
+                      uuid: String(rawMem.userId),
+                      position_number: rawMem.order
+                    }
+                  }));
+                } else {
+                  groups.push({
+                    position_uuid: String(rawSubCast.positionId),
+                    group_index: rawSubCast.castNumber,
+                    members: rawSubCast.members.map(rawMem => {
+                      return {
+                        uuid: String(rawMem.userId),
+                        position_number: rawMem.order
+                      }
+                    })
+                  });
+                }
+              } else {
+                groups.push({
+                  position_uuid: String(rawSubCast.positionId),
+                  group_index: rawSubCast.castNumber,
+                  members: rawSubCast.members.map(rawMem => {
+                    return {
+                      uuid: String(rawMem.userId),
+                      position_number: rawMem.order
+                    }
+                  })
+                });
+              }
+            }
+            return {
+              uuid: String(rawCast.id),
+              name: rawCast.name,
+              segment: String(rawCast.sectionId),
+              filled_positions: rawCast.subCasts.map(rawSubCast => {
+                return {
+                  position_uuid: String(rawSubCast.positionId),
+                  groups: groups.filter(g => g.position_uuid == String(rawSubCast.positionId))
+                }
+              })
+            }
+          })
+        },
+        warnings: val.warnings
+      }
+    }).then(val => { console.log(val); return val }).catch(err => {
+      this.loggingService.logError(err);
+      return Promise.resolve({
+        data: {
+          casts: []
+        },
+        warnings: []
+      })
+    });
   }
 
   /** Hits backend with one cast GET request */
@@ -78,12 +159,100 @@ export class CastApi {
 
   /** Hits backend with create/edit cast POST request */
   requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
-    return this.mockBackend.requestCastSet(cast);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestCastSet(cast);
+    }
+    if (this.hasCast(cast.uuid)) {
+      // Do patch
+      return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, { observe: "response" }).toPromise().then(na => {
+        let allSubCasts: RawSubCast[] = [];
+        for (let filledPos of cast.filled_positions) {
+          for (let group of filledPos.groups) {
+            allSubCasts.push({
+              id: undefined,
+              positionId: this.pieceAPI.positions.find(val2 => {
+                return val2.name == filledPos.position_uuid;
+              }).id,
+              castNumber: group.group_index,
+              members: group.members.map(mem => {
+                return {
+                  id: undefined,
+                  userId: Number(mem.uuid),
+                  order: mem.position_number
+                }
+              })
+            });
+          }
+        }
+        let rawCast: RawCast = {
+          id: undefined,
+          name: cast.name,
+          notes: "",
+          sectionId: Number(cast.segment),
+          subCasts: allSubCasts
+        }
+        return this.http.post(environment.backendURL + "api/cast", rawCast, { observe: "response" }).toPromise().then(val => {
+          console.log(val);
+          return val;
+        }).catch(val => {
+          return {
+            status: 400
+          } as HttpResponse<any>;
+        });
+      });
+    } else {
+      // Do post
+      let allSubCasts: RawSubCast[] = [];
+      for (let filledPos of cast.filled_positions) {
+        for (let group of filledPos.groups) {
+          allSubCasts.push({
+            id: undefined,
+            positionId: this.pieceAPI.positions.find(val2 => {
+              return val2.name == filledPos.position_uuid;
+            }).id,
+            castNumber: group.group_index,
+            members: group.members.map(mem => {
+              return {
+                id: undefined,
+                userId: Number(mem.uuid),
+                order: mem.position_number
+              }
+            })
+          });
+        }
+      }
+      let rawCast: RawCast = {
+        id: undefined,
+        name: cast.name,
+        notes: "",
+        sectionId: Number(cast.segment),
+        subCasts: allSubCasts
+      }
+      console.log(rawCast);
+      return this.http.post(environment.backendURL + "api/cast", rawCast, { observe: "response" }).toPromise().then(val => {
+        return val;
+      }).catch(val => {
+        console.log(val);
+        return {
+          status: 400
+        } as HttpResponse<any>;
+      });
+    }
   }
   /** 
    * Hits backend with delete cast POST request */
   requestCastDelete(cast: Cast): Promise<HttpResponse<any>> {
-    return this.mockBackend.requestCastDelete(cast);
+    if (environment.mockBackend) {
+      return this.mockBackend.requestCastDelete(cast);
+    }
+    return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, { observe: "response" }).toPromise().then(val => {
+      return val;
+    }).catch(val => {
+      console.log(val);
+      return {
+        status: 400
+      } as HttpResponse<any>;
+    });
   }
 
   /** All the loaded casts mapped by UUID */

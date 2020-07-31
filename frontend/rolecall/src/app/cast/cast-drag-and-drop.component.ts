@@ -223,6 +223,7 @@ export class CastDragAndDrop implements OnInit {
       this.ensureEmptyArrayAtEnd(posInd);
       this.updateEmptyRows(posInd);
     }
+    console.log(this.positionNames);
   }
 
   drop(event: CdkDragDrop<User[]>) {

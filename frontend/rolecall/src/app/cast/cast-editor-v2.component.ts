@@ -125,17 +125,17 @@ export class CastEditorV2 implements OnInit {
   }
 
   setCurrentCast(cast: Cast, index?: number) {
-    if (isNullOrUndefined(index)) {
+    if (isNullOrUndefined(index) && cast) {
       index = this.filteredCasts.findIndex((val) => val.uuid == cast.uuid);
     }
-    if (index == -1) {
+    if (isNullOrUndefined(index) || index == -1) {
       this.lastSelectedCastIndex = undefined;
     } else {
       this.lastSelectedCastIndex = index;
     }
     this.selectedCast = cast;
-    this.dragAndDrop.selectCast(cast.uuid);
-    this.urlUUID = cast.uuid;
+    this.dragAndDrop.selectCast(cast ? cast.uuid : undefined);
+    this.urlUUID = cast ? cast.uuid : "";
     this.setCastURL();
   }
 
