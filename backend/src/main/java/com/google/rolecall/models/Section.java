@@ -119,7 +119,7 @@ public class Section {
     }
 
     for (Position position : positions) {
-      if(position.getId().equals(id)) {
+      if((int) position.getId() == (int) id) {
         return position;
       }
     }
