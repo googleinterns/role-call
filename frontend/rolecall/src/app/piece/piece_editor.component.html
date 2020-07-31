@@ -61,7 +61,7 @@
                   </div>
                   <div class="add-button-height-container">
                     <button mat-icon-button aria-label="Delete Position Button" class="add-button"
-                      (click)="deletePosition(i)">
+                      (click)="deletePosition(data.index)">
                       <mat-icon [inline]="true" class="add-button-icon">
                         delete
                       </mat-icon>
@@ -73,12 +73,12 @@
                 <div cdkDrag class="adding-position-container">
                   <div class="adding-position-input-container">
                     <app-text-input (valueChange)="onInputChange($event)" [bgColor]="offWhite"
-                      [valueName]="'Position ' + (i + this.currentSelectedPiece.positions.length + 1)">
+                      [valueName]="'Position ' + (data.index + 1)" [initValue]="data.value">
                     </app-text-input>
                   </div>
                   <div class="add-button-height-container">
                     <button mat-icon-button aria-label="Delete Position Button" class="add-button"
-                      (click)="deleteAddingPosition(i)">
+                      (click)="deleteAddingPosition(data.index)">
                       <mat-icon [inline]="true" class="add-button-icon">
                         delete
                       </mat-icon>

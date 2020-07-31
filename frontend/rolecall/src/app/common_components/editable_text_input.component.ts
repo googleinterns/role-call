@@ -19,4 +19,8 @@ export class EditableTextInput implements OnInit {
   ngOnInit() {
     this.currentValue = this.initValue;
   }
+
+  onValueChange(event: any) {
+    this.valueChange.emit([this.valueName, event]);
+  }
 }

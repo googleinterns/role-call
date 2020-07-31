@@ -48,7 +48,6 @@ export class CastEditorV2 implements OnInit {
 
   onSelectPiece(piece: Piece) {
     this.setPiece(piece);
-    this.setCastURL();
   }
 
   setPiece(piece: Piece) {
@@ -120,16 +119,8 @@ export class CastEditorV2 implements OnInit {
   }
 
   setCastURL() {
-    this.location.replaceState("cast/");
-    if (this.location.path().endsWith("cast") || this.location.path().endsWith("cast/")) {
-      this.location.replaceState(this.location.path() + "/" + this.urlUUID);
-    } else {
-      let splits: string[] = this.location.path().split('/');
-      let baseURL = "";
-      for (let i = 0; i < splits.length - 1; i++) {
-        baseURL += (splits[i] + "/");
-      }
-      this.location.replaceState(baseURL + this.urlUUID);
+    if (this.location.path().startsWith("/cast") || this.location.path().startsWith("/cast/")) {
+      this.location.replaceState("/cast/" + this.urlUUID);
     }
   }
 

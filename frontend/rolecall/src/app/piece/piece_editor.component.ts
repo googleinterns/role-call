@@ -7,8 +7,7 @@ import { isNullOrUndefined } from 'util';
 import { Piece, PieceApi } from '../api/piece_api.service';
 
 type WorkingPiece = Piece & {
-  addingPositions: Map<number, string>,
-  addingPositionsIndexes: number[],
+  addingPositions: { index: number, value: string }[],
   nameSaved: boolean
 }
 
@@ -28,7 +27,7 @@ export class PieceEditor implements OnInit {
 
   prevWorkingState: WorkingPiece;
   workingPiece: WorkingPiece;
-  pieceSaved: boolean = false;
+  pieceSaved: boolean = true;
 
   creatingPiece: boolean = false;
 
@@ -52,8 +51,7 @@ export class PieceEditor implements OnInit {
       return;
     }
     let workPieces = pieces.map(val => {
-      val['addingPositionsIndexes'] = [];
-      val['addingPositions'] = new Map<number, string>();
+      val['addingPositions'] = [];
       val['nameSaved'] = true;
       return val as WorkingPiece;
     });
@@ -72,10 +70,8 @@ export class PieceEditor implements OnInit {
 
   setCurrentPiece(piece: WorkingPiece) {
     if (piece && this.currentSelectedPiece && piece.uuid !== this.currentSelectedPiece.uuid) {
-      this.pieceSaved = false;
       this.creatingPiece = false;
-      this.currentSelectedPiece.addingPositions.clear();
-      this.currentSelectedPiece.addingPositionsIndexes = [];
+      this.currentSelectedPiece.addingPositions = [];
     }
     if ((this.workingPiece && piece.uuid != this.workingPiece.uuid)) {
       this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.workingPiece.uuid);
@@ -87,15 +83,8 @@ export class PieceEditor implements OnInit {
       this.workingPiece = undefined;
     }
     this.currentSelectedPiece = piece;
-    if (this.location.path().endsWith("piece") || this.location.path().endsWith("piece/")) {
-      this.location.replaceState(this.location.path() + "/" + piece.uuid);
-    } else {
-      let splits: string[] = this.location.path().split('/');
-      let baseURL = "";
-      for (let i = 0; i < splits.length - 1; i++) {
-        baseURL += (splits[i] + "/");
-      }
-      this.location.replaceState(baseURL + piece.uuid);
+    if (this.location.path().startsWith("/piece") || this.location.path().startsWith("/piece/")) {
+      this.location.replaceState("/piece/" + piece.uuid);
     }
     this.urlPointingUUID = piece.uuid;
     this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
@@ -113,8 +102,7 @@ export class PieceEditor implements OnInit {
       name: undefined,
       positions: [],
       nameSaved: false,
-      addingPositions: new Map<number, string>(),
-      addingPositionsIndexes: []
+      addingPositions: []
     }
     this.currentSelectedPiece = newPiece;
     this.renderingPieces.push(newPiece);
@@ -129,17 +117,16 @@ export class PieceEditor implements OnInit {
       return;
     }
     this.pieceSaved = true;
-    this.currentSelectedPiece.positions.push(...this.currentSelectedPiece.addingPositions.values());
+    this.currentSelectedPiece.positions.push(...this.currentSelectedPiece.addingPositions.map(val => val.value));
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {
-        this.currentSelectedPiece.addingPositions.clear();
-        this.currentSelectedPiece.addingPositionsIndexes = [];
+        this.currentSelectedPiece.addingPositions = [];
         let prevUUID = this.currentSelectedPiece.uuid;
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
         await this.pieceAPI.getAllPieces();
         let foundSame = this.renderingPieces.find(val => val.uuid == prevUUID);
-        if (foundSame) {
+        if (foundSame && this.location.path().startsWith("/piece")) {
           this.setCurrentPiece(foundSame);
         }
       } else {
@@ -156,17 +143,14 @@ export class PieceEditor implements OnInit {
     }
     this.creatingPiece = true;
     this.pieceSaved = false;
-    let nextInd = (this.currentSelectedPiece.positions.length + this.currentSelectedPiece.addingPositions.size + 1);
-    this.currentSelectedPiece.addingPositions.set(nextInd, "Position " + nextInd);
-    this.currentSelectedPiece.addingPositionsIndexes.push(nextInd);
+    let nextInd = (this.currentSelectedPiece.positions.length + this.currentSelectedPiece.addingPositions.length);
+    this.currentSelectedPiece.addingPositions.push({ index: nextInd, value: "New Position" });
     this.updateDragAndDropData();
   }
 
   deleteAddingPosition(index: number) {
-    let realInd = this.currentSelectedPiece.positions.length + index + 1;
-    this.currentSelectedPiece.addingPositionsIndexes =
-      this.currentSelectedPiece.addingPositionsIndexes.filter((val) => val != realInd);
-    this.currentSelectedPiece.addingPositions.delete(realInd);
+    let realInd = index;
+    this.currentSelectedPiece.addingPositions = this.currentSelectedPiece.addingPositions.filter((val, ind) => val.index != realInd);
     this.updateDragAndDropData();
   }
   deletePosition(index: number) {
@@ -177,6 +161,7 @@ export class PieceEditor implements OnInit {
     }
     this.currentSelectedPiece.positions = this.currentSelectedPiece.positions.filter((val, ind) => ind != index);
     this.updateDragAndDropData();
+    this.pieceSaved = false;
   }
 
   editTitle() {
@@ -192,6 +177,7 @@ export class PieceEditor implements OnInit {
     this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.currentSelectedPiece.uuid);
     this.pieceAPI.deletePiece(this.currentSelectedPiece);
     this.renderingPieces.length > 0 ? this.setCurrentPiece(this.renderingPieces[0]) : this.setCurrentPiece(undefined);
+    this.pieceSaved = false;
   }
 
   onInputChange(change: [string, any]) {
@@ -210,7 +196,10 @@ export class PieceEditor implements OnInit {
   setWorkingPropertyByKey(key: string, val: string) {
     if (key.startsWith("Position")) {
       let index = Number(key.split(" ")[1]);
-      this.currentSelectedPiece.addingPositions.set(index, val);
+      let found = this.currentSelectedPiece.addingPositions.find(val => val.index == index);
+      console.log(found);
+      if (found)
+        found.value = val;
     }
     if (key == "New Piece Name") {
       this.currentSelectedPiece.name = val;
@@ -218,6 +207,8 @@ export class PieceEditor implements OnInit {
   }
 
   updateDragAndDropData() {
+    console.log(this.dragAndDropData)
+    console.log(this.currentSelectedPiece.addingPositions, this.currentSelectedPiece.positions);
     this.dragAndDropData = [];
     for (let i = 0; i < this.currentSelectedPiece.positions.length; i++) {
       this.dragAndDropData.push({
@@ -226,17 +217,17 @@ export class PieceEditor implements OnInit {
         value: this.currentSelectedPiece.positions[i]
       });
     }
-    let addingPoses = Array.from(this.currentSelectedPiece.addingPositions.values());
-    for (let i = 0; i < addingPoses.length; i++) {
+    for (let i = 0; i < this.currentSelectedPiece.addingPositions.length; i++) {
       this.dragAndDropData.push({
         type: "adding",
-        index: i + this.currentSelectedPiece.positions.length,
-        value: addingPoses[i]
+        index: this.currentSelectedPiece.addingPositions[i].index,
+        value: this.currentSelectedPiece.addingPositions[i].value
       });
     }
   }
 
   drop(event: CdkDragDrop<any>) {
     transferArrayItem(this.dragAndDropData, this.dragAndDropData, event.previousIndex, event.currentIndex);
+    this.pieceSaved = false;
   }
 }

@@ -98,19 +98,17 @@ export class UserEditor implements OnInit {
       this.workingUser = undefined;
     }
     this.currentSelectedUser = user;
-    if (isNullOrUndefined(fromInputChange) || !fromInputChange) {
-      this.permissionsSet.emit(this.getSelectedPerms(this.currentSelectedUser));
-      this.privilegeClassSet.emit(this.currentSelectedUser.has_privilege_classes ? this.currentSelectedUser.has_privilege_classes : []);
-    }
-    if (this.location.path().endsWith("user") || this.location.path().endsWith("user/")) {
-      this.location.replaceState(this.location.path() + "/" + user.uuid);
-    } else {
-      let splits: string[] = this.location.path().split('/');
-      let baseURL = "";
-      for (let i = 0; i < splits.length - 1; i++) {
-        baseURL += (splits[i] + "/");
+    if ((isNullOrUndefined(fromInputChange) || !fromInputChange)) {
+      if (!this.currentSelectedUser) {
+        this.permissionsSet.emit([]);
+        this.privilegeClassSet.emit([]);
+      } else {
+        this.permissionsSet.emit(this.getSelectedPerms(this.currentSelectedUser));
+        this.privilegeClassSet.emit(this.currentSelectedUser.has_privilege_classes ? this.currentSelectedUser.has_privilege_classes : []);
       }
-      this.location.replaceState(baseURL + user.uuid);
+    }
+    if (this.location.path().startsWith("/user") || this.location.path().startsWith("/user/")) {
+      this.location.replaceState("/user/" + user.uuid);
     }
     this.urlPointingUUID = user.uuid;
     this.renderingUsers.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
@@ -173,7 +171,7 @@ export class UserEditor implements OnInit {
         this.workingUser = undefined;
         await this.userAPI.getAllUsers();
         let foundSame = this.renderingUsers.find(val => val.uuid == prevUUID);
-        if (foundSame) {
+        if (foundSame && this.location.path().startsWith('user')) {
           this.setCurrentUser(foundSame);
         }
       } else {
@@ -285,7 +283,6 @@ export class UserEditor implements OnInit {
       val = val2;
     }
     else if (key == "Privilege Classes") {
-      console.log("OOOOO", val);
       if (this.workingUser.has_privilege_classes) {
         let largerArr = val.length > this.workingUser.has_privilege_classes.length ? val : this.workingUser.has_privilege_classes;
         let smallerArr = val.length <= this.workingUser.has_privilege_classes.length ? val : this.workingUser.has_privilege_classes;
