@@ -252,8 +252,8 @@ export class PieceApi {
   /** Requests for the backend to delete the piece */
   deletePiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.deletePieceResponse(piece).then(val => {
+      this.getAllPieces();
       if (val.status == 200) {
-        this.getAllPieces();
         return {
           successful: true
         }

@@ -323,8 +323,8 @@ export class UserApi {
   /** Requests for the backend to delete the user */
   deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
     return this.deleteUserResponse(user).then(val => {
+      this.getAllUsers();
       if (val.status == 200) {
-        this.getAllUsers();
         return {
           successful: true
         }
