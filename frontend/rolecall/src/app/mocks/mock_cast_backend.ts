@@ -26,53 +26,23 @@ export class MockCastBackend {
                   "position_number": 3
                 },
                 {
-                  "uuid": "183",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "188",
-                  "position_number": 5
-                },
-                {
-                  "uuid": "187",
-                  "position_number": 4
-                },
-                {
                   "uuid": "185",
                   "position_number": 2
                 },
                 {
                   "uuid": "184",
                   "position_number": 1
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "192",
-                  "position_number": 3
                 },
                 {
-                  "uuid": "190",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "191",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "194",
+                  "uuid": "188",
                   "position_number": 5
                 },
                 {
-                  "uuid": "193",
+                  "uuid": "183",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "187",
                   "position_number": 4
                 }
               ]
@@ -82,12 +52,42 @@ export class MockCastBackend {
               "group_index": 2,
               "members": [
                 {
+                  "uuid": "196",
+                  "position_number": 2
+                },
+                {
                   "uuid": "195",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "193",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "191",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "189",
                   "position_number": 0
                 },
                 {
-                  "uuid": "196",
-                  "position_number": 2
+                  "uuid": "194",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "190",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "192",
+                  "position_number": 3
                 }
               ]
             }
@@ -105,53 +105,23 @@ export class MockCastBackend {
                   "position_number": 3
                 },
                 {
-                  "uuid": "183",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "188",
-                  "position_number": 5
-                },
-                {
-                  "uuid": "187",
-                  "position_number": 4
-                },
-                {
                   "uuid": "185",
                   "position_number": 2
                 },
                 {
                   "uuid": "184",
                   "position_number": 1
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "192",
-                  "position_number": 3
                 },
                 {
-                  "uuid": "190",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "191",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "194",
+                  "uuid": "188",
                   "position_number": 5
                 },
                 {
-                  "uuid": "193",
+                  "uuid": "183",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "187",
                   "position_number": 4
                 }
               ]
@@ -161,12 +131,42 @@ export class MockCastBackend {
               "group_index": 2,
               "members": [
                 {
+                  "uuid": "196",
+                  "position_number": 2
+                },
+                {
                   "uuid": "195",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "193",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "191",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "189",
                   "position_number": 0
                 },
                 {
-                  "uuid": "196",
-                  "position_number": 2
+                  "uuid": "194",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "190",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "192",
+                  "position_number": 3
                 }
               ]
             }
@@ -184,53 +184,23 @@ export class MockCastBackend {
                   "position_number": 3
                 },
                 {
-                  "uuid": "183",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "188",
-                  "position_number": 5
-                },
-                {
-                  "uuid": "187",
-                  "position_number": 4
-                },
-                {
                   "uuid": "185",
                   "position_number": 2
                 },
                 {
                   "uuid": "184",
                   "position_number": 1
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "192",
-                  "position_number": 3
                 },
                 {
-                  "uuid": "190",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "191",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "194",
+                  "uuid": "188",
                   "position_number": 5
                 },
                 {
-                  "uuid": "193",
+                  "uuid": "183",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "187",
                   "position_number": 4
                 }
               ]
@@ -240,12 +210,42 @@ export class MockCastBackend {
               "group_index": 2,
               "members": [
                 {
+                  "uuid": "196",
+                  "position_number": 2
+                },
+                {
                   "uuid": "195",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "193",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "191",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "189",
                   "position_number": 0
                 },
                 {
-                  "uuid": "196",
-                  "position_number": 2
+                  "uuid": "194",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "190",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "192",
+                  "position_number": 3
                 }
               ]
             }
@@ -263,6 +263,20 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Dancer - Fandango",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "185",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Fandango",
               "group_index": 0,
               "members": [
                 {
@@ -271,20 +285,6 @@ export class MockCastBackend {
                 },
                 {
                   "uuid": "198",
-                  "position_number": 1
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Fandango",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "193",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "185",
                   "position_number": 1
                 }
               ]
@@ -296,6 +296,20 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Dancer - Fandango",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "185",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Fandango",
               "group_index": 0,
               "members": [
                 {
@@ -304,20 +318,6 @@ export class MockCastBackend {
                 },
                 {
                   "uuid": "198",
-                  "position_number": 1
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Fandango",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "193",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "185",
                   "position_number": 1
                 }
               ]
@@ -332,6 +332,69 @@ export class MockCastBackend {
       "segment": "214",
       "filled_positions": [
         {
+          "position_uuid": "Resting and Moving On",
+          "groups": [
+            {
+              "position_uuid": "Resting and Moving On",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "184",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "194",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "183",
+                  "position_number": 3
+                }
+              ]
+            },
+            {
+              "position_uuid": "Resting and Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "196",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "195",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "188",
+                  "position_number": 2
+                }
+              ]
+            },
+            {
+              "position_uuid": "Resting and Moving On",
+              "group_index": 2,
+              "members": [
+                {
+                  "uuid": "204",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "187",
+                  "position_number": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
           "position_uuid": "Seeking, Resting, and Moving On",
           "groups": [
             {
@@ -340,6 +403,16 @@ export class MockCastBackend {
               "members": [
                 {
                   "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Seeking, Resting, and Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "211",
                   "position_number": 0
                 }
               ]
@@ -360,16 +433,6 @@ export class MockCastBackend {
               "members": [
                 {
                   "uuid": "189",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Seeking, Resting, and Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "211",
                   "position_number": 0
                 }
               ]
@@ -381,6 +444,28 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Resting and Moving On",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "184",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "194",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "183",
+                  "position_number": 3
+                }
+              ]
+            },
+            {
+              "position_uuid": "Resting and Moving On",
               "group_index": 1,
               "members": [
                 {
@@ -388,16 +473,16 @@ export class MockCastBackend {
                   "position_number": 3
                 },
                 {
-                  "uuid": "188",
-                  "position_number": 2
+                  "uuid": "195",
+                  "position_number": 0
                 },
                 {
                   "uuid": "209",
                   "position_number": 1
                 },
                 {
-                  "uuid": "195",
-                  "position_number": 0
+                  "uuid": "188",
+                  "position_number": 2
                 }
               ]
             },
@@ -406,79 +491,75 @@ export class MockCastBackend {
               "group_index": 2,
               "members": [
                 {
-                  "uuid": "187",
-                  "position_number": 2
-                },
-                {
                   "uuid": "204",
                   "position_number": 3
-                }
-              ]
-            },
-            {
-              "position_uuid": "Resting and Moving On",
-              "group_index": 0,
-              "members": [
-                {
-                  "uuid": "194",
-                  "position_number": 0
                 },
                 {
-                  "uuid": "184",
+                  "uuid": "187",
                   "position_number": 2
-                },
-                {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "183",
-                  "position_number": 3
                 }
               ]
             }
           ]
         },
         {
-          "position_uuid": "Seeking, Resting, and Moving On",
+          "position_uuid": "Resting and Moving On",
           "groups": [
             {
-              "position_uuid": "Seeking, Resting, and Moving On",
+              "position_uuid": "Resting and Moving On",
               "group_index": 0,
               "members": [
                 {
-                  "uuid": "193",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Seeking, Resting, and Moving On",
-              "group_index": 2,
-              "members": [
+                  "uuid": "191",
+                  "position_number": 1
+                },
                 {
                   "uuid": "184",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Seeking, Resting, and Moving On",
-              "group_index": 3,
-              "members": [
+                  "position_number": 2
+                },
                 {
-                  "uuid": "189",
+                  "uuid": "194",
                   "position_number": 0
+                },
+                {
+                  "uuid": "183",
+                  "position_number": 3
                 }
               ]
             },
             {
-              "position_uuid": "Seeking, Resting, and Moving On",
+              "position_uuid": "Resting and Moving On",
               "group_index": 1,
               "members": [
                 {
-                  "uuid": "211",
+                  "uuid": "196",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "195",
                   "position_number": 0
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "188",
+                  "position_number": 2
+                }
+              ]
+            },
+            {
+              "position_uuid": "Resting and Moving On",
+              "group_index": 2,
+              "members": [
+                {
+                  "uuid": "204",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "187",
+                  "position_number": 2
                 }
               ]
             }
@@ -492,10 +573,6 @@ export class MockCastBackend {
               "group_index": 0,
               "members": [
                 {
-                  "uuid": "189",
-                  "position_number": 0
-                },
-                {
                   "uuid": "187",
                   "position_number": 2
                 },
@@ -504,11 +581,41 @@ export class MockCastBackend {
                   "position_number": 4
                 },
                 {
+                  "uuid": "189",
+                  "position_number": 0
+                },
+                {
                   "uuid": "205",
                   "position_number": 3
                 },
                 {
                   "uuid": "203",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "201",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "210",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "200",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "206",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "207",
                   "position_number": 1
                 }
               ]
@@ -526,30 +633,75 @@ export class MockCastBackend {
                   "position_number": 0
                 }
               ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Moving On",
+          "groups": [
+            {
+              "position_uuid": "Moving On",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "187",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "186",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "189",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "205",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "203",
+                  "position_number": 1
+                }
+              ]
             },
             {
               "position_uuid": "Moving On",
               "group_index": 1,
               "members": [
                 {
-                  "uuid": "206",
-                  "position_number": 4
+                  "uuid": "201",
+                  "position_number": 3
                 },
                 {
                   "uuid": "210",
                   "position_number": 0
                 },
                 {
-                  "uuid": "207",
-                  "position_number": 1
-                },
-                {
                   "uuid": "200",
                   "position_number": 2
                 },
                 {
-                  "uuid": "201",
-                  "position_number": 3
+                  "uuid": "206",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "207",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Moving On",
+              "group_index": 2,
+              "members": [
+                {
+                  "uuid": "208",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "195",
+                  "position_number": 0
                 }
               ]
             }
@@ -564,6 +716,16 @@ export class MockCastBackend {
               "members": [
                 {
                   "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Seeking, Resting, and Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "211",
                   "position_number": 0
                 }
               ]
@@ -587,87 +749,6 @@ export class MockCastBackend {
                   "position_number": 0
                 }
               ]
-            },
-            {
-              "position_uuid": "Seeking, Resting, and Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "211",
-                  "position_number": 0
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "position_uuid": "Moving On",
-          "groups": [
-            {
-              "position_uuid": "Moving On",
-              "group_index": 0,
-              "members": [
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "187",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "186",
-                  "position_number": 4
-                },
-                {
-                  "uuid": "205",
-                  "position_number": 3
-                },
-                {
-                  "uuid": "203",
-                  "position_number": 1
-                }
-              ]
-            },
-            {
-              "position_uuid": "Moving On",
-              "group_index": 2,
-              "members": [
-                {
-                  "uuid": "208",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "195",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "206",
-                  "position_number": 4
-                },
-                {
-                  "uuid": "210",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "207",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "200",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "201",
-                  "position_number": 3
-                }
-              ]
             }
           ]
         },
@@ -680,6 +761,16 @@ export class MockCastBackend {
               "members": [
                 {
                   "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Seeking, Resting, and Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "211",
                   "position_number": 0
                 }
               ]
@@ -703,79 +794,6 @@ export class MockCastBackend {
                   "position_number": 0
                 }
               ]
-            },
-            {
-              "position_uuid": "Seeking, Resting, and Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "211",
-                  "position_number": 0
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "position_uuid": "Resting and Moving On",
-          "groups": [
-            {
-              "position_uuid": "Resting and Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "196",
-                  "position_number": 3
-                },
-                {
-                  "uuid": "188",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "209",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "195",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Resting and Moving On",
-              "group_index": 2,
-              "members": [
-                {
-                  "uuid": "187",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "204",
-                  "position_number": 3
-                }
-              ]
-            },
-            {
-              "position_uuid": "Resting and Moving On",
-              "group_index": 0,
-              "members": [
-                {
-                  "uuid": "194",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "184",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "183",
-                  "position_number": 3
-                }
-              ]
             }
           ]
         },
@@ -787,10 +805,6 @@ export class MockCastBackend {
               "group_index": 0,
               "members": [
                 {
-                  "uuid": "189",
-                  "position_number": 0
-                },
-                {
                   "uuid": "187",
                   "position_number": 2
                 },
@@ -799,11 +813,41 @@ export class MockCastBackend {
                   "position_number": 4
                 },
                 {
+                  "uuid": "189",
+                  "position_number": 0
+                },
+                {
                   "uuid": "205",
                   "position_number": 3
                 },
                 {
                   "uuid": "203",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "201",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "210",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "200",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "206",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "207",
                   "position_number": 1
                 }
               ]
@@ -821,93 +865,49 @@ export class MockCastBackend {
                   "position_number": 0
                 }
               ]
-            },
-            {
-              "position_uuid": "Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "206",
-                  "position_number": 4
-                },
-                {
-                  "uuid": "210",
-                  "position_number": 0
-                },
-                {
-                  "uuid": "207",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "200",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "201",
-                  "position_number": 3
-                }
-              ]
             }
           ]
         },
         {
-          "position_uuid": "Resting and Moving On",
+          "position_uuid": "Seeking, Resting, and Moving On",
           "groups": [
             {
-              "position_uuid": "Resting and Moving On",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "196",
-                  "position_number": 3
-                },
-                {
-                  "uuid": "188",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "209",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "195",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Resting and Moving On",
-              "group_index": 2,
-              "members": [
-                {
-                  "uuid": "187",
-                  "position_number": 2
-                },
-                {
-                  "uuid": "204",
-                  "position_number": 3
-                }
-              ]
-            },
-            {
-              "position_uuid": "Resting and Moving On",
+              "position_uuid": "Seeking, Resting, and Moving On",
               "group_index": 0,
               "members": [
                 {
-                  "uuid": "194",
+                  "uuid": "193",
                   "position_number": 0
-                },
+                }
+              ]
+            },
+            {
+              "position_uuid": "Seeking, Resting, and Moving On",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "211",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Seeking, Resting, and Moving On",
+              "group_index": 2,
+              "members": [
                 {
                   "uuid": "184",
-                  "position_number": 2
-                },
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Seeking, Resting, and Moving On",
+              "group_index": 3,
+              "members": [
                 {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "183",
-                  "position_number": 3
+                  "uuid": "189",
+                  "position_number": 0
                 }
               ]
             }
@@ -925,20 +925,6 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 0,
               "members": [
                 {
@@ -953,20 +939,6 @@ export class MockCastBackend {
             },
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 3,
-              "members": [
-                {
-                  "uuid": "209",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "200",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 2,
               "members": [
                 {
@@ -975,6 +947,34 @@ export class MockCastBackend {
                 },
                 {
                   "uuid": "184",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 3,
+              "members": [
+                {
+                  "uuid": "200",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "189",
                   "position_number": 0
                 }
               ]
@@ -986,20 +986,6 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 0,
               "members": [
                 {
@@ -1014,20 +1000,6 @@ export class MockCastBackend {
             },
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 3,
-              "members": [
-                {
-                  "uuid": "209",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "200",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 2,
               "members": [
                 {
@@ -1036,6 +1008,34 @@ export class MockCastBackend {
                 },
                 {
                   "uuid": "184",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 3,
+              "members": [
+                {
+                  "uuid": "200",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "189",
                   "position_number": 0
                 }
               ]
@@ -1047,20 +1047,6 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 0,
               "members": [
                 {
@@ -1075,20 +1061,6 @@ export class MockCastBackend {
             },
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 3,
-              "members": [
-                {
-                  "uuid": "209",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "200",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 2,
               "members": [
                 {
@@ -1097,6 +1069,34 @@ export class MockCastBackend {
                 },
                 {
                   "uuid": "184",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 3,
+              "members": [
+                {
+                  "uuid": "200",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "189",
                   "position_number": 0
                 }
               ]
@@ -1108,20 +1108,6 @@ export class MockCastBackend {
           "groups": [
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 1,
-              "members": [
-                {
-                  "uuid": "191",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "189",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 0,
               "members": [
                 {
@@ -1136,20 +1122,6 @@ export class MockCastBackend {
             },
             {
               "position_uuid": "Dancer - Ella",
-              "group_index": 3,
-              "members": [
-                {
-                  "uuid": "209",
-                  "position_number": 1
-                },
-                {
-                  "uuid": "200",
-                  "position_number": 0
-                }
-              ]
-            },
-            {
-              "position_uuid": "Dancer - Ella",
               "group_index": 2,
               "members": [
                 {
@@ -1158,6 +1130,537 @@ export class MockCastBackend {
                 },
                 {
                   "uuid": "184",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 3,
+              "members": [
+                {
+                  "uuid": "200",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 1
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dancer - Ella",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "189",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uuid": "373",
+      "name": "2020 Tour Roster",
+      "segment": "220",
+      "filled_positions": [
+        {
+          "position_uuid": "Father",
+          "groups": [
+            {
+              "position_uuid": "Father",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "199",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Father",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "198",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Mother",
+          "groups": [
+            {
+              "position_uuid": "Mother",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "189",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Mother",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "202",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "White Psyche",
+          "groups": [
+            {
+              "position_uuid": "White Psyche",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "199",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "200",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "183",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "194",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "186",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "195",
+                  "position_number": 6
+                },
+                {
+                  "uuid": "185",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "White Psyche",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "196",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "204",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "207",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 6
+                },
+                {
+                  "uuid": "208",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "205",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "206",
+                  "position_number": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Daughter",
+          "groups": [
+            {
+              "position_uuid": "Daughter",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Daughter",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "203",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Sara Page",
+          "groups": [
+            {
+              "position_uuid": "Sara Page",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "192",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Sara Page",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Son",
+          "groups": [
+            {
+              "position_uuid": "Son",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "187",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Son",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "188",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Son",
+          "groups": [
+            {
+              "position_uuid": "Son",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "187",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Son",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "188",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Father",
+          "groups": [
+            {
+              "position_uuid": "Father",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "199",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Father",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "198",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Dick Rowland",
+          "groups": [
+            {
+              "position_uuid": "Dick Rowland",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "197",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dick Rowland",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "184",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Sara Page",
+          "groups": [
+            {
+              "position_uuid": "Sara Page",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "192",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Sara Page",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "191",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Witness",
+          "groups": [
+            {
+              "position_uuid": "Witness",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "190",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Witness",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "201",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "White Psyche",
+          "groups": [
+            {
+              "position_uuid": "White Psyche",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "199",
+                  "position_number": 3
+                },
+                {
+                  "uuid": "200",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "183",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "194",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "186",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "195",
+                  "position_number": 6
+                },
+                {
+                  "uuid": "185",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "White Psyche",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "196",
+                  "position_number": 1
+                },
+                {
+                  "uuid": "204",
+                  "position_number": 0
+                },
+                {
+                  "uuid": "207",
+                  "position_number": 4
+                },
+                {
+                  "uuid": "209",
+                  "position_number": 6
+                },
+                {
+                  "uuid": "208",
+                  "position_number": 5
+                },
+                {
+                  "uuid": "205",
+                  "position_number": 2
+                },
+                {
+                  "uuid": "206",
+                  "position_number": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Daughter",
+          "groups": [
+            {
+              "position_uuid": "Daughter",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "193",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Daughter",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "203",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Witness",
+          "groups": [
+            {
+              "position_uuid": "Witness",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "190",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Witness",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "201",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Dick Rowland",
+          "groups": [
+            {
+              "position_uuid": "Dick Rowland",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "197",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Dick Rowland",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "184",
+                  "position_number": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "position_uuid": "Mother",
+          "groups": [
+            {
+              "position_uuid": "Mother",
+              "group_index": 0,
+              "members": [
+                {
+                  "uuid": "189",
+                  "position_number": 0
+                }
+              ]
+            },
+            {
+              "position_uuid": "Mother",
+              "group_index": 1,
+              "members": [
+                {
+                  "uuid": "202",
                   "position_number": 0
                 }
               ]
