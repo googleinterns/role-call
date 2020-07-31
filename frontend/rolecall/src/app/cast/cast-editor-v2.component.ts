@@ -60,7 +60,7 @@ export class CastEditorV2 implements OnInit {
     }
     this.selectedPiece = piece;
     this.updateFilteredCasts();
-    if (autoSelectFirst && this.filteredCasts.length > 0) {
+    if (autoSelectFirst) {
       this.setCurrentCast(this.filteredCasts[0]);
     }
   }

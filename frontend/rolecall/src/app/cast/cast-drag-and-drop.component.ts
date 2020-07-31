@@ -66,7 +66,7 @@ export class CastDragAndDrop implements OnInit {
 
   onUserLoad(users: User[]) {
     this.usersLoaded = true;
-    this.allUsers = users;
+    this.allUsers = users.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
     if (this.checkAllLoaded()) {
       this.setupData();
     }
@@ -284,10 +284,8 @@ export class CastDragAndDrop implements OnInit {
 
   async saveCast() {
     this.cast = this.dataToCast();
-    this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => this.pieceAPI.positions.find(val => a.position_uuid == val.name).order - this.pieceAPI.positions.find(val => b.position_uuid == val.name).order);
     return this.castAPI.setCast(this.cast).then(val => {
       if (!val.successful) {
-        this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => this.pieceAPI.positions.find(val => a.position_uuid == val.name).order - this.pieceAPI.positions.find(val => b.position_uuid == val.name).order);
         alert(val.error);
       }
     });

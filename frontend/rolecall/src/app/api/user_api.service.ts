@@ -339,8 +339,9 @@ export class UserApi {
 
   /** Determines if the user object provided is valid for storage in the database */
   public isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.contact_info.email) && !isNullOrUndefined(user.first_name) &&
-      !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_permissions);
+    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.contact_info.email)
+      && !isNullOrUndefined(user.first_name)
+      && !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_permissions);
   }
 
 }
