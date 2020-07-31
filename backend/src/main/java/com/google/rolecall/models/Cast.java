@@ -80,7 +80,7 @@ public class Cast {
     }
 
     for (SubCast subCast : subCasts) {
-      if(subCast.getId() == id) {
+      if(subCast.getId().equals(id)) {
         return subCast;
       }
     }

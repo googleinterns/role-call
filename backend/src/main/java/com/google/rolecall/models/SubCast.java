@@ -103,7 +103,7 @@ public class SubCast {
     }
 
     for (CastMember member : members) {
-      if(member.getId() == id) {
+      if(member.getId().equals(id)) {
         return member;
       }
     }
