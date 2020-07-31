@@ -40,6 +40,7 @@ export type Cast = {
   filled_positions: {
     position_uuid: string,
     groups: {
+      position_uuid?: string,
       group_index: number,
       members: { uuid: string, position_number: number }[]
     }[]

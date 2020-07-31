@@ -8,38 +8,39 @@ import { AllPiecesResponse, OnePieceResponse, Piece } from '../api/piece_api.ser
 export class MockPieceBackend {
 
   /** Mock piece database */
-  mockPieceDB: Piece[] = [
-    {
-      uuid: "PIECE1UUID",
-      name: "Piece 1",
-      positions: [
-        "piece1pos1",
-        "piece1pos2"
-      ],
-      deletePositions: []
-    },
-    {
-      uuid: "PIECE2UUID",
-      name: "Piece 2",
-      positions: [
-        "piece2pos1",
-        "piece2pos2",
-        "piece2pos3"
-      ],
-      deletePositions: []
-    },
-    {
-      uuid: "PIECE3UUID",
-      name: "Piece 3",
-      positions: [
-        "piece3pos1",
-        "piece3pos2",
-        "piece3pos3",
-        "piece3pos4"
-      ],
-      deletePositions: []
-    }
-  ];
+  mockPieceDB: Piece[] = [{ "uuid": "212", "name": "Ode", "positions": ["Dancer"], "deletePositions": [] }, { "uuid": "214", "name": "Divining", "positions": ["Seeking, Resting, and Moving On", "Resting and Moving On", "Moving On"], "deletePositions": [] }, { "uuid": "220", "name": "Greenwood", "positions": ["Witness", "Sara Page", "Dick Rowland", "Father", "Mother", "Son", "Daughter", "White Psyche"], "deletePositions": [] }, { "uuid": "247", "name": "Fandango", "positions": ["Dancer - Fandango"], "deletePositions": [] }, { "uuid": "358", "name": "Ella", "positions": ["Dancer - Ella"], "deletePositions": [] }]
+  // [
+  //   {
+  //     uuid: "PIECE1UUID",
+  //     name: "Piece 1",
+  //     positions: [
+  //       "piece1pos1",
+  //       "piece1pos2"
+  //     ],
+  //     deletePositions: []
+  //   },
+  //   {
+  //     uuid: "PIECE2UUID",
+  //     name: "Piece 2",
+  //     positions: [
+  //       "piece2pos1",
+  //       "piece2pos2",
+  //       "piece2pos3"
+  //     ],
+  //     deletePositions: []
+  //   },
+  //   {
+  //     uuid: "PIECE3UUID",
+  //     name: "Piece 3",
+  //     positions: [
+  //       "piece3pos1",
+  //       "piece3pos2",
+  //       "piece3pos3",
+  //       "piece3pos4"
+  //     ],
+  //     deletePositions: []
+  //   }
+  // ];
   shouldRejectSetRequest = false;
 
   /** Mocks backend response */
