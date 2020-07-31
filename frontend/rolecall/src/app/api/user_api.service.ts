@@ -1,11 +1,11 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { MockUserBackend } from '../mocks/mock_user_backend';
 import { LoggingService } from '../services/logging.service';
-
 
 export type User = {
   uuid: APITypes.UserUUID,
@@ -122,7 +122,7 @@ export class UserApi {
               knows_positions: [],
               first_name: val.firstName,
               last_name: val.lastName,
-              date_joined: Date.parse(val.dateJoined),
+              date_joined: moment(val.dateJoined, 'MM-DD-YYYY').valueOf(),
               contact_info: {
                 phone_number: "N/A",
                 email: val.email,
@@ -168,6 +168,7 @@ export class UserApi {
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.contact_info.email,
+        dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
         emergencyContactName: user.contact_info.emergency_contact.name,
         emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
         canLogin: user.has_permissions.canLogin,
@@ -193,6 +194,7 @@ export class UserApi {
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.contact_info.email,
+        dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
         emergencyContactName: user.contact_info.emergency_contact.name,
         emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
         canLogin: user.has_permissions.canLogin,
