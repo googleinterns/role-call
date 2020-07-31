@@ -301,16 +301,19 @@ public class CastServices {
     }
   }
 
-  // public void deleteCast(int id) throws EntityNotFoundException {
-  //   Cast cast = getCastById(id);
-  //   try {
-  //     Position position = cast.getPosition();
-  //     position.removeCast(cast);
-  //     positionService.updatePosition(position);
-  //   } catch(InvalidParameterException e) {
-  //     throw new Error("Database inconsitency. Cast maps to no position.");
-  //   }
-  // }
+  public void deleteCast(int id) throws EntityNotFoundException {
+    Optional<Cast> query = castRepo.findById(id);
+
+    if(query.isEmpty()) {
+      throw new EntityNotFoundException(String.format("No Cast with id %d", id));
+    }
+
+    Cast cast = query.get();
+    Section section = cast.getSection();
+    section.removeCast(cast);
+    
+    castRepo.delete(cast);
+  }
 
   public CastServices(CastRepository castRepo, SectionServices sectionService,
       UserServices userService) {

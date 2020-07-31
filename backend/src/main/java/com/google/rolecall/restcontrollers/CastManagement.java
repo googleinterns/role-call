@@ -82,17 +82,17 @@ public class CastManagement {
     return CompletableFuture.completedFuture(response);
   }
 
-  // @Delete(Constants.RequestParameters.CAST_ID)
-  // public CompletableFuture<Void> deleteCast(@RequestParam(
-  //     value=Constants.RequestParameters.CAST_ID, required=true) int id) {
-  //   try {
-  //     castService.deleteCast(id);
-  //   } catch(EntityNotFoundException e) {
-  //     return CompletableFuture.failedFuture(e);
-  //   }
+  @Delete(Constants.RequestParameters.CAST_ID)
+  public CompletableFuture<Void> deleteCast(@RequestParam(
+      value=Constants.RequestParameters.CAST_ID, required=true) int id) {
+    try {
+      castService.deleteCast(id);
+    } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    }
     
-  //   return CompletableFuture.completedFuture(null);
-  // }
+    return CompletableFuture.completedFuture(null);
+  }
 
   public CastManagement(CastServices castService) {
     this.castService = castService;
