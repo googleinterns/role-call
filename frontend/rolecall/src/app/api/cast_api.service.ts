@@ -76,10 +76,11 @@ export class CastApi {
   constructor(private loggingService: LoggingService, private http: HttpClient, private pieceAPI: PieceApi) { }
 
   /** Hits backend with all casts GET request */
-  requestAllCasts(): Promise<AllCastsResponse> {
+  async requestAllCasts(): Promise<AllCastsResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllCasts();
     }
+    await this.pieceAPI.getAllPieces();
     return this.http.get<AllRawCastsResponse>(environment.backendURL + "api/cast").toPromise().then((val) => {
       this.rawCasts = val.data;
       return {
@@ -91,9 +92,9 @@ export class CastApi {
               members: { uuid: string, position_number: number }[]
             }[] = [];
             for (let rawSubCast of rawCast.subCasts) {
-              let foundGroup = groups.find(g => g.position_uuid == String(rawSubCast.positionId));
+              let foundGroup = groups.find(g => g.position_uuid == String(this.pieceAPI.positions.find(pos => pos.id == rawSubCast.positionId).name));
               if (foundGroup) {
-                let foundGroupIndex = groups.find(g => g.position_uuid == String(rawSubCast.positionId) && g.group_index == rawSubCast.castNumber);
+                let foundGroupIndex = groups.find(g => g.position_uuid == String(this.pieceAPI.positions.find(pos => pos.id == rawSubCast.positionId).name) && g.group_index == rawSubCast.castNumber);
                 if (foundGroupIndex) {
                   foundGroupIndex.members = foundGroupIndex.members.concat(rawSubCast.members.map(rawMem => {
                     return {
@@ -103,7 +104,7 @@ export class CastApi {
                   }));
                 } else {
                   groups.push({
-                    position_uuid: String(rawSubCast.positionId),
+                    position_uuid: String(this.pieceAPI.positions.find(pos => pos.id == rawSubCast.positionId).name),
                     group_index: rawSubCast.castNumber,
                     members: rawSubCast.members.map(rawMem => {
                       return {
@@ -115,7 +116,7 @@ export class CastApi {
                 }
               } else {
                 groups.push({
-                  position_uuid: String(rawSubCast.positionId),
+                  position_uuid: String(this.pieceAPI.positions.find(pos => pos.id == rawSubCast.positionId).name),
                   group_index: rawSubCast.castNumber,
                   members: rawSubCast.members.map(rawMem => {
                     return {
@@ -132,8 +133,8 @@ export class CastApi {
               segment: String(rawCast.sectionId),
               filled_positions: rawCast.subCasts.map(rawSubCast => {
                 return {
-                  position_uuid: String(rawSubCast.positionId),
-                  groups: groups.filter(g => g.position_uuid == String(rawSubCast.positionId))
+                  position_uuid: String(this.pieceAPI.positions.find(pos => pos.id == rawSubCast.positionId).name),
+                  groups: groups.filter(g => g.position_uuid == String(this.pieceAPI.positions.find(pos => pos.id == rawSubCast.positionId).name))
                 }
               })
             }
@@ -191,6 +192,8 @@ export class CastApi {
           sectionId: Number(cast.segment),
           subCasts: allSubCasts
         }
+        console.log(rawCast);
+        console.log(this.pieceAPI.positions);
         return this.http.post(environment.backendURL + "api/cast", rawCast, { observe: "response" }).toPromise().then(val => {
           console.log(val);
           return val;
@@ -229,6 +232,7 @@ export class CastApi {
         subCasts: allSubCasts
       }
       console.log(rawCast);
+      console.log(this.pieceAPI.positions);
       return this.http.post(environment.backendURL + "api/cast", rawCast, { observe: "response" }).toPromise().then(val => {
         return val;
       }).catch(val => {

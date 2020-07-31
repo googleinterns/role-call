@@ -2,7 +2,7 @@
   <div class="position-pool">
     <input type="text" class="name-input" (input)="onTitleInput($event)" [value]="this.cast.name" />
     <div *ngFor="let position of data; let i1 = index" class="position-container">
-      <div *ngIf="i1 < (data.length - 1)">
+      <div *ngIf="i1 < positionNames.length">
         <h3 class="position-title">{{positionNames[i1]}}</h3>
         <div class="table-container">
           <div class="horizontal-list" id="col-headers">

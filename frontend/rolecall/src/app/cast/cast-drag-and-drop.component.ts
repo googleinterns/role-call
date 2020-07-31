@@ -189,9 +189,14 @@ export class CastDragAndDrop implements OnInit {
   }
 
   setupData() {
-    if (!this.castSelected)
+    if (!this.castSelected) {
+      // if (this.cast)
+      //   this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionNames.findIndex(val => val == a.position_uuid) - this.positionNames.findIndex(val => val == b.position_uuid) })
       return;
+    }
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
+      // if (this.cast)
+      //   this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionNames.findIndex(val => val == a.position_uuid) - this.positionNames.findIndex(val => val == b.position_uuid) })
       this.data = [[]];
       this.castSelected = false;
       this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
@@ -199,7 +204,9 @@ export class CastDragAndDrop implements OnInit {
     }
     this.data = [[]];
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
+    // this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionNames.findIndex(val => val == a.position_uuid) - this.positionNames.findIndex(val => val == b.position_uuid) })
     this.ensureAllPositionsMet(this.cast);
+    this.positionNames = this.positionNames.sort((a, b) => this.cast.filled_positions.findIndex(val => val.position_uuid == a) - this.cast.filled_positions.findIndex(val => val.position_uuid == b));
     let filledPoses = this.cast.filled_positions;
     let tempData = filledPoses.map((val, posInd) => {
       let colObs = val.groups.sort((a, b) => a.group_index < b.group_index ? -1 : 1);
@@ -276,8 +283,10 @@ export class CastDragAndDrop implements OnInit {
 
   async saveCast() {
     this.cast = this.dataToCast();
+    this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => this.pieceAPI.positions.find(val => a.position_uuid == val.name).order - this.pieceAPI.positions.find(val => b.position_uuid == val.name).order);
     return this.castAPI.setCast(this.cast).then(val => {
       if (!val.successful) {
+        this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => this.pieceAPI.positions.find(val => a.position_uuid == val.name).order - this.pieceAPI.positions.find(val => b.position_uuid == val.name).order);
         alert(val.error);
       }
     });

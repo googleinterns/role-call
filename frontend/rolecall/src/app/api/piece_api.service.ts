@@ -65,6 +65,7 @@ export class PieceApi {
     }
     return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
       this.positions = [];
+      this.rawPieces = val.data;
       return {
         data: {
           pieces: val.data.map((section) => {
@@ -170,6 +171,7 @@ export class PieceApi {
   pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
 
   positions: RawPosition[] = [];
+  rawPieces: RawPiece[] = [];
 
   /** Emitter that is called whenever pieces are loaded */
   pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
