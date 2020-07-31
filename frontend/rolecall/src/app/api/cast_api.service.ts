@@ -5,6 +5,27 @@ import { isNullOrUndefined } from 'util';
 import { MockCastBackend } from '../mocks/mock_cast_backend';
 import { LoggingService } from '../services/logging.service';
 
+type RawCastMember = {
+  id: number,
+  userId: number,
+  order: number
+}
+
+type RawSubCast = {
+  id: number,
+  positionId: number,
+  castNumber: number,
+  members: RawCastMember[]
+}
+
+type RawCast = {
+  id: number,
+  name: string,
+  notes: string,
+  sectionId: number,
+  subCasts: RawSubCast[]
+}
+
 export type Cast = {
   uuid: string;
   name: string;
