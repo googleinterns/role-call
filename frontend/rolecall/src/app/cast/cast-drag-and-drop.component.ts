@@ -239,7 +239,8 @@ export class CastDragAndDrop implements OnInit {
       return;
     }
     if (prevContainerID == "user-pool" && event.container.id) {
-      copyArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      let arr = [event.item.data];
+      copyArrayItem(arr, event.container.data, 0, event.currentIndex);
       let currentContainerID = event.container.id;
       let currentIdSplits = currentContainerID.split(':');
       let currentPosRowInd: [number, number] = [Number(currentIdSplits[0]), Number(currentIdSplits[1])];
