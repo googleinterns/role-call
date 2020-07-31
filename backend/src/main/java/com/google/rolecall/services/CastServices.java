@@ -12,14 +12,12 @@ import com.google.rolecall.models.User;
 import com.google.rolecall.repos.CastRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -311,7 +309,7 @@ public class CastServices {
     Cast cast = query.get();
     Section section = cast.getSection();
     section.removeCast(cast);
-    
+
     castRepo.delete(cast);
   }
 
