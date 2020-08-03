@@ -4,10 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Colors } from 'src/constants';
 import { isNullOrUndefined } from 'util';
-import { Piece, PieceApi } from '../api/piece_api.service';
+import { Piece, PieceApi, Position } from '../api/piece_api.service';
 
 type WorkingPiece = Piece & {
-  addingPositions: { index: number, value: string }[],
+  addingPositions: { index: number, value: Position, type: "adding" | "added" }[],
   originalName: string
 }
 
@@ -18,7 +18,7 @@ type WorkingPiece = Piece & {
 })
 export class PieceEditor implements OnInit {
 
-  dragAndDropData: { type: "adding" | "added", index: number, value: string }[] = [];
+  dragAndDropData: { type: "adding" | "added", index: number, value: Position }[] = [];
   currentSelectedPiece: WorkingPiece;
   renderingPieces: WorkingPiece[];
   urlPointingUUID: string;
@@ -154,7 +154,15 @@ export class PieceEditor implements OnInit {
     this.creatingPiece = true;
     this.pieceSaved = false;
     let nextInd = (this.currentSelectedPiece.positions.length + this.currentSelectedPiece.addingPositions.length);
-    this.dragAndDropData.push({ index: nextInd, value: "New Position", type: "adding" });
+    this.dragAndDropData.push({
+      index: nextInd, value: {
+        name: "New Position",
+        uuid: "position:" + Date.now(),
+        notes: "",
+        order: nextInd,
+        size: 1
+      }, type: "adding"
+    });
     this.updateDragAndDropData();
   }
 
@@ -208,7 +216,7 @@ export class PieceEditor implements OnInit {
     if (key.startsWith("New Position")) {
       let found = this.currentSelectedPiece.addingPositions.find(val => val.index == data.index);
       if (found)
-        found.value = val;
+        found.value.name = val;
     }
     if (key == "New Piece Name") {
       this.currentSelectedPiece.name = val;
@@ -237,15 +245,15 @@ export class PieceEditor implements OnInit {
         let struct = {
           type: "added",
           index: i,
-          value: data.value
+          value: { ...data.value, order: i }
         };
         newDDData.push(struct);
         this.currentSelectedPiece.positions.push(struct.value);
       } else {
-        let struct = {
+        let struct: { type: "adding" | "added", index: number, value: Position } = {
           type: "adding",
           index: i,
-          value: data.value
+          value: { ...data.value, order: i }
         };
         newDDData.push(struct);
         this.currentSelectedPiece.addingPositions.push(struct);
@@ -259,8 +267,22 @@ export class PieceEditor implements OnInit {
   }
 
   drop(event: CdkDragDrop<any>) {
+    let largerInd = event.previousIndex > event.currentIndex ? event.previousIndex : event.currentIndex;
+    let smallerInd = event.previousIndex <= event.currentIndex ? event.previousIndex : event.currentIndex;
     this.dragAndDropData[event.previousIndex].index = event.currentIndex;
-    this.dragAndDropData[event.currentIndex].index = event.previousIndex;
+    this.dragAndDropData[event.previousIndex].value.order = event.currentIndex;
+    let isToLargerInd = largerInd == event.currentIndex;
+    if (isToLargerInd) {
+      for (let i = smallerInd + 1; i <= largerInd; i++) {
+        this.dragAndDropData[i].index--;
+        this.dragAndDropData[i].value.order--;
+      }
+    } else {
+      for (let i = smallerInd; i <= largerInd - 1; i++) {
+        this.dragAndDropData[i].index++;
+        this.dragAndDropData[i].value.order++;
+      }
+    }
     transferArrayItem(this.dragAndDropData, this.dragAndDropData, event.previousIndex, event.currentIndex);
     this.pieceSaved = false;
   }

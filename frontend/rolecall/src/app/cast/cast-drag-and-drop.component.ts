@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
-import { Piece, PieceApi } from '../api/piece_api.service';
+import { Piece, PieceApi, Position } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
 import { NumberToPlacePipe } from '../common_components/number_to_place.pipe';
 import { LoggingService } from '../services/logging.service';
@@ -16,7 +16,7 @@ import { LoggingService } from '../services/logging.service';
 export class CastDragAndDrop implements OnInit {
 
   data: User[][][];
-  positionNames: string[];
+  positionVals: Position[];
   columnHeaders: string[][] = [];
   emptyCells: string[][][] = [];
   selectedCastUUID: APITypes.CastUUID;
@@ -112,7 +112,7 @@ export class CastDragAndDrop implements OnInit {
           });
         });
         return {
-          position_uuid: this.positionNames[posInd],
+          position_uuid: this.positionVals[posInd].uuid,
           groups: groupArr
         }
       })
@@ -174,11 +174,11 @@ export class CastDragAndDrop implements OnInit {
   }
 
   ensureAllPositionsMet(cast: Cast) {
-    this.positionNames = this.pieceAPI.pieces.get(this.cast.segment).positions;
-    for (let posName of this.positionNames) {
-      if (!cast.filled_positions.find(val => val.position_uuid == posName)) {
+    this.positionVals = this.pieceAPI.pieces.get(this.cast.segment).positions;
+    for (let pos of this.positionVals) {
+      if (!cast.filled_positions.find(val => val.position_uuid == pos.uuid)) {
         cast.filled_positions.push({
-          position_uuid: posName,
+          position_uuid: pos.uuid,
           groups: [
             {
               group_index: 0,
@@ -192,13 +192,9 @@ export class CastDragAndDrop implements OnInit {
 
   setupData() {
     if (!this.castSelected) {
-      // if (this.cast)
-      //   this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionNames.findIndex(val => val == a.position_uuid) - this.positionNames.findIndex(val => val == b.position_uuid) })
       return;
     }
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
-      // if (this.cast)
-      //   this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionNames.findIndex(val => val == a.position_uuid) - this.positionNames.findIndex(val => val == b.position_uuid) })
       this.data = [[]];
       this.castSelected = false;
       this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
@@ -206,9 +202,9 @@ export class CastDragAndDrop implements OnInit {
     }
     this.data = [[]];
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
-    // this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionNames.findIndex(val => val == a.position_uuid) - this.positionNames.findIndex(val => val == b.position_uuid) })
     this.ensureAllPositionsMet(this.cast);
-    this.positionNames = this.positionNames.sort((a, b) => this.cast.filled_positions.findIndex(val => val.position_uuid == a) - this.cast.filled_positions.findIndex(val => val.position_uuid == b));
+    this.positionVals = this.positionVals.sort((a, b) => { return a.name < b.name ? -1 : 1 });
+    this.cast.filled_positions = this.cast.filled_positions.sort((a, b) => { return this.positionVals.find(val => val.uuid == a.position_uuid).name < this.positionVals.find(val => val.uuid == b.position_uuid).name ? -1 : 1 });
     let filledPoses = this.cast.filled_positions;
     let tempData = filledPoses.map((val, posInd) => {
       let colObs = val.groups.sort((a, b) => a.group_index < b.group_index ? -1 : 1);
@@ -227,12 +223,11 @@ export class CastDragAndDrop implements OnInit {
       return subcasts;
     });
     this.data = tempData;
-    for (let posInd = 0; posInd < this.positionNames.length; posInd++) {
+    for (let posInd = 0; posInd < this.positionVals.length; posInd++) {
       this.setColumnHeaders(posInd);
       this.ensureEmptyArrayAtEnd(posInd);
       this.updateEmptyRows(posInd);
     }
-    console.log(this.positionNames);
   }
 
   drop(event: CdkDragDrop<User[]>) {

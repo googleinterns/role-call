@@ -39,7 +39,7 @@
               <div *ngIf="data.type == 'added';else addingPosition">
                 <div cdkDrag class="position-container">
                   <div class="app-card position-name-card">
-                    <h2 class="position-name">{{data.value}}</h2>
+                    <h2 class="position-name">{{data.value.name}}</h2>
                   </div>
                   <div class="add-button-height-container">
                     <button mat-icon-button aria-label="Delete Position Button" class="add-button"
@@ -55,7 +55,7 @@
                 <div cdkDrag class="adding-position-container">
                   <div class="adding-position-input-container">
                     <app-text-input (valueChange)="onInputChange($event, data)" [bgColor]="offWhite"
-                      [valueName]="'New Position'" [initValue]="data.value">
+                      [valueName]="'New Position'" [initValue]="data.value.name">
                     </app-text-input>
                   </div>
                   <div class="add-button-height-container">

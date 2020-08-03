@@ -146,7 +146,7 @@ export class CastEditorV2 implements OnInit {
       segment: this.selectedPiece.uuid,
       filled_positions: this.selectedPiece.positions.map(val => {
         return {
-          position_uuid: val,
+          position_uuid: val.uuid,
           groups: [
             {
               group_index: 0,

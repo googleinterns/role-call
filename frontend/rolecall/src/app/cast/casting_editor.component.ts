@@ -157,7 +157,7 @@ export class CastingEditor implements OnInit {
       let pieceObj = this.pieceAPI.pieces.get(pieceUUID);
       for (let pos of pieceObj.positions) {
         this.currentSelectedCast.filled_positions.push({
-          position_uuid: pos,
+          position_uuid: pos.uuid,
           groups: [
             {
               group_index: 0,
@@ -254,7 +254,7 @@ export class CastingEditor implements OnInit {
     }
     if (this.currentSelectedCast && this.currentSelectedCast.uuid != cast.uuid) {
       let piece = this.pieceAPI.pieces.get(cast.segment);
-      piece ? cast.currentPositionUUID = piece.positions[0] : cast.currentPositionUUID = undefined;
+      piece ? cast.currentPositionUUID = piece.positions[0].uuid : cast.currentPositionUUID = undefined;
     }
     this.currentSelectedCast = cast;
     this.lastPieceUUID = this.currentSelectedCast.segment;

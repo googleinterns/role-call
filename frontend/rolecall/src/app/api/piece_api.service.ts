@@ -26,11 +26,20 @@ type RawAllPiecesResponse = {
   warnings: string[]
 }
 
+export type Position = {
+  id?: number,
+  uuid: string,
+  name: string,
+  notes: string,
+  order: number,
+  size: number
+};
+
 export type Piece = {
   uuid: string;
   name: string;
-  positions: string[];
-  deletePositions: string[];
+  positions: Position[];
+  deletePositions: Position[];
 }
 
 export type AllPiecesResponse = {
@@ -64,7 +73,6 @@ export class PieceApi {
       return this.mockBackend.requestAllPieces();
     }
     return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
-      this.positions = [];
       this.rawPieces = val.data;
       return {
         data: {
@@ -72,10 +80,7 @@ export class PieceApi {
             return {
               uuid: String(section.id),
               name: section.name,
-              positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map((position) => {
-                this.positions.push(position);
-                return position.name;
-              }),
+              positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map(pos => { return { ...pos, uuid: String(pos.id) } }),
               deletePositions: []
             }
           })
@@ -97,35 +102,24 @@ export class PieceApi {
     }
     if (this.pieces.has(piece.uuid)) {
       // Do patch
-      console.log(piece);
       return this.http.patch(environment.backendURL + 'api/section', {
         name: piece.name,
-        id: piece.uuid,
+        id: Number(piece.uuid),
         positions: piece.positions.map((val, ind) => {
-          let prevId = this.positions.find(val2 => {
-            return val2.name == val;
-          });
           return {
-            id: prevId ? prevId.id : undefined,
-            name: val,
-            order: ind,
+            ...val,
             delete: false
           }
         }).concat(piece.deletePositions.map((val, ind) => {
-          let prevId = this.positions.find(val2 => {
-            return val2.name == val;
-          });
           return {
-            id: prevId ? prevId.id : undefined,
-            name: val,
-            order: ind,
+            ...val,
             delete: true
           }
         }))
       }, { observe: "response" }).toPromise().then(val => {
         return val;
       }).catch(val => {
-        console.log(val);
+        this.loggingService.logError(val);
         return {
           status: 400
         } as HttpResponse<any>;
@@ -134,17 +128,11 @@ export class PieceApi {
       // Do post
       return this.http.post(environment.backendURL + 'api/section', {
         name: piece.name,
-        positions: piece.positions.map((val, ind) => {
-          return {
-            name: val,
-            order: ind
-          }
-        })
+        positions: piece.positions
       }, { observe: "response" }).toPromise().then(val => {
-        console.log(val);
         return val;
       }).catch(val => {
-        console.log(val);
+        this.loggingService.logError(val);
         return {
           status: 400
         } as HttpResponse<any>;
@@ -160,7 +148,7 @@ export class PieceApi {
     return this.http.delete(environment.backendURL + 'api/section?sectionid=' + piece.uuid, { observe: "response" }).toPromise().then(val => {
       return val;
     }).catch(val => {
-      console.log(val);
+      this.loggingService.logError(val);
       return {
         status: 400
       } as HttpResponse<any>;
@@ -170,7 +158,6 @@ export class PieceApi {
   /** All the loaded pieces mapped by UUID */
   pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
 
-  positions: RawPosition[] = [];
   rawPieces: RawPiece[] = [];
 
   /** Emitter that is called whenever pieces are loaded */

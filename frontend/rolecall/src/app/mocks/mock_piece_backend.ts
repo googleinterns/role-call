@@ -8,39 +8,7 @@ import { AllPiecesResponse, OnePieceResponse, Piece } from '../api/piece_api.ser
 export class MockPieceBackend {
 
   /** Mock piece database */
-  mockPieceDB: Piece[] = [{ "uuid": "212", "name": "Ode", "positions": ["Dancer"], "deletePositions": [] }, { "uuid": "214", "name": "Divining", "positions": ["Seeking, Resting, and Moving On", "Resting and Moving On", "Moving On"], "deletePositions": [] }, { "uuid": "220", "name": "Greenwood", "positions": ["Witness", "Sara Page", "Dick Rowland", "Father", "Mother", "Son", "Daughter", "White Psyche"], "deletePositions": [] }, { "uuid": "247", "name": "Fandango", "positions": ["Dancer - Fandango"], "deletePositions": [] }, { "uuid": "358", "name": "Ella", "positions": ["Dancer - Ella"], "deletePositions": [] }]
-  // [
-  //   {
-  //     uuid: "PIECE1UUID",
-  //     name: "Piece 1",
-  //     positions: [
-  //       "piece1pos1",
-  //       "piece1pos2"
-  //     ],
-  //     deletePositions: []
-  //   },
-  //   {
-  //     uuid: "PIECE2UUID",
-  //     name: "Piece 2",
-  //     positions: [
-  //       "piece2pos1",
-  //       "piece2pos2",
-  //       "piece2pos3"
-  //     ],
-  //     deletePositions: []
-  //   },
-  //   {
-  //     uuid: "PIECE3UUID",
-  //     name: "Piece 3",
-  //     positions: [
-  //       "piece3pos1",
-  //       "piece3pos2",
-  //       "piece3pos3",
-  //       "piece3pos4"
-  //     ],
-  //     deletePositions: []
-  //   }
-  // ];
+  mockPieceDB: Piece[] = [{ "uuid": "212", "name": "Ode", "positions": [{ "id": 213, "name": "Dancer", "notes": "", "order": 0, "size": null, "uuid": "213" }], "deletePositions": [] }, { "uuid": "214", "name": "Divining", "positions": [{ "id": 215, "name": "Seeking, Resting, and Moving On", "notes": "", "order": 0, "size": null, "uuid": "215" }, { "id": 216, "name": "Resting and Moving On", "notes": "", "order": 1, "size": null, "uuid": "216" }, { "id": 217, "name": "Moving On", "notes": "", "order": 2, "size": null, "uuid": "217" }], "deletePositions": [] }, { "uuid": "220", "name": "Greenwood", "positions": [{ "id": 227, "name": "Daughter", "notes": "", "order": 5, "size": null, "uuid": "227" }, { "id": 223, "name": "Dick Rowland", "notes": "", "order": 2, "size": null, "uuid": "223" }, { "id": 224, "name": "Father", "notes": "", "order": 7, "size": null, "uuid": "224" }, { "id": 225, "name": "Mother", "notes": "", "order": 3, "size": null, "uuid": "225" }, { "id": 222, "name": "Sara Page", "notes": "", "order": 1, "size": null, "uuid": "222" }, { "id": 226, "name": "Son", "notes": "", "order": 4, "size": null, "uuid": "226" }, { "id": 228, "name": "White Psyche", "notes": "", "order": 6, "size": null, "uuid": "228" }, { "id": 221, "name": "Witness", "notes": "", "order": 0, "size": null, "uuid": "221" }], "deletePositions": [] }, { "uuid": "247", "name": "Fandango", "positions": [{ "id": 248, "name": "Dancer - Fandango", "notes": "", "order": 0, "size": null, "uuid": "248" }], "deletePositions": [] }, { "uuid": "358", "name": "Ella", "positions": [{ "id": 359, "name": "Dancer - Ella", "notes": "", "order": 0, "size": null, "uuid": "359" }], "deletePositions": [] }];
   shouldRejectSetRequest = false;
 
   /** Mocks backend response */
