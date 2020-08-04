@@ -3,6 +3,9 @@ runtime: java11
 # Deploy to backend service
 service: backend-dev
 
+env_variables:
+  SPRING_PROFILES_ACTIVE: "clouddev"
+
 # Only use 1 instance for development
 manual_scaling:
   instances: 1
