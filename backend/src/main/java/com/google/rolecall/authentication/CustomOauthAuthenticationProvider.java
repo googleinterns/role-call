@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 @Profile("prod")
@@ -51,7 +52,7 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
 
   @Override
   public boolean supports(Class<?> authentication) {
-    return authentication.equals(RememberMeAuthenticationToken.class);
+    return authentication.equals(PreAuthenticatedAuthenticationToken.class);
   }
 
   public CustomOauthAuthenticationProvider(UserDetailsService detailService,
