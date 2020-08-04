@@ -33,6 +33,8 @@ export class PieceEditor implements OnInit {
 
   offWhite: string = Colors.offWhite;
 
+  lastSelectedPieceName: string;
+
   constructor(private route: ActivatedRoute, private pieceAPI: PieceApi,
     private location: Location) { }
 
@@ -49,6 +51,23 @@ export class PieceEditor implements OnInit {
     if (pieces.length == 0) {
       this.renderingPieces = [];
       return;
+    }
+    if (this.renderingPieces) {
+      let prevPieceUUIDS = new Set(this.renderingPieces.map(piece => piece.uuid));
+      let newPieces: Piece[] = [];
+      for (let piece of pieces) {
+        if (!prevPieceUUIDS.has(piece.uuid)) {
+          newPieces.push(piece);
+        }
+      }
+      if (newPieces.length > 0) {
+        for (let newPiece of newPieces) {
+          if (newPiece.name == this.lastSelectedPieceName) {
+            this.lastSelectedPieceName == newPiece.uuid;
+            this.urlPointingUUID = newPiece.uuid;
+          }
+        }
+      }
     }
     let workPieces = pieces.map(val => {
       val['addingPositions'] = [];
@@ -125,6 +144,7 @@ export class PieceEditor implements OnInit {
       alert("You must enter a piece name!");
       return;
     }
+    this.lastSelectedPieceName = this.currentSelectedPiece.name;
     this.updateDragAndDropData(true);
     this.pieceAPI.setPiece(this.currentSelectedPiece).then(async val => {
       if (val.successful) {

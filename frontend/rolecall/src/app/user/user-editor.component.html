@@ -6,7 +6,8 @@
       </h1>
       <div class="user-select-container">
         <div *ngFor="let user of renderingUsers" class="app-card user-select"
-          [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''" (click)="setCurrentUser(user)">
+          [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''"
+          (click)="setCurrentUser(user, false, true)">
           <h2 class="user-name">
             {{ (user.first_name ? user.first_name : " ") + " " + (user.last_name ? user.last_name : " ") }}
           </h2>

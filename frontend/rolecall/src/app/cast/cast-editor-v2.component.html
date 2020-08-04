@@ -37,7 +37,7 @@
     </div>
   </div>
   <div class="drag-and-drop-container">
-    <app-cast-drag-and-drop #castDragAndDrop>
+    <app-cast-drag-and-drop #castDragAndDrop (castChangeEmitter)="onEditCast($event)">
     </app-cast-drag-and-drop>
   </div>
 </div>

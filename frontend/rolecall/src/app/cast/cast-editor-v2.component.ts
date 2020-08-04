@@ -20,7 +20,8 @@ export class CastEditorV2 implements OnInit {
   allCasts: Cast[] = [];
   filteredCasts: Cast[] = [];
   allPieces: Piece[] = [];
-  lastSelectedCastIndex;
+  lastSelectedCastIndex: number;
+  lastSelectedCast: Cast;
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
   constructor(private castAPI: CastApi, private pieceAPI: PieceApi, private route: ActivatedRoute, private location: Location) { }
@@ -105,10 +106,20 @@ export class CastEditorV2 implements OnInit {
       return;
     }
     if (!this.dragAndDrop.castSelected) {
-      if (this.filteredCasts.length > 0) {
-        this.selectedCast = this.filteredCasts[this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
+      if (this.lastSelectedCast) {
+        let foundCast = casts.find(c => c.name == this.lastSelectedCast.name);
+        if (foundCast) {
+          this.lastSelectedCast = foundCast;
+          this.selectedCast = foundCast;
+        } else {
+          this.selectedCast = casts[0];
+        }
       } else {
-        this.selectedCast = casts[0];
+        if (this.filteredCasts.length > 0) {
+          this.selectedCast = this.filteredCasts[this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
+        } else {
+          this.selectedCast = casts[0];
+        }
       }
       this.setCurrentCast(this.selectedCast);
     } else {
@@ -124,6 +135,11 @@ export class CastEditorV2 implements OnInit {
     }
   }
 
+  onEditCast(cast: Cast) {
+    console.log(cast.name);
+    this.lastSelectedCast = cast;
+  }
+
   setCurrentCast(cast: Cast, index?: number) {
     if (isNullOrUndefined(index) && cast) {
       index = this.filteredCasts.findIndex((val) => val.uuid == cast.uuid);
@@ -133,13 +149,14 @@ export class CastEditorV2 implements OnInit {
     } else {
       this.lastSelectedCastIndex = index;
     }
+    this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
     this.selectedCast = cast;
-    this.dragAndDrop.selectCast(cast ? cast.uuid : undefined);
+    this.dragAndDrop.selectCast(cast ? cast.uuid : this.lastSelectedCast.uuid);
     this.urlUUID = cast ? cast.uuid : "";
     this.setCastURL();
   }
 
-  addCast() {
+  async addCast() {
     let newCast: Cast = {
       uuid: "cast:" + Date.now(),
       name: "New Cast",
@@ -157,6 +174,7 @@ export class CastEditorV2 implements OnInit {
       })
     };
     this.castAPI.setCast(newCast, true);
+    await this.castAPI.getAllCasts();
     this.setCurrentCast(newCast);
   }
 }

@@ -1,5 +1,5 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
@@ -22,6 +22,7 @@ export class CastDragAndDrop implements OnInit {
   selectedCastUUID: APITypes.CastUUID;
   cast: Cast;
   allUsers: User[] = [];
+  @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
 
   usersLoaded = false;
   castsLoaded = false;
@@ -49,6 +50,7 @@ export class CastDragAndDrop implements OnInit {
 
   onTitleInput(inputEvent: InputEvent) {
     this.cast.name = inputEvent.srcElement['value'];
+    this.castChangeEmitter.emit(this.cast);
   }
 
   onPieceLoad(pieces: Piece[]) {
@@ -277,6 +279,7 @@ export class CastDragAndDrop implements OnInit {
       this.ensureEmptyArrayAtEnd(currentPosRowInd[0]);
       this.updateEmptyRows(currentPosRowInd[0]);
     }
+    this.castChangeEmitter.emit(this.cast);
   }
 
   async saveCast() {

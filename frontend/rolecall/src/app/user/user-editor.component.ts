@@ -35,6 +35,8 @@ export class UserEditor implements OnInit {
   privilegeClassesLoaded: boolean = false;
   dataLoaded: boolean = false;
 
+  lastSelectedUserEmail: string;
+
   constructor(private route: ActivatedRoute, private userAPI: UserApi,
     private privilegeClassAPI: PrivilegeClassApi,
     private location: Location) { }
@@ -57,6 +59,23 @@ export class UserEditor implements OnInit {
       this.renderingUsers = [];
       return;
     }
+    if (this.renderingUsers) {
+      let prevUserUUIDS = new Set(this.renderingUsers.map(user => user.uuid));
+      let newUsers = [];
+      for (let user of users) {
+        if (!prevUserUUIDS.has(user.uuid)) {
+          newUsers.push(user);
+        }
+      }
+      if (newUsers.length > 0) {
+        for (let newUser of newUsers) {
+          if (newUser.contact_info.email == this.lastSelectedUserEmail) {
+            this.lastSelectedUserEmail == newUser.contact_info.email;
+            this.urlPointingUUID = newUser.uuid;
+          }
+        }
+      }
+    }
     this.renderingUsers = users;
     this.usersLoaded = true;
     this.dataLoaded = this.usersLoaded && this.privilegeClassesLoaded;
@@ -70,9 +89,14 @@ export class UserEditor implements OnInit {
     } else {
       let foundUser = this.renderingUsers.find((val) => val.uuid == this.urlPointingUUID);
       if (isNullOrUndefined(foundUser)) {
-        this.setCurrentUser(this.renderingUsers[0]);
+        // if (!isNullOrUndefined(this.lastSelectedUserUUID)) {
+        //   let foundUser2 = this.renderingUsers.find((val) => val.uuid == this.lastSelectedUserUUID);
+        //   this.setCurrentUser(foundUser2);
+        // } else {
+        this.setCurrentUser(this.renderingUsers[0], false, true);
+        // }
       } else {
-        this.setCurrentUser(foundUser);
+        this.setCurrentUser(foundUser, false, true);
       }
     }
   }
@@ -84,7 +108,10 @@ export class UserEditor implements OnInit {
       this.onDataLoaded()
   }
 
-  setCurrentUser(user: User, fromInputChange?: boolean) {
+  setCurrentUser(user: User, fromInputChange?: boolean, shouldSetLastUser?: boolean) {
+    if (shouldSetLastUser) {
+      this.lastSelectedUserEmail == user.contact_info.email;
+    }
     if (user && this.currentSelectedUser && user.uuid !== this.currentSelectedUser.uuid) {
       this.creatingUser = false;
     }
@@ -162,6 +189,7 @@ export class UserEditor implements OnInit {
   }
 
   onSaveUser() {
+    this.lastSelectedUserEmail = this.workingUser.contact_info.email;
     this.userAPI.setUser(this.workingUser).then(async val => {
       if (val.successful) {
         this.creatingUser = false;
