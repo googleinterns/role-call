@@ -30,10 +30,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .addFilter(getFilter())
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .sessionFixation().migrateSession()
-        .and().authorizeRequests()
-        .anyRequest().authenticated()
-        .and()
-        .logout().deleteCookies("SESSIONID").invalidateHttpSession(true).logoutUrl("/logout");
+        .and().authorizeRequests().antMatchers("/api/**").authenticated()
+        .and().logout()
+        .deleteCookies("SESSIONID").invalidateHttpSession(true).logoutUrl("/logout");
   }
 
   private PreAuthTokenHeaderFilter getFilter() throws Exception {
