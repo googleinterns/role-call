@@ -35,7 +35,6 @@ public class GoogleAuthServices {
     try {
       idToken = verifier.verify(token);
     } catch(GeneralSecurityException e) {
-      logger.log(Level.WARNING, "Unable to verify with google");
       throw new Exception("Unable to verify with Google.");
     } catch(IOException e) {
       throw new IOException(
@@ -44,6 +43,7 @@ public class GoogleAuthServices {
 
     if(idToken != null) {
       Payload payload = idToken.getPayload();
+      logger.log(Level.INFO, String.format("Id associates with %s",payload.getEmail()));
       if(email.equals(payload.getEmail())) {
         return true;
       }
@@ -83,10 +83,7 @@ public class GoogleAuthServices {
   public GoogleAuthServices(Environment env) {
     this.env = env;
     verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport() , new JacksonFactory())
-    // Specify the CLIENT_ID of the app that accesses the backend:
     .setAudience(Collections.singletonList(getClientId()))
-    // Or, if multiple clients access the backend:
-    //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
     .build();
   }
 }
