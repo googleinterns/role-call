@@ -4,6 +4,7 @@ import { HomepageModule } from '../homepage/homepage.module';
 import { HomepageBase } from '../homepage/homepage_base.component';
 import { SettingsModule } from '../settings/settings.module';
 import { SettingsBase } from '../settings/settings_base.component';
+import { UserModule } from '../user/user.module';
 
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes),
     HomepageModule,
-    SettingsModule
+    SettingsModule,
+    UserModule
   ],
   exports: [RouterModule]
 })

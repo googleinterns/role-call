@@ -1,6 +1,5 @@
 package com.google.rolecall.config;
 
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +51,7 @@ public class RepositoryConfig {
     JpaTransactionManager txnManager = new JpaTransactionManager();
 
     txnManager.setEntityManagerFactory(entityManagerFactory);
+    txnManager.setRollbackOnCommitFailure(true);
 
     return txnManager;
   }

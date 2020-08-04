@@ -46,13 +46,21 @@ export class MockGAPI {
       expires_at: this.moment + this.expiresTime,
       idpId: "google"
     },
-    Qt: {
+    Ot: {
       JU: "JU",
-      Bd: "TestFirst TestLast",
+      Cd: "TestFirst TestLast",
       nW: "TestFirst",
       nU: "TestLast",
-      MK: "https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg",
-      Au: this.testEmail
+      PK: "https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg",
+      yu: this.testEmail
+    },
+    getBasicProfile: () => {
+      return {
+        getEmail: () => { return this.testUser.Ot.yu },
+        getImageUrl: () => { return this.testUser.Ot.PK },
+        getGivenName: () => { return this.testUser.Ot.nW },
+        getFamilyName: () => { return this.testUser.Ot.nU }
+      }
     }
   };
 

@@ -1,0 +1,54 @@
+<div *ngIf="dataLoaded && castSelected" class="drop-group-container" cdkDropListGroup>
+  <div class="position-pool">
+    <input type="text" class="name-input" (input)="onTitleInput($event)" [value]="this.cast.name" />
+    <div *ngFor="let position of data; let i1 = index" class="position-container">
+      <div *ngIf="i1 < positionNames.length">
+        <h3 class="position-title">{{positionNames[i1]}}</h3>
+        <div class="table-container">
+          <div class="horizontal-list" id="col-headers">
+            <div class="cell cellBothHeader">
+            </div>
+            <div *ngFor="let header of columnHeaders[i1]" class="cell cellColHeader">
+              {{ header }}
+            </div>
+          </div>
+          <div cdkDropList cdkDropListOrientation="horizontal" class="horizontal-list" [cdkDropListData]="row"
+            *ngFor="let row of position; let i2 = index" (cdkDropListDropped)="drop($event)" [id]="i1 + ':' + i2">
+            <div class="cell cellRowHeader">
+              {{ positionNames[i1] + " " + (i2 + 1) }}
+            </div>
+            <div class="cell" *ngFor="let person of row; let i3 = index" cdkDrag [cdkDragData]="person">
+              <img class="user-image"
+                src="https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg">
+              {{person.first_name + " " + person.last_name}}
+            </div>
+            <!-- <div class="empty-cell" *ngFor="let empty of emptyCells[i1][i2]">
+        </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="user-container">
+    <div cdkDropList cdkDropListOrientation="horizontal" class="horizontal-list user-pool" [cdkDropListData]="allUsers"
+      (cdkDropListDropped)="drop($event)" id="user-pool">
+      <div *ngFor="let user of allUsers" class="cell user-cell" cdkDrag [cdkDragData]="user">
+        <img class="user-image"
+          src="https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg">
+        {{user.first_name + " " + user.last_name}}
+      </div>
+    </div>
+    <div class="buttons-container">
+      <button mat-icon-button class="save-delete-button" (click)="deleteCast()">
+        <mat-icon class="save-delete-button-icon">
+          delete
+        </mat-icon>
+      </button>
+      <button mat-icon-button class="save-delete-button" (click)="saveCast()">
+        <mat-icon class="save-delete-button-icon">
+          save
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

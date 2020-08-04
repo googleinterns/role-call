@@ -2,6 +2,7 @@ package com.google.rolecall.services;
 
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
+import com.google.rolecall.repos.CastMemberRepository;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -12,10 +13,11 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 /* Utility classes for accessing Users while mantaining database consistencies. */
-@Service
+@Service("userServices")
 public class UserServices {
   
   private final UserRepository userRepo;
+  private final CastMemberRepository castMemberRepo;
 
   public List<User> getAllUsers() {
     List<User> allUsers = new ArrayList<>();
@@ -40,7 +42,7 @@ public class UserServices {
    * @param newUser {@link UserInfo} containing information describing the new user.
    * @return The new {@link User} created and stored.
    * @throws InvalidParameterException When firstName, lastName, or email are null in
-   * {@link UserInfo} newUser and when the email is malformatted or already exists.
+   *    {@link UserInfo} newUser and when the email is malformatted or already exists.
    */
   public User createUser(UserInfo newUser) throws InvalidParameterException {
     if(newUser.email() == null) {
@@ -48,7 +50,8 @@ public class UserServices {
     } else if(!validateEmail(newUser.email())) {
       throw new InvalidParameterException("User requires valid email address");
     } else if(userRepo.findByEmailIgnoreCase(newUser.email()).isPresent()) {
-      throw new InvalidParameterException("User requires unique email address");
+      throw new InvalidParameterException(String.format("A user with email %s already exists",
+          newUser.email()));
     }
     
     User user = User.newBuilder()
@@ -79,7 +82,7 @@ public class UserServices {
    * @param newUser {@link UserInfo} containing information describing the user edits.
    * @return The updated {@link User}.
    * @throws EntityNotFoundException The id from {@link UserInfo} newUser does not exist
-   * in the database.
+   *     in the database.
    */
     public User editUser(UserInfo newUser) throws EntityNotFoundException {
     User.Builder builder = this.getUser(newUser.id()).toBuilder()
@@ -98,27 +101,30 @@ public class UserServices {
         .setManagePieces(newUser.managePieces())
         .setManageRoles(newUser.manageRoles())
         .setManageRules(newUser.manageRules());
-    
-    User user;
-    
+
     try {
-      user = builder.build();
+      return userRepo.save(builder.build());
     } catch(InvalidParameterException e) { 
       // Unreachable unless an invalid object exists in the database
-      throw new Error("Tried to edit User with invalid properties");
+      throw new Error(String.format(
+          "Tried to edit User with id %d with invalid properties", newUser.id()));
     }
-    
-    return userRepo.save(user);
   }
 
   /** 
    * Deletes an existing {@link User} object by id.
    * 
    * @param id Unique id for the {@link User} object to be deleted
-   * @throws EntityNotFoundException The id from does not exist in the database.
+   * @throws EntityNotFoundException The id does not match and existing {@link User}
+   *    in the database.
    */
-  public void deleteUser(int id) throws EntityNotFoundException {
-    getUser(id);
+  public void deleteUser(int id) throws EntityNotFoundException, InvalidParameterException {
+    User user = getUser(id);
+
+    if(castMemberRepo.findFirstByUser(user).isPresent()) {
+      throw new InvalidParameterException("User involved in cast or performances cannot be deleted. Change is active.");
+    }
+
     userRepo.deleteById(id);
   }
 
@@ -130,7 +136,8 @@ public class UserServices {
     return Pattern.matches(pattern, email);
   }
 
-  public UserServices(UserRepository userRepo) {
+  public UserServices(UserRepository userRepo, CastMemberRepository castMemberRepo) {
     this.userRepo = userRepo;
+    this.castMemberRepo = castMemberRepo;
   }
 }

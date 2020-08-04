@@ -1,0 +1,43 @@
+<div class="root-container">
+  <div class="cast-selector-container">
+    <div class="app-card card-margins left-card">
+      <div ngbDropdown #pieceDropdown="ngbDropdown">
+        <div class="app-card piece-select" ngbDropdownToggle>
+          <h1 class="left-card-title">
+            {{selectedPiece ? selectedPiece.name : " "}}
+          </h1>
+          <mat-icon class="dropdownArrow">
+            arrow_drop_down
+          </mat-icon>
+          <div ngbDropdownMenu aria-labelledby="Piece Dropdown" class="piece-options">
+            <button ngbDropdownItem *ngFor="let piece of allPieces" (click)="onSelectPiece(piece)">
+              {{piece.name}}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="cast-select-container">
+        <div *ngFor="let cast of filteredCasts" class="app-card cast-select"
+          [ngClass]="cast.uuid == castDragAndDrop.selectedCastUUID ? 'selected-cast' : ''"
+          (click)="setCurrentCast(cast)">
+          <h2 class="cast-name">
+            {{ cast.name }}
+          </h2>
+        </div>
+      </div>
+      <div class="add-button-width-container">
+        <div class="add-button-height-container">
+          <button mat-icon-button aria-label="Add Cast Button" class="add-button" (click)="addCast()">
+            <mat-icon [inline]="true" class="add-button-icon">
+              add
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="drag-and-drop-container">
+    <app-cast-drag-and-drop #castDragAndDrop>
+    </app-cast-drag-and-drop>
+  </div>
+</div>

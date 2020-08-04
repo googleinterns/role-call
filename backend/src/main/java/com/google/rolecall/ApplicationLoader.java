@@ -3,7 +3,6 @@ package com.google.rolecall;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +33,7 @@ public class ApplicationLoader implements ApplicationRunner {
     adminLastName = environment.getProperty("admin.last.name");
     adminEmail = environment.getProperty("admin.email");
     
-    Optional<User> possibleAdmin = userRepo.findByFirstNameAndLastNameAndEmailIgnoreCase(
-        adminFirstName, adminLastName, adminEmail);
+    Optional<User> possibleAdmin = userRepo.findByEmailIgnoreCase(adminEmail);
         
     possibleAdmin.ifPresentOrElse(this::adminExists, this::createAdmin);
   }

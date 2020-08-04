@@ -31,6 +31,11 @@ export class LoginApi {
   authInstance: gapi.auth2.GoogleAuth;
   /** If the google OAuth2 api is loaded */
   isAuthLoaded: boolean = false;
+  /** User profile attributes */
+  imageURL: string;
+  email: string;
+  givenName: string;
+  familyName: string;
 
   constructor(private loggingService: LoggingService) { }
 
@@ -96,6 +101,13 @@ export class LoginApi {
   private getLoginResponse(authed: boolean, isLoggedIn: boolean, user: gapi.auth2.GoogleUser): LoginResponse {
     this.isLoggedIn = isLoggedIn;
     this.user = user;
+    if (isLoggedIn) {
+      let basicProf = this.user.getBasicProfile();
+      this.email = basicProf.getEmail();
+      this.imageURL = basicProf.getImageUrl();
+      this.givenName = basicProf.getGivenName();
+      this.familyName = basicProf.getFamilyName();
+    }
     return {
       authenticated: authed,
       user: this.user

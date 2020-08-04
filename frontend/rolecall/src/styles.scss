@@ -1,10 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import "src/constants";
 
 // div styling to make a card
 .app-card {
   background: white;
   box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
-  border-radius: 5px;
+  border-radius: $borderRadius;
 }
 .app-card:hover {
   box-shadow: 0 8px 16px 0 rgba($color: #000000, $alpha: 0.2);
@@ -16,6 +17,17 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.cdk-focused,
+.cdk-mouse-focused {
+  border: none !important;
+  outline: none !important;
+}
+
+*:focus {
+  border: none;
+  outline: none;
 }
 
 /* Importing Bootstrap SCSS file. */

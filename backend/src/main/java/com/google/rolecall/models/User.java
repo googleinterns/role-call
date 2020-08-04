@@ -1,12 +1,10 @@
 package com.google.rolecall.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.common.collect.ImmutableList;
 import com.google.rolecall.Constants;
+import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -172,6 +170,28 @@ public class User {
     }
     String[] out = new String[roles.size()];
     return roles.toArray(out);
+  }
+
+  public UserInfo toUserInfo() {
+    return UserInfo.newBuilder()
+        .setId(id)
+        .setFirstName(firstName)
+        .setLastName(lastName)
+        .setEmail(email)
+        .setDateJoined(dateJoined)
+        .setEmergencyContactName(getEmergencyContactName())
+        .setEmergencyContactNumber(getEmergencyContactNumber())
+        .setComments(getComments())
+        .setIsActive(isActive)
+        .setCanLogin(canLogin)
+        .setAdmin(admin)
+        .setNotifications(notifications)
+        .setManagePerformances(managePerformances)
+        .setManageCasts(manageCasts)
+        .setManagePieces(managePieces)
+        .setManageRoles(manageRoles)
+        .setManageRules(manageRules)
+        .build();
   }
 
   public Builder toBuilder() {

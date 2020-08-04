@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.google.rolecall.jsonobjects.UserInfo;
+import com.google.rolecall.models.CastMember;
 import com.google.rolecall.models.User;
+import com.google.rolecall.repos.CastMemberRepository;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -33,6 +35,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class UserServiceTests {
   
   private UserRepository userRepo;
+  private CastMemberRepository castMemberRepo;
   private UserServices userService;
   private User user;
   private int invalidId = 30;
@@ -58,7 +61,8 @@ public class UserServiceTests {
   @BeforeEach
   public void init() {
     userRepo = mock(UserRepository.class);
-    userService = new UserServices(userRepo);
+    castMemberRepo = mock(CastMemberRepository.class);
+    userService = new UserServices(userRepo, castMemberRepo);
     User.Builder builder = User.newBuilder()
         .setFirstName(firstName)
         .setLastName(lastName)
@@ -281,7 +285,7 @@ public class UserServiceTests {
 
     // Assert
     verify(userRepo, never()).save(any(User.class));
-    assertThat(exception).hasMessageThat().contains("unique email");
+    assertThat(exception).hasMessageThat().contains(email);
   }
 
   @Test
@@ -412,6 +416,7 @@ public class UserServiceTests {
   public void deleteUser_success() throws Exception {
     // Mock
     lenient().doNothing().when(userRepo).deleteById(id);
+    lenient().doReturn(Optional.of(new CastMember())).when(castMemberRepo).findFirstByUser(any(User.class));
 
     // Execute
     userService.deleteUser(id);
