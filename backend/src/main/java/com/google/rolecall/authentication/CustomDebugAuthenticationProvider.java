@@ -21,7 +21,7 @@ public class CustomDebugAuthenticationProvider implements AuthenticationProvider
 
   private final UserDetailsService detailService;
 
-  private Logger logger = Logger.getLogger(CustomOauthAuthenticationProvider.class.getName());
+  private Logger logger = Logger.getLogger(CustomDebugAuthenticationProvider.class.getName());
 
   @Override
   public Authentication authenticate(Authentication authentication)

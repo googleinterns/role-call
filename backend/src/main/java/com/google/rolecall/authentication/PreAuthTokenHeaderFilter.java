@@ -13,6 +13,7 @@ public class PreAuthTokenHeaderFilter extends AbstractPreAuthenticatedProcessing
 
   @Override
   protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
-    return request.getHeader(Constants.Headers.OAUTH_KEY);
+    String token = request.getHeader(Constants.Headers.OAUTH_KEY);
+    return token == null ? "" : token;
   }
 }
