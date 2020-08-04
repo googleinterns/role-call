@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-@Profile("dev")
+@Profile({"dev", "cloud-dev"})
 @Component
 public class CustomDebugAuthenticationProvider implements AuthenticationProvider {
 

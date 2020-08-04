@@ -13,7 +13,7 @@ steps:
 # Clean and build the backend, then deploy to GAE backend service
 - id: build_and_deploy_backend
   name: "gcr.io/cloud-builders/mvn"
-  args: ["-P", "dev", "-f", "backend/pom.xml", "-D", "skipTests", "clean", "package", "appengine:deploy"]
+  args: ["-P", "cloud-dev", "-f", "backend/pom.xml", "-D", "skipTests", "clean", "package", "appengine:deploy"]
   waitFor:
   - configure_yamls
 
