@@ -112,7 +112,11 @@ export class CastEditorV2 implements OnInit {
           this.lastSelectedCast = foundCast;
           this.selectedCast = foundCast;
         } else {
-          this.selectedCast = casts[0];
+          if (this.filteredCasts.length > 0) {
+            this.selectedCast = this.filteredCasts[this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
+          } else {
+            this.selectedCast = casts[0];
+          }
         }
       } else {
         if (this.filteredCasts.length > 0) {
