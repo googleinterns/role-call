@@ -12,6 +12,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -24,11 +27,15 @@ public class GoogleAuthServices {
   
   private GoogleIdTokenVerifier verifier;
 
+  private Logger logger = Logger.getLogger(GoogleAuthServices.class.getName());
+
   public boolean isValidAccessToken(String email, String token) throws Exception {
     GoogleIdToken idToken = null;
+    logger.log(Level.INFO, String.format("Attempting to verify %s", email));
     try {
       idToken = verifier.verify(token);
     } catch(GeneralSecurityException e) {
+      logger.log(Level.WARNING, "Unable to verify with google");
       throw new Exception("Unable to verify with Google.");
     } catch(IOException e) {
       throw new IOException(
