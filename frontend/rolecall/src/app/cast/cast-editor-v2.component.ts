@@ -136,7 +136,6 @@ export class CastEditorV2 implements OnInit {
   }
 
   onEditCast(cast: Cast) {
-    console.log(cast.name);
     this.lastSelectedCast = cast;
   }
 
