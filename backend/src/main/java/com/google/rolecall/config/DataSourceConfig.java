@@ -54,7 +54,7 @@ public class DataSourceConfig {
    * spring.datasource.username, and spring.cloud.gcp.sql.instance-connection-name found through 
    * application-prod.properties.
    */
-  @Profile({"prod", "cloud-dev"})
+  @Profile({"prod", "clouddev"})
   @Bean
   public DataSource getDataSourceCloudSql() {
     return new HikariDataSource(getCloudConfig());
