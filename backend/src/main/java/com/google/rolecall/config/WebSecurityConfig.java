@@ -1,11 +1,7 @@
 package com.google.rolecall.config;
 
-import com.google.rolecall.authentication.CustomDebugAuthenticationProvider;
-import com.google.rolecall.authentication.CustomOauthAuthenticationProvider;
 import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
-
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -32,9 +28,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.httpBasic().and()
         .addFilter(getFilter())
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .sessionFixation().migrateSession()
         .and().authorizeRequests()
-        .anyRequest().authenticated();
+        .anyRequest().authenticated()
+        .and()
+        .logout().deleteCookies("SESSIONID").invalidateHttpSession(true).logoutUrl("/logout");
   }
 
   private PreAuthTokenHeaderFilter getFilter() throws Exception {
