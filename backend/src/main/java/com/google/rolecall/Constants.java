@@ -9,10 +9,15 @@ public class Constants {
   }
 
   public static class RequestParameters {
-    public static final String  USER_ID = "userid";
-    public static final String  ROLE_ID = "roleid";
-    public static final String  CAST_ID = "castid";
-    public static final String  SECTION_ID = "sectionid";
+    public static final String USER_ID = "userid";
+    public static final String ROLE_ID = "roleid";
+    public static final String CAST_ID = "castid";
+    public static final String SECTION_ID = "sectionid";
+  }
+
+  public static class Headers {
+    public static final String EMAIL = "email";
+    public static final String OAUTH_KEY = "access_token";
   }
 
   public static class Roles {

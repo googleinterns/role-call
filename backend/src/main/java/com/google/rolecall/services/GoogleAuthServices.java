@@ -1,12 +1,5 @@
 package com.google.rolecall.services;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -16,37 +9,39 @@ import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretVersionName;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-@Service("googleAuth")
+@Profile("prod")
+@Service("googleAuthServices")
 public class GoogleAuthServices {
 
   private final Environment env;
   
   private GoogleIdTokenVerifier verifier;
 
-  @Async
-  public CompletableFuture<Boolean> isValidAccessToken(String email, String token) {
+  public boolean isValidAccessToken(String email, String token) throws Exception {
     GoogleIdToken idToken = null;
     try {
       idToken = verifier.verify(token);
     } catch(GeneralSecurityException e) {
-      CompletableFuture.failedFuture(new Exception("Unable to verify with Google."));
+      throw new Exception("Unable to verify with Google.");
     } catch(IOException e) {
-      CompletableFuture.failedFuture(new IOException(
-          "Unable to verify with Google. Please try again."));
+      throw new IOException(
+          "Unable to verify with Google. Please try again.");
     }
 
     if(idToken != null) {
       Payload payload = idToken.getPayload();
       if(email.equals(payload.getEmail())) {
-        return CompletableFuture.completedFuture(true);
+        return true;
       }
     }
-    return CompletableFuture.completedFuture(false);
+    return false;
   }
 
   private String getClientId() {
