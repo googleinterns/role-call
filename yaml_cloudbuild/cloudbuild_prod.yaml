@@ -8,7 +8,7 @@ steps:
 # into the correct places for deployment
 - id: configure_yamls
   name: 'gcr.io/cloud-builders/npm'
-  args: ["run", "configureYamls", "app_frontend_test.yaml", "app_backend_test.yaml"]
+  args: ["run", "configureYamls", "app_frontend_test.yaml", "app_backend_prod.yaml"]
 
 # Clean and build the backend, then deploy to GAE backend service
 - id: build_and_deploy_backend

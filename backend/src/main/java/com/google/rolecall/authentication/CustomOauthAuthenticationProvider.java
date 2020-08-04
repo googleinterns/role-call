@@ -1,5 +1,8 @@
 package com.google.rolecall.authentication;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.rolecall.services.GoogleAuthServices;
 
 import org.springframework.context.annotation.Profile;
@@ -21,6 +24,8 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
 
   private final UserDetailsService detailService;
   private final GoogleAuthServices authService;
+
+  private Logger logger = Logger.getLogger(CustomOauthAuthenticationProvider.class.getName());
 
 
   @Override
@@ -59,5 +64,6 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
       GoogleAuthServices authService) {
     this.detailService = detailService;
     this.authService = authService;
+    logger.log(Level.INFO, "Using oauth authentication");
   }
 }

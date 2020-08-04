@@ -1,5 +1,8 @@
 package com.google.rolecall.authentication;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Component;
 public class CustomDebugAuthenticationProvider implements AuthenticationProvider {
 
   private final UserDetailsService detailService;
+
+  private Logger logger = Logger.getLogger(CustomOauthAuthenticationProvider.class.getName());
 
   @Override
   public Authentication authenticate(Authentication authentication)
@@ -43,5 +48,6 @@ public class CustomDebugAuthenticationProvider implements AuthenticationProvider
 
   public CustomDebugAuthenticationProvider(UserDetailsService detailService) {
     this.detailService = detailService;
+    logger.log(Level.INFO, "Using debug authentication");
   }
 }
