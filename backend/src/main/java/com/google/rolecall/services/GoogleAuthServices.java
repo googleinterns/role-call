@@ -29,13 +29,13 @@ public class GoogleAuthServices {
 
   private Logger logger = Logger.getLogger(GoogleAuthServices.class.getName());
 
-  public boolean isValidAccessToken(String email, String token) throws Exception {
+  public boolean isValidAccessToken(String email, String token) throws GeneralSecurityException, IOException {
     GoogleIdToken idToken = null;
     logger.log(Level.INFO, String.format("Attempting to verify %s", email));
     try {
       idToken = verifier.verify(token);
     } catch(GeneralSecurityException e) {
-      throw new Exception("Unable to verify with Google.");
+      throw new RuntimeException("Unable to verify with Google.");
     } catch(IOException e) {
       logger.log(Level.SEVERE, e.getMessage());
       throw new IOException(
@@ -85,7 +85,7 @@ public class GoogleAuthServices {
   public GoogleAuthServices(Environment env) {
     this.env = env;
     verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport() , new JacksonFactory())
-    .setAudience(Collections.singletonList(getClientId()))
-    .build();
+        .setAudience(Collections.singletonList(getClientId()))
+        .build();
   }
 }

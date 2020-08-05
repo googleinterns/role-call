@@ -47,6 +47,7 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
         throw new BadCredentialsException("Email and token do not validate with Google.");
       }
     } catch(Exception ex) {
+      logger.log(Level.SEVERE, ex.getMessage());
       throw new AuthenticationServiceException("Unable to successfully authenticate", ex);
     }
 
