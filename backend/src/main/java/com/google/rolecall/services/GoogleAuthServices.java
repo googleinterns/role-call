@@ -40,6 +40,7 @@ public class GoogleAuthServices {
       throw new IOException(
           "Unable to verify with Google. Please try again.");
     }
+    logger.log(Level.INFO, String.format("Id is null: %b", idToken == null));
 
     if(idToken != null) {
       Payload payload = idToken.getPayload();
