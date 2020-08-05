@@ -30,6 +30,11 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
     routerLinkUrl: 'cast/',
     icon: 'group'
   },
+  {
+    name: 'Performances',
+    routerLinkUrl: 'performances/',
+    icon: 'sports_kabaddi'
+  },
 ];
 
 /** Color variables */
