@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PerformanceEditor implements OnInit {
 
+  stepperOpts = ["Performance Details", "Pieces & Intermissions", "Fill Casts", "Finalize"]
+
   constructor() { }
 
   ngOnInit(): void {

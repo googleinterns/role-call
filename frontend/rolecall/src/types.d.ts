@@ -18,6 +18,7 @@ export namespace APITypes {
   export type PrivilegeClassUUID = string;
   export type PieceUUID = string;
   export type CastUUID = string;
+  export type PerformanceUUID = string;
   export type SuccessIndicator = {
     successful: boolean,
     error?: string

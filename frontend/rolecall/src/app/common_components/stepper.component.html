@@ -1,0 +1,27 @@
+<div class="bottom-right-sharp-card stepper-bar-container" [@openClose]="isStepperOpen ? 'open' : 'closed'">
+  <div class="stepper-content">
+    <div *ngFor="let option of stepperOptions; let i = index" class="stepper-child" (click)="navigate(i)">
+      <div class="stepper-child-content">
+        <div class="circle-name-pair">
+          <div class="circle-line-container">
+            <div class="line-container">
+              <div class="line" [ngStyle]="i == 0 ? { background: 'none' } : {}"></div>
+            </div>
+            <h2 [ngClass]="i == currentStepIndex ? 'selected-circle' : 'circle'">{{i}}</h2>
+            <div class="line-container">
+              <div class="line" [ngStyle]="i == stepperOptions.length - 1 ? { background: 'none' } : {}"></div>
+            </div>
+          </div>
+          <h3 class="step-name">{{ option }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="close-stepper-button-div left-sharp-card" [@openCloseButton]="isStepperOpen ? 'open' : 'closed'">
+  <button mat-icon-button aria-label="Close Stepper Button" class="close-stepper-button" (click)="toggleStepper()">
+    <mat-icon [inline]="true" class="close-stepper-button-icon" [@openCloseIcon]="isStepperOpen ? 'open' : 'closed'">
+      arrow_drop_down
+    </mat-icon>
+  </button>
+</div>

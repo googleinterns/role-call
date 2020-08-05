@@ -91,7 +91,7 @@ export class PieceApi {
   }
 
   /** Hits backend with one piece GET request */
-  requestOnePiece(uuid: APITypes.UserUUID): Promise<OnePieceResponse> {
+  requestOnePiece(uuid: APITypes.PieceUUID): Promise<OnePieceResponse> {
     return this.mockBackend.requestOnePiece(uuid);
   };
 

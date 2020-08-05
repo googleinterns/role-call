@@ -32,7 +32,7 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
   },
   {
     name: 'Performances',
-    routerLinkUrl: 'performances/',
+    routerLinkUrl: 'performance/',
     icon: 'sports_kabaddi'
   },
 ];
