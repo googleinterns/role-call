@@ -14,7 +14,6 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -24,16 +23,15 @@ import org.springframework.stereotype.Service;
 public class GoogleAuthServices {
 
   private final Environment env;
-  
   private GoogleIdTokenVerifier verifier;
-
   private Logger logger = Logger.getLogger(GoogleAuthServices.class.getName());
 
-  public boolean isValidAccessToken(String email, String token) throws GeneralSecurityException, IOException {
+  public boolean isValidAccessToken(String email, String encodedToken)
+      throws GeneralSecurityException, IOException {
+
     GoogleIdToken idToken = null;
-    logger.log(Level.INFO, String.format("Attempting to verify %s", email));
     try {
-      idToken = verifier.verify(token);
+      idToken = verifier.verify(encodedToken);
     } catch(GeneralSecurityException e) {
       throw new RuntimeException("Unable to verify with Google.");
     } catch(IOException e) {
@@ -41,11 +39,9 @@ public class GoogleAuthServices {
       throw new IOException(
           "Unable to verify with Google. Please try again.");
     }
-    logger.log(Level.INFO, String.format("Id is null: %b", idToken == null));
 
     if(idToken != null) {
       Payload payload = idToken.getPayload();
-      logger.log(Level.INFO, String.format("Id associates with %s",payload.getEmail()));
       if(email.equals(payload.getEmail())) {
         return true;
       }

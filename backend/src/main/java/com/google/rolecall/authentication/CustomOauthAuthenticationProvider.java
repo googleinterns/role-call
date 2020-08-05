@@ -1,5 +1,6 @@
 package com.google.rolecall.authentication;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,13 +43,20 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
           "User with email %s could not be authenticated.", email));
     }
 
+    boolean isValid = false;
+
     try {
-      if(!authService.isValidAccessToken(email, oauthToken)) {
-        throw new BadCredentialsException("Email and token do not validate with Google.");
-      }
-    } catch(Exception ex) {
-      logger.log(Level.SEVERE, ex.getStackTrace().toString());
+      isValid = authService.isValidAccessToken(email, oauthToken);
+    } catch(IOException ex) {
+      logger.log(Level.SEVERE, "Unable to validate token with Google.", ex);
       throw new AuthenticationServiceException("Unable to successfully authenticate", ex);
+    } catch(Exception ex) {
+      logger.log(Level.WARNING, "Unexcepted Exception was thrown.", ex);
+      throw new AuthenticationServiceException("Unable to successfully authenticate", ex);
+    }
+
+    if(!isValid) {
+      throw new BadCredentialsException("Email and token do not validate with Google.");
     }
 
     Authentication auth = new RememberMeAuthenticationToken("Bad_HardCoded_Key", user, user.getAuthorities());
