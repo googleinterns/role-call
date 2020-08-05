@@ -37,6 +37,7 @@ public class GoogleAuthServices {
     } catch(GeneralSecurityException e) {
       throw new Exception("Unable to verify with Google.");
     } catch(IOException e) {
+      logger.log(Level.SEVERE, e.getMessage());
       throw new IOException(
           "Unable to verify with Google. Please try again.");
     }
