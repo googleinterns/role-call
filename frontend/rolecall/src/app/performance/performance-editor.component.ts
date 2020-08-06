@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Performance, PerformanceApi } from '../api/performance-api.service';
 
 @Component({
   selector: 'app-performance-editor',
@@ -7,11 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PerformanceEditor implements OnInit {
 
-  stepperOpts = ["Performance Details", "Pieces & Intermissions", "Fill Casts", "Finalize"]
+  stepperOpts = ["Performance Details", "Pieces & Intermissions", "Fill Casts", "Finalize"];
+  currentStep = 0;
 
-  constructor() { }
+  state: Performance;
+
+  constructor(private performanceAPI: PerformanceApi) { }
 
   ngOnInit(): void {
+  }
+
+  onStepChange(indexName: [number, string]) {
+    this.currentStep = indexName[0];
+    console.log(this.currentStep);
   }
 
 }

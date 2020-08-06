@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-stepper',
@@ -53,6 +53,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 export class Stepper implements OnInit, OnChanges {
 
   @Input() stepperOptions: string[];
+  @Output() stepChange: EventEmitter<[number, string]> = new EventEmitter();
   currentStepIndex = 0;
   showOptions = false;
   isStepperOpen = true;
@@ -75,7 +76,7 @@ export class Stepper implements OnInit, OnChanges {
 
   navigate(index: number) {
     this.currentStepIndex = index;
-    console.log(this.currentStepIndex);
+    this.emitStep();
   }
 
   nextStep(): boolean {
@@ -83,6 +84,7 @@ export class Stepper implements OnInit, OnChanges {
       return false;
     }
     this.currentStepIndex++;
+    this.emitStep();
     return true;
   }
 
@@ -91,11 +93,12 @@ export class Stepper implements OnInit, OnChanges {
       return false;
     }
     this.currentStepIndex--;
+    this.emitStep();
     return true;
   }
 
-  currentStep(): number {
-    return this.currentStepIndex + 1;
+  emitStep() {
+    this.stepChange.emit([this.currentStepIndex, this.stepperOptions[this.currentStepIndex]]);
   }
 
 }

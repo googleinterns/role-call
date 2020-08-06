@@ -1,1 +1,49 @@
-<app-stepper [stepperOptions]="stepperOpts"></app-stepper>
+<app-stepper [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
+
+<ng-container [ngSwitch]="currentStep" class="page-container">
+  <ng-container *ngSwitchCase="0">
+    <ng-container *ngTemplateOutlet="step1"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="1">
+    <ng-container *ngTemplateOutlet="step2"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="2">
+    <ng-container *ngTemplateOutlet="step3"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="3">
+    <ng-container *ngTemplateOutlet="step4"></ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #step1>
+  <div class="step1">
+    <div class="left-card-container">
+      <div class="left-card app-card">
+        <p> test </p>
+      </div>
+    </div>
+    <div class="right-card-container">
+      <div class="right-card app-card">
+        <p> test </p>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #step2>
+  <div class="step2">
+    <h1>step 2</h1>
+  </div>
+</ng-template>
+
+<ng-template #step3>
+  <div class="step3">
+    <h1>step 3</h1>
+  </div>
+</ng-template>
+
+<ng-template #step4>
+  <div class="step4">
+    <h1>step 4</h1>
+  </div>
+</ng-template>
