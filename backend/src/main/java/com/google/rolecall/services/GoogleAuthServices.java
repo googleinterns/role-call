@@ -26,8 +26,18 @@ public class GoogleAuthServices {
   private GoogleIdTokenVerifier verifier;
   private Logger logger = Logger.getLogger(GoogleAuthServices.class.getName());
 
+  /**
+   * Decodes and verifies Google Oauth id_token. Compares the provided email to the email
+   * associated with the token.
+   * 
+   * @param email String email supplied by the User.
+   * @param encodedToken String id_token provided by the user.
+   * @return True if the email token combination is valid.
+   * @throws GeneralSecurityException 
+   * @throws IOException When unable to make a request to the Google Oauth API.
+   */
   public boolean isValidAccessToken(String email, String encodedToken)
-      throws GeneralSecurityException, IOException {
+      throws IOException {
 
     GoogleIdToken idToken = null;
     try {
@@ -49,6 +59,7 @@ public class GoogleAuthServices {
     return false;
   }
 
+  /** Gets the client id from the secret manager */
   private String getClientId() {
     String id;
     String projectId = env.getProperty("spring.cloud.gcp.projectId");

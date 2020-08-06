@@ -28,7 +28,13 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
 
   private Logger logger = Logger.getLogger(CustomOauthAuthenticationProvider.class.getName());
 
-
+  /**
+   * Authenticates a user through existence in the database and a valid Google Oauth Id Token.
+   * 
+   * @param authentication current authentication of a user
+   * @return Returns the user's authentication as a {@link RememberAuthenticationToken} token 
+   * @throws AuthenticationException when bad credentials are provided or is unable to authenticate
+   */
   @Override
   public Authentication authenticate(Authentication authentication)
       throws AuthenticationException {

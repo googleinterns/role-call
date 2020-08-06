@@ -23,6 +23,14 @@ public class CustomDebugAuthenticationProvider implements AuthenticationProvider
 
   private Logger logger = Logger.getLogger(CustomDebugAuthenticationProvider.class.getName());
 
+  /**
+   * Verifies the email of the user is in the database.
+   * 
+   * @param authentication Contains the session's current authentication levels and at least 
+   *    the email of the user.
+   * @return The authentication based on the email of the user as a {@link RememberMeToken} token.
+   * @throws AuthenticationException When the email is not in the database.
+   */
   @Override
   public Authentication authenticate(Authentication authentication)
       throws AuthenticationException {

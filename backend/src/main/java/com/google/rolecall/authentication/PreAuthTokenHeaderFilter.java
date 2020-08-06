@@ -4,6 +4,7 @@ import com.google.rolecall.Constants;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
+/** Parses the header of a request for EMAIL and AUTHORIZZATION used in authentication */
 public class PreAuthTokenHeaderFilter extends AbstractPreAuthenticatedProcessingFilter {
 
   @Override

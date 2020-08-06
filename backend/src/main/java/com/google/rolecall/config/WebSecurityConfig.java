@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /* Security Configuration for authenticating a request to the REST application. */
 @Configuration
@@ -32,9 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionFixation().migrateSession()
         .and().authorizeRequests().antMatchers("/api/**").authenticated()
         .and().logout()
-        .deleteCookies("SESSIONID").invalidateHttpSession(true).logoutUrl("/logout");
+        .deleteCookies("SESSIONID").invalidateHttpSession(true)
+        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
   }
 
+  /** Initializes the filter for Authentication header information. */
   private PreAuthTokenHeaderFilter getFilter() throws Exception {
     PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter();
     filter.setAuthenticationManager(authenticationManager());
