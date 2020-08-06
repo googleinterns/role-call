@@ -14,9 +14,28 @@ export class PerformanceEditor implements OnInit {
 
   state: Performance;
 
+  performancesLoaded = false;
+  dataLoaded = false;
+
   constructor(private performanceAPI: PerformanceApi) { }
 
   ngOnInit(): void {
+    this.performanceAPI.getAllPerformances().then(val => this.onPerformanceLoad(val));
+  }
+
+  onPerformanceLoad(perfs: Performance[]) {
+    this.allPerformanes = perfs;
+    this.allPerformanes.push(...this.allPerformanes);
+    this.allPerformanes.push(...this.allPerformanes);
+    this.allPerformanes.push(...this.allPerformanes);
+    this.selectedPerformance = perfs[0] ? perfs[0] : undefined;
+    this.performancesLoaded = true;
+    this.checkDataLoaded();
+  }
+
+  checkDataLoaded(): boolean {
+    this.dataLoaded = this.performancesLoaded;
+    return this.dataLoaded;
   }
 
   // All Steps ----------------------------------------------------
@@ -61,7 +80,25 @@ export class PerformanceEditor implements OnInit {
 
   // Step 1 -------------------------------------------------------
 
+  allPerformanes: Performance[] = [];
+  selectedPerformance: Performance;
 
+  onSelectRecentPerformance(perf: Performance) {
+    this.selectedPerformance = perf;
+  }
+
+  onStep1Input(field: string, value: any) {
+    switch (field) {
+      case "title":
+        this.state.step_1.title = value;
+      case "date":
+        this.state.step_1.date = value;
+      case "location":
+        this.state.step_1.location = value;
+      case "description":
+        this.state.step_1.description = value;
+    }
+  }
 
   // --------------------------------------------------------------
 

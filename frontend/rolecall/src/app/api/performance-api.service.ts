@@ -19,21 +19,19 @@ export type Performance = {
   },
   step_3: {
     segments: {
+      segment: string,
       type: "intermission" | "segment",
       length: number,
       uses_premade_group: boolean,
       premade_group_uuid: string,
-      custom_groups: [
-        {
+      custom_groups: {
+        position_uuid: string,
+        groups: {
           position_uuid: string,
-          groups: [
-            {
-              group_index: number,
-              members: { uuid: string, position_number: number }[]
-            }
-          ]
-        }
-      ]
+          group_index: number,
+          members: { uuid: string, position_number: number }[]
+        }[]
+      }[]
     }[]
   }
 }

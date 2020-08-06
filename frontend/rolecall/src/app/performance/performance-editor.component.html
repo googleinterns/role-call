@@ -1,20 +1,38 @@
-<app-stepper #stepper [stepperOptions]="stepperOpts"></app-stepper>
+<div *ngIf="dataLoaded">
+  <app-stepper #stepper [stepperOptions]="stepperOpts"></app-stepper>
 
-<ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
-  <ng-container *ngSwitchCase="0">
-    <ng-container *ngTemplateOutlet="step1"></ng-container>
+  <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
+    <ng-container *ngSwitchCase="0">
+      <ng-container *ngTemplateOutlet="step1"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="1">
+      <ng-container *ngTemplateOutlet="step2"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="2">
+      <ng-container *ngTemplateOutlet="step3"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="3">
+      <ng-container *ngTemplateOutlet="step4"></ng-container>
+    </ng-container>
   </ng-container>
-  <ng-container *ngSwitchCase="1">
-    <ng-container *ngTemplateOutlet="step2"></ng-container>
-  </ng-container>
-  <ng-container *ngSwitchCase="2">
-    <ng-container *ngTemplateOutlet="step3"></ng-container>
-  </ng-container>
-  <ng-container *ngSwitchCase="3">
-    <ng-container *ngTemplateOutlet="step4"></ng-container>
-  </ng-container>
-</ng-container>
 
+  <div class="button-overall-container">
+    <button mat-flat-button aria-label="Save User" class="button" (click)="onSaveDraft()">
+      save draft
+    </button>
+    <div>
+      <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
+        previous
+      </button>
+      <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
+        next
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Templates -->
 <ng-template #step1>
   <div class="step1">
     <div class="left-card-container">
@@ -23,8 +41,13 @@
           <h2 class="title">Recent Performances</h2>
         </div>
         <div class="children-container">
-          <p>hi</p>
-          <p>lo</p>
+          <div class="child-container">
+            <div *ngFor="let perf of allPerformanes" class="child app-card"
+              [ngClass]="perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
+              (click)="onSelectRecentPerformance(perf)">
+              <h3 class="performance-title">{{ perf.step_1.title }}</h3>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -53,18 +76,3 @@
     <h1>step 4</h1>
   </div>
 </ng-template>
-
-<div class="button-overall-container">
-  <button mat-flat-button aria-label="Save User" class="button" (click)="onSaveDraft()">
-    save draft
-  </button>
-  <div>
-    <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
-      previous
-    </button>
-    <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
-      next
-    </button>
-  </div>
-
-</div>
