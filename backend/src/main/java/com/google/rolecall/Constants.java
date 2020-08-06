@@ -4,6 +4,7 @@ package com.google.rolecall;
 public class Constants {
 
   public static class Mappings {
+    public static final String CURRENT_USER = "/api/self";
     public static final String USER_MANAGEMENT = "/api/user";
     public static final String SECTION_MANAGEMENT = "/api/section";
     public static final String CAST_MANAGEMENT = "/api/cast";
