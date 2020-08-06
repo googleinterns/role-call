@@ -7,7 +7,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   height: 10vh;
-  justify-content: space-between;
+  justify-content: start;
   width: 100vw;
 }
 
@@ -17,16 +17,18 @@
   flex-direction: row;
   flex-wrap: nowrap;
   height: 10%;
-  justify-content: space-between;
-  width: 60%;
+  justify-content: end;
+  width: 100%;
 }
 
 // The container for the log in button
 .log-in-account-container {
   display: flex;
   flex-direction: column;
+  height: 10vh;
   justify-content: center;
   margin-right: 2vw;
+  width: 7vh;
 }
 // The log in button
 .log-in-button {
@@ -68,11 +70,11 @@
   border: 8px solid #f3f3f3; /* Light grey */
   border-top: 8px solid #d3d3d3; /* Darker grey */
   border-radius: 50%;
-  height: 7vh;
+  min-height: 7vh;
   margin-bottom: auto;
   margin-right: 2vw;
   margin-top: auto;
-  width: 7vh;
+  min-width: 7vh;
 }
 @keyframes spin {
   0% {
@@ -81,4 +83,13 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.logo {
+  cursor: pointer;
+  display: block;
+  // max-width: 240px;
+  max-height: 100%;
+  width: auto;
+  height: auto;
 }

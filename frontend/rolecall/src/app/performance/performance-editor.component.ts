@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Performance, PerformanceApi } from '../api/performance-api.service';
+import { Stepper } from '../common_components/stepper.component';
 
 @Component({
   selector: 'app-performance-editor',
@@ -8,8 +9,8 @@ import { Performance, PerformanceApi } from '../api/performance-api.service';
 })
 export class PerformanceEditor implements OnInit {
 
+  @ViewChild('stepper') stepper: Stepper;
   stepperOpts = ["Performance Details", "Pieces & Intermissions", "Fill Casts", "Finalize"];
-  currentStep = 0;
 
   state: Performance;
 
@@ -18,9 +19,68 @@ export class PerformanceEditor implements OnInit {
   ngOnInit(): void {
   }
 
-  onStepChange(indexName: [number, string]) {
-    this.currentStep = indexName[0];
-    console.log(this.currentStep);
+  // All Steps ----------------------------------------------------
+
+  createNewPerformance(): Performance {
+    return {
+      uuid: "performance" + Date.now(),
+      step_1: {
+        title: "Program Title",
+        date: Date.now(),
+        location: "Location",
+        description: ""
+      },
+      step_2: {
+        segments: []
+      },
+      step_3: {
+        segments: []
+      }
+    };
   }
+
+  onSaveDraft() {
+    this.performanceAPI.setPerformance(this.state).then(val => {
+      if (val.successful) {
+
+      } else {
+
+      }
+    })
+  }
+
+  onNextClick() {
+    this.stepper.nextStep();
+  }
+
+  onPrevClick() {
+    this.stepper.prevStep();
+  }
+
+  // --------------------------------------------------------------
+
+  // Step 1 -------------------------------------------------------
+
+
+
+  // --------------------------------------------------------------
+
+  // Step 2 -------------------------------------------------------
+
+
+
+  // --------------------------------------------------------------
+
+  // Step 3 -------------------------------------------------------
+
+
+
+  // --------------------------------------------------------------
+
+  // Step 4 -------------------------------------------------------
+
+
+
+  // --------------------------------------------------------------
 
 }

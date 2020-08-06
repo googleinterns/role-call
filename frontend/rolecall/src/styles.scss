@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "src/constants";
+@import "~@angular/material/theming";
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 
 // div styling to make a card
 .app-card {
@@ -10,13 +13,13 @@
 .app-card:hover {
   box-shadow: 0 8px 16px 0 rgba($color: #000000, $alpha: 0.2);
 }
+
 html,
 body {
   height: 100%;
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .cdk-focused,
@@ -32,3 +35,8 @@ body {
 
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
+
+$custom-typography: mat-typography-config(
+  $font-family: "Open Sans, sans-serif",
+);
+@include mat-core($custom-typography);
