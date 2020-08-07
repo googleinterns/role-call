@@ -16,9 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
   public void addCorsMappings(CorsRegistry registry) {
       String allowedOrigin = env.getProperty("rolecall.frontend.url");
       
-      registry.addMapping("/api/**").allowedOrigins(allowedOrigin)
-          .allowedMethods("GET", "POST", "PATCH", "DELETE");
-      registry.addMapping("/logout").allowedOrigins(allowedOrigin)
+      registry.addMapping("/**").allowedOrigins(allowedOrigin)
+          .allowCredentials(true)
           .allowedMethods("GET", "POST", "PATCH", "DELETE");
   }
 
