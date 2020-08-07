@@ -37,7 +37,6 @@ public class Section {
   @Basic
   private Integer length;
 
-  // TODO: Change Fetch type by implementing lazy fetching
   @OneToMany(mappedBy = "section", 
       cascade = CascadeType.ALL, 
       orphanRemoval = true, 
@@ -49,6 +48,12 @@ public class Section {
     orphanRemoval = true, 
     fetch = FetchType.LAZY)
   private List<Cast> casts = new ArrayList<>();
+
+  @OneToMany(mappedBy = "section", 
+      cascade = CascadeType.REMOVE, 
+      orphanRemoval = true, 
+      fetch = FetchType.LAZY)
+  private List<PerformanceSection> performanceSections = new ArrayList<>();
 
   public Integer getId() {
     return id;
@@ -109,6 +114,16 @@ public class Section {
   public void removeCast(Cast cast) {
     cast.setSection(null);
     casts.remove(cast);
+  }
+
+  public void addPerformanceSection(PerformanceSection performanceSection) {
+    performanceSection.setSection(this);
+    performanceSections.add(performanceSection);
+  }
+
+  public void removePerformanceSection(PerformanceSection performanceSection) {
+    performanceSection.setSection(null);
+    performanceSections.remove(performanceSection);
   }
 
   /* Searches for and returns a Position from positions based on id. */
