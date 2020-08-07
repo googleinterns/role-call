@@ -33,6 +33,8 @@ export class ResponseStatusHandlerService {
     rej: (reason?: any) => void
   ) {
 
+    console.log(response);
+
     if (response.status != 200) {
       let userResp = await this.showError(response.statusText);
       rej(response.statusText);

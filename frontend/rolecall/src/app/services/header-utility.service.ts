@@ -10,6 +10,8 @@ export class HeaderUtilityService {
 
   constructor(private loginAPI: LoginApi) { }
 
+  sentEmail = false;
+
   generateHeader(): Promise<HttpHeaders> {
     return this.loginAPI.loginPromise.then(() => {
       let headers = new HttpHeaders({
