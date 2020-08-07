@@ -19,8 +19,8 @@ public class Constants {
   }
 
   public static class Headers {
-    public static final String EMAIL = "EMAIL";
-    public static final String OAUTH_KEY = "AUTHORIZATION";
+    public static final String EMAIL = "Email";
+    public static final String OAUTH_KEY = "Authorization";
   }
 
   public static class Roles {
