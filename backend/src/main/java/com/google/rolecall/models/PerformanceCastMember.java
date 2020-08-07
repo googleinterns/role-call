@@ -20,7 +20,7 @@ public class PerformanceCastMember {
   @Column(nullable = false)
   private Integer castNumber;
 
-  @Column(nullable = false)
+  @Column(name = "orderOf", nullable = false)
   private Integer order;
 
   @Column(nullable = false)
@@ -38,5 +38,52 @@ public class PerformanceCastMember {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Position position;
 
-  
+  public Integer getId() {
+    return id;
+  }
+
+  public Integer getCastNumber() {
+    return castNumber;
+  }
+
+  public Boolean isPerforming() {
+    return performing;
+  }
+
+  public Integer getOrder() {
+    return order;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public Performance getPerformance() {
+    return performance;
+  }
+
+  public PerformanceSection getPerformanceSection() {
+    return performanceSection;
+  }
+
+  public Position getPosition() {
+    return position;
+  }
+
+  void setUser(User user) {
+    this.user = user;
+  }
+
+  void setPerformance(Performance performance) {
+    this.performance = performance;
+  }
+
+  void setPerformanceSection(PerformanceSection performanceSection) {
+    this.performanceSection = performanceSection;
+  }
+
+  void setPosition(Position position) {
+    this.position = position;
+  }
+
 }
