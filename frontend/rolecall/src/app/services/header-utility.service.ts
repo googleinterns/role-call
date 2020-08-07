@@ -11,13 +11,18 @@ export class HeaderUtilityService {
 
   generateHeader(): Promise<HttpHeaders> {
     return this.loginAPI.loginPromise.then(() => {
-      return new HttpHeaders(
-        {
-          'EMAIL': this.loginAPI.email,
-          'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
-        }
-      );
+      let headers = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        'EMAIL': this.loginAPI.email,
+        'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
+      });
+      return headers;
     })
+
+    // {
+    //   'EMAIL': this.loginAPI.email,
+    //   'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
+    // }
   }
 
 }

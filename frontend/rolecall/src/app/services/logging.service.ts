@@ -13,7 +13,7 @@ export class LoggingService {
 
   /** Logs an error */
   public logError(err: any) {
-    console.log(ERROR_PREFIX + err);
+    console.log(ERROR_PREFIX + JSON.stringify(err));
   }
   /** Logs a warning */
   public logWarn(warn: any) {
