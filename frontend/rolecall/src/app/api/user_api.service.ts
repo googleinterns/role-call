@@ -7,6 +7,7 @@ import { isNullOrUndefined } from 'util';
 import { MockUserBackend } from '../mocks/mock_user_backend';
 import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 export type User = {
   uuid: APITypes.UserUUID,
@@ -97,14 +98,17 @@ export class UserApi {
   mockBackend: MockUserBackend = new MockUserBackend();
 
   constructor(private loggingService: LoggingService, private http: HttpClient,
-    private headerUtil: HeaderUtilityService) { }
+    private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
   /** Hits backend with all users GET request */
-  requestAllUsers(): Promise<AllUsersResponse> {
+  async requestAllUsers(): Promise<AllUsersResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUsers();
     }
-    return this.http.get<RawAllUsersResponse>(environment.backendURL + "api/user").toPromise().then((val) => {
+    return this.http.get<RawAllUsersResponse>(environment.backendURL + "api/user", {
+      headers: await this.headerUtil.generateHeader(),
+      observe: "response"
+    }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp)).then((val) => {
       return {
         data: {
           users: val.data.map((val) => {
@@ -159,7 +163,7 @@ export class UserApi {
   };
 
   /** Hits backend with create/edit user POST request */
-  requestUserSet(user: User): Promise<HttpResponse<any>> {
+  async requestUserSet(user: User): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserSet(user);
     }
@@ -182,7 +186,10 @@ export class UserApi {
         manageRoles: user.has_permissions.manageRoles,
         manageRules: user.has_permissions.manageRules,
         isActive: true
-      }, { observe: "response" }).toPromise().then(val => {
+      }, {
+        headers: await this.headerUtil.generateHeader(),
+        observe: "response"
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         console.log(val);
         return val;
       }).catch(val => {
