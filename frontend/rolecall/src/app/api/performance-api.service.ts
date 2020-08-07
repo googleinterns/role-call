@@ -3,6 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { MockPerformanceBackend } from '../mocks/mock_performance_backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
 
 
@@ -59,7 +60,8 @@ export class PerformanceApi {
   /** Mock backend */
   mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient,
+    private headerUtil: HeaderUtilityService) { }
 
   /** Hits backend with all performances GET request */
   requestAllPerformances(): Promise<AllPerformancesResponse> {

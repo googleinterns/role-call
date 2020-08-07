@@ -3,7 +3,9 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { MockPieceBackend } from '../mocks/mock_piece_backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 type RawPosition = {
   id: number,
@@ -65,14 +67,19 @@ export class PieceApi {
   /** Mock backend */
   mockBackend: MockPieceBackend = new MockPieceBackend();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient,
+    private respHandler: ResponseStatusHandlerService, private headerUtil: HeaderUtilityService) { }
 
   /** Hits backend with all pieces GET request */
-  requestAllPieces(): Promise<AllPiecesResponse> {
+  async requestAllPieces(): Promise<AllPiecesResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPieces();
     }
-    return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section").toPromise().then((val) => {
+    let header = await this.headerUtil.generateHeader();
+    return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section", {
+      headers: header,
+      observe: "response"
+    }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
       this.rawPieces = val.data;
       return {
         data: {
@@ -87,6 +94,15 @@ export class PieceApi {
         },
         warnings: val.warnings
       }
+    }).catch(err => {
+      this.respHandler.noConnectionError(err);
+      this.loggingService.logError(err);
+      return Promise.resolve({
+        data: {
+          pieces: []
+        },
+        warnings: []
+      })
     });
   }
 
@@ -96,12 +112,13 @@ export class PieceApi {
   };
 
   /** Hits backend with create/edit piece POST request */
-  requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
+  async requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceSet(piece);
     }
     if (this.pieces.has(piece.uuid)) {
       // Do patch
+      let header = await this.headerUtil.generateHeader();
       return this.http.patch(environment.backendURL + 'api/section', {
         name: piece.name,
         id: Number(piece.uuid),
@@ -116,7 +133,10 @@ export class PieceApi {
             delete: true
           }
         }))
-      }, { observe: "response" }).toPromise().then(val => {
+      }, {
+        headers: header,
+        observe: "response"
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         return val;
       }).catch(val => {
         this.loggingService.logError(val);
@@ -126,10 +146,14 @@ export class PieceApi {
       });
     } else {
       // Do post
+      let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + 'api/section', {
         name: piece.name,
         positions: piece.positions
-      }, { observe: "response" }).toPromise().then(val => {
+      }, {
+        headers: header,
+        observe: "response"
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         return val;
       }).catch(val => {
         this.loggingService.logError(val);
@@ -141,11 +165,15 @@ export class PieceApi {
   }
   /** 
    * Hits backend with delete piece POST request */
-  requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
+  async requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceDelete(piece);
     }
-    return this.http.delete(environment.backendURL + 'api/section?sectionid=' + piece.uuid, { observe: "response" }).toPromise().then(val => {
+    let header = await this.headerUtil.generateHeader();
+    return this.http.delete(environment.backendURL + 'api/section?sectionid=' + piece.uuid, {
+      headers: header,
+      observe: "response"
+    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
       return val;
     }).catch(val => {
       this.loggingService.logError(val);

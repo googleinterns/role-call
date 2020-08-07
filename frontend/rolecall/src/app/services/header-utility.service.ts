@@ -9,13 +9,15 @@ export class HeaderUtilityService {
 
   constructor(private loginAPI: LoginApi) { }
 
-  generateHeader(): HttpHeaders {
-    return new HttpHeaders(
-      {
-        'EMAIL': this.loginAPI.email,
-        'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
-      }
-    )
+  generateHeader(): Promise<HttpHeaders> {
+    return this.loginAPI.loginPromise.then(() => {
+      return new HttpHeaders(
+        {
+          'EMAIL': this.loginAPI.email,
+          'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
+        }
+      );
+    })
   }
 
 }

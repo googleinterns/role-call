@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { APITypes } from 'src/types';
 import { isNullOrUndefined } from 'util';
 import { MockUserBackend } from '../mocks/mock_user_backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
 
 export type User = {
@@ -95,7 +96,8 @@ export class UserApi {
   /** Mock backend */
   mockBackend: MockUserBackend = new MockUserBackend();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient,
+    private headerUtil: HeaderUtilityService) { }
 
   /** Hits backend with all users GET request */
   requestAllUsers(): Promise<AllUsersResponse> {

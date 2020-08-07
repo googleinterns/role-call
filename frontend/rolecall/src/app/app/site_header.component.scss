@@ -7,7 +7,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   height: 10vh;
-  justify-content: start;
+  justify-content: flex-start;
   width: 100vw;
 }
 
@@ -17,7 +17,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   height: 10%;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
 }
 

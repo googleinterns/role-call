@@ -31,6 +31,9 @@ export class LoginApi {
   authInstance: gapi.auth2.GoogleAuth;
   /** If the google OAuth2 api is loaded */
   isAuthLoaded: boolean = false;
+  /** Promise that resolves when logged in */
+  loginPromise = new Promise((res, rej) => { this.resolveLogin = res });
+  resolveLogin: (value?: unknown) => void;
   /** User profile attributes */
   imageURL: string;
   email: string;
@@ -99,6 +102,10 @@ export class LoginApi {
 
   /** Constructs a login response and updates appropriate state */
   private getLoginResponse(authed: boolean, isLoggedIn: boolean, user: gapi.auth2.GoogleUser): LoginResponse {
+    let resolveLogin = false;
+    if (!this.isLoggedIn && isLoggedIn) {
+      resolveLogin = true;
+    }
     this.isLoggedIn = isLoggedIn;
     this.user = user;
     if (isLoggedIn) {
@@ -107,6 +114,9 @@ export class LoginApi {
       this.imageURL = basicProf.getImageUrl();
       this.givenName = basicProf.getGivenName();
       this.familyName = basicProf.getFamilyName();
+      if (resolveLogin) {
+        this.resolveLogin();
+      }
     }
     return {
       authenticated: authed,
