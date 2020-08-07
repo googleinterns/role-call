@@ -151,6 +151,14 @@ public class User {
     loginCount++;
   }
 
+  public void addPerformanceCastMember(PerformanceCastMember member) {
+    member.setUser(this);
+  }
+
+  public void removePerformanceCastMember(PerformanceCastMember member) {
+    member.setUser(null);
+  }
+
   public String[] getRoles() {
     List<Boolean> permissions = new ArrayList<>();
     permissions.add(isAdmin()); // ADMIN

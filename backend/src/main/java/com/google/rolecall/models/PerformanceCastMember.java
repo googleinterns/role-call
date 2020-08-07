@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
 @Entity
 @Table
 public class PerformanceCastMember {
@@ -70,6 +72,10 @@ public class PerformanceCastMember {
     return position;
   }
 
+  public void setPerforming(boolean isPerforming) {
+    this.performing = isPerforming;
+  }
+
   void setUser(User user) {
     this.user = user;
   }
@@ -86,4 +92,58 @@ public class PerformanceCastMember {
     this.position = position;
   }
 
+  public Builder toBuilder() {
+    return new Builder(this);
+  }
+
+  public PerformanceCastMember() {
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    private PerformanceCastMember member;
+    private Integer castNumber;
+    private Integer order;
+
+    public Builder setCAstNumber(Integer castNumber) {
+      if(castNumber != null) {
+        this.castNumber = castNumber;
+      }
+
+      return this;
+    }
+
+    public Builder setOrder(Integer order) {
+      if(order != null) {
+        this.order = order;
+      }
+
+      return this;
+    }
+
+    public PerformanceCastMember build() throws InvalidParameterException {
+      if(order == null || castNumber == null) {
+        throw new InvalidParameterException(
+            "Cast Member in Performance requires a cast number and an order.");
+      }
+
+      member.castNumber = this.castNumber;
+      member.order = this.order;
+
+      return member;
+    }
+
+    public Builder(PerformanceCastMember member) {
+      this.member = member;
+      this.order = member.getOrder();
+      this.castNumber = member.getCastNumber();
+    }
+
+    public Builder() {
+      this.member = new PerformanceCastMember();
+    }
+  }
 }

@@ -95,6 +95,14 @@ public class Performance {
     performanceSections.remove(performanceSection);
   }
 
+  public void addPerformanceCastMember(PerformanceCastMember member) {
+    member.setPerformance(this);
+  }
+
+  public void removePerformanceCastMember(PerformanceCastMember member) {
+    member.setPerformance(null);
+  }
+
   public Builder toBuilder() {
     return new Builder(this);
   }

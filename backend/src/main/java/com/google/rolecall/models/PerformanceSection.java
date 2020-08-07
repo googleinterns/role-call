@@ -1,6 +1,10 @@
 package com.google.rolecall.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -32,6 +37,12 @@ public class PerformanceSection {
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Section section;
 
+  @OneToMany(mappedBy = "performanceSection", 
+      cascade = CascadeType.ALL, 
+      orphanRemoval = true, 
+      fetch = FetchType.EAGER)
+  private List<PerformanceCastMember> performanceCastMembers = new ArrayList<>();
+
   public Integer getId() {
     return id;
   }
@@ -50,6 +61,16 @@ public class PerformanceSection {
 
   public Section getSection() {
     return section;
+  }
+
+  public void addPerformanceCastMember(PerformanceCastMember member) {
+    member.setPerformanceSection(this);
+    performanceCastMembers.add(member);
+  }
+
+  public void removePerformanceCastMember(PerformanceCastMember member) {
+    member.setPerformance(null);
+    performanceCastMembers.remove(member);
   }
 
   void setSection(Section section) {

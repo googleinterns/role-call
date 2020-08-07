@@ -78,6 +78,14 @@ public class Position {
     subCast.setPosition(null);
   }
 
+  public void addPerformanceCastMember(PerformanceCastMember member) {
+    member.setPosition(this);
+  }
+
+  public void removePerformanceCastMember(PerformanceCastMember member) {
+    member.setPosition(null);
+  }
+
   public PositionInfo toPositionInfo() {
     return PositionInfo.newBuilder()
         .setId(getId())
