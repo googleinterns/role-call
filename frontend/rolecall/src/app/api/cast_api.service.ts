@@ -89,7 +89,8 @@ export class CastApi {
     return this.http.get<AllRawCastsResponse>(environment.backendURL + "api/cast",
       {
         headers: header,
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }).toPromise().then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((val) => {
         this.rawCasts = val.data;
         let allPositions: Position[] = [];
@@ -184,7 +185,8 @@ export class CastApi {
       let header = await this.headerUtil.generateHeader();
       return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, {
         headers: header,
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(async na => {
         let allSubCasts: RawSubCast[] = [];
         let allPositions: Position[] = [];
@@ -218,7 +220,8 @@ export class CastApi {
         }
         return this.http.post(environment.backendURL + "api/cast", rawCast, {
           headers: header,
-          observe: "response"
+          observe: "response",
+          withCredentials: true
         }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
           return val;
         }).catch(val => {
@@ -262,7 +265,8 @@ export class CastApi {
       let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + "api/cast", rawCast, {
         headers: header,
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         return val;
       }).catch(val => {
@@ -282,7 +286,8 @@ export class CastApi {
     let header = await this.headerUtil.generateHeader();
     return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, {
       headers: header,
-      observe: "response"
+      observe: "response",
+      withCredentials: true
     }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
       return val;
     }).catch(val => {

@@ -139,7 +139,8 @@ export class LoginApi {
   public async signOut() {
     this.http.get(environment.backendURL + "logout",
       {
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }
     ).toPromise().then((resp) => this.respHandler.checkResponse(resp)).then(() => {
       if (this.isLoggedIn) {

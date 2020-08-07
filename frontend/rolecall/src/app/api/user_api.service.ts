@@ -107,7 +107,8 @@ export class UserApi {
     }
     return this.http.get<RawAllUsersResponse>(environment.backendURL + "api/user", {
       headers: await this.headerUtil.generateHeader(),
-      observe: "response"
+      observe: "response",
+      withCredentials: true
     }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp)).then((val) => {
       return {
         data: {
@@ -188,7 +189,8 @@ export class UserApi {
         isActive: true
       }, {
         headers: await this.headerUtil.generateHeader(),
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         console.log(val);
         return val;
@@ -215,7 +217,11 @@ export class UserApi {
         manageRoles: user.has_permissions.manageRoles,
         manageRules: user.has_permissions.manageRules,
         isActive: true
-      }, { observe: "response" }).toPromise().then(val => {
+      }, {
+        observe: "response",
+        headers: await this.headerUtil.generateHeader(),
+        withCredentials: true
+      }).toPromise().then(val => {
         return val;
       }).catch(val => {
         console.log(val);
@@ -227,11 +233,15 @@ export class UserApi {
   }
 
   /** Hits backend with delete user POST request */
-  requestUserDelete(user: User): Promise<HttpResponse<any>> {
+  async requestUserDelete(user: User): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserDelete(user);
     }
-    return this.http.delete(environment.backendURL + 'api/user?userid=' + user.uuid, { observe: "response" }).toPromise().then(val => {
+    return this.http.delete(environment.backendURL + 'api/user?userid=' + user.uuid, {
+      observe: "response",
+      headers: await this.headerUtil.generateHeader(),
+      withCredentials: true
+    }).toPromise().then(val => {
       return val;
     }).catch(val => {
       console.log(val);

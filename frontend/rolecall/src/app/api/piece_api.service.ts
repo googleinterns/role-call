@@ -78,7 +78,8 @@ export class PieceApi {
     let header = await this.headerUtil.generateHeader();
     return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section", {
       headers: header,
-      observe: "response"
+      observe: "response",
+      withCredentials: true
     }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
       this.rawPieces = val.data;
       return {
@@ -135,7 +136,8 @@ export class PieceApi {
         }))
       }, {
         headers: header,
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         return val;
       }).catch(val => {
@@ -152,7 +154,8 @@ export class PieceApi {
         positions: piece.positions
       }, {
         headers: header,
-        observe: "response"
+        observe: "response",
+        withCredentials: true
       }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
         return val;
       }).catch(val => {
@@ -172,7 +175,8 @@ export class PieceApi {
     let header = await this.headerUtil.generateHeader();
     return this.http.delete(environment.backendURL + 'api/section?sectionid=' + piece.uuid, {
       headers: header,
-      observe: "response"
+      observe: "response",
+      withCredentials: true
     }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
       return val;
     }).catch(val => {
