@@ -20,6 +20,7 @@ export class PerformanceEditor implements OnInit {
   constructor(private performanceAPI: PerformanceApi) { }
 
   ngOnInit(): void {
+    this.state = this.createNewPerformance();
     this.performanceAPI.getAllPerformances().then(val => this.onPerformanceLoad(val));
   }
 
@@ -28,7 +29,7 @@ export class PerformanceEditor implements OnInit {
     this.allPerformanes.push(...this.allPerformanes);
     this.allPerformanes.push(...this.allPerformanes);
     this.allPerformanes.push(...this.allPerformanes);
-    this.selectedPerformance = perfs[0] ? perfs[0] : undefined;
+    this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
     this.performancesLoaded = true;
     this.checkDataLoaded();
   }
@@ -82,22 +83,49 @@ export class PerformanceEditor implements OnInit {
 
   allPerformanes: Performance[] = [];
   selectedPerformance: Performance;
+  dateStr: string;
 
   onSelectRecentPerformance(perf: Performance) {
     this.selectedPerformance = perf;
+    this.updateDateString();
+  }
+
+  updateDateString() {
+    let timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+    let iso = new Date(this.state.step_1.date - timeZoneOffset).toISOString();
+    let isoSplits = iso.slice(0, iso.length - 1).split(":");
+    this.dateStr = isoSplits[0] + ":" + isoSplits[1];
+    console.log(this.dateStr);
   }
 
   onStep1Input(field: string, value: any) {
-    switch (field) {
-      case "title":
-        this.state.step_1.title = value;
-      case "date":
-        this.state.step_1.date = value;
-      case "location":
-        this.state.step_1.location = value;
-      case "description":
-        this.state.step_1.description = value;
+    if (field == "title") {
+      let val = value as InputEvent;
+      this.state.step_1.title = val.target['value'];
     }
+    if (field == "location") {
+      let val2 = value as InputEvent;
+      this.state.step_1.location = val2.target['value'];
+    }
+    if (field == "date") {
+      let val3 = value as InputEvent;
+      this.state.step_1.date = Date.parse(val3.target['value'])
+      this.updateDateString();
+    }
+    if (field == "description") {
+      let val4 = value as InputEvent;
+      this.state.step_1.description = val4.target['value'];
+    }
+  }
+
+  duplicatePerformance(perf: Performance) {
+    this.state = JSON.parse(JSON.stringify(perf));
+    this.updateDateString();
+  }
+
+  resetPerformance() {
+    this.state = this.createNewPerformance();
+    this.updateDateString();
   }
 
   // --------------------------------------------------------------

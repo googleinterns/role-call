@@ -49,11 +49,57 @@
             </div>
           </div>
         </div>
+        <div class="dup-button-container">
+          <button mat-icon-button aria-label="Duplicate Recent Performance Button" class="dup-button"
+            (click)="duplicatePerformance(selectedPerformance)">
+            <mat-icon [inline]="true" class="dup-button-icon">
+              content_copy
+            </mat-icon>
+          </button>
+        </div>
       </div>
     </div>
     <div class="right-card-container">
       <div class="right-card app-card">
-        <p> test </p>
+        <div class="content">
+          <div class="title-reset-container">
+            <input type="text" class="title-input" [value]="state.step_1.title"
+              (input)="onStep1Input('title', $event)" />
+            <div class="reset-button-container">
+              <button mat-icon-button aria-label="Reset Performance Button" class="reset-button"
+                (click)="resetPerformance()">
+                <mat-icon [inline]="true" class="reset-button-icon">
+                  refresh
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="date-container">
+            <div class="date-title-container">
+              <h3 class="input-title">Date</h3>
+            </div>
+            <mat-form-field appearance="fill" class="date-input">
+              <mat-label>Date</mat-label>
+              <input matInput type="datetime-local" (input)="onStep1Input('date', $event)" [value]="dateStr">
+            </mat-form-field>
+          </div>
+          <div class="location-container">
+            <div class="location-title-container">
+              <h3 class="input-title location-title">Location</h3>
+            </div>
+            <div class="location-card app-card">
+              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.location"
+                (input)="onStep1Input('location', $event)"></textarea>
+            </div>
+          </div>
+          <div class="description-container">
+            <h3 class="input-title">Description</h3>
+            <div class="description-card app-card">
+              <textarea type="text" class="description-input" rows="8" [value]="state.step_1.description"
+                (input)="onStep1Input('description', $event)"></textarea>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -13,7 +13,7 @@ export class MockPerformanceBackend {
       uuid: "performance1:" + Date.now(),
       step_1: {
         title: "Test Title 1",
-        date: Date.now(),
+        date: (Date.now() - 600000),
         location: "Location",
         description: ""
       },
@@ -75,7 +75,7 @@ export class MockPerformanceBackend {
       uuid: "performance2:" + Date.now(),
       step_1: {
         title: "Test Title 2",
-        date: Date.now(),
+        date: (Date.now() - 600000),
         location: "Location",
         description: ""
       },

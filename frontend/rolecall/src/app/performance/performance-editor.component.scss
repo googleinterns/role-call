@@ -1,4 +1,5 @@
 @import "src/colors";
+@import "src/constants";
 
 $buttonRowHeight: 5rem;
 
@@ -44,11 +45,30 @@ $buttonRowHeight: 5rem;
       justify-content: flex-start;
       margin: 0.5rem;
 
+      .dup-button-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        .dup-button {
+          background: $white;
+          border-radius: $borderRadius;
+          height: 6vh;
+          margin: 1em;
+          width: 6vh;
+        }
+        .dup-button-icon {
+          font-size: 2.5em;
+          vertical-align: middle;
+        }
+      }
+
       .title-container {
         .title {
           font-size: xx-large;
           font-weight: bold;
           margin-left: 0.5em;
+          margin-right: 0.5em;
           padding-top: 0.5em;
         }
       }
@@ -86,18 +106,156 @@ $buttonRowHeight: 5rem;
       background: $offWhite;
       height: calc(100% - 1rem);
       margin: 0.5rem;
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        .title-reset-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+
+          .reset-button-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+
+            .reset-button {
+              background: $white;
+              border-radius: $borderRadius;
+              height: 6vh;
+              margin: 1em;
+              width: 6vh;
+            }
+            .reset-button-icon {
+              font-size: 2.5em;
+              vertical-align: middle;
+            }
+          }
+
+          .title-input {
+            background: none;
+            border: none;
+            color: black;
+            font-size: xx-large;
+            font-weight: bold;
+            margin-left: 2rem;
+            margin-top: 0.5em;
+            position: relative;
+            &:focus {
+              border: none;
+            }
+          }
+        }
+
+        .input-title {
+          background: none;
+          border: none;
+          color: black;
+          font-size: x-large;
+          font-weight: bold;
+          margin-left: 2rem;
+          margin-top: 0.5em;
+        }
+
+        .date-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          margin-top: 1em;
+
+          .date-title-container {
+            margin-right: 2rem;
+          }
+
+          .date-input {
+            width: 25%;
+          }
+        }
+
+        .location-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+
+          .location-title-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+          }
+
+          .location-card {
+            height: min-content;
+            margin-left: 2rem;
+            margin-right: 2rem;
+            width: 100%;
+
+            .location-input {
+              background: none;
+              border: none;
+              color: black;
+              font-size: large;
+              height: 100%;
+              margin: auto;
+              padding-bottom: 0.75em;
+              padding-left: 1em;
+              padding-right: 1em;
+              padding-top: 0.75em;
+              position: relative;
+              resize: none;
+              white-space: normal;
+              width: 100%;
+              &:focus {
+                border: none;
+              }
+            }
+          }
+        }
+
+        .description-container {
+          margin-top: 1rem;
+
+          .description-card {
+            margin-left: 2rem;
+            margin-right: 2rem;
+            margin-top: 1em;
+
+            .description-input {
+              background: none;
+              border: none;
+              color: black;
+              font-size: large;
+              margin: 0;
+              padding-bottom: 0.75em;
+              padding-left: 1em;
+              padding-right: 1em;
+              padding-top: 0.75em;
+              position: relative;
+              resize: none;
+              &:focus {
+                border: none;
+              }
+              white-space: normal;
+              width: 100%;
+            }
+          }
+        }
+      }
     }
   }
 }
 
 .step2 {
-  margin-top: 10vh;
+  // margin-top: 10vh;
 }
 
 .step3 {
-  margin-top: 10vh;
+  // margin-top: 10vh;
 }
 
 .step4 {
-  margin-top: 10vh;
+  // margin-top: 10vh;
 }
