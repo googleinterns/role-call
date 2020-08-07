@@ -172,5 +172,4 @@ public class Performance {
       performance.status = Status.Draft;
     }
   }
-
 }
