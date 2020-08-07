@@ -4,7 +4,7 @@ runtime: java11
 service: backend-dev
 
 env_variables:
-  SPRING_PROFILES_ACTIVE: "clouddev"
+  SPRING_PROFILES_ACTIVE: "prod"
 
 # Only use 1 instance for development
 manual_scaling:
