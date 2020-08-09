@@ -10,16 +10,30 @@ export class HeaderUtilityService {
 
   constructor(private loginAPI: LoginApi) { }
 
-  sentEmail = false;
+  sentToken = false;
+
+  updateSentToken() {
+    this.sentToken = this.loginAPI.isLoggedIn && this.sentToken;
+  }
 
   generateHeader(): Promise<HttpHeaders> {
+    this.updateSentToken();
     return this.loginAPI.loginPromise.then(() => {
-      let headers = new HttpHeaders({
-        'Content-Type': 'application/json; charset=utf-8',
-        'EMAIL': environment.useDevEmail ? environment.devEmail : this.loginAPI.email,
-        'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
-      });
-      return headers;
+      if (this.sentToken) {
+        let headers = new HttpHeaders({
+          'Content-Type': 'application/json; charset=utf-8',
+          'EMAIL': environment.useDevEmail ? environment.devEmail : this.loginAPI.email,
+        });
+        return headers;
+      } else {
+        let headers = new HttpHeaders({
+          'Content-Type': 'application/json; charset=utf-8',
+          'EMAIL': environment.useDevEmail ? environment.devEmail : this.loginAPI.email,
+          'AUTHORIZATION': 'Bearer ' + this.loginAPI.user.getAuthResponse().id_token
+        });
+        this.sentToken = true;
+        return headers;
+      }
     })
   }
 

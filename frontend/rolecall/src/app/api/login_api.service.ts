@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { LoggingService } from '../services/logging.service';
-import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 
 /** Request and Response types */
@@ -42,7 +41,7 @@ export class LoginApi {
   givenName: string;
   familyName: string;
 
-  constructor(private loggingService: LoggingService, private http: HttpClient, private respHandler: ResponseStatusHandlerService) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient) { }
 
   /** Initialize OAuth2 */
   public async initGoogleAuth(): Promise<void> {
@@ -140,13 +139,21 @@ export class LoginApi {
     this.http.get(environment.backendURL + "logout",
       {
         observe: "response",
-        withCredentials: true
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'EMAIL': this.email
+        }
       }
-    ).toPromise().then((resp) => this.respHandler.checkResponse(resp)).then(() => {
+    ).toPromise().then((resp) => {
+      if (resp.status > 299 || resp.status < 200) { return Promise.reject("Sign in failed") }
+      else { return resp }
+    }).then(() => {
       if (this.isLoggedIn) {
         this.authInstance.signOut();
       }
       this.isLoggedIn = false;
+    }).catch(err => {
+      alert("Sign out failed!");
     });
   }
 
