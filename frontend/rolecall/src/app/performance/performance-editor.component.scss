@@ -249,7 +249,51 @@ $buttonRowHeight: 5rem;
 }
 
 .step2 {
-  // margin-top: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  .left-card-container {
+    height: calc(82vh - 5rem);
+    margin-top: 8vh;
+    width: 25vw;
+
+    .left-card {
+      background: $offWhite;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 1rem);
+      justify-content: flex-start;
+      margin: 0.5rem;
+
+      .title-container {
+        .title {
+          font-size: xx-large;
+          font-weight: bold;
+          margin-left: 0.5em;
+          margin-right: 0.5em;
+          padding-top: 0.5em;
+        }
+      }
+    }
+  }
+
+  .right-card-container {
+    height: calc(90vh - 5rem);
+    width: 75vw;
+
+    .right-card {
+      background: $offWhite;
+      height: calc(100% - 1rem);
+      margin: 0.5rem;
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+    }
+  }
 }
 
 .step3 {

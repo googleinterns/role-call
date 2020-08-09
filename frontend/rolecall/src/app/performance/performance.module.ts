@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +24,8 @@ import { PerformanceEditor } from './performance-editor.component';
     MatFormFieldModule,
     FormsModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    DragDropModule
   ]
 })
 export class PerformanceModule { }

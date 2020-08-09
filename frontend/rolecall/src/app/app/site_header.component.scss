@@ -2,7 +2,7 @@
 
 // the div that holds the entire site header
 .site-header-container {
-  background: rgba($color: $AAOrange, $alpha: 1);
+  background: $AAOrange;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -37,7 +37,11 @@
 }
 // The profile picture
 .profile-image {
+  border: solid;
+  border-color: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
+  border-width: 3px;
+  box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
   cursor: pointer;
   height: 7vh;
   width: 7vh;
@@ -45,6 +49,7 @@
 
 // The nav trigger menu button on the left
 .nav-trigger-button {
+  color: white;
   font-size: 5vh;
   height: 10vh;
   width: 10vh;
@@ -88,6 +93,7 @@
 .logo {
   cursor: pointer;
   display: block;
+  filter: invert(100%);
   // max-width: 240px;
   max-height: 100%;
   width: auto;
