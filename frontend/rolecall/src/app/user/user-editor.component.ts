@@ -203,6 +203,7 @@ export class UserEditor implements OnInit {
           this.setCurrentUser(foundSame);
         }
       } else {
+        console.log(val);
         alert("User missing necessary information!");
       }
     });
