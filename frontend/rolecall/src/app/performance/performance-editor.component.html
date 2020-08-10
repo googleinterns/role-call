@@ -17,17 +17,29 @@
   </ng-container>
 
   <div class="button-overall-container">
-    <button mat-flat-button aria-label="Save User" class="button" (click)="onSaveDraft()">
-      save draft
-    </button>
-    <div>
-      <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
-        previous
+    <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
+      <button mat-flat-button aria-label="Save Performance Draft" class="button" (click)="onSaveDraft()">
+        save draft
       </button>
-      <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
-        next
+      <div>
+        <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
+          previous
+        </button>
+        <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
+          next
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #finalButtons>
+      <button mat-flat-button aria-label="Return to Editor" class="button" (click)="onReturn()">
+        return to editor
       </button>
-    </div>
+      <div>
+        <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
+          submit
+        </button>
+      </div>
+    </ng-template>
   </div>
 </div>
 
@@ -159,9 +171,9 @@
         </div>
         <div class="children-container">
           <div class="child-container">
-            <div *ngFor="let segment of step2Data" class="child app-card"
-              [ngClass]="segment.uuid == this.selectedSegment.uuid ? 'child-selected' : ''"
-              (click)="onSelectStep3Segment(segment)">
+            <div *ngFor="let segment of step2Data; let i = index" class="child app-card"
+              [ngClass]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i ? 'child-selected' : ''"
+              (click)="onSelectStep3Segment(segment, i)">
               <h3 class="segment-title">{{ segment.name }}</h3>
             </div>
           </div>
@@ -170,9 +182,39 @@
     </div>
     <div class="right-card-container">
       <div class="app-card right-card" *ngIf="selectedSegment != undefined">
-        <app-cast-drag-and-drop #castDnD
-          [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
-        </app-cast-drag-and-drop>
+        <div class="toolbar-drag-and-drop-container">
+          <div class="cast-tool-container"
+            [ngClass]="selectedSegment.uuid == 'intermission' ? 'cast-tool-container-solo' : ''">
+            <mat-form-field appearance="fill" class="tool"
+              [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+              <mat-label>Dancing Cast</mat-label>
+              <mat-select [(value)]="this.primaryGroupNum" (selectionChange)="onChoosePrimaryCast($event)">
+                <mat-option *ngFor="let num of chooseFromGroupIndices" [value]="num">
+                  {{ num + 1 | numberToPlace }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="tool"
+              [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+              <mat-label>Autofill Cast</mat-label>
+              <mat-select (selectionChange)="onAutofillCast($event)">
+                <mat-option *ngFor="let cast of castsForSegment" [value]="cast">
+                  {{ cast.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="tool"
+              [ngClass]="selectedSegment.uuid == 'intermission' ? 'tool-solo' : ''">
+              <mat-label>Length</mat-label>
+              <input matInput [value]="segmentLength" (input)="onLengthChange($event)">
+            </mat-form-field>
+          </div>
+          <div class="cast-drag-and-drop-container">
+            <app-cast-drag-and-drop #castDnD (castChangeEmitter)="onChangeCast($event)"
+              [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+            </app-cast-drag-and-drop>
+          </div>
+        </div>
       </div>
     </div>
   </div>

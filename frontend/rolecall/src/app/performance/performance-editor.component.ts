@@ -1,5 +1,6 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
-import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Performance, PerformanceApi } from '../api/performance-api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
@@ -20,22 +21,21 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   performancesLoaded = false;
   piecesLoaded = false;
+  castsLoaded = false;
   dataLoaded = false;
 
   constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi,
-    private castAPI: CastApi) { }
+    private castAPI: CastApi, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.state = this.createNewPerformance();
     this.performanceAPI.getAllPerformances().then(val => this.onPerformanceLoad(val));
     this.piecesAPI.getAllPieces().then(val => this.onPieceLoad(val));
+    this.castAPI.getAllCasts().then(val => this.onCastLoad(val));
   }
 
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformanes = perfs;
-    this.allPerformanes.push(...this.allPerformanes);
-    this.allPerformanes.push(...this.allPerformanes);
-    this.allPerformanes.push(...this.allPerformanes);
     this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
     this.performancesLoaded = true;
     this.checkDataLoaded();
@@ -56,8 +56,14 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.checkDataLoaded();
   }
 
+  onCastLoad(casts: Cast[]) {
+    this.allCasts = casts;
+    this.castsLoaded = true;
+    this.checkDataLoaded();
+  }
+
   checkDataLoaded(): boolean {
-    this.dataLoaded = this.performancesLoaded && this.piecesLoaded;
+    this.dataLoaded = this.performancesLoaded && this.piecesLoaded && this.castsLoaded;
     return this.dataLoaded;
   }
 
@@ -206,17 +212,47 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   // Step 3 -------------------------------------------------------
 
   selectedSegment: Piece;
+  selectedIndex: number;
   @ViewChild('castDnD') castDnD: CastDragAndDrop;
+  // segment uuid to cast, primary cast, and length
+  segmentToCast: Map<string, [Cast, number, number]> = new Map();
+  // segement index to length
+  intermissions: Map<number, number> = new Map();
+  chooseFromGroupIndices: number[] = [];
+  primaryGroupNum = 0;
+  allCasts: Cast[] = [];
 
-  onSelectStep3Segment(segment: Piece) {
+  saveCastChanges() {
+    let prevCastUUID = this.state.uuid + "cast" + this.selectedSegment.uuid;
+    if (this.selectedSegment && this.castDnD.castSelected) {
+      let exportedCast: Cast = this.castDnD.dataToCast();
+      if (this.castAPI.hasCast(exportedCast.uuid)) {
+        this.castAPI.deleteCast(exportedCast);
+      }
+      this.segmentToCast.set(prevCastUUID, [exportedCast, this.primaryGroupNum, this.segmentLength]);
+      this.castAPI.setCast(exportedCast, true);
+    }
+    if (this.selectedSegment && this.selectedSegment.uuid == "intermission") {
+      this.intermissions.set(this.selectedIndex, this.segmentLength);
+    }
+  }
+
+  onSelectStep3Segment(segment: Piece, ind: number) {
+    this.saveCastChanges();
     this.selectedSegment = segment;
+    this.selectedIndex = ind;
     if (segment.uuid == "intermission") {
+      if (this.intermissions.has(ind)) {
+        this.segmentLength = this.intermissions.get(ind);
+      } else {
+        this.segmentLength = 0;
+      }
       return;
     }
     let castUUID = this.state.uuid + "cast" + this.selectedSegment.uuid;
-    let cast: Cast;
-    if (this.castAPI.hasCast(castUUID)) {
-      cast = this.castAPI.castFromUUID(castUUID);
+    let castAndPrimLength: [Cast, number, number];
+    if (this.segmentToCast.has(castUUID)) {
+      castAndPrimLength = this.segmentToCast.get(castUUID);
     } else {
       let newCast: Cast = {
         uuid: castUUID,
@@ -234,24 +270,87 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
           }
         })
       };
+      this.segmentToCast.set(newCast.uuid, [newCast, 0, 0]);
       this.castAPI.setCast(newCast, true);
-      cast = this.castAPI.castFromUUID(castUUID);
+      castAndPrimLength = this.segmentToCast.get(castUUID);
     }
+    this.primaryGroupNum = castAndPrimLength[1];
     this.castDnD.selectCast(castUUID, false);
+    this.updateGroupIndices(castAndPrimLength[0]);
+    this.updateCastsForSegment();
+    this.segmentLength = castAndPrimLength[2];
+    this.changeDetectorRef.detectChanges();
+  }
+
+  updateGroupIndices(cast: Cast) {
+    let maxGroupInd = 0;
+    for (let pos of cast.filled_positions) {
+      for (let group of pos.groups) {
+        if (group.group_index > maxGroupInd) {
+          maxGroupInd = group.group_index
+        }
+      }
+    }
+    this.chooseFromGroupIndices = Array(maxGroupInd + 1).fill(0).map((val, ind) => ind);
+  }
+
+  updateCastsForSegment() {
+    this.castsForSegment = this.allCasts.filter(val => val.segment == this.selectedSegment.uuid);
+  }
+
+  onChangeCast(cast: Cast) {
+    this.updateGroupIndices(cast);
+    this.saveCastChanges();
   }
 
   shouldSelectFirstSegment = false;
 
   ngAfterViewChecked() {
     if (this.selectedSegment && this.shouldSelectFirstSegment) {
-      this.onSelectStep3Segment(this.selectedSegment);
+      this.onSelectStep3Segment(this.selectedSegment, 0);
       this.shouldSelectFirstSegment = false;
     }
   }
 
   initStep3Data() {
     this.selectedSegment = this.step2Data[0];
+    this.selectedIndex = 0;
     this.shouldSelectFirstSegment = true;
+    let newInterms: Map<number, number> = new Map();
+    for (let entry of this.intermissions.entries()) {
+      if (this.step2Data.length > entry[0] && this.step2Data[entry[0]].uuid == "intermission") {
+        newInterms.set(entry[0], entry[1]);
+      }
+    }
+    this.intermissions = newInterms;
+  }
+
+  onChoosePrimaryCast(groupInd: number) {
+    this.saveCastChanges();
+  }
+
+  castsForSegment: Cast[] = [];
+
+  onAutofillCast(event: MatSelectChange) {
+    let cast: Cast = event.value;
+    let newCast: Cast = JSON.parse(JSON.stringify(cast));
+    newCast.uuid = this.state.uuid + "cast" + this.selectedSegment.uuid;
+    this.segmentToCast.set(newCast.uuid, [newCast, 0, this.segmentLength]);
+    this.castAPI.setCast(newCast, true);
+    this.updateGroupIndices(newCast);
+  }
+
+  segmentLength = 0;
+
+  onLengthChange(event: any) {
+    let length = event.target.value;
+    try {
+      let numLength = Number(length);
+      this.segmentLength = numLength;
+    } catch (err) {
+      this.segmentLength = 0;
+    }
+    this.saveCastChanges();
   }
 
 
@@ -259,6 +358,13 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   // Step 4 -------------------------------------------------------
 
+  onSubmit() {
+
+  }
+
+  onReturn() {
+    this.onPrevClick();
+  }
 
 
   // --------------------------------------------------------------

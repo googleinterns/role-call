@@ -441,6 +441,34 @@ $buttonRowHeight: 5rem;
       background: $offWhite;
       height: calc(100% - 1rem);
       margin: 0.5rem;
+
+      .toolbar-drag-and-drop-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+
+        .cast-tool-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          &-solo {
+            height: 100%;
+            justify-content: center;
+          }
+
+          .tool {
+            height: 2.5rem;
+            width: 32%;
+            &-solo {
+              width: 100%;
+            }
+          }
+        }
+        .cast-drag-and-drop-container {
+          height: calc(100% - 5rem);
+        }
+      }
     }
   }
 }

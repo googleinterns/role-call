@@ -249,6 +249,7 @@ export class CastDragAndDrop implements OnInit {
       this.setColumnHeaders(currentPosRowInd[0]);
       this.ensureEmptyArrayAtEnd(currentPosRowInd[0]);
       this.updateEmptyRows(currentPosRowInd[0]);
+      this.castChangeEmitter.emit(this.dataToCast());
       return;
     }
     let prevIdSplits = prevContainerID.split(':');
@@ -259,6 +260,7 @@ export class CastDragAndDrop implements OnInit {
       this.setColumnHeaders(prevPosRowInd[0]);
       this.ensureEmptyArrayAtEnd(prevPosRowInd[0]);
       this.updateEmptyRows(prevPosRowInd[0]);
+      this.castChangeEmitter.emit(this.dataToCast());
       return;
     }
     let currentContainerID = event.container.id;
@@ -282,7 +284,7 @@ export class CastDragAndDrop implements OnInit {
       this.ensureEmptyArrayAtEnd(currentPosRowInd[0]);
       this.updateEmptyRows(currentPosRowInd[0]);
     }
-    this.castChangeEmitter.emit(this.cast);
+    this.castChangeEmitter.emit(this.dataToCast());
   }
 
   async saveCast() {
