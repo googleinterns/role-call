@@ -374,9 +374,17 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   submitted = false;
 
   onSubmit() {
-    this.submitted = true;
     let finishedPerf = this.dataToPerformance();
-    this.performanceAPI.setPerformance(finishedPerf);
+    this.performanceAPI.setPerformance(finishedPerf).then(val => {
+      if (val.successful) {
+        this.submitted = true;
+      } else {
+        alert("Unable to save performance: " + val.error);
+      }
+    }).catch(err => {
+      console.log(err);
+      alert("Unable to save performance: " + err.error.status + " " + err.error.error);
+    });
   }
 
   initStep4() {

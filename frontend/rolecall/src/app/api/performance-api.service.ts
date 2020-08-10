@@ -5,6 +5,7 @@ import { APITypes } from 'src/types';
 import { MockPerformanceBackend } from '../mocks/mock_performance_backend';
 import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 
 export type Performance = {
@@ -35,6 +36,11 @@ export type Performance = {
   }
 }
 
+export type RawAllPerformancesResponse = {
+  data: Performance[];
+  warnings: string[];
+}
+
 export type AllPerformancesResponse = {
   data: {
     performances: Performance[]
@@ -59,14 +65,21 @@ export class PerformanceApi {
   mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
 
   constructor(private loggingService: LoggingService, private http: HttpClient,
-    private headerUtil: HeaderUtilityService) { }
+    private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
   /** Hits backend with all performances GET request */
-  requestAllPerformances(): Promise<AllPerformancesResponse> {
+  async requestAllPerformances(): Promise<AllPerformancesResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPerformances();
     }
-    return this.mockBackend.requestAllPerformances();
+    let header = await this.headerUtil.generateHeader();
+    return this.http.get<RawAllPerformancesResponse>(environment.backendURL + "api/performance", {
+      headers: header,
+      observe: "response",
+      withCredentials: true
+    }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(resp)).then((val) => {
+      return { data: { performances: val.data }, warnings: val.warnings };
+    });
   }
 
   /** Hits backend with one performance GET request */
@@ -75,11 +88,18 @@ export class PerformanceApi {
   };
 
   /** Hits backend with create/edit performance POST request */
-  requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
+  async requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceSet(performance);
     }
-    return this.mockBackend.requestPerformanceSet(performance);
+    let header = await this.headerUtil.generateHeader();
+    return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance", {
+      headers: header,
+      observe: "response",
+      withCredentials: true
+    }).toPromise().then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
+      return this.getAllPerformances().then(() => val);
+    });
   }
   /** 
    * Hits backend with delete performance POST request */
