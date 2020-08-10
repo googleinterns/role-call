@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { LoggingService } from '../services/logging.service';
 
@@ -41,7 +42,8 @@ export class LoginApi {
   givenName: string;
   familyName: string;
 
-  constructor(private loggingService: LoggingService, private http: HttpClient) { }
+  constructor(private loggingService: LoggingService, private http: HttpClient,
+    private router: Router) { }
 
   /** Initialize OAuth2 */
   public async initGoogleAuth(): Promise<void> {
@@ -141,6 +143,7 @@ export class LoginApi {
         this.authInstance.signOut();
       }
       this.isLoggedIn = false;
+      this.refresh();
     }
     else {
       this.http.get(environment.backendURL + "logout",
@@ -160,10 +163,15 @@ export class LoginApi {
         }
         this.isLoggedIn = false;
         this.loginPromise = new Promise((res, rej) => { this.resolveLogin = res; });
+        this.refresh();
       }).catch(err => {
         alert("Sign out failed!");
       });
     }
+  }
+
+  refresh() {
+    window.location.pathname = "/";
   }
 
 }
