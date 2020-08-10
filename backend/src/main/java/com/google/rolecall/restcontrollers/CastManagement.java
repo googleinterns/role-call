@@ -35,7 +35,7 @@ public class CastManagement {
   }
 
   @Get(Constants.RequestParameters.SECTION_ID)
-  public CompletableFuture<ResponseSchema<List<CastInfo>>> getAllCasts(@RequestParam(
+  public CompletableFuture<ResponseSchema<List<CastInfo>>> getAllCastsForSection(@RequestParam(
          value=Constants.RequestParameters.SECTION_ID, required=true) int id) {
     List<CastInfo> casts;
 

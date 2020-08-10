@@ -111,6 +111,14 @@ public class Section {
     casts.remove(cast);
   }
 
+  public void addPerformanceSection(PerformanceSection performanceSection) {
+    performanceSection.setSection(this);
+  }
+
+  public void removePerformanceSection(PerformanceSection performanceSection) {
+    performanceSection.setSection(null);
+  }
+
   /* Searches for and returns a Position from positions based on id. */
   public Position getPositionById(Integer id)
       throws EntityNotFoundException, InvalidParameterException {

@@ -8,7 +8,8 @@ public class Constants {
     public static final String USER_MANAGEMENT = "/api/user";
     public static final String SECTION_MANAGEMENT = "/api/section";
     public static final String CAST_MANAGEMENT = "/api/cast";
-    public static final String  INCREMENT_USER_LOGIN = "/api/increment-login";
+    public static final String PERFORMANCE_MANAGEMENT = "/api/performance";
+    public static final String INCREMENT_USER_LOGIN = "/api/increment-login";
   }
 
   public static class RequestParameters {
@@ -16,6 +17,7 @@ public class Constants {
     public static final String ROLE_ID = "roleid";
     public static final String CAST_ID = "castid";
     public static final String SECTION_ID = "sectionid";
+    public static final String PERFORMANCE_ID = "performanceid";
   }
 
   public static class Headers {
