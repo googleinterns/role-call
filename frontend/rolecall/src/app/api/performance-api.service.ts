@@ -23,6 +23,7 @@ export type Performance = {
       segment: string,
       type: "intermission" | "segment",
       length: number,
+      selected_group: number,
       custom_groups: {
         position_uuid: string,
         groups: {

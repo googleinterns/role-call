@@ -1,20 +1,22 @@
 <div *ngIf="dataLoaded">
   <app-stepper #stepper [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
 
-  <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
-    <ng-container *ngSwitchCase="0">
-      <ng-container *ngTemplateOutlet="step1"></ng-container>
+  <div>
+    <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
+      <ng-container *ngSwitchCase="0">
+        <ng-container *ngTemplateOutlet="step1"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="1">
+        <ng-container *ngTemplateOutlet="step2"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="2">
+        <ng-container *ngTemplateOutlet="step3"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="3">
+        <ng-container *ngTemplateOutlet="step4"></ng-container>
+      </ng-container>
     </ng-container>
-    <ng-container *ngSwitchCase="1">
-      <ng-container *ngTemplateOutlet="step2"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="2">
-      <ng-container *ngTemplateOutlet="step3"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="3">
-      <ng-container *ngTemplateOutlet="step4"></ng-container>
-    </ng-container>
-  </ng-container>
+  </div>
 
   <div class="button-overall-container">
     <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
@@ -231,11 +233,39 @@
 
 <ng-template #step4>
   <div class="step4">
-    <ng-container *ngIf="!submitted">
-
-    </ng-container>
-    <ng-container *ngIf="submitted">
-
-    </ng-container>
+    <div>
+      <ng-container *ngIf="!submitted; else submittedCard">
+        <div class="finalize-card-container">
+          <div class="finalize-card app-card">
+            <div class="content">
+              <h2 class="title">Review Casting</h2>
+              <div class="segment-list app-card">
+                <div class="segment-container" *ngFor="let segment of state.step_3.segments">
+                  <h3 class="title">{{segment['name']}}</h3>
+                  <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+                    <h4 class="pos-title">{{pos['name']}}</h4>
+                    <ng-container *ngFor="let group of pos.groups">
+                      <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
+                        <p class="names">{{group['memberNames'].join(", ")}}</p>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #submittedCard>
+        <div class="finalize-card-container">
+          <div class="finalize-card app-card">
+            <div class="content">
+              <h2 class="title">Performance Submitted!</h2>
+              <h2 class="title">{{'Scheduled for ' + date.toLocaleDateString()}}</h2>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </ng-template>

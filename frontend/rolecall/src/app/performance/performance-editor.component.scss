@@ -474,7 +474,90 @@ $buttonRowHeight: 5rem;
 }
 
 .step4 {
-  // margin-top: 10vh;
+  height: 100%;
+
+  .finalize-card-container {
+    height: calc(90vh - 5rem);
+    padding-top: 1rem;
+    width: 100vw;
+
+    .finalize-card {
+      background: $offWhite;
+      height: calc(100% - 1rem);
+      margin-left: 5rem;
+      margin-right: 1rem;
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        .title {
+          font-size: xx-large;
+          font-weight: bold;
+          height: 3rem;
+          margin-left: 1rem;
+          margin-right: 0.5em;
+          padding-top: 1rem;
+        }
+
+        .segment-list {
+          display: flex;
+          flex-direction: column;
+          height: calc(90vh - 12rem);
+          justify-content: flex-start;
+          margin-left: 1rem;
+          margin-right: 1rem;
+          margin-bottom: 1rem;
+          overflow-y: scroll;
+
+          .segment-container {
+            border-left: 4px solid;
+            border-color: $lightLightGray;
+            margin-bottom: 0.5rem;
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+
+            .title {
+              font-size: x-large;
+              font-weight: bold;
+              margin-bottom: 0;
+              margin-right: 0.5em;
+              padding-bottom: 0.5rem;
+              padding-top: 0.5rem;
+            }
+
+            .pos-container {
+              border-left: 4px solid;
+              border-color: $offoffWhite;
+              margin-left: 2rem;
+
+              .pos-title {
+                font-size: larger;
+                font-weight: bold;
+                margin-bottom: 0;
+                margin-right: 0.5em;
+                padding-left: 1em;
+              }
+
+              .dancer-list {
+                border-left: 4px solid;
+                border-color: $offWhite;
+                margin-left: 3rem;
+
+                .names {
+                  font-size: large;
+                  margin-bottom: 0;
+                  margin-right: 0.5em;
+                  padding-left: 1em;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .cdk-drag-animating {

@@ -4,6 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Performance, PerformanceApi } from '../api/performance-api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
+import { User, UserApi } from '../api/user_api.service';
 import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
 import { Stepper } from '../common_components/stepper.component';
 
@@ -20,24 +21,31 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   state: Performance;
 
   performancesLoaded = false;
+  usersLoaded = false;
   piecesLoaded = false;
   castsLoaded = false;
   dataLoaded = false;
 
   constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi,
-    private castAPI: CastApi, private changeDetectorRef: ChangeDetectorRef) { }
+    private castAPI: CastApi, private userAPI: UserApi, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.state = this.createNewPerformance();
     this.performanceAPI.getAllPerformances().then(val => this.onPerformanceLoad(val));
     this.piecesAPI.getAllPieces().then(val => this.onPieceLoad(val));
     this.castAPI.getAllCasts().then(val => this.onCastLoad(val));
+    this.userAPI.getAllUsers().then(val => this.onUserLoad(val));
   }
 
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformanes = perfs;
     this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
     this.performancesLoaded = true;
+    this.checkDataLoaded();
+  }
+
+  onUserLoad(users: User[]) {
+    this.usersLoaded = true;
     this.checkDataLoaded();
   }
 
@@ -63,7 +71,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   checkDataLoaded(): boolean {
-    this.dataLoaded = this.performancesLoaded && this.piecesLoaded && this.castsLoaded;
+    this.dataLoaded = this.performancesLoaded && this.piecesLoaded && this.castsLoaded && this.usersLoaded;
     return this.dataLoaded;
   }
 
@@ -119,6 +127,9 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     if (this.stepper.currentStepIndex == 2) {
       this.initStep3Data();
     }
+    if (this.stepper.currentStepIndex == 3) {
+      this.initStep4();
+    }
   }
 
   // --------------------------------------------------------------
@@ -128,6 +139,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   allPerformanes: Performance[] = [];
   selectedPerformance: Performance;
   dateStr: string;
+  date: Date;
 
   onSelectRecentPerformance(perf: Performance) {
     this.selectedPerformance = perf;
@@ -136,10 +148,10 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   updateDateString() {
     let timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-    let iso = new Date(this.state.step_1.date - timeZoneOffset).toISOString();
+    this.date = new Date(this.state.step_1.date - timeZoneOffset);
+    let iso = this.date.toISOString();
     let isoSplits = iso.slice(0, iso.length - 1).split(":");
     this.dateStr = isoSplits[0] + ":" + isoSplits[1];
-    console.log(this.dateStr);
   }
 
   onStep1Input(field: string, value: any) {
@@ -364,19 +376,24 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   onSubmit() {
     this.submitted = true;
     let finishedPerf = this.dataToPerformance();
-    console.log(finishedPerf);
     this.performanceAPI.setPerformance(finishedPerf);
+  }
+
+  initStep4() {
+    this.state = this.dataToPerformance();
   }
 
   dataToPerformance(): Performance {
     this.updateStep2State();
-    let newState = JSON.parse(JSON.stringify(this.state));
+    let newState: Performance = JSON.parse(JSON.stringify(this.state));
     newState.step_3.segments =
       this.step2Data.map((segment, ind) => {
         if (segment.uuid == "intermission") {
           return {
             segment: "intermission",
+            name: "Intermission",
             type: "intermission",
+            selected_group: undefined,
             length: this.intermissions.get(ind) ? this.intermissions.get(ind) : 0,
             custom_groups: []
           };
@@ -385,9 +402,27 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
         let info: [Cast, number, number] = this.segmentToCast.get(segUUID);
         return {
           segment: segment.uuid,
+          name: segment.name,
           type: "segment",
+          selected_group: info ? info[1] : 0,
           length: this.segmentToCast.get(segUUID) ? this.segmentToCast.get(segUUID)[2] : 0,
-          custom_groups: info[0].filled_positions
+          custom_groups: info ? info[0].filled_positions.map(val => {
+            let positionName = "";
+            this.step2PickFrom.forEach(val2 => {
+              let foundPos = val2.positions.find(val3 => val3.uuid == val.position_uuid);
+              if (foundPos) { positionName = foundPos.name }
+            });
+            return {
+              ...val,
+              name: positionName,
+              groups: val.groups.map(g => {
+                return {
+                  ...g,
+                  memberNames: g.members.map(mem => this.userAPI.users.get(mem.uuid)).map(usr => usr.first_name + " " + usr.last_name)
+                }
+              })
+            }
+          }) : []
         };
       })
     return newState;
