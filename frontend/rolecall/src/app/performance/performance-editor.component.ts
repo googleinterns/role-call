@@ -164,6 +164,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   duplicatePerformance(perf: Performance) {
     this.state = JSON.parse(JSON.stringify(perf));
+    this.state.uuid = "performance" + Date.now();
     this.updateDateString();
     this.initStep2Data();
   }
@@ -358,12 +359,49 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   // Step 4 -------------------------------------------------------
 
-  onSubmit() {
+  submitted = false;
 
+  onSubmit() {
+    this.submitted = true;
+    let finishedPerf = this.dataToPerformance();
+    console.log(finishedPerf);
+    this.performanceAPI.setPerformance(finishedPerf);
+  }
+
+  dataToPerformance(): Performance {
+    this.updateStep2State();
+    let newState = JSON.parse(JSON.stringify(this.state));
+    newState.step_3.segments =
+      this.step2Data.map((segment, ind) => {
+        if (segment.uuid == "intermission") {
+          return {
+            segment: "intermission",
+            type: "intermission",
+            length: this.intermissions.get(ind) ? this.intermissions.get(ind) : 0,
+            custom_groups: []
+          };
+        }
+        let segUUID = newState.uuid + "cast" + segment.uuid;
+        let info: [Cast, number, number] = this.segmentToCast.get(segUUID);
+        return {
+          segment: segment.uuid,
+          type: "segment",
+          length: this.segmentToCast.get(segUUID) ? this.segmentToCast.get(segUUID)[2] : 0,
+          custom_groups: info[0].filled_positions
+        };
+      })
+    return newState;
   }
 
   onReturn() {
     this.onPrevClick();
+    this.submitted = false;
+  }
+
+  onResetFromStart() {
+    this.resetPerformance();
+    this.stepper.navigate(0);
+    this.submitted = false;
   }
 
 

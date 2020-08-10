@@ -31,14 +31,23 @@
       </div>
     </ng-container>
     <ng-template #finalButtons>
-      <button mat-flat-button aria-label="Return to Editor" class="button" (click)="onReturn()">
-        return to editor
-      </button>
-      <div>
-        <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
-          submit
+      <ng-container *ngIf="(!submitted); else submittedButtons">
+        <button mat-flat-button aria-label="Return to Editor" class="button" (click)="onReturn()">
+          return to editor
         </button>
-      </div>
+        <div>
+          <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
+            submit
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #submittedButtons>
+        <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
+          <button mat-flat-button aria-label="New Performance" class="button" (click)="onResetFromStart()">
+            new performance
+          </button>
+        </div>
+      </ng-template>
     </ng-template>
   </div>
 </div>
@@ -222,6 +231,11 @@
 
 <ng-template #step4>
   <div class="step4">
-    <h1>step 4</h1>
+    <ng-container *ngIf="!submitted">
+
+    </ng-container>
+    <ng-container *ngIf="submitted">
+
+    </ng-container>
   </div>
 </ng-template>

@@ -23,12 +23,9 @@ export type Performance = {
       segment: string,
       type: "intermission" | "segment",
       length: number,
-      uses_premade_group: boolean,
-      premade_group_uuid: string,
       custom_groups: {
         position_uuid: string,
         groups: {
-          position_uuid: string,
           group_index: number,
           members: { uuid: string, position_number: number }[]
         }[]

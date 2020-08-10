@@ -26,14 +26,12 @@ export class MockPerformanceBackend {
             segment: "212",
             type: "segment",
             length: 600,
-            uses_premade_group: true,
-            premade_group_uuid: "476",
             custom_groups: [
               {
                 "position_uuid": "213",
                 "groups": [
                   {
-                    "position_uuid": "213", "group_index": 0, "members": [
+                    "group_index": 0, "members": [
                       { "uuid": "184", "position_number": 1 },
                       { "uuid": "186", "position_number": 3 }, { "uuid": "183", "position_number": 0 },
                       { "uuid": "188", "position_number": 5 }, { "uuid": "185", "position_number": 2 },
@@ -41,13 +39,13 @@ export class MockPerformanceBackend {
                     ]
                   },
                   {
-                    "position_uuid": "213", "group_index": 2, "members": [
+                    "group_index": 2, "members": [
                       { "uuid": "196", "position_number": 2 },
                       { "uuid": "195", "position_number": 0 }
                     ]
                   },
                   {
-                    "position_uuid": "213", "group_index": 1, "members": [
+                    "group_index": 1, "members": [
                       { "uuid": "193", "position_number": 4 },
                       { "uuid": "189", "position_number": 0 },
                       { "uuid": "194", "position_number": 5 },
@@ -64,8 +62,6 @@ export class MockPerformanceBackend {
             segment: "intermission",
             type: "intermission",
             length: 300,
-            uses_premade_group: false,
-            premade_group_uuid: "n/a",
             custom_groups: []
           }
         ]
@@ -88,14 +84,12 @@ export class MockPerformanceBackend {
             segment: "212",
             type: "segment",
             length: 600,
-            uses_premade_group: true,
-            premade_group_uuid: "476",
             custom_groups: [
               {
                 "position_uuid": "213",
                 "groups": [
                   {
-                    "position_uuid": "213", "group_index": 0, "members": [
+                    "group_index": 0, "members": [
                       { "uuid": "184", "position_number": 1 },
                       { "uuid": "186", "position_number": 3 }, { "uuid": "183", "position_number": 0 },
                       { "uuid": "188", "position_number": 5 }, { "uuid": "185", "position_number": 2 },
@@ -103,13 +97,13 @@ export class MockPerformanceBackend {
                     ]
                   },
                   {
-                    "position_uuid": "213", "group_index": 2, "members": [
+                    "group_index": 2, "members": [
                       { "uuid": "196", "position_number": 2 },
                       { "uuid": "195", "position_number": 0 }
                     ]
                   },
                   {
-                    "position_uuid": "213", "group_index": 1, "members": [
+                    "group_index": 1, "members": [
                       { "uuid": "193", "position_number": 4 },
                       { "uuid": "189", "position_number": 0 },
                       { "uuid": "194", "position_number": 5 },
@@ -126,8 +120,6 @@ export class MockPerformanceBackend {
             segment: "intermission",
             type: "intermission",
             length: 300,
-            uses_premade_group: false,
-            premade_group_uuid: "n/a",
             custom_groups: []
           }
         ]
