@@ -34,7 +34,7 @@ public class PerformanceSection {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Performance performance;
 
-  @ManyToOne(optional = false, fetch = FetchType.EAGER)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Section section;
 
   @OneToMany(mappedBy = "performanceSection", 
