@@ -116,6 +116,7 @@ public class Performance {
         .collect(Collectors.toList());
 
     PerformanceInfo info = PerformanceInfo.newBuilder()
+        .setId(id)
         .setTitle(getTitle())
         .setDescription(getDescription())
         .setLocation(getLocation())

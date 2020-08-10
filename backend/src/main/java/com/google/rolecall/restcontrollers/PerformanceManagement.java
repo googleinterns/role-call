@@ -8,9 +8,17 @@ import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.PerformanceInfo;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.models.Performance;
+import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
+import com.google.rolecall.restcontrollers.Annotations.Post;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.PerformanceServices;
+import com.google.rolecall.services.ServiceResult;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Endpoint(Constants.Mappings.PERFORMANCE_MANAGEMENT)
 public class PerformanceManagement extends AsyncRestEndpoint {
@@ -31,5 +39,55 @@ public class PerformanceManagement extends AsyncRestEndpoint {
 
   public PerformanceManagement(PerformanceServices performanceService) {
     this.performanceService = performanceService;
+  }
+
+  @Get(Constants.RequestParameters.PERFORMANCE_ID)
+  public CompletableFuture<ResponseSchema<PerformanceInfo>> getSingleSection(
+      @RequestParam(value=Constants.RequestParameters.PERFORMANCE_ID, required=true) int id) {
+    Performance performance;
+
+    try {
+      performance = performanceService.getPerformance(id);
+    } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+
+    ResponseSchema<PerformanceInfo> response =
+        new ResponseSchema<>(performance.toPerformanceInfo());
+    return CompletableFuture.completedFuture(response);
+  }
+
+  @Post
+  public CompletableFuture<ResponseSchema<PerformanceInfo>> createCast(
+      @RequestBody PerformanceInfo newPerformance) {
+    ServiceResult<Performance> result;
+
+    try {
+      result = performanceService.createPerformance(newPerformance);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+
+    ResponseSchema<PerformanceInfo> response = new ResponseSchema<>(
+        result.getResult().toPerformanceInfo(),result.getWarnings());
+    return CompletableFuture.completedFuture(response);
+  }
+
+  @Delete(Constants.RequestParameters.PERFORMANCE_ID)
+  public CompletableFuture<Void> deleteCast(@RequestParam(
+      value=Constants.RequestParameters.PERFORMANCE_ID, required=true) int id) {
+    try {
+      performanceService.deletePerformance(id);
+    } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+    
+    return CompletableFuture.completedFuture(null);
   }
 }

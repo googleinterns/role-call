@@ -1,7 +1,11 @@
 package com.google.rolecall.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final AuthenticationProvider authProvider;
+  private final Environment env;
 
   @Override
   public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
@@ -35,6 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().logout()
         .deleteCookies("SESSIONID").invalidateHttpSession(true)
         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+
+    List<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
+    if(activeProfiles.contains("dev")) {
+      http.csrf().disable();
+    }
   }
 
   /** Initializes the filter for Authentication header information. */
@@ -44,7 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return filter;
   }
 
-  public WebSecurityConfig(AuthenticationProvider authProvider) {
+  public WebSecurityConfig(AuthenticationProvider authProvider, Environment env) {
     this.authProvider = authProvider;
+    this.env = env;
   }
 }

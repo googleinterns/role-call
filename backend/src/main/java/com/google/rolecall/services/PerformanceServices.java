@@ -57,6 +57,8 @@ public class PerformanceServices {
     Performance performance = buildNewPerformance(newPerformance);
     List<String> warnings = verifyPerformance(performance);
 
+    performance = performanceRepo.save(performance);
+
     ServiceResult<Performance> result = new ServiceResult<>(performance, warnings);
     return result;
   }
@@ -112,12 +114,11 @@ public class PerformanceServices {
 
       Section section = sectionService.getSection(info.sectionId());
       section.addPerformanceSection(performanceSection);
+      performance.addPerformanceSection(performanceSection);
 
       if(info.positions() != null) {
         performanceSection = addNewCastMembers(performanceSection, info.positions());
       }
-      
-      performance.addPerformanceSection(performanceSection);
     }
 
     return performance;
@@ -167,7 +168,7 @@ public class PerformanceServices {
     List<String> warnings = new ArrayList<>();
 
     HashSet<Integer> uniqueSectionPositions = new HashSet<>();
-    Hashtable<Integer, HashSet<User>> uniqueMembers = new Hashtable<>();
+    Hashtable<Integer, HashSet<Integer>> uniqueMembersByCastNumber = new Hashtable<>();
     for(PerformanceSection section: performance.getProgram()) {
       Integer order = section.getSectionPosition();
 
@@ -177,16 +178,27 @@ public class PerformanceServices {
       }
       uniqueSectionPositions.add(order);
 
-      Hashtable<Integer, HashSet<Integer>> uniqueOrders = new Hashtable<>();
+      Hashtable<Position, Hashtable<Integer, HashSet<Integer>>> uniqueOrders = new Hashtable<>();
       for(PerformanceCastMember member: section.getPerformanceCastMembers()) {
+        // Validity Check
+        Hashtable<Integer, HashSet<Integer>>positionOrders;
+        Position position = member.getPosition();
+
+        if(uniqueOrders.containsKey(position)) {
+          positionOrders = uniqueOrders.get(position);
+        } else {
+          positionOrders = new Hashtable<>();
+          uniqueOrders.put(position, positionOrders);
+        }
+        
         HashSet<Integer> orders;
         int castNumber = member.getCastNumber();
 
-        if(uniqueOrders.containsKey(castNumber)) {
-          orders = uniqueOrders.get(castNumber);
+        if(positionOrders.containsKey(castNumber)) {
+          orders = positionOrders.get(castNumber);
         } else {
           orders = new HashSet<>();
-          uniqueOrders.put(castNumber, orders);
+          positionOrders.put(castNumber, orders);
         }
 
         if(orders.contains(member.getOrder())) {
@@ -195,21 +207,21 @@ public class PerformanceServices {
         }
         orders.add(member.getOrder());
 
-
-        HashSet<User> cast;
-        if(uniqueMembers.containsKey(castNumber)) {
-          cast = uniqueMembers.get(castNumber);
+        // Warnings Check
+        HashSet<Integer> cast;
+        if(uniqueMembersByCastNumber.containsKey(castNumber)) {
+          cast = uniqueMembersByCastNumber.get(castNumber);
         } else {
           cast = new HashSet<>();
-          uniqueMembers.put(castNumber, cast);
+          uniqueMembersByCastNumber.put(castNumber, cast);
         }
 
         User user = member.getUser();
-        if(cast.contains(user)) {
+        if(cast.contains(user.getId())) {
           warnings.add(String.format("User %s %s appears multiple times in cast %d",
               user.getFirstName(), user.getLastName(), castNumber));
         } else {
-          cast.add(user);
+          cast.add(user.getId());
         }
       }
     }

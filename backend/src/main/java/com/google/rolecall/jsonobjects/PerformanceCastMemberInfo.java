@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
 
-@JsonDeserialize(builder = AutoValue_PerformanceCastInfo.Builder.class)
+@JsonDeserialize(builder = AutoValue_PerformanceCastMemberInfo.Builder.class)
 @AutoValue
 public abstract class PerformanceCastMemberInfo {
   @Nullable

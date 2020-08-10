@@ -17,7 +17,7 @@ public class WebSecurityUnitTests {
   @Test
   public void runWebSecurityConfigurations_success() throws Exception {
     // Setup
-    WebSecurityConfig config = new WebSecurityConfig(null);
+    WebSecurityConfig config = new WebSecurityConfig(null, null);
     ObjectPostProcessor<Object> objectPostProcessor = new ObjectPostProcessor<Object>() {
       public <T> T postProcess(T object) {
         throw new IllegalStateException("For testing purposes only");
