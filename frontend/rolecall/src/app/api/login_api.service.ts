@@ -159,6 +159,7 @@ export class LoginApi {
           this.authInstance.signOut();
         }
         this.isLoggedIn = false;
+        this.loginPromise = new Promise((res, rej) => { this.resolveLogin = res; });
       }).catch(err => {
         alert("Sign out failed!");
       });
