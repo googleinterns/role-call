@@ -37,8 +37,39 @@ export type Performance = {
 }
 
 export type RawAllPerformancesResponse = {
-  data: Performance[];
+  data: RawPerformance[];
   warnings: string[];
+}
+
+export type RawPerformance = {
+  "id": number,
+  "title": string,
+  "description": string,
+  "location": string,
+  "dateTime": number,
+  "status": string,
+  "PerformanceSections":
+  {
+    "id"?: number,
+    "sectionPosition": number,
+    "primaryCast": number,
+    "sectionId": number,
+    "positions":
+    {
+      "positionId": number,
+      "casts":
+      {
+        "castNumber": number,
+        "members":
+        {
+          "id"?: number,
+          "order": number,
+          "userId": number,
+          "performing": boolean
+        }[]
+      }[]
+    }[]
+  }[]
 }
 
 export type AllPerformancesResponse = {
@@ -67,6 +98,86 @@ export class PerformanceApi {
   constructor(private loggingService: LoggingService, private http: HttpClient,
     private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
+  convertRawToPerformance(raw: RawPerformance): Performance {
+    return {
+      uuid: String(raw.id),
+      step_1: {
+        title: raw.title,
+        description: raw.description,
+        date: raw.dateTime,
+        location: raw.location
+      },
+      step_2: {
+        segments: raw.PerformanceSections.map(val => val).sort((a, b) => {
+          return a.sectionPosition < b.sectionPosition ? -1 : 1;
+        }).map(val => String(val.sectionId))
+      },
+      step_3: {
+        segments: raw.PerformanceSections.map(val => {
+          return {
+            segment: val.positions.length == 0 ? "intermission" : String(val.sectionId),
+            type: val.positions.length == 0 ? "intermission" : "segment",
+            length: 0,
+            selected_group: val.primaryCast,
+            custom_groups: val.positions.map(pos => {
+              return {
+                position_uuid: String(pos.positionId),
+                groups: pos.casts.map(c => {
+                  return {
+                    group_index: c.castNumber,
+                    members: c.members.map(mem => {
+                      return {
+                        uuid: String(mem.userId),
+                        position_number: mem.order
+                      }
+                    })
+                  }
+                })
+
+              }
+            })
+          }
+        })
+      }
+    }
+  }
+
+  convertPerformanceToRaw(perf: Performance): RawPerformance {
+    return {
+      id: Number(perf.uuid),
+      title: perf.step_1.title,
+      description: perf.step_1.description,
+      location: perf.step_1.location,
+      dateTime: perf.step_1.date,
+      status: "",
+      PerformanceSections: perf.step_3.segments.map((seg, ind) => {
+        return {
+          sectionPosition: ind,
+          primaryCast: seg.selected_group,
+          sectionId: Number(seg.segment),
+          positions: seg.custom_groups.map(cg => {
+            return {
+              positionId: Number(cg.position_uuid),
+              casts: cg.groups.map(c => {
+                return {
+                  castNumber: c.group_index,
+                  members: c.members.map(mem => {
+                    return {
+                      order: mem.position_number,
+                      userId: Number(mem.uuid),
+                      performing: c.group_index == seg.selected_group
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+
+      })
+    }
+  }
+
   /** Hits backend with all performances GET request */
   async requestAllPerformances(): Promise<AllPerformancesResponse> {
     if (environment.mockBackend) {
@@ -78,7 +189,7 @@ export class PerformanceApi {
       observe: "response",
       withCredentials: true
     }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(resp)).then((val) => {
-      return { data: { performances: val.data }, warnings: val.warnings };
+      return { data: { performances: val.data.map(val => this.convertRawToPerformance(val)) }, warnings: val.warnings };
     });
   }
 
@@ -93,13 +204,16 @@ export class PerformanceApi {
       return this.mockBackend.requestPerformanceSet(performance);
     }
     let header = await this.headerUtil.generateHeader();
-    return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance", {
-      headers: header,
-      observe: "response",
-      withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
-      return this.getAllPerformances().then(() => val);
-    });
+    console.log(header);
+    return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
+      this.convertPerformanceToRaw(performance),
+      {
+        headers: header,
+        observe: "response",
+        withCredentials: true
+      }).toPromise().then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
+        return this.getAllPerformances().then(() => val);
+      });
   }
   /** 
    * Hits backend with delete performance POST request */
