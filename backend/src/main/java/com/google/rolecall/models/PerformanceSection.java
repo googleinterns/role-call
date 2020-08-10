@@ -1,6 +1,8 @@
 package com.google.rolecall.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -15,6 +17,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.rolecall.jsonobjects.PerformanceCastInfo;
+import com.google.rolecall.jsonobjects.PerformanceCastMemberInfo;
+import com.google.rolecall.jsonobjects.PerformancePositionInfo;
+import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 @Entity
@@ -75,6 +81,72 @@ public class PerformanceSection {
   public void removePerformanceCastMember(PerformanceCastMember member) {
     member.setPerformance(null);
     performanceCastMembers.remove(member);
+  }
+
+  public PerformanceSectionInfo toPerformanceSectionInfo() {
+    Hashtable<Position, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions = 
+        new Hashtable<>();
+    
+    for(PerformanceCastMember member: performanceCastMembers) {
+      Position position = member.getPosition();
+
+      Hashtable<Integer, List<PerformanceCastMemberInfo>> cast;
+      if(positions.containsKey(position)) {
+        cast = positions.get(position);
+      } else {
+        cast = new Hashtable<>();
+        positions.put(position, cast);
+      }
+
+      int castNumber = member.getCastNumber();
+      List<PerformanceCastMemberInfo> members;
+      if(cast.containsKey(castNumber)) {
+        members = cast.get(castNumber);
+      } else {
+        members = new ArrayList<>();
+        cast.put(castNumber, members);
+      }
+
+      members.add(member.toPerformanceCastMemberInfo());
+    }
+
+    List<PerformancePositionInfo> positionInfos = toAllPerformancePositionInfo(positions);
+
+    return PerformanceSectionInfo.newBuilder()
+        .setId(id)
+        .setPrimaryCast(getPrimaryCast())
+        .setSectionId(section.getId())
+        .setSectionPosition(getSectionPosition())
+        .setPositions(positionInfos)
+        .build();
+  }
+
+  private List<PerformancePositionInfo> toAllPerformancePositionInfo(
+      Hashtable<Position, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions) {
+    List<PerformancePositionInfo> positionInfos = new ArrayList<>();
+
+    for(Position position: positions.keySet()) {
+      Hashtable<Integer, List<PerformanceCastMemberInfo>> casts = positions.get(position);
+      
+      List<PerformanceCastInfo> castInfos = new ArrayList<>();
+      for(Integer castNumber: casts.keySet()) {
+        PerformanceCastInfo castInfo = PerformanceCastInfo.newBuilder()
+            .setCastNumber(castNumber)
+            .setPerformanceCastMembers(casts.get(castNumber))
+            .build();
+        
+        castInfos.add(castInfo);
+      }
+      
+      PerformancePositionInfo positionInfo = PerformancePositionInfo.newBuilder()
+          .setPositionId(position.getId())
+          .setPerformanceCasts(castInfos)
+          .build();
+
+      positionInfos.add(positionInfo);
+    }
+
+    return positionInfos;
   }
 
   void setSection(Section section) {

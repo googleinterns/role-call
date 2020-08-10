@@ -30,7 +30,7 @@ public abstract class PerformanceInfo {
 
   @Nullable
   @JsonProperty("dateTime")
-  public abstract Integer dateTime();
+  public abstract Long dateTime();
 
   @Nullable
   @JsonProperty("status")
@@ -52,6 +52,10 @@ public abstract class PerformanceInfo {
     return super.hashCode();
   }
 
+  public static Builder newBuilder() {
+    return new AutoValue_PerformanceInfo.Builder();
+  }
+
   @AutoValue.Builder
   public abstract static class Builder { 
     @JsonProperty("id")
@@ -67,7 +71,7 @@ public abstract class PerformanceInfo {
     public abstract Builder setLocation(String location);
 
     @JsonProperty("dateTime")
-    public abstract Builder setDateTime(Integer dateTime);
+    public abstract Builder setDateTime(Long dateTime);
     
     @JsonProperty("status")
     public abstract Builder setStatus(Status status);

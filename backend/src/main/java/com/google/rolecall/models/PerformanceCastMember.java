@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.google.rolecall.jsonobjects.PerformanceCastMemberInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 @Entity
@@ -90,6 +91,15 @@ public class PerformanceCastMember {
 
   void setPosition(Position position) {
     this.position = position;
+  }
+
+  public PerformanceCastMemberInfo toPerformanceCastMemberInfo() {
+    return PerformanceCastMemberInfo.newBuilder()
+        .setId(id)
+        .setOrder(order)
+        .setPerforming(performing)
+        .setUserId(user.getId())
+        .build();
   }
 
   public Builder toBuilder() {

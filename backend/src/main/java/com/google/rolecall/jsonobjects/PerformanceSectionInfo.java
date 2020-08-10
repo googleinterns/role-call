@@ -46,6 +46,10 @@ public abstract class PerformanceSectionInfo {
     return super.hashCode();
   }
 
+  public static Builder newBuilder() {
+    return new AutoValue_PerformanceSectionInfo.Builder();
+  }
+
   @AutoValue.Builder
   public abstract static class Builder { 
     @JsonProperty("id")

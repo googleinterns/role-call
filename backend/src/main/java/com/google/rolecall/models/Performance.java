@@ -3,6 +3,7 @@ package com.google.rolecall.models;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.rolecall.jsonobjects.PerformanceInfo;
+import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 @Entity
@@ -107,6 +110,23 @@ public class Performance {
     member.setPerformance(null);
   }
 
+  public PerformanceInfo toPerformanceInfo() {
+    List<PerformanceSectionInfo> sections = performanceSections
+        .stream().map(s -> s.toPerformanceSectionInfo())
+        .collect(Collectors.toList());
+
+    PerformanceInfo info = PerformanceInfo.newBuilder()
+        .setTitle(getTitle())
+        .setDescription(getDescription())
+        .setLocation(getLocation())
+        .setDateTime(getDate().getTime())
+        .setStatus(getStatus())
+        .setPerformanceSections(sections)
+        .build();
+
+    return info;
+  }
+
   public Builder toBuilder() {
     return new Builder(this);
   }
@@ -149,7 +169,7 @@ public class Performance {
       return this;
     }
 
-    public Builder setDateTime(Integer dateTimeMilis) {
+    public Builder setDateTime(Long dateTimeMilis) {
       if(dateTimeMilis != null) {
         this.dateTime = new Date(dateTimeMilis);
       }

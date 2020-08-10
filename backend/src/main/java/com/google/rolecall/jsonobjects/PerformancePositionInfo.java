@@ -31,6 +31,10 @@ public abstract class PerformancePositionInfo {
     return super.hashCode();
   }
 
+  public static Builder newBuilder() {
+    return new AutoValue_PerformancePositionInfo.Builder();
+  }
+
   @AutoValue.Builder
   public abstract static class Builder { 
     @JsonProperty("positionId")

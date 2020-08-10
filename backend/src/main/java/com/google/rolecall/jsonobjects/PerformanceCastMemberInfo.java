@@ -40,6 +40,10 @@ public abstract class PerformanceCastMemberInfo {
     return super.hashCode();
   }
 
+  public static Builder newBuilder() {
+    return new AutoValue_PerformanceCastMemberInfo.Builder();
+  }
+
   @AutoValue.Builder
   public abstract static class Builder { 
     @JsonProperty("id")
