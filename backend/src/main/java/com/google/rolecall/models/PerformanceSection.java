@@ -47,11 +47,11 @@ public class PerformanceSection {
     return id;
   }
 
-  public Integer getSectionPosition() {
+  public int getSectionPosition() {
     return sectionPosition;
   }
 
-  public Integer getPrimaryCast() {
+  public int getPrimaryCast() {
     return primaryCast == null ? 0 : primaryCast;
   }
 
@@ -61,6 +61,10 @@ public class PerformanceSection {
 
   public Section getSection() {
     return section;
+  }
+
+  public List<PerformanceCastMember> getPerformanceCastMembers() {
+    return performanceCastMembers;
   }
 
   public void addPerformanceCastMember(PerformanceCastMember member) {

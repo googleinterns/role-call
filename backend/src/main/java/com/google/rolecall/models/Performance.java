@@ -75,6 +75,10 @@ public class Performance {
     return status;
   }
 
+  public List<PerformanceSection> getProgram() {
+    return performanceSections;
+  }
+
   public void publish() {
     if(status == Status.Draft) {
       this.status = Status.Published;
@@ -129,7 +133,7 @@ public class Performance {
       return this;
     }
 
-    public Builder setNotes(String description) {
+    public Builder setDescription(String description) {
       if(description != null) {
         this.description = description;
       }

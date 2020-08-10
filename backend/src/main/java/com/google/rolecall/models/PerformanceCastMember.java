@@ -108,7 +108,7 @@ public class PerformanceCastMember {
     private Integer castNumber;
     private Integer order;
 
-    public Builder setCAstNumber(Integer castNumber) {
+    public Builder setCastNumber(Integer castNumber) {
       if(castNumber != null) {
         this.castNumber = castNumber;
       }
