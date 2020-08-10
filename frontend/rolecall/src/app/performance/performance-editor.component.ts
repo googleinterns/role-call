@@ -116,8 +116,13 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onStepChange(step) {
+    if (this.lastStepperIndex == 3 && this.submitted) {
+      this.onResetFromStart();
+    }
     this.updateBasedOnStep();
   }
+
+  lastStepperIndex: number = 0;
 
   updateBasedOnStep() {
     if (this.stepper.currentStepIndex == 1) {
@@ -130,6 +135,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     if (this.stepper.currentStepIndex == 3) {
       this.initStep4();
     }
+    this.lastStepperIndex = this.stepper.currentStepIndex;
   }
 
   // --------------------------------------------------------------
@@ -177,6 +183,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   duplicatePerformance(perf: Performance) {
     this.state = JSON.parse(JSON.stringify(perf));
     this.state.uuid = "performance" + Date.now();
+    this.state.step_1.title = this.state.step_1.title + " copy";
     this.updateDateString();
     this.initStep2Data();
   }
@@ -442,8 +449,8 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onResetFromStart() {
-    this.resetPerformance();
     this.stepper.navigate(0);
+    this.resetPerformance();
     this.submitted = false;
   }
 
