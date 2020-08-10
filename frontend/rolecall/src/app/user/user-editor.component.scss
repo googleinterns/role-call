@@ -172,6 +172,7 @@
   background: $AAOrange;
   color: white;
   font-size: x-large;
+  font-weight: bold;
   margin-right: 0.6em;
   margin-bottom: 0.6em;
   padding-bottom: 0.5em;
@@ -192,6 +193,7 @@
   &:hover {
     background: red;
     color: $white;
+    font-weight: bold;
   }
 }
 

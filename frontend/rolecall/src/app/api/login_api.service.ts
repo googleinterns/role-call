@@ -136,25 +136,33 @@ export class LoginApi {
 
   /** Sign out of Google OAuth2 */
   public async signOut() {
-    this.http.get(environment.backendURL + "logout",
-      {
-        observe: "response",
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'EMAIL': this.email
-        }
-      }
-    ).toPromise().then((resp) => {
-      if (resp.status > 299 || resp.status < 200) { return Promise.reject("Sign in failed") }
-      else { return resp }
-    }).then(() => {
+    if (environment.mockBackend) {
       if (this.isLoggedIn) {
         this.authInstance.signOut();
       }
       this.isLoggedIn = false;
-    }).catch(err => {
-      alert("Sign out failed!");
-    });
+    }
+    else {
+      this.http.get(environment.backendURL + "logout",
+        {
+          observe: "response",
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'EMAIL': this.email
+          }
+        }
+      ).toPromise().then((resp) => {
+        if (resp.status > 299 || resp.status < 200) { return Promise.reject("Sign in failed") }
+        else { return resp }
+      }).then(() => {
+        if (this.isLoggedIn) {
+          this.authInstance.signOut();
+        }
+        this.isLoggedIn = false;
+      }).catch(err => {
+        alert("Sign out failed!");
+      });
+    }
   }
 
 }

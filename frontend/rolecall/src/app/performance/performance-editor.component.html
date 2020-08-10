@@ -1,5 +1,5 @@
 <div *ngIf="dataLoaded">
-  <app-stepper #stepper [stepperOptions]="stepperOpts"></app-stepper>
+  <app-stepper #stepper [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
 
   <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
     <ng-container *ngSwitchCase="0">
@@ -112,14 +112,38 @@
         <div class="title-container">
           <h2 class="title">Ballets</h2>
         </div>
-        <div cdkDropList>
-
+        <div cdkDropList id="piece-list" [cdkDropListData]="step2PickFrom">
+          <div *ngFor="let data of step2PickFrom; let i = index">
+            <div cdkDrag class="piece-name-container" [cdkDragData]="data">
+              <div class="app-card piece-name-card">
+                <h2 class="piece-name">{{data.name}}</h2>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="right-card-container">
       <div class="right-card app-card">
         <div class="content">
+          <h2 class="program-title">Program</h2>
+          <div id="program-list" cdkDropList (cdkDropListDropped)="step2Drop($event)" [cdkDropListData]="step2Data">
+            <div *ngFor="let data of step2Data; let i = index">
+              <div cdkDrag class="piece-container" [cdkDragData]="data">
+                <div class="app-card piece-name-card">
+                  <h2 class="piece-name-delete">{{data.name}}</h2>
+                </div>
+                <div class="delete-button-height-container">
+                  <button mat-icon-button aria-label="Delete Piece Button" class="delete-button"
+                    (click)="deletePiece(data, i)">
+                    <mat-icon [inline]="true" class="delete-button-icon">
+                      delete
+                    </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

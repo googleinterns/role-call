@@ -14,6 +14,7 @@ $buttonRowHeight: 5rem;
     background: $AAOrange;
     color: white;
     font-size: x-large;
+    font-weight: bold;
     margin: 0.5rem;
     padding-bottom: 0.5em;
     padding-left: 1.5em;
@@ -290,10 +291,75 @@ $buttonRowHeight: 5rem;
       .content {
         display: flex;
         flex-direction: column;
+        height: 100%;
         justify-content: flex-start;
+      }
+
+      .program-title {
+        font-size: xx-large;
+        font-weight: bold;
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+        padding-top: 0.5em;
       }
     }
   }
+}
+.piece-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  margin-left: 1em;
+
+  .delete-button-height-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: auto;
+    margin-top: auto;
+
+    .delete-button {
+      color: black;
+      font-size: x-large;
+      padding-bottom: 0.5em;
+      padding-left: 1em;
+      padding-right: 1em;
+      width: 100%;
+      .delete-button-icon {
+        font-size: 6vh;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+.piece-name-card {
+  margin-left: 1em;
+  width: calc(100% - 2em);
+
+  .piece-name {
+    font-size: x-large;
+    font-weight: bold;
+    margin-left: 1em;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+    &-delete {
+      font-size: x-large;
+      font-weight: bold;
+      margin-bottom: 0;
+      margin-left: 1em;
+      padding-bottom: 0.5em;
+      padding-top: 0.5em;
+    }
+  }
+}
+#piece-list {
+  overflow-y: scroll;
+}
+#program-list {
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .step3 {
@@ -302,4 +368,14 @@ $buttonRowHeight: 5rem;
 
 .step4 {
   // margin-top: 10vh;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+.cdk-drop-list-dragging :not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

@@ -27,18 +27,19 @@
   flex-direction: column;
   height: 10vh;
   justify-content: center;
-  margin-right: 2vw;
-  width: 7vh;
+  margin-right: 1.5em;
+  width: fit-content;
 }
 // The log in button
 .log-in-button {
   font-size: large;
   height: 50%;
+  width: fit-content;
 }
 // The profile picture
 .profile-image {
   border: solid;
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border-width: 3px;
   box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
