@@ -26,6 +26,7 @@ import { CastingEditor } from './casting_editor.component';
     MatSelectModule,
     DragDropModule,
     NgbModule
-  ]
+  ],
+  exports: [CastDragAndDrop]
 })
 export class CastModule { }

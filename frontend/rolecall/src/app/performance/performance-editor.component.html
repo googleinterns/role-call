@@ -152,7 +152,29 @@
 
 <ng-template #step3>
   <div class="step3">
-    <h1>step 3</h1>
+    <div class="left-card-container">
+      <div class="left-card app-card">
+        <div class="title-container">
+          <h2 class="title">Program</h2>
+        </div>
+        <div class="children-container">
+          <div class="child-container">
+            <div *ngFor="let segment of step2Data" class="child app-card"
+              [ngClass]="segment.uuid == this.selectedSegment.uuid ? 'child-selected' : ''"
+              (click)="onSelectStep3Segment(segment)">
+              <h3 class="segment-title">{{ segment.name }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right-card-container">
+      <div class="app-card right-card" *ngIf="selectedSegment != undefined">
+        <app-cast-drag-and-drop #castDnD
+          [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+        </app-cast-drag-and-drop>
+      </div>
+    </div>
   </div>
 </ng-template>
 

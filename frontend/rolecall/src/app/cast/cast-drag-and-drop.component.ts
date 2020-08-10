@@ -24,6 +24,8 @@ export class CastDragAndDrop implements OnInit {
   allUsers: User[] = [];
   @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
 
+  buttonsEnabled = true;
+
   usersLoaded = false;
   castsLoaded = false;
   piecesLoaded = false;
@@ -82,7 +84,8 @@ export class CastDragAndDrop implements OnInit {
     }
   }
 
-  selectCast(uuid: APITypes.CastUUID) {
+  selectCast(uuid: APITypes.CastUUID, saveDeleteEnabled?: boolean) {
+    this.buttonsEnabled = saveDeleteEnabled ? true : (isNullOrUndefined(saveDeleteEnabled) ? true : false);
     this.castSelected = true;
     this.selectedCastUUID = uuid;
     if (this.dataLoaded) {

@@ -1,6 +1,7 @@
 <div *ngIf="dataLoaded && castSelected" class="drop-group-container" cdkDropListGroup>
   <div class="position-pool">
-    <input type="text" class="name-input" (input)="onTitleInput($event)" [value]="this.cast.name" />
+    <input *ngIf="buttonsEnabled" type="text" class="name-input" (input)="onTitleInput($event)"
+      [value]="this.cast.name" />
     <div *ngFor="let position of data; let i1 = index" class="position-container">
       <div *ngIf="i1 < positionVals.length">
         <h3 class="position-title">{{positionVals[i1].name}}</h3>
@@ -38,7 +39,7 @@
         {{user.first_name + " " + user.last_name}}
       </div>
     </div>
-    <div class="buttons-container">
+    <div *ngIf="buttonsEnabled" class="buttons-container">
       <button mat-icon-button class="save-delete-button" (click)="deleteCast()">
         <mat-icon class="save-delete-button-icon">
           delete

@@ -1,7 +1,9 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
+import { Cast, CastApi } from '../api/cast_api.service';
 import { Performance, PerformanceApi } from '../api/performance-api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
+import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
 import { Stepper } from '../common_components/stepper.component';
 
 @Component({
@@ -9,7 +11,7 @@ import { Stepper } from '../common_components/stepper.component';
   templateUrl: './performance-editor.component.html',
   styleUrls: ['./performance-editor.component.scss']
 })
-export class PerformanceEditor implements OnInit {
+export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   @ViewChild('stepper') stepper: Stepper;
   stepperOpts = ["Performance Details", "Pieces & Intermissions", "Fill Casts", "Finalize"];
@@ -20,7 +22,8 @@ export class PerformanceEditor implements OnInit {
   piecesLoaded = false;
   dataLoaded = false;
 
-  constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi) { }
+  constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi,
+    private castAPI: CastApi) { }
 
   ngOnInit(): void {
     this.state = this.createNewPerformance();
@@ -108,6 +111,7 @@ export class PerformanceEditor implements OnInit {
       this.updateStep2State();
     }
     if (this.stepper.currentStepIndex == 2) {
+      this.initStep3Data();
     }
   }
 
@@ -201,6 +205,54 @@ export class PerformanceEditor implements OnInit {
 
   // Step 3 -------------------------------------------------------
 
+  selectedSegment: Piece;
+  @ViewChild('castDnD') castDnD: CastDragAndDrop;
+
+  onSelectStep3Segment(segment: Piece) {
+    this.selectedSegment = segment;
+    if (segment.uuid == "intermission") {
+      return;
+    }
+    let castUUID = this.state.uuid + "cast" + this.selectedSegment.uuid;
+    let cast: Cast;
+    if (this.castAPI.hasCast(castUUID)) {
+      cast = this.castAPI.castFromUUID(castUUID);
+    } else {
+      let newCast: Cast = {
+        uuid: castUUID,
+        name: "New Cast",
+        segment: this.selectedSegment.uuid,
+        filled_positions: this.selectedSegment.positions.map(val => {
+          return {
+            position_uuid: val.uuid,
+            groups: [
+              {
+                group_index: 0,
+                members: []
+              }
+            ]
+          }
+        })
+      };
+      this.castAPI.setCast(newCast, true);
+      cast = this.castAPI.castFromUUID(castUUID);
+    }
+    this.castDnD.selectCast(castUUID, false);
+  }
+
+  shouldSelectFirstSegment = false;
+
+  ngAfterViewChecked() {
+    if (this.selectedSegment && this.shouldSelectFirstSegment) {
+      this.onSelectStep3Segment(this.selectedSegment);
+      this.shouldSelectFirstSegment = false;
+    }
+  }
+
+  initStep3Data() {
+    this.selectedSegment = this.step2Data[0];
+    this.shouldSelectFirstSegment = true;
+  }
 
 
   // --------------------------------------------------------------
