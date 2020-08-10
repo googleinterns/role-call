@@ -23,8 +23,10 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.E
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("performanceServices")
+@Transactional(rollbackFor = Exception.class)
 public class PerformanceServices {
 
   private final PerformanceRepository performanceRepo;

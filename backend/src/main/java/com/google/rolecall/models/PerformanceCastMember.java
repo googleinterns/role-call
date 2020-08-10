@@ -38,7 +38,7 @@ public class PerformanceCastMember {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private PerformanceSection performanceSection;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Position position;
 
   public Integer getId() {

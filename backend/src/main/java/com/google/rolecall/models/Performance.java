@@ -2,7 +2,9 @@ package com.google.rolecall.models;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -48,11 +50,12 @@ public class Performance {
   @Enumerated(EnumType.ORDINAL)
   private Status status;
 
+  // This as a set masks a larger issue PerformanceRepository.getById duplicates sections
   @OneToMany(mappedBy = "performance", 
       cascade = CascadeType.ALL, 
       orphanRemoval = true, 
       fetch = FetchType.EAGER)
-  private List<PerformanceSection> performanceSections = new ArrayList<>();
+  private Set<PerformanceSection> performanceSections = new HashSet<>();
 
   public Integer getId() {
     return id;
@@ -79,7 +82,7 @@ public class Performance {
   }
 
   public List<PerformanceSection> getProgram() {
-    return performanceSections;
+    return new ArrayList<>(performanceSections);
   }
 
   public void publish() {
