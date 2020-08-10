@@ -40,13 +40,12 @@ public class RepositoryConfig {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 
-    // TODO: Remove tempory AntiPattern
-    Map<String,Boolean> properties = new HashMap<>();
-    properties.put("hibernate.enable_lazy_load_no_trans", true);
-
+    // Map<String,Boolean> properties = new HashMap<>();
+    // properties.put("hibernate.enable_lazy_load_no_trans", true);
+    // factory.setJpaPropertyMap(properties);
+    
     // TODO: Add shared caching here
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setJpaPropertyMap(properties);
     factory.setPackagesToScan("com.google.rolecall.models");
     factory.setDataSource(dataSource);
 

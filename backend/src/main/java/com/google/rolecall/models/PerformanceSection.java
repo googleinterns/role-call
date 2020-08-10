@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -47,7 +48,7 @@ public class PerformanceSection {
       cascade = CascadeType.ALL, 
       orphanRemoval = true, 
       fetch = FetchType.EAGER)
-  private List<PerformanceCastMember> performanceCastMembers = new ArrayList<>();
+  private Set<PerformanceCastMember> performanceCastMembers = new HashSet<>();
 
   public Integer getId() {
     return id;
@@ -70,7 +71,7 @@ public class PerformanceSection {
   }
 
   public List<PerformanceCastMember> getPerformanceCastMembers() {
-    return performanceCastMembers;
+    return new ArrayList<>(performanceCastMembers);
   }
 
   public void addPerformanceCastMember(PerformanceCastMember member) {
@@ -79,23 +80,23 @@ public class PerformanceSection {
   }
 
   public void removePerformanceCastMember(PerformanceCastMember member) {
-    member.setPerformance(null);
+    member.setPerformanceSection(null);
     performanceCastMembers.remove(member);
   }
 
   public PerformanceSectionInfo toPerformanceSectionInfo() {
-    Hashtable<Position, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions = 
+    Hashtable<Integer, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions = 
         new Hashtable<>();
     
     for(PerformanceCastMember member: performanceCastMembers) {
-      Position position = member.getPosition();
+      Integer positionId = member.getPosition().getId();
 
       Hashtable<Integer, List<PerformanceCastMemberInfo>> cast;
-      if(positions.containsKey(position)) {
-        cast = positions.get(position);
+      if(positions.containsKey(positionId)) {
+        cast = positions.get(positionId);
       } else {
         cast = new Hashtable<>();
-        positions.put(position, cast);
+        positions.put(positionId, cast);
       }
 
       int castNumber = member.getCastNumber();
@@ -122,11 +123,11 @@ public class PerformanceSection {
   }
 
   private List<PerformancePositionInfo> toAllPerformancePositionInfo(
-      Hashtable<Position, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions) {
+      Hashtable<Integer, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions) {
     List<PerformancePositionInfo> positionInfos = new ArrayList<>();
 
-    for(Position position: positions.keySet()) {
-      Hashtable<Integer, List<PerformanceCastMemberInfo>> casts = positions.get(position);
+    for(Integer positionId: positions.keySet()) {
+      Hashtable<Integer, List<PerformanceCastMemberInfo>> casts = positions.get(positionId);
       
       List<PerformanceCastInfo> castInfos = new ArrayList<>();
       for(Integer castNumber: casts.keySet()) {
@@ -139,7 +140,7 @@ public class PerformanceSection {
       }
       
       PerformancePositionInfo positionInfo = PerformancePositionInfo.newBuilder()
-          .setPositionId(position.getId())
+          .setPositionId(positionId)
           .setPerformanceCasts(castInfos)
           .build();
 
