@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "rolecall"
+  "defaultProject": "rolecall",
+  "cli": {
+    "analytics": "69f43049-7ff7-410c-973f-f7edc6d4926f"
+  }
 }
