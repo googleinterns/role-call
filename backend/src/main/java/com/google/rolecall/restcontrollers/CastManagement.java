@@ -13,6 +13,8 @@ import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.CastServices;
+import com.google.rolecall.services.ServiceResult;
+
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -44,6 +46,8 @@ public class CastManagement extends AsyncRestEndpoint {
           .collect(Collectors.toList());
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
     }
 
     ResponseSchema<List<CastInfo>> response = new ResponseSchema<>(casts);
@@ -58,16 +62,17 @@ public class CastManagement extends AsyncRestEndpoint {
       return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
     }
     
-    Cast cast;
+    ServiceResult<Cast> result;
     try {
-      cast = castService.createCast(newCast);
+      result = castService.createCast(newCast);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
     }
 
-    ResponseSchema<CastInfo> response = new ResponseSchema<>(cast.toCastInfo());
+    ResponseSchema<CastInfo> response = new ResponseSchema<>(result.getResult().toCastInfo(),
+        result.getWarnings());
     return CompletableFuture.completedFuture(response);
   }
 
@@ -79,16 +84,17 @@ public class CastManagement extends AsyncRestEndpoint {
       return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
     }
 
-    Cast newCast;
+    ServiceResult<Cast> result;
     try {
-      newCast = castService.editCast(cast);
+      result = castService.editCast(cast);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
     }
 
-    ResponseSchema<CastInfo> response = new ResponseSchema<>(newCast.toCastInfo());
+    ResponseSchema<CastInfo> response = new ResponseSchema<>(result.getResult().toCastInfo(),
+        result.getWarnings());
     return CompletableFuture.completedFuture(response);
   }
 
