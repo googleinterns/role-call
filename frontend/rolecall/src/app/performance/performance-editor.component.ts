@@ -80,6 +80,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   createNewPerformance(): Performance {
     return {
       uuid: "performance" + Date.now(),
+      status: "Draft",
       step_1: {
         title: "Program Title",
         date: Date.now(),
@@ -116,9 +117,6 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onStepChange(step) {
-    if (this.lastStepperIndex == 3 && this.submitted) {
-      this.onResetFromStart();
-    }
     this.updateBasedOnStep();
   }
 
@@ -382,6 +380,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   onSubmit() {
     let finishedPerf = this.dataToPerformance();
+    finishedPerf.status = "Published"
     this.performanceAPI.setPerformance(finishedPerf).then(val => {
       if (val.successful) {
         this.submitted = true;

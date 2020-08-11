@@ -11,6 +11,7 @@ export class MockPerformanceBackend {
   mockPerformanceDB: Performance[] = [
     {
       uuid: "performance1:" + Date.now(),
+      status: "Published",
       step_1: {
         title: "Test Title 1",
         date: (Date.now() - 600000),
@@ -71,6 +72,7 @@ export class MockPerformanceBackend {
     },
     {
       uuid: "performance2:" + Date.now(),
+      status: "Draft",
       step_1: {
         title: "Test Title 2",
         date: (Date.now() - 600000),

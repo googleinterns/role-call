@@ -10,6 +10,7 @@ import { ResponseStatusHandlerService } from '../services/response-status-handle
 
 export type Performance = {
   uuid: string,
+  status: "Draft" | "Published" | "Canceled",
   step_1: {
     title: string,
     date: number,
@@ -101,6 +102,8 @@ export class PerformanceApi {
   convertRawToPerformance(raw: RawPerformance): Performance {
     return {
       uuid: String(raw.id),
+      status: (raw.status == "Draft" || raw.status == "Published" || raw.status == "Canceled")
+        ? raw.status : "Draft",
       step_1: {
         title: raw.title,
         description: raw.description,
@@ -149,7 +152,7 @@ export class PerformanceApi {
       description: perf.step_1.description,
       location: perf.step_1.location,
       dateTime: perf.step_1.date,
-      status: "",
+      status: perf.status ? perf.status : "Draft",
       PerformanceSections: perf.step_3.segments.map((seg, ind) => {
         return {
           sectionPosition: ind,
