@@ -15,7 +15,6 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import com.google.rolecall.services.SectionServices;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

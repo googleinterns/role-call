@@ -1,11 +1,9 @@
 package com.google.rolecall.services;
 
-import java.util.Optional;
-
 import com.google.rolecall.models.Position;
 import com.google.rolecall.repos.PositionRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
-
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service("positionServices")
