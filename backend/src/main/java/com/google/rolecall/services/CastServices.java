@@ -243,7 +243,7 @@ public class CastServices {
       User user = member.getUser();
       if(usersInCast.contains(user)) {
         warnings.add(String.format("%s %s appears multiple times in cast number %d",
-            user.getFirstName(), user.getLastName(), castNumber));
+            user.getFirstName(), user.getLastName(), castNumber + 1)); // Add one for readability
       }
       usersInCast.add(member.getUser());
     }
