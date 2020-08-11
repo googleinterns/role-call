@@ -39,10 +39,6 @@ public class RepositoryConfig {
     vendorAdapter.setGenerateDdl(true);
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-
-    // Map<String,Boolean> properties = new HashMap<>();
-    // properties.put("hibernate.enable_lazy_load_no_trans", true);
-    // factory.setJpaPropertyMap(properties);
     
     // TODO: Add shared caching here
     factory.setJpaVendorAdapter(vendorAdapter);
