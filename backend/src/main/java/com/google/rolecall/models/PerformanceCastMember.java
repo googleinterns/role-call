@@ -1,5 +1,7 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.PerformanceCastMemberInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,9 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.google.rolecall.jsonobjects.PerformanceCastMemberInfo;
-import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 @Entity
 @Table

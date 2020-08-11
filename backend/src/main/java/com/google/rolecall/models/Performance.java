@@ -1,12 +1,14 @@
 package com.google.rolecall.models;
 
+import com.google.rolecall.jsonobjects.PerformanceInfo;
+import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.google.rolecall.jsonobjects.PerformanceInfo;
-import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
-import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 
 @Entity
 @Table

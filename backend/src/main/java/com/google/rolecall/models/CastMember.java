@@ -2,7 +2,6 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.CastMemberInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

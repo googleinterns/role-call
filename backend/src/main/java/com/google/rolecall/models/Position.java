@@ -2,7 +2,6 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.PositionInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
