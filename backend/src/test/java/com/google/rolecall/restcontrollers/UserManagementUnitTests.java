@@ -8,6 +8,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import java.util.Collections;
+import java.security.Principal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,8 @@ import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.UserServices;
+import com.google.rolecall.util.DefaultUsers;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -140,12 +143,14 @@ public class UserManagementUnitTests {
     // Setup
     UserInfo newUser = UserInfo.newBuilder().build();
     User user = new User();
+    Principal principal = DefaultUsers.getAdminPrincipal();
 
     // Mock
     lenient().doReturn(user).when(userService).createUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<UserInfo>> response = controller.createUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response = 
+        controller.createUser(principal, newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
@@ -156,12 +161,14 @@ public class UserManagementUnitTests {
   public void postCreateBadUser_failure() throws Exception {
     // Setup
     UserInfo newUser = UserInfo.newBuilder().build();
+    Principal principal = DefaultUsers.getAdminPrincipal();
 
     // Mock
     lenient().doThrow(new InvalidParameterException("Missing params")).when(userService).createUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<UserInfo>> response = controller.createUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response =
+        controller.createUser(principal, newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -182,12 +189,14 @@ public class UserManagementUnitTests {
     // Setup
     UserInfo newUser = UserInfo.newBuilder().setId(id).build();
     User user = new User();
+    Principal principal = DefaultUsers.getAdminPrincipal();
 
     // Mock
     lenient().doReturn(user).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<UserInfo>> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response =
+        controller.editUser(principal, newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
@@ -199,12 +208,14 @@ public class UserManagementUnitTests {
   public void patchEditUserNoId_failure() throws Exception {
     // Setup
     UserInfo newUser = UserInfo.newBuilder().build();
+    Principal principal = DefaultUsers.getAdminPrincipal();
     
     // Mock
     lenient().doThrow(new EntityNotFoundException("Wrong exception")).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<UserInfo>> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response =
+        controller.editUser(principal, newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -224,12 +235,14 @@ public class UserManagementUnitTests {
   public void patchEditUserBadId_failure() throws Exception {
     // Setup
     UserInfo newUser = UserInfo.newBuilder().setId(id).build();
+    Principal principal = DefaultUsers.getAdminPrincipal();
 
     // Mock
     lenient().doThrow(new EntityNotFoundException("Bad id")).when(userService).editUser(newUser);
 
     // Execute
-    CompletableFuture<ResponseSchema<UserInfo>> response = controller.editUser(newUser);
+    CompletableFuture<ResponseSchema<UserInfo>> response =
+        controller.editUser(principal, newUser);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();
@@ -247,11 +260,14 @@ public class UserManagementUnitTests {
 
   @Test
   public void deleteUser_success() throws Exception {
+    // Setup
+    Principal principal = DefaultUsers.getAdminPrincipal();
+
     // Mock
     lenient().doNothing().when(userService).deleteUser(id);
 
     // Execute
-    CompletableFuture<Void> response = controller.deleteUser(id);
+    CompletableFuture<Void> response = controller.deleteUser(principal, id);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isFalse();
@@ -260,11 +276,14 @@ public class UserManagementUnitTests {
 
   @Test
   public void deleteUserBadId_failure() throws Exception {
+    // Setup
+    Principal principal = DefaultUsers.getAdminPrincipal();
+
     // Mock
     lenient().doThrow(new EntityNotFoundException("Bad id")).when(userService).deleteUser(id);
 
     // Execute
-    CompletableFuture<Void> response = controller.deleteUser(id);
+    CompletableFuture<Void> response = controller.deleteUser(principal, id);
 
     // Assert
     assertThat(response.isCompletedExceptionally()).isTrue();

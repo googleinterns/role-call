@@ -26,7 +26,11 @@ public class UserServices {
     return allUsers;
   }
 
-  public User getUser(int id) throws EntityNotFoundException{
+  public User getUser(Integer id) throws EntityNotFoundException, InvalidParameterException {
+    if (id == null) {
+      throw new InvalidParameterException("Missing id");
+    }
+
     Optional<User> queryResult = userRepo.findById(id);
 
     if (!queryResult.isPresent()) {
@@ -76,15 +80,16 @@ public class UserServices {
     return userRepo.save(user);
   }
 
-  /** 
+  /**
    * Edits an existing {@link User} and updates it in the database.
    * 
    * @param newUser {@link UserInfo} containing information describing the user edits.
    * @return The updated {@link User}.
-   * @throws EntityNotFoundException The id from {@link UserInfo} newUser does not exist
-   *     in the database.
+   * @throws EntityNotFoundException The id from {@link UserInfo} newUser does not exist in the
+   *    database.
+   * @throws InvalidParameterException {@link User} has no id
    */
-    public User editUser(UserInfo newUser) throws EntityNotFoundException {
+  public User editUser(UserInfo newUser) throws EntityNotFoundException, InvalidParameterException {
     User.Builder builder = this.getUser(newUser.id()).toBuilder()
         .setFirstName(newUser.firstName())
         .setLastName(newUser.lastName())

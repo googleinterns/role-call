@@ -1,5 +1,6 @@
 package com.google.rolecall.restcontrollers;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.CastInfo;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.models.Cast;
+import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Endpoint(Constants.Mappings.CAST_MANAGEMENT)
-public class CastManagement {
+public class CastManagement extends AsyncRestEndpoint {
   
   private final CastServices castService;
 
@@ -51,9 +53,14 @@ public class CastManagement {
   }
 
   @Post
-  public CompletableFuture<ResponseSchema<CastInfo>> createCast(@RequestBody CastInfo newCast) {
+  public CompletableFuture<ResponseSchema<CastInfo>> createCast(Principal principal,
+      @RequestBody CastInfo newCast) {
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManageCasts()) {
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
+    }
+    
     Cast cast;
-
     try {
       cast = castService.createCast(newCast);
     } catch(InvalidParameterException e) {
@@ -67,9 +74,14 @@ public class CastManagement {
   }
 
   @Patch
-  public CompletableFuture<ResponseSchema<CastInfo>> editCast(@RequestBody CastInfo cast) {
-    Cast newCast;
+  public CompletableFuture<ResponseSchema<CastInfo>> editCast(Principal principal,
+      @RequestBody CastInfo cast) {
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManageCasts()) {
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
+    }
 
+    Cast newCast;
     try {
       newCast = castService.editCast(cast);
     } catch(InvalidParameterException e) {
@@ -83,8 +95,13 @@ public class CastManagement {
   }
 
   @Delete(Constants.RequestParameters.CAST_ID)
-  public CompletableFuture<Void> deleteCast(@RequestParam(
+  public CompletableFuture<Void> deleteCast(Principal principal, @RequestParam(
       value=Constants.RequestParameters.CAST_ID, required=true) int id) {
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManageCasts()) {
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
+    }
+
     try {
       castService.deleteCast(id);
     } catch(EntityNotFoundException e) {
