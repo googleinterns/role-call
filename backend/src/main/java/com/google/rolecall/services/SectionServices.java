@@ -41,7 +41,11 @@ public class SectionServices {
    * @return A {@link Section} object associated with id.
    * @throws EntityNotFoundException when there is not a Section containing the id.
    */
-  public Section getSection(int id) throws EntityNotFoundException {
+  public Section getSection(Integer id) throws EntityNotFoundException, InvalidParameterException {
+    if(id == null) {
+      throw new InvalidParameterException("Cannot find Section with null id");
+    }
+
     Optional<Section> queryResult = sectionRepo.findById(id);
 
     if (!queryResult.isPresent()) {
@@ -154,7 +158,7 @@ public class SectionServices {
    * @throws EntityNotFoundException The id does not match and existing {@link Section}
    *    in the database.
    */
-  public void deleteSection(int id) throws EntityNotFoundException {
+  public void deleteSection(int id) throws EntityNotFoundException, InvalidParameterException {
     getSection(id);
     sectionRepo.deleteById(id);
   }

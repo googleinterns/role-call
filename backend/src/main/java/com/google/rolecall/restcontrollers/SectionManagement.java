@@ -58,6 +58,8 @@ public class SectionManagement extends AsyncRestEndpoint {
       section = sectionService.getSection(id);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
     }
 
     ResponseSchema<SectionInfo> response = new ResponseSchema<>(section.toSectionInfo());
@@ -143,6 +145,8 @@ public class SectionManagement extends AsyncRestEndpoint {
     try {
       sectionService.deleteSection(id);
     } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     }
     
