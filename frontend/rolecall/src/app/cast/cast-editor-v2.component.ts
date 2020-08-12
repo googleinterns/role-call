@@ -88,8 +88,8 @@ export class CastEditorV2 implements OnInit {
 
   onPieceLoad(pieces: Piece[]) {
     this.allPieces = pieces.filter(val => val.type == "PIECE");
-    if (!this.selectedPiece) {
-      this.onSelectPiece(pieces[0]);
+    if (!this.selectedPiece && this.allPieces.length > 0) {
+      this.onSelectPiece(this.allPieces[0]);
     }
     this.checkForUrlCompliance();
   }
