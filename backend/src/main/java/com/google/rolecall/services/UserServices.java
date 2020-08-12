@@ -3,6 +3,7 @@ package com.google.rolecall.services;
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.CastMemberRepository;
+import com.google.rolecall.repos.PerformanceCastMemberRepository;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -18,6 +19,7 @@ public class UserServices {
   
   private final UserRepository userRepo;
   private final CastMemberRepository castMemberRepo;
+  private final PerformanceCastMemberRepository performanceCastMemberRepo;
 
   public List<User> getAllUsers() {
     List<User> allUsers = new ArrayList<>();
@@ -126,8 +128,10 @@ public class UserServices {
   public void deleteUser(int id) throws EntityNotFoundException, InvalidParameterException {
     User user = getUser(id);
 
-    if(castMemberRepo.findFirstByUser(user).isPresent()) {
-      throw new InvalidParameterException("User involved in cast or performances cannot be deleted. Change is active.");
+    if(castMemberRepo.findFirstByUser(user).isPresent() ||
+        performanceCastMemberRepo.findFirstByUser(user).isPresent()) {
+      throw new InvalidParameterException(
+          "User involved in cast or performances cannot be deleted. Change is active.");
     }
 
     userRepo.deleteById(id);
@@ -141,8 +145,10 @@ public class UserServices {
     return Pattern.matches(pattern, email);
   }
 
-  public UserServices(UserRepository userRepo, CastMemberRepository castMemberRepo) {
+  public UserServices(UserRepository userRepo, CastMemberRepository castMemberRepo,
+      PerformanceCastMemberRepository performanceCastMemberRepo) {
     this.userRepo = userRepo;
     this.castMemberRepo = castMemberRepo;
+    this.performanceCastMemberRepo = performanceCastMemberRepo;
   }
 }

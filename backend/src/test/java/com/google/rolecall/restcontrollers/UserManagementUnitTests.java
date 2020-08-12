@@ -58,7 +58,7 @@ public class UserManagementUnitTests {
   public void init() {
 
     userService = spy(new UserServices(mock(UserRepository.class),
-        mock(CastMemberRepository.class)));
+        mock(CastMemberRepository.class),null));
     controller = new UserManagement(userService);
     User.Builder builder = User.newBuilder()
         .setFirstName(firstName)
