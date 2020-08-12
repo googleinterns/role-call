@@ -22,7 +22,7 @@ public class Constants {
 
   public static class Headers {
     public static final String EMAIL = "Email";
-    public static final String OAUTH_KEY = "Authorization";
+    public static final String AUTHORIZATION = "Authorization";
   }
 
   public static class Roles {

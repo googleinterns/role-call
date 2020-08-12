@@ -1,7 +1,7 @@
 package com.google.rolecall.config;
 
 import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
-import com.google.rolecall.authentication.SameSiteFilter;
+import com.google.rolecall.authentication.CustomResponseAttributesFilter;
 
 import java.util.Arrays;
 
@@ -45,8 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.httpBasic()
         .and()
         .cors()
-        .and().addFilter(getFilter())
-        .addFilterAfter(getSameSite(), BasicAuthenticationFilter.class)
+        .and().addFilter(getPreAuthenticationFilter())
+        .addFilterAfter(getCustomResponseAttributes(), BasicAuthenticationFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .sessionFixation().migrateSession()
         .and().authorizeRequests().antMatchers("/api/**").authenticated()
@@ -76,14 +76,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /** Initializes the filter for Authentication header information. */
-  private PreAuthTokenHeaderFilter getFilter() throws Exception {
+  private PreAuthTokenHeaderFilter getPreAuthenticationFilter() throws Exception {
     PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter();
     filter.setAuthenticationManager(authenticationManager());
     return filter;
   }
 
-  private Filter getSameSite() throws Exception {
-    Filter filter = new SameSiteFilter();
+  private Filter getCustomResponseAttributes() throws Exception {
+    Filter filter = new CustomResponseAttributesFilter();
     return filter;
   }
 
