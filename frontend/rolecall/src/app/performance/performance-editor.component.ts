@@ -42,6 +42,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onPerformanceLoad(perfs: Performance[]) {
+    console.log(perfs);
     this.allPerformances = perfs;
     this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
     this.performancesLoaded = true;
@@ -242,7 +243,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
       this.segmentToCast.set(prevCastUUID, [exportedCast, this.primaryGroupNum, this.segmentLength]);
       this.castAPI.setCast(exportedCast, true);
     }
-    if (this.selectedSegment && this.selectedSegment.uuid == "intermission") {
+    if (this.selectedSegment && this.selectedSegment.type == "SEGMENT") {
       this.intermissions.set(this.selectedIndex, this.segmentLength);
     }
   }
@@ -251,7 +252,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.saveCastChanges();
     this.selectedSegment = segment;
     this.selectedIndex = ind;
-    if (segment.uuid == "intermission") {
+    if (segment.type == "SEGMENT") {
       if (this.intermissions.has(ind)) {
         this.segmentLength = this.intermissions.get(ind);
       } else {
@@ -372,7 +373,8 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   onSubmit() {
     let finishedPerf = this.dataToPerformance();
-    finishedPerf.status = "Published"
+    finishedPerf.status = "Published";
+    console.log(finishedPerf);
     this.performanceAPI.setPerformance(finishedPerf).then(val => {
       if (val.successful) {
         this.submitted = true;
@@ -394,11 +396,11 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     let newState: Performance = JSON.parse(JSON.stringify(this.state));
     newState.step_3.segments =
       this.step2Data.map((segment, ind) => {
-        if (segment.uuid == "intermission") {
+        if (segment.type == "SEGMENT") {
           return {
-            segment: "intermission",
-            name: "Intermission",
-            type: "intermission",
+            segment: segment.uuid,
+            name: segment.name,
+            type: segment.type,
             selected_group: undefined,
             length: this.intermissions.get(ind) ? this.intermissions.get(ind) : 0,
             custom_groups: []
@@ -409,7 +411,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
         return {
           segment: segment.uuid,
           name: segment.name,
-          type: "segment",
+          type: segment.type,
           selected_group: info ? info[1] : 0,
           length: this.segmentToCast.get(segUUID) ? this.segmentToCast.get(segUUID)[2] : 0,
           custom_groups: info ? info[0].filled_positions.map(val => {
