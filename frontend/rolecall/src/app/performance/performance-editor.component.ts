@@ -54,13 +54,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onPieceLoad(pieces: Piece[]) {
-    let intermissionPiece: Piece = {
-      uuid: "intermission",
-      name: "Intermission",
-      positions: [],
-      deletePositions: []
-    }
-    this.step2PickFrom = [intermissionPiece];
+    this.step2PickFrom = [];
     this.step2PickFrom.push(...pieces.map(val => val));
     this.step2Data = [];
     this.initStep2Data();
@@ -101,13 +95,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onSaveDraft() {
-    this.performanceAPI.setPerformance(this.state).then(val => {
-      if (val.successful) {
-
-      } else {
-
-      }
-    })
+    this.performanceAPI.setPerformance(this.state);
   }
 
   onNextClick() {
