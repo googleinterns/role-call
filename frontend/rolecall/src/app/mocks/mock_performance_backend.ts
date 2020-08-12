@@ -25,7 +25,6 @@ export class MockPerformanceBackend {
         segments: [
           {
             segment: "212",
-            type: "segment",
             length: 600,
             selected_group: 1,
             custom_groups: [
@@ -62,7 +61,6 @@ export class MockPerformanceBackend {
           },
           {
             segment: "intermission",
-            type: "intermission",
             selected_group: undefined,
             length: 300,
             custom_groups: []
@@ -86,7 +84,6 @@ export class MockPerformanceBackend {
         segments: [
           {
             segment: "212",
-            type: "segment",
             length: 600,
             selected_group: 0,
             custom_groups: [
@@ -123,7 +120,6 @@ export class MockPerformanceBackend {
           },
           {
             segment: "intermission",
-            type: "intermission",
             length: 300,
             selected_group: undefined,
             custom_groups: []

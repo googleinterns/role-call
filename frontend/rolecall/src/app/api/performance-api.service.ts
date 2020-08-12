@@ -23,7 +23,6 @@ export type Performance = {
   step_3: {
     segments: {
       segment: string,
-      type: "intermission" | "segment",
       length: number,
       selected_group: number,
       custom_groups: {
@@ -49,7 +48,7 @@ export type RawPerformance = {
   "location": string,
   "dateTime": number,
   "status": string,
-  "PerformanceSections":
+  "performanceSections":
   {
     "id"?: number,
     "sectionPosition": number,
@@ -100,6 +99,7 @@ export class PerformanceApi {
     private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
   convertRawToPerformance(raw: RawPerformance): Performance {
+    console.log(raw);
     return {
       uuid: String(raw.id),
       status: (raw.status == "Draft" || raw.status == "Published" || raw.status == "Canceled")
@@ -111,15 +111,14 @@ export class PerformanceApi {
         location: raw.location
       },
       step_2: {
-        segments: raw.PerformanceSections.map(val => val).sort((a, b) => {
+        segments: raw.performanceSections.map(val => val).sort((a, b) => {
           return a.sectionPosition < b.sectionPosition ? -1 : 1;
         }).map(val => String(val.sectionId))
       },
       step_3: {
-        segments: raw.PerformanceSections.map(val => {
+        segments: raw.performanceSections.map(val => {
           return {
-            segment: val.positions.length == 0 ? "intermission" : String(val.sectionId),
-            type: val.positions.length == 0 ? "intermission" : "segment",
+            segment: String(val.sectionId),
             length: 0,
             selected_group: val.primaryCast,
             custom_groups: val.positions.map(pos => {
@@ -146,15 +145,14 @@ export class PerformanceApi {
   }
 
   convertPerformanceToRaw(perf: Performance): RawPerformance {
-    console.log(perf.step_1.date);
-    return {
-      id: Number(perf.uuid),
+    let ret = {
+      id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
       description: perf.step_1.description,
       location: perf.step_1.location,
       dateTime: perf.step_1.date,
       status: perf.status ? perf.status : "Draft",
-      PerformanceSections: perf.step_3.segments.map((seg, ind) => {
+      performanceSections: perf.step_3.segments.map((seg, ind) => {
         return {
           sectionPosition: ind,
           primaryCast: seg.selected_group,
@@ -177,9 +175,10 @@ export class PerformanceApi {
             }
           })
         }
-
       })
-    }
+    };
+    console.log(ret);
+    return ret;
   }
 
   /** Hits backend with all performances GET request */
