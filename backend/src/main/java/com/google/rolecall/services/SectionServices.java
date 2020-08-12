@@ -68,6 +68,7 @@ public class SectionServices {
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
+        .setType(newSection.type())
         .build();
 
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
@@ -112,6 +113,7 @@ public class SectionServices {
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
+        .setType(newSection.type())
         .build();
     
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
@@ -123,6 +125,7 @@ public class SectionServices {
           if(info.id() == null) {
             throw new InvalidParameterException("Cannot delete Position before it is created.");
           }
+
           section.removePosition(section.getPositionById(info.id()));
           continue;
         } else if(info.id() != null) {

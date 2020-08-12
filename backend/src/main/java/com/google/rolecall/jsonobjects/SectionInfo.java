@@ -3,6 +3,7 @@ package com.google.rolecall.jsonobjects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
+import com.google.rolecall.models.Section.Type;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -27,10 +28,14 @@ public abstract class SectionInfo {
   public abstract Integer length();
 
   @Nullable
+  @JsonProperty("type")
+  public abstract Type type();
+
+  @Nullable
   @JsonProperty("positions")
   public abstract List<PositionInfo> positions();
 
-    /* Every SectionInfo should be unique unless it's being comapred to itself */
+  /* Every SectionInfo should be unique unless it's being comapred to itself */
   @Override
   public boolean equals(Object object) {
     return this == object;
@@ -59,6 +64,9 @@ public abstract class SectionInfo {
 
     @JsonProperty("length")
     public abstract Builder setLength(Integer length);
+
+    @JsonProperty("type")
+    public abstract Builder setType(Type type);
 
     @JsonProperty("positions")
     public abstract Builder setPositions(List<PositionInfo> positions);
