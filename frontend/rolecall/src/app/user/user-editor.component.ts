@@ -184,7 +184,9 @@ export class UserEditor implements OnInit {
   deleteUser() {
     this.prevWorkingState = undefined;
     this.renderingUsers = this.renderingUsers.filter(val => val.uuid != this.currentSelectedUser.uuid);
-    this.userAPI.deleteUser(this.currentSelectedUser);
+    if (!this.creatingUser) {
+      this.userAPI.deleteUser(this.currentSelectedUser);
+    }
     this.renderingUsers.length > 0 ? this.setCurrentUser(this.renderingUsers[0]) : this.setCurrentUser(undefined);
   }
 
@@ -202,9 +204,6 @@ export class UserEditor implements OnInit {
         if (foundSame && this.location.path().startsWith('user')) {
           this.setCurrentUser(foundSame);
         }
-      } else {
-        console.log(val);
-        alert("User missing necessary information!");
       }
     });
   }

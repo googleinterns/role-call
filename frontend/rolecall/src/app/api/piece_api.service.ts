@@ -80,7 +80,7 @@ export class PieceApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
+    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
       this.rawPieces = val.data;
       return {
         data: {
@@ -129,7 +129,7 @@ export class PieceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       let header = await this.headerUtil.generateHeader();
@@ -140,7 +140,7 @@ export class PieceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
   /** 
@@ -154,7 +154,7 @@ export class PieceApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded pieces mapped by UUID */

@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Colors } from 'src/constants';
 import { isNullOrUndefined } from 'util';
 import { Piece, PieceApi, Position } from '../api/piece_api.service';
+import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 type WorkingPiece = Piece & {
   addingPositions: { index: number, value: Position, type: "adding" | "added" }[],
@@ -36,7 +37,7 @@ export class PieceEditor implements OnInit {
   lastSelectedPieceName: string;
 
   constructor(private route: ActivatedRoute, private pieceAPI: PieceApi,
-    private location: Location) { }
+    private location: Location, private respHandler: ResponseStatusHandlerService) { }
 
   ngOnInit(): void {
     let uuid = this.route.snapshot.params.uuid;
@@ -141,7 +142,12 @@ export class PieceEditor implements OnInit {
 
   onSavePiece() {
     if (this.currentSelectedPiece && (!this.currentSelectedPiece.name || this.currentSelectedPiece.name == "")) {
-      alert("You must enter a piece name!");
+      this.respHandler.showError({
+        url: "Error occured while saving ballet",
+        status: 400,
+        statusText: "No ballet name!",
+        errorMessage: "You must enter a ballet name!"
+      });
       return;
     }
     this.lastSelectedPieceName = this.currentSelectedPiece.name;
@@ -159,8 +165,6 @@ export class PieceEditor implements OnInit {
         if (foundSame && this.location.path().startsWith("/piece")) {
           this.setCurrentPiece(foundSame);
         }
-      } else {
-        alert("Piece save failed! Try again.");
       }
     });
   }
@@ -213,7 +217,9 @@ export class PieceEditor implements OnInit {
   deletePiece() {
     this.prevWorkingState = undefined;
     this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.currentSelectedPiece.uuid);
-    this.pieceAPI.deletePiece(this.currentSelectedPiece);
+    if (!this.creatingPiece) {
+      this.pieceAPI.deletePiece(this.currentSelectedPiece);
+    }
     this.renderingPieces.length > 0 ? this.setCurrentPiece(this.renderingPieces[0]) : this.setCurrentPiece(undefined);
     this.pieceSaved = true;
     this.creatingPiece = false;

@@ -91,7 +91,7 @@ export class CastApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((val) => {
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((val) => {
         this.rawCasts = val.data;
         let allPositions: Position[] = [];
         Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
@@ -178,7 +178,7 @@ export class CastApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(async na => {
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp)).then(async na => {
         let allSubCasts: RawSubCast[] = [];
         let allPositions: Position[] = [];
         Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
@@ -213,7 +213,7 @@ export class CastApi {
           headers: header,
           observe: "response",
           withCredentials: true
-        }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
       });
     } else {
       // Do post
@@ -252,7 +252,7 @@ export class CastApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
   /** 
@@ -266,7 +266,7 @@ export class CastApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded casts mapped by UUID */

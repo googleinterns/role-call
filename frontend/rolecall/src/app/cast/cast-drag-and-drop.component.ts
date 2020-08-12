@@ -301,11 +301,7 @@ export class CastDragAndDrop implements OnInit {
     this.castsLoaded = false;
     this.castSelected = false;
     this.selectedCastUUID = undefined;
-    return this.castAPI.deleteCast(this.cast).then(val => {
-      if (!val.successful) {
-        alert(val.error);
-      }
-    });
+    this.castAPI.deleteCast(this.cast);
   }
 
 }

@@ -109,7 +109,7 @@ export class UserApi {
       headers: await this.headerUtil.generateHeader(),
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp)).then((val) => {
+    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp)).then((val) => {
       return {
         data: {
           users: val.data.map((val) => {
@@ -183,7 +183,7 @@ export class UserApi {
         headers: await this.headerUtil.generateHeader(),
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       return this.http.post(environment.backendURL + "api/user", {
@@ -206,7 +206,7 @@ export class UserApi {
         observe: "response",
         headers: await this.headerUtil.generateHeader(),
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -219,7 +219,7 @@ export class UserApi {
       observe: "response",
       headers: await this.headerUtil.generateHeader(),
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded users mapped by UUID */

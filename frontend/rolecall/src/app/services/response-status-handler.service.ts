@@ -38,7 +38,7 @@ export class ResponseStatusHandlerService {
     if (response.status < 200 || response.status > 299) {
       let errorEvent: ErrorEvent = {
         url: response.url,
-        errorMessage: response['message'],
+        errorMessage: response['error'] ? response['error']['error'] : response['message'],
         status: response.status,
         statusText: response.statusText
       }

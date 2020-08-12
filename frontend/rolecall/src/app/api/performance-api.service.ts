@@ -191,7 +191,7 @@ export class PerformanceApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(resp)).then((val) => {
+    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(resp)).then((val) => {
       return { data: { performances: val.data.map(val => this.convertRawToPerformance(val)) }, warnings: val.warnings };
     });
   }
@@ -206,16 +206,32 @@ export class PerformanceApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceSet(performance);
     }
-    let header = await this.headerUtil.generateHeader();
-    return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
-      this.convertPerformanceToRaw(performance),
-      {
-        headers: header,
-        observe: "response",
-        withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
-        return this.getAllPerformances().then(() => val);
+    if (this.performances.has(performance.uuid)) {
+      let header = await this.headerUtil.generateHeader();
+      return this.requestPerformanceDelete(performance).then(val => {
+        return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
+          this.convertPerformanceToRaw(performance),
+          {
+            headers: header,
+            observe: "response",
+            withCredentials: true
+          }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
+            return this.getAllPerformances().then(() => val);
+          })
       });
+
+    } else {
+      let header = await this.headerUtil.generateHeader();
+      return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
+        this.convertPerformanceToRaw(performance),
+        {
+          headers: header,
+          observe: "response",
+          withCredentials: true
+        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
+          return this.getAllPerformances().then(() => val);
+        });
+    }
   }
   /** 
    * Hits backend with delete performance POST request */
@@ -229,7 +245,7 @@ export class PerformanceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded performances mapped by UUID */
