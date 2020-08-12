@@ -39,15 +39,21 @@ public class GoogleAuthServices {
   public boolean isValidAccessToken(String email, String encodedToken)
       throws IOException {
 
+    logger.log(Level.INFO, String.format("Found token %s", encodedToken));
     GoogleIdToken idToken = null;
     try {
       idToken = verifier.verify(encodedToken);
     } catch(GeneralSecurityException e) {
+      logger.log(Level.SEVERE, e.getMessage());
       throw new RuntimeException("Unable to verify with Google.");
     } catch(IOException e) {
       logger.log(Level.SEVERE, e.getMessage());
       throw new IOException(
           "Unable to verify with Google. Please try again.");
+    }
+
+    if (idToken != null) {
+      logger.log(Level.INFO, String.format("Found idtoken %s", idToken.toString()));
     }
 
     if(idToken != null) {
