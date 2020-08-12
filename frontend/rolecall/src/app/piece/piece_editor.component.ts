@@ -219,11 +219,13 @@ export class PieceEditor implements OnInit {
     this.currentSelectedPiece.name = event.target.value;
   }
 
-  segmentTypes = ["SEGMENT", "PIECE"];
-  selectedSegmentType: "SEGMENT" | "PIECE" = "PIECE";
+  segmentTypes = ["PIECE", "SEGMENT"];
+  segmentPrettyNames = ["Piece", "Segment"]
+  selectedSegmentType: "SEGMENT" | "PIECE";
 
   onSelectSegmentType(event: MatSelectChange) {
     this.selectedSegmentType = event.value;
+    this.currentSelectedPiece.type = event.value;
   }
 
   deletePiece() {

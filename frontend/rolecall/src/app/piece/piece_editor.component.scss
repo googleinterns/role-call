@@ -78,7 +78,7 @@
 }
 // Title styling
 .left-card-title {
-  margin: 1em;
+  margin: 1rem;
   font-weight: 800;
   font-size: xx-large;
 }
@@ -98,9 +98,13 @@
   justify-content: space-between;
 }
 .right-card-title {
-  margin: 1em;
+  margin: 2rem;
+  margin-bottom: 1rem;
   font-weight: 800;
   font-size: xx-large;
+}
+.type-dropdown {
+  margin-left: 2rem;
 }
 .button-container {
   display: flex;
