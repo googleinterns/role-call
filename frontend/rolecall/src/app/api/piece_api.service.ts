@@ -95,15 +95,6 @@ export class PieceApi {
         },
         warnings: val.warnings
       }
-    }).catch(err => {
-      this.respHandler.noConnectionError(err);
-      this.loggingService.logError(err);
-      return Promise.resolve({
-        data: {
-          pieces: []
-        },
-        warnings: []
-      })
     });
   }
 
@@ -138,14 +129,7 @@ export class PieceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-        return val;
-      }).catch(val => {
-        this.loggingService.logError(val);
-        return {
-          status: 400
-        } as HttpResponse<any>;
-      });
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       let header = await this.headerUtil.generateHeader();
@@ -156,14 +140,7 @@ export class PieceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-        return val;
-      }).catch(val => {
-        this.loggingService.logError(val);
-        return {
-          status: 400
-        } as HttpResponse<any>;
-      });
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
   /** 
@@ -177,14 +154,7 @@ export class PieceApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-      return val;
-    }).catch(val => {
-      this.loggingService.logError(val);
-      return {
-        status: 400
-      } as HttpResponse<any>;
-    });;
+    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded pieces mapped by UUID */
@@ -239,7 +209,9 @@ export class PieceApi {
     return this.getAllPiecesResponse().then(val => {
       this.pieceEmitter.emit(Array.from(this.pieces.values()));
       return val;
-    }).then(val => val.data.pieces);
+    }).then(val => val.data.pieces).catch(err => {
+      return [];
+    });
   }
 
   /** Gets a specific piece from the backend by UUID and returns it */
@@ -256,16 +228,14 @@ export class PieceApi {
    */
   setPiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.setPieceResponse(piece).then(val => {
-      if (val.status == 200) {
-        this.getAllPieces();
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      this.getAllPieces();
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }
@@ -274,15 +244,13 @@ export class PieceApi {
   deletePiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.deletePieceResponse(piece).then(val => {
       this.getAllPieces();
-      if (val.status == 200) {
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }

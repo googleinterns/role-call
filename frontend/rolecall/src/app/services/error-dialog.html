@@ -1,0 +1,13 @@
+<h1 mat-dialog-title class="title">Error!</h1>
+<div mat-dialog-content>
+  <p class="subheader" style="font-weight: normal;">{{ data.errorEvent.url }}</p>
+  <br>
+  <br>
+  <p class="subheader">{{ "Status " + data.errorEvent.status + ": " + data.errorEvent.statusText }} </p>
+  <p class="content">{{ data.errorEvent.errorMessage }}</p>
+  <br>
+  <br>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onOkClick('OK')" cdkFocusInitial>OK</button>
+</div>

@@ -158,15 +158,6 @@ export class CastApi {
           },
           warnings: val.warnings
         }
-      }).then(val => { return val }).catch(err => {
-        this.respHandler.noConnectionError(err);
-        this.loggingService.logError(err);
-        return Promise.resolve({
-          data: {
-            casts: []
-          },
-          warnings: []
-        })
       });
   }
 
@@ -222,13 +213,7 @@ export class CastApi {
           headers: header,
           observe: "response",
           withCredentials: true
-        }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-          return val;
-        }).catch(val => {
-          return {
-            status: 400
-          } as HttpResponse<any>;
-        });
+        }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
       });
     } else {
       // Do post
@@ -267,14 +252,7 @@ export class CastApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-        return val;
-      }).catch(val => {
-        this.loggingService.logError(val);
-        return {
-          status: 400
-        } as HttpResponse<any>;
-      });
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
   /** 
@@ -288,14 +266,7 @@ export class CastApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-      return val;
-    }).catch(val => {
-      this.loggingService.logError(val);
-      return {
-        status: 400
-      } as HttpResponse<any>;
-    });
+    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded casts mapped by UUID */
@@ -349,6 +320,8 @@ export class CastApi {
       let allCasts = Array.from(this.casts.values()).concat(...this.workingCasts.values());
       this.castEmitter.emit(allCasts);
       return allCasts;
+    }).catch(err => {
+      return [];
     });
   }
 
@@ -377,16 +350,14 @@ export class CastApi {
       this.workingCasts.delete(cast.uuid);
     }
     return this.setCastResponse(cast).then(val => {
-      if (val.status == 200) {
-        this.getAllCasts();
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      this.getAllCasts();
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }
@@ -401,16 +372,15 @@ export class CastApi {
       });
     }
     return this.deleteCastResponse(cast).then(val => {
-      if (val.status == 200) {
-        this.getAllCasts();
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      this.casts.delete(cast.uuid);
+      this.getAllCasts();
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }

@@ -207,7 +207,6 @@ export class PerformanceApi {
       return this.mockBackend.requestPerformanceSet(performance);
     }
     let header = await this.headerUtil.generateHeader();
-    console.log(header);
     return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
       this.convertPerformanceToRaw(performance),
       {
@@ -220,11 +219,17 @@ export class PerformanceApi {
   }
   /** 
    * Hits backend with delete performance POST request */
-  requestPerformanceDelete(performance: Performance): Promise<HttpResponse<any>> {
+  async requestPerformanceDelete(performance: Performance): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceDelete(performance);
     }
-    return this.mockBackend.requestPerformanceDelete(performance);
+    let header = await this.headerUtil.generateHeader();
+    return this.http.delete(environment.backendURL + "api/performance?performanceid=" + performance.uuid,
+      {
+        headers: header,
+        observe: "response",
+        withCredentials: true
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded performances mapped by UUID */
@@ -277,7 +282,9 @@ export class PerformanceApi {
     return this.getAllPerformancesResponse().then(val => {
       this.performanceEmitter.emit(Array.from(this.performances.values()));
       return val;
-    }).then(val => val.data.performances);
+    }).then(val => val.data.performances).catch(err => {
+      return [];
+    });
   }
 
   /** Gets a specific performance from the backend by UUID and returns it */
@@ -294,16 +301,14 @@ export class PerformanceApi {
    */
   setPerformance(performance: Performance): Promise<APITypes.SuccessIndicator> {
     return this.setPerformanceResponse(performance).then(val => {
-      if (val.status == 200) {
-        this.getAllPerformances();
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      this.getAllPerformances();
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }
@@ -312,15 +317,13 @@ export class PerformanceApi {
   deletePerformance(performance: Performance): Promise<APITypes.SuccessIndicator> {
     return this.deletePerformanceResponse(performance).then(val => {
       this.getAllPerformances();
-      if (val.status == 200) {
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }

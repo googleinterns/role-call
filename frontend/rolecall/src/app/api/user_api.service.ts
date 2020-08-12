@@ -144,14 +144,6 @@ export class UserApi {
         },
         warnings: val.warnings
       }
-    }).catch(err => {
-      this.loggingService.logError(err);
-      return Promise.resolve({
-        data: {
-          users: []
-        },
-        warnings: []
-      })
     });
   }
 
@@ -191,14 +183,7 @@ export class UserApi {
         headers: await this.headerUtil.generateHeader(),
         observe: "response",
         withCredentials: true
-      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp)).then(val => {
-        console.log(val);
-        return val;
-      }).catch(val => {
-        return {
-          status: 400
-        } as HttpResponse<any>;
-      });
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       return this.http.post(environment.backendURL + "api/user", {
@@ -221,14 +206,7 @@ export class UserApi {
         observe: "response",
         headers: await this.headerUtil.generateHeader(),
         withCredentials: true
-      }).toPromise().then(val => {
-        return val;
-      }).catch(val => {
-        console.log(val);
-        return {
-          status: 400
-        } as HttpResponse<any>;
-      });
+      }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -241,14 +219,7 @@ export class UserApi {
       observe: "response",
       headers: await this.headerUtil.generateHeader(),
       withCredentials: true
-    }).toPromise().then(val => {
-      return val;
-    }).catch(val => {
-      console.log(val);
-      return {
-        status: 400
-      } as HttpResponse<any>;
-    });;
+    }).toPromise().then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded users mapped by UUID */
@@ -301,7 +272,9 @@ export class UserApi {
     return this.getAllUsersResponse().then(val => {
       this.userEmitter.emit(Array.from(this.users.values()));
       return val;
-    }).then(val => val.data.users);
+    }).then(val => val.data.users).catch(err => {
+      return [];
+    });
   }
 
   /** Gets a specific user from the backend by UUID and returns it */
@@ -317,41 +290,30 @@ export class UserApi {
    * request fails for some other reason.
    */
   setUser(user: User): Promise<APITypes.SuccessIndicator> {
-    if (this.isValidUser(user)) {
-      return this.setUserResponse(user).then(val => {
-        if (val.status == 200) {
-          this.getAllUsers();
-          return {
-            successful: true
-          }
-        } else {
-          return {
-            successful: false,
-            error: "Server failed, try again."
-          }
-        }
-      });
-    } else {
+    return this.setUserResponse(user).then(val => {
+      this.getAllUsers();
+      return {
+        successful: true
+      }
+    }).catch(reason => {
       return Promise.resolve({
         successful: false,
-        error: "Invalid user object"
-      });
-    }
+        error: reason
+      })
+    });
   }
 
   /** Requests for the backend to delete the user */
   deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
     return this.deleteUserResponse(user).then(val => {
       this.getAllUsers();
-      if (val.status == 200) {
-        return {
-          successful: true
-        }
-      } else {
-        return {
-          successful: false,
-          error: "Server failed, try again."
-        }
+      return {
+        successful: true
+      }
+    }).catch(reason => {
+      return {
+        successful: false,
+        error: reason
       }
     });
   }
