@@ -485,8 +485,11 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   deleteWorkingCasts() {
     for (let entry of this.segmentToCast.entries()) {
-      this.castAPI.deleteCast(entry[1][0]);
+      if (this.castAPI.workingCasts.has(entry[0])) {
+        this.castAPI.deleteCast(entry[1][0]);
+      }
     }
+    this.segmentToCast.clear();
   }
 
   initStep4() {

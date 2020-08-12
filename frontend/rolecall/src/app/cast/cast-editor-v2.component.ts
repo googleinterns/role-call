@@ -87,7 +87,7 @@ export class CastEditorV2 implements OnInit {
   }
 
   onPieceLoad(pieces: Piece[]) {
-    this.allPieces = pieces;
+    this.allPieces = pieces.filter(val => val.type == "PIECE");
     if (!this.selectedPiece) {
       this.onSelectPiece(pieces[0]);
     }
