@@ -37,7 +37,7 @@ public abstract class PerformanceInfo {
   public abstract Status status();
 
   @Nullable
-  @JsonProperty("PerformanceSections")
+  @JsonProperty("performanceSections")
   public abstract List<PerformanceSectionInfo> performanceSections();
 
   /* Every PositionInfo should be unique unless it's being comapred to itself */

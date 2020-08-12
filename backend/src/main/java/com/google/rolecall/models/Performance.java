@@ -3,7 +3,6 @@ package com.google.rolecall.models;
 import com.google.rolecall.jsonobjects.PerformanceInfo;
 import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;

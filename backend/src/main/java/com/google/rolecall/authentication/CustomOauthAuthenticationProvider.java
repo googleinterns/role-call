@@ -41,6 +41,8 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
     String email = authentication.getName();
     String oauthToken = authentication.getCredentials().toString();
 
+    logger.log(Level.INFO, String.format("Attempting to login %s", email));
+
     UserDetails user;
     try {
       user = detailService.loadUserByUsername(email);
@@ -62,8 +64,11 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
     }
 
     if(!isValid) {
+      logger.log(Level.INFO, String.format("Login failed for %s. Invalid Credentials", email));
       throw new BadCredentialsException("Email and token do not validate with Google.");
     }
+
+    logger.log(Level.INFO, String.format("Login for %s was successful", email));
 
     Authentication auth = new RememberMeAuthenticationToken("Bad_HardCoded_Key", user, user.getAuthorities());
     return auth;
