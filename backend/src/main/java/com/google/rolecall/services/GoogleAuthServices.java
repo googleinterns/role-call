@@ -43,6 +43,7 @@ public class GoogleAuthServices {
     try {
       idToken = verifier.verify(encodedToken);
     } catch(GeneralSecurityException e) {
+      logger.log(Level.SEVERE, e.getMessage());
       throw new RuntimeException("Unable to verify with Google.");
     } catch(IOException e) {
       logger.log(Level.SEVERE, e.getMessage());
@@ -77,7 +78,7 @@ public class GoogleAuthServices {
       throw new RuntimeException("Failed to get cloud db password for UNKNOWN reason: \n" 
           + e.getMessage());
     }
-
+    
     return id;
   }
 
