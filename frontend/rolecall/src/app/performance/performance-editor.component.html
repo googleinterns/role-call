@@ -1,64 +1,64 @@
 <div *ngIf="dataLoaded">
-  <app-stepper #stepper [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
-    [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
+  <div *ngIf="performanceSelected; else selectPerformanceView">
+    <app-stepper #stepper [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
+      [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
 
-  <div>
-    <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
-      <ng-container *ngSwitchCase="0">
-        <ng-container *ngTemplateOutlet="step1"></ng-container>
+    <div>
+      <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
+        <ng-container *ngSwitchCase="0">
+          <ng-container *ngTemplateOutlet="step1"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="1">
+          <ng-container *ngTemplateOutlet="step2"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="2">
+          <ng-container *ngTemplateOutlet="step3"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="3">
+          <ng-container *ngTemplateOutlet="step4"></ng-container>
+        </ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="1">
-        <ng-container *ngTemplateOutlet="step2"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="2">
-        <ng-container *ngTemplateOutlet="step3"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="3">
-        <ng-container *ngTemplateOutlet="step4"></ng-container>
-      </ng-container>
-    </ng-container>
-  </div>
+    </div>
 
-  <div class="button-overall-container">
-    <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
-      <button mat-flat-button aria-label="Save Performance Draft" class="button" (click)="onSaveDraft()">
-        save draft
-      </button>
-      <div>
-        <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
-          previous
-        </button>
-        <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
-          next
-        </button>
-      </div>
-    </ng-container>
-    <ng-template #finalButtons>
-      <ng-container *ngIf="(!submitted); else submittedButtons">
-        <button mat-flat-button aria-label="Return to Editor" class="button" (click)="onReturn()">
-          return to editor
+    <div class="button-overall-container">
+      <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
+        <button mat-flat-button aria-label="Save Performance Draft" class="button" (click)="onSaveDraft()">
+          save draft
         </button>
         <div>
-          <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
-            submit
+          <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
+            previous
+          </button>
+          <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
+            next
           </button>
         </div>
       </ng-container>
-      <ng-template #submittedButtons>
-        <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
-          <button mat-flat-button aria-label="New Performance" class="button" (click)="onResetFromStart()">
-            new performance
+      <ng-template #finalButtons>
+        <ng-container *ngIf="(!submitted); else submittedButtons">
+          <button mat-flat-button aria-label="Return to Editor" class="button" (click)="onReturn()">
+            return to editor
           </button>
-        </div>
+          <div>
+            <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
+              submit
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #submittedButtons>
+          <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
+            <button mat-flat-button aria-label="New Performance" class="button" (click)="onResetFromStart()">
+              new performance
+            </button>
+          </div>
+        </ng-template>
       </ng-template>
-    </ng-template>
+    </div>
   </div>
 </div>
 
-
-<!-- Templates -->
-<ng-template #step1>
-  <div class="step1">
+<ng-template #selectPerformanceView>
+  <div class="step0">
     <div class="left-card-container">
       <div class="left-card app-card">
         <div class="title-container">
@@ -67,22 +67,41 @@
         <div class="children-container">
           <div class="child-container">
             <div *ngFor="let perf of allPerformances" class="child app-card"
-              [ngClass]="perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
+              [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
               (click)="onSelectRecentPerformance(perf)">
               <h3 class="performance-title">{{ perf.step_1.title }}</h3>
             </div>
           </div>
         </div>
         <div class="dup-button-container">
-          <button mat-icon-button aria-label="Duplicate Recent Performance Button" class="dup-button"
+          <!-- <button mat-icon-button aria-label="Duplicate Recent Performance Button" class="dup-button"
             (click)="duplicatePerformance(selectedPerformance)">
             <mat-icon [inline]="true" class="dup-button-icon">
               content_copy
             </mat-icon>
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
+    <div class="button-overall-container">
+      <button mat-flat-button aria-label="Select Performance" class="button" (click)="onEditPerformance()">
+        edit
+      </button>
+      <button mat-flat-button aria-label="Duplicate Performance" class="button"
+        (click)="onDuplicatePerformance(selectedPerformance)">
+        duplicate
+      </button>
+      <button mat-flat-button aria-label="Duplicate Performance" class="button" (click)="onCancelPerformance()">
+        cancel
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- Step Templates -->
+<ng-template #step1>
+  <div class="step1">
     <div class="right-card-container">
       <div class="right-card app-card">
         <div class="content">
