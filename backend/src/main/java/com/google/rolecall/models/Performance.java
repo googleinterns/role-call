@@ -4,6 +4,7 @@ import com.google.rolecall.jsonobjects.PerformanceInfo;
 import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Performance {
   private String location;
 
   @Column(nullable = false)
-  private Date dateTime;
+  private Timestamp dateTime;
 
   @Enumerated(EnumType.ORDINAL)
   private Status status;
@@ -72,7 +73,7 @@ public class Performance {
     return location;
   }
 
-  public Date getDate() {
+  public Timestamp getDate() {
     return dateTime;
   }
 
@@ -146,7 +147,7 @@ public class Performance {
     private String title;
     private String description;
     private String location;
-    private Date dateTime;
+    private Timestamp dateTime;
 
     public Builder setTitle(String title) {
       if(title != null) {
@@ -174,7 +175,7 @@ public class Performance {
 
     public Builder setDateTime(Long dateTimeMilis) {
       if(dateTimeMilis != null) {
-        this.dateTime = new Date(dateTimeMilis);
+        this.dateTime = new Timestamp(dateTimeMilis);
       }
 
       return this;
