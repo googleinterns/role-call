@@ -28,11 +28,8 @@ $buttonRowHeight: 5rem;
   height: 90vh;
   width: 100%;
 }
-.step1 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
 
+.step0 {
   .left-card-container {
     height: calc(82vh - 5rem);
     margin-top: 8vh;
@@ -98,6 +95,12 @@ $buttonRowHeight: 5rem;
       }
     }
   }
+}
+
+.step1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 
   .right-card-container {
     height: calc(90vh - 5rem);
