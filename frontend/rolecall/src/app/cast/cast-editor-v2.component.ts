@@ -154,7 +154,7 @@ export class CastEditorV2 implements OnInit {
     }
     this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
     this.selectedCast = cast;
-    this.dragAndDrop.selectCast(cast ? cast.uuid : this.lastSelectedCast.uuid);
+    this.dragAndDrop.selectCast(cast ? cast.uuid : undefined);
     this.urlUUID = cast ? cast.uuid : "";
     this.setCastURL();
   }
