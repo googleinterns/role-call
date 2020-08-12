@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.httpBasic()
-        .and().csrf().disable()
+        .and()
         .cors()
         .and().addFilter(getFilter())
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -50,7 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .deleteCookies("SESSIONID").invalidateHttpSession(true)
         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
         .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
-        .permitAll();
+        .permitAll()
+        .and()
+        .csrf().disable();
   }
 
   @Bean
