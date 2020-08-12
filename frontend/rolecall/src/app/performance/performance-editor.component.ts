@@ -31,14 +31,18 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     this.state = this.createNewPerformance();
-    this.performanceAPI.getAllPerformances().then(val => this.onPerformanceLoad(val));
-    this.piecesAPI.getAllPieces().then(val => this.onPieceLoad(val));
-    this.castAPI.getAllCasts().then(val => this.onCastLoad(val));
-    this.userAPI.getAllUsers().then(val => this.onUserLoad(val));
+    this.performanceAPI.performanceEmitter.subscribe(val => this.onPerformanceLoad(val));
+    this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
+    this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
+    this.userAPI.userEmitter.subscribe(val => this.onUserLoad(val));
+    this.performanceAPI.getAllPerformances();
+    this.piecesAPI.getAllPieces();
+    this.castAPI.getAllCasts();
+    this.userAPI.getAllUsers();
   }
 
   onPerformanceLoad(perfs: Performance[]) {
-    this.allPerformanes = perfs;
+    this.allPerformances = perfs;
     this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
     this.performancesLoaded = true;
     this.checkDataLoaded();
@@ -80,6 +84,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   createNewPerformance(): Performance {
     return {
       uuid: "performance" + Date.now(),
+      status: "Draft",
       step_1: {
         title: "Program Title",
         date: Date.now(),
@@ -116,9 +121,6 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onStepChange(step) {
-    if (this.lastStepperIndex == 3 && this.submitted) {
-      this.onResetFromStart();
-    }
     this.updateBasedOnStep();
   }
 
@@ -142,7 +144,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   // Step 1 -------------------------------------------------------
 
-  allPerformanes: Performance[] = [];
+  allPerformances: Performance[] = [];
   selectedPerformance: Performance;
   dateStr: string;
   date: Date;
@@ -382,6 +384,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   onSubmit() {
     let finishedPerf = this.dataToPerformance();
+    finishedPerf.status = "Published"
     this.performanceAPI.setPerformance(finishedPerf).then(val => {
       if (val.successful) {
         this.submitted = true;

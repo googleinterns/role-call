@@ -1,9 +1,13 @@
-import { HttpResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Component, Inject, Injectable, NgModule } from '@angular/core';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export type ErrorEvent = {
-  id: number,
-  error: string
+  url: string,
+  errorMessage: string,
+  status: number,
+  statusText: string
 }
 
 export type WarningEvent = {
@@ -15,11 +19,9 @@ export type WarningEvent = {
 })
 export class ResponseStatusHandlerService {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
-  errorEmitter: EventEmitter<ErrorEvent> = new EventEmitter();
-  pendingErrors: Map<number, [Promise<string>, (value?: string | PromiseLike<string>) => void]> = new Map();
-  msgNum = 0;
+  pendingErrors: Map<string, [Promise<string>, (value?: string | PromiseLike<string>) => void]> = new Map();
 
   checkResponse<T>(response: HttpResponse<T>): Promise<T> {
     let prom: Promise<T> = new Promise(async (res, rej) => {
@@ -33,42 +35,83 @@ export class ResponseStatusHandlerService {
     rej: (reason?: any) => void
   ) {
 
-    console.log(response);
-
-    if (response.status != 200) {
-      let userResp = await this.showError(response.statusText);
-      rej(response.statusText);
+    if (response.status < 200 || response.status > 299) {
+      let errorEvent: ErrorEvent = {
+        url: response.url,
+        errorMessage: response['message'],
+        status: response.status,
+        statusText: response.statusText
+      }
+      let userResp = await this.showError(errorEvent);
+      rej(userResp);
     } else {
       res(response.body);
     }
   }
 
-  showError(text: string) {
+  showError(errorEvent: ErrorEvent) {
+    if (this.pendingErrors.has(errorEvent.url)) {
+      return;
+    }
     let resFunc;
     let prom: Promise<string> = new Promise((res, rej) => {
       resFunc = res;
     });
-    let errorEvent: ErrorEvent = {
-      id: this.msgNum,
-      error: text
-    }
-    this.pendingErrors.set(errorEvent.id, [prom, resFunc]);
-    this.msgNum++;
-    this.errorEmitter.emit(errorEvent);
-    console.log(errorEvent);
-    return prom;
+    this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
+    let dialogRef = this.dialog.open(ErrorDialog, { width: "50%", data: { errorEvent: errorEvent } });
+    return dialogRef.afterClosed().toPromise().then(() => prom);
   }
 
   resolveError(errEv: ErrorEvent, userResp: string) {
-    let resolveThis = this.pendingErrors.get(errEv.id);
+    let resolveThis = this.pendingErrors.get(errEv.url);
     if (resolveThis) {
       resolveThis[1](userResp);
-      this.pendingErrors.delete(errEv.id);
+      this.pendingErrors.delete(errEv.url);
     }
   }
 
-  noConnectionError(err) {
-    this.showError(err);
+  noConnectionError(err: HttpErrorResponse) {
+    let errorEvent: ErrorEvent = {
+      url: err.url,
+      errorMessage: err.message,
+      status: err.status,
+      statusText: err.statusText
+    }
+    this.showError(errorEvent);
   }
 
 }
+
+export interface ErrorDialogData {
+  errorEvent: ErrorEvent
+}
+
+
+@Component({
+  selector: 'app-error-dialog',
+  templateUrl: './error-dialog.html',
+  styleUrls: ['./error-dialog.scss']
+})
+export class ErrorDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<ErrorDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: ErrorDialogData,
+    private respHandler: ResponseStatusHandlerService) { }
+
+  onOkClick(userResp: string): void {
+    this.respHandler.resolveError(this.data.errorEvent, userResp);
+    this.dialogRef.close();
+  }
+
+}
+
+@NgModule(
+  {
+    declarations: [ErrorDialog],
+    imports: [
+      CommonModule,
+      MatDialogModule
+    ]
+  })
+export class DialogModule { }

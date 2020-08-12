@@ -66,7 +66,7 @@
         </div>
         <div class="children-container">
           <div class="child-container">
-            <div *ngFor="let perf of allPerformanes" class="child app-card"
+            <div *ngFor="let perf of allPerformances" class="child app-card"
               [ngClass]="perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
               (click)="onSelectRecentPerformance(perf)">
               <h3 class="performance-title">{{ perf.step_1.title }}</h3>
@@ -262,7 +262,7 @@
           <div class="finalize-card-submitted finalize-card app-card">
             <div class="content">
               <h2 class="title">Performance Submitted!</h2>
-              <h2 class="title">{{'Scheduled for ' + date.toLocaleDateString()}}</h2>
+              <h2 class="title">{{'Scheduled ' + state.step_1.title + ' for ' + date.toLocaleDateString()}}</h2>
             </div>
           </div>
         </div>
