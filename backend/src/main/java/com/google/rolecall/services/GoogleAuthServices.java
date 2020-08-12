@@ -38,9 +38,11 @@ public class GoogleAuthServices {
    */
   public boolean isValidAccessToken(String email, String encodedToken)
       throws IOException {
+    if(encodedToken == "") {
+      return false;
+    }
 
     GoogleIdToken idToken = null;
-    logger.log(Level.INFO, encodedToken);
     try {
       idToken = verifier.verify(encodedToken);
     } catch(GeneralSecurityException e) {
