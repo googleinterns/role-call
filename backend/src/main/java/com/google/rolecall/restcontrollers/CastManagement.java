@@ -14,7 +14,6 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.E
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.CastServices;
 import com.google.rolecall.services.ServiceResult;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
