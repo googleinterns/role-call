@@ -1,9 +1,11 @@
 package com.google.rolecall.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
+import com.google.rolecall.authentication.SameSiteFilter;
+
+import java.util.Arrays;
+
+import javax.servlet.Filter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -43,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .cors()
         .and().addFilter(getFilter())
+        .addFilterAfter(getSameSite(), BasicAuthenticationFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .sessionFixation().migrateSession()
         .and().authorizeRequests().antMatchers("/api/**").authenticated()
@@ -75,6 +79,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private PreAuthTokenHeaderFilter getFilter() throws Exception {
     PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter();
     filter.setAuthenticationManager(authenticationManager());
+    return filter;
+  }
+
+  private Filter getSameSite() throws Exception {
+    Filter filter = new SameSiteFilter();
     return filter;
   }
 
