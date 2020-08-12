@@ -5,5 +5,5 @@ export const environment = {
   logRequests: false,
   devEmail: "admin@rolecall.com",
   useDevEmail: false,
-  backendURL: "http://localhost:9091/"
+  backendURL: "https://backend-dev-dot-project-role-call-dev.uk.r.appspot.com/"
 };
