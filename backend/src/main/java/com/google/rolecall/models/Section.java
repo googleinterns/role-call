@@ -96,6 +96,7 @@ public class Section {
         .setName(name)
         .setNotes(getNotes())
         .setLength(length)
+        .setType(type)
         .setPositions(positionInfos)
         .build();
 

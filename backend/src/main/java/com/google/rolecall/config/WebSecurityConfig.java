@@ -40,25 +40,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.httpBasic()
-        .and()
+        .and().csrf().disable()
         .cors()
-        .and()
-        .addFilter(getFilter())
+        .and().addFilter(getFilter())
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .sessionFixation().migrateSession()
-        .and()
-        .authorizeRequests().antMatchers("/api/**").authenticated()
-        .and()
-        .logout()
+        .and().authorizeRequests().antMatchers("/api/**").authenticated()
+        .and().logout()
         .deleteCookies("SESSIONID").invalidateHttpSession(true)
         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
         .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
         .permitAll();
-
-    List<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
-    if(activeProfiles.contains("dev")) {
-      http.csrf().disable();
-    }
   }
 
   @Bean
