@@ -146,6 +146,7 @@ export class PerformanceApi {
   }
 
   convertPerformanceToRaw(perf: Performance): RawPerformance {
+    console.log(perf.step_1.date);
     return {
       id: Number(perf.uuid),
       title: perf.step_1.title,
@@ -192,7 +193,11 @@ export class PerformanceApi {
       observe: "response",
       withCredentials: true
     }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(resp)).then((val) => {
-      return { data: { performances: val.data.map(val => this.convertRawToPerformance(val)) }, warnings: val.warnings };
+      return {
+        data: {
+          performances: val.data.map(val => { return this.convertRawToPerformance(val) })
+        }, warnings: val.warnings
+      };
     });
   }
 

@@ -19,6 +19,7 @@ type RawPiece = {
   id: number,
   name: string,
   notes: string,
+  type: "SEGMENT" | "PIECE",
   length: number,
   positions: RawPosition[]
 }
@@ -40,6 +41,7 @@ export type Position = {
 export type Piece = {
   uuid: string;
   name: string;
+  type: "SEGMENT" | "PIECE";
   positions: Position[];
   deletePositions: Position[];
 }
@@ -81,13 +83,16 @@ export class PieceApi {
       observe: "response",
       withCredentials: true
     }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
+      console.log(val);
       this.rawPieces = val.data;
       return {
         data: {
           pieces: val.data.map((section) => {
+            console.log(section);
             return {
               uuid: String(section.id),
               name: section.name,
+              type: section.type,
               positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map(pos => { return { ...pos, uuid: String(pos.id) } }),
               deletePositions: []
             }
@@ -114,6 +119,7 @@ export class PieceApi {
       return this.http.patch(environment.backendURL + 'api/section', {
         name: piece.name,
         id: Number(piece.uuid),
+        type: piece.type ? piece.type : "PIECE",
         positions: piece.positions.map((val, ind) => {
           return {
             ...val,
@@ -135,6 +141,7 @@ export class PieceApi {
       let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + 'api/section', {
         name: piece.name,
+        type: piece.type ? piece.type : "PIECE",
         positions: piece.positions
       }, {
         headers: header,

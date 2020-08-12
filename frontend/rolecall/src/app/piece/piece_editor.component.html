@@ -2,7 +2,7 @@
   <div class="left-panel">
     <div class="app-card card-margins left-card">
       <h1 class="left-card-title">
-        Ballets
+        Segments
       </h1>
       <div class="piece-select-container">
         <div *ngFor="let piece of renderingPieces" class="app-card piece-select"
@@ -31,7 +31,16 @@
           <input type="text" class="name-input left-card-title" (input)="onTitleInput($event)"
             [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)" />
         </div>
+        <mat-form-field appearance="fill" class="tool">
+          <mat-label>Segment Type</mat-label>
+          <mat-select [(value)]="selectedSegmentType" (selectionChange)="onSelectSegmentType($event)">
+            <mat-option *ngFor="let type of segmentTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
+
       <div class="app-card positions-card">
         <div cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="drop($event)" id="position-pool">
           <div *ngIf="currentSelectedPiece">

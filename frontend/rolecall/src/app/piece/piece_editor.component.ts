@@ -1,6 +1,7 @@
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { Colors } from 'src/constants';
 import { isNullOrUndefined } from 'util';
@@ -115,6 +116,8 @@ export class PieceEditor implements OnInit {
     }
     this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
     this.updateDragAndDropData();
+    console.log(this.currentSelectedPiece);
+    this.selectedSegmentType = this.currentSelectedPiece ? this.currentSelectedPiece.type : "SEGMENT";
   }
 
   addPiece() {
@@ -127,10 +130,12 @@ export class PieceEditor implements OnInit {
       uuid: "piece:" + Date.now(),
       name: "New Piece",
       positions: [],
+      type: "PIECE",
       originalName: "New Piece",
       addingPositions: [],
       deletePositions: []
     }
+    this.selectedSegmentType = "PIECE";
     this.currentSelectedPiece = newPiece;
     this.renderingPieces.push(newPiece);
     this.workingPiece = newPiece;
@@ -212,6 +217,13 @@ export class PieceEditor implements OnInit {
   onTitleInput(event) {
     this.pieceSaved = false;
     this.currentSelectedPiece.name = event.target.value;
+  }
+
+  segmentTypes = ["SEGMENT", "PIECE"];
+  selectedSegmentType: "SEGMENT" | "PIECE" = "PIECE";
+
+  onSelectSegmentType(event: MatSelectChange) {
+    this.selectedSegmentType = event.value;
   }
 
   deletePiece() {
