@@ -155,8 +155,6 @@ export class LoginApi {
           }
         }
       ).toPromise().then((resp) => {
-
-        console.log(resp);
         if (resp.status > 299 || resp.status < 200) { return Promise.reject("Sign in failed") }
         else { return resp }
       }).then(() => {

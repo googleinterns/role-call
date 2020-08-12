@@ -103,6 +103,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
       await this.performanceAPI.deletePerformance(this.state);
     }
     this.performanceAPI.setPerformance(this.state);
+    this.deleteWorkingCasts();
     this.resetState();
   }
 
@@ -476,9 +477,16 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.performanceAPI.setPerformance(finishedPerf).then(val => {
       this.submitted = true;
       this.initCastsLoaded = false;
+      this.deleteWorkingCasts();
     }).catch(err => {
       alert("Unable to save performance: " + err.error.status + " " + err.error.error);
     });
+  }
+
+  deleteWorkingCasts() {
+    for (let entry of this.segmentToCast.entries()) {
+      this.castAPI.deleteCast(entry[1][0]);
+    }
   }
 
   initStep4() {
@@ -536,6 +544,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   onResetFromStart() {
+    this.deleteWorkingCasts();
     this.stepper.navigate(0);
     this.resetPerformance();
     this.resetState();

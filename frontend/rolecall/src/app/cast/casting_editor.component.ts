@@ -427,7 +427,6 @@ export class CastingEditor implements OnInit {
   }
 
   onInputChange(change: [string, any]) {
-    console.log(change);
     let valueName = change[0];
     let value = change[1];
     if (!this.workingCast) {
