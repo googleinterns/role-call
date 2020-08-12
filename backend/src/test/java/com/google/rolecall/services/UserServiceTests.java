@@ -62,7 +62,7 @@ public class UserServiceTests {
   public void init() {
     userRepo = mock(UserRepository.class);
     castMemberRepo = mock(CastMemberRepository.class);
-    userService = new UserServices(userRepo, castMemberRepo);
+    userService = new UserServices(userRepo, castMemberRepo, null);
     User.Builder builder = User.newBuilder()
         .setFirstName(firstName)
         .setLastName(lastName)

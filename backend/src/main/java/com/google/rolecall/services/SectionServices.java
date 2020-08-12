@@ -4,7 +4,11 @@ import com.google.rolecall.jsonobjects.PositionInfo;
 import com.google.rolecall.jsonobjects.SectionInfo;
 import com.google.rolecall.models.Position;
 import com.google.rolecall.models.Section;
+import com.google.rolecall.repos.CastRepository;
+import com.google.rolecall.repos.PerformanceCastMemberRepository;
+import com.google.rolecall.repos.PerformanceSectionRepository;
 import com.google.rolecall.repos.SectionRepository;
+import com.google.rolecall.repos.SubCastRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
@@ -21,6 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class SectionServices {
 
   private final SectionRepository sectionRepo;
+  private final CastRepository castRepo;
+  private final SubCastRepository subCastRepo;
+  private final PerformanceSectionRepository performanceSectionRepo;
+  private final PerformanceCastMemberRepository performanceCastMemberRepo;
 
   /** 
    * Queries for and returns a list of every {@link Section} object in the Database.
@@ -126,7 +134,14 @@ public class SectionServices {
             throw new InvalidParameterException("Cannot delete Position before it is created.");
           }
 
-          section.removePosition(section.getPositionById(info.id()));
+          Position positionToDelete = section.getPositionById(info.id());
+          if(subCastRepo.findFirstByPosition(positionToDelete).isPresent() ||
+              performanceCastMemberRepo.findFirstByPosition(positionToDelete).isPresent()) {
+                throw new InvalidParameterException(
+                    "Cannot delete Position if it has a cast or is involved in a performance.");
+          }
+
+          section.removePosition(positionToDelete);
           continue;
         } else if(info.id() != null) {
           position = section.getPositionById(info.id());
@@ -162,11 +177,24 @@ public class SectionServices {
    *    in the database.
    */
   public void deleteSection(int id) throws EntityNotFoundException, InvalidParameterException {
-    getSection(id);
+    Section section = getSection(id);
+
+    if(performanceSectionRepo.findFirstBySection(section).isPresent() || 
+        castRepo.findFirstBySection(section).isPresent()) {
+      throw new InvalidParameterException(
+          "Cannot delete Section if it has a Cast or is part of a Performance");
+    }
+
     sectionRepo.deleteById(id);
   }
 
-  public SectionServices(SectionRepository sectionRepo) {
+  public SectionServices(SectionRepository sectionRepo, CastRepository castRepo,
+      SubCastRepository subCastRepo, PerformanceSectionRepository performanceSectionRepo,
+      PerformanceCastMemberRepository performanceCastMemberRepo) {
     this.sectionRepo = sectionRepo;
+    this.castRepo = castRepo;
+    this.subCastRepo = subCastRepo;
+    this.performanceSectionRepo = performanceSectionRepo;
+    this.performanceCastMemberRepo = performanceCastMemberRepo;
   }
 }
