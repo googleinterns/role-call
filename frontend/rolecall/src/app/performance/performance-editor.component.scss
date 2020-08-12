@@ -30,65 +30,136 @@ $buttonRowHeight: 5rem;
 }
 
 .step0 {
-  .left-card-container {
-    height: calc(82vh - 5rem);
-    margin-top: 8vh;
-    width: 25vw;
+  .cards-container {
+    display: flex;
+    height: calc(90vh - 5rem);
+    justify-content: space-evenly;
+    width: 100vw;
 
-    .left-card {
-      background: $offWhite;
-      display: flex;
-      flex-direction: column;
-      height: calc(100% - 1rem);
-      justify-content: flex-start;
-      margin: 0.5rem;
+    .left-card-container {
+      height: calc(90vh - 5rem);
+      width: 45vw;
 
-      .dup-button-container {
+      .left-card {
+        background: $offWhite;
         display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
+        flex-direction: column;
+        height: calc(100% - 1rem);
+        justify-content: flex-start;
+        margin: 0.5rem;
 
-        .dup-button {
-          background: $white;
-          border-radius: $borderRadius;
-          height: 6vh;
-          margin: 1em;
-          width: 6vh;
+        .dup-button-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+
+          .dup-button {
+            background: $white;
+            border-radius: $borderRadius;
+            height: 6vh;
+            margin: 1em;
+            width: 6vh;
+          }
+          .dup-button-icon {
+            font-size: 2.5em;
+            vertical-align: middle;
+          }
         }
-        .dup-button-icon {
-          font-size: 2.5em;
-          vertical-align: middle;
+
+        .title-container {
+          .title {
+            font-size: xx-large;
+            font-weight: bold;
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+            padding-top: 0.5em;
+          }
         }
-      }
 
-      .title-container {
-        .title {
-          font-size: xx-large;
-          font-weight: bold;
-          margin-left: 0.5em;
-          margin-right: 0.5em;
-          padding-top: 0.5em;
-        }
-      }
+        .children-container {
+          overflow-y: scroll;
 
-      .children-container {
-        overflow-y: scroll;
+          .child-container {
+            margin: 0 1em 0.5em 1em;
 
-        .child-container {
-          margin: 0 1em 0.5em 1em;
+            .child {
+              &-selected {
+                background: $offoffWhite;
+              }
 
-          .child {
-            &-selected {
-              background: $offoffWhite;
+              .performance-title {
+                font-size: x-large;
+                font-weight: bold;
+                padding-bottom: 0.5em;
+                padding-left: 1em;
+                padding-right: 1em;
+                padding-top: 0.5em;
+              }
             }
+          }
+        }
+      }
+    }
 
-            .performance-title {
-              font-size: x-large;
-              font-weight: bold;
-              padding-bottom: 0.5em;
-              padding-left: 1em;
-              padding-right: 1em;
-              padding-top: 0.5em;
+    .right-card-container {
+      height: calc(90vh - 5rem);
+      width: 45vw;
+
+      .right-card {
+        background: $offWhite;
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 1rem);
+        justify-content: flex-start;
+        margin: 0.5rem;
+
+        .dup-button-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+
+          .dup-button {
+            background: $white;
+            border-radius: $borderRadius;
+            height: 6vh;
+            margin: 1em;
+            width: 6vh;
+          }
+          .dup-button-icon {
+            font-size: 2.5em;
+            vertical-align: middle;
+          }
+        }
+
+        .title-container {
+          .title {
+            font-size: xx-large;
+            font-weight: bold;
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+            padding-top: 0.5em;
+          }
+        }
+
+        .children-container {
+          overflow-y: scroll;
+
+          .child-container {
+            margin: 0 1em 0.5em 1em;
+
+            .child {
+              &-selected {
+                background: $offoffWhite;
+              }
+
+              .performance-title {
+                font-size: x-large;
+                font-weight: bold;
+                padding-bottom: 0.5em;
+                padding-left: 1em;
+                padding-right: 1em;
+                padding-top: 0.5em;
+              }
             }
           }
         }
@@ -104,6 +175,7 @@ $buttonRowHeight: 5rem;
 
   .right-card-container {
     height: calc(90vh - 5rem);
+    margin-left: 20vw;
     width: 75vw;
 
     .right-card {

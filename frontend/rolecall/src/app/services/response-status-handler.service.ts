@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, Inject, Injectable, NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export type ErrorEvent = {
@@ -111,7 +112,8 @@ export class ErrorDialog {
     declarations: [ErrorDialog],
     imports: [
       CommonModule,
-      MatDialogModule
+      MatDialogModule,
+      MatButtonModule
     ]
   })
 export class DialogModule { }

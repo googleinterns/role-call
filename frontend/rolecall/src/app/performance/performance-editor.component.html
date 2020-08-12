@@ -41,7 +41,7 @@
           </button>
           <div>
             <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
-              submit
+              publish
             </button>
           </div>
         </ng-container>
@@ -59,39 +59,68 @@
 
 <ng-template #selectPerformanceView>
   <div class="step0">
-    <div class="left-card-container">
-      <div class="left-card app-card">
-        <div class="title-container">
-          <h2 class="title">Recent Performances</h2>
-        </div>
-        <div class="children-container">
-          <div class="child-container">
-            <div *ngFor="let perf of allPerformances" class="child app-card"
-              [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
-              (click)="onSelectRecentPerformance(perf)">
-              <h3 class="performance-title">{{ perf.step_1.title }}</h3>
+    <div class="cards-container">
+      <div class="left-card-container">
+        <div class="left-card app-card">
+          <div class="title-container">
+            <h2 class="title">Recently Published Performances</h2>
+          </div>
+          <div class="children-container">
+            <div class="child-container">
+              <div *ngFor="let perf of publishedPerfs" class="child app-card"
+                [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
+                (click)="onSelectRecentPerformance(perf)">
+                <h3 class="performance-title">{{ perf.step_1.title + ", " + perf.step_1.location }}</h3>
+              </div>
             </div>
           </div>
+          <div class="dup-button-container">
+            <!-- <button mat-icon-button aria-label="Duplicate Recent Performance Button" class="dup-button"
+              (click)="duplicatePerformance(selectedPerformance)">
+              <mat-icon [inline]="true" class="dup-button-icon">
+                content_copy
+              </mat-icon>
+            </button> -->
+          </div>
         </div>
-        <div class="dup-button-container">
-          <!-- <button mat-icon-button aria-label="Duplicate Recent Performance Button" class="dup-button"
-            (click)="duplicatePerformance(selectedPerformance)">
-            <mat-icon [inline]="true" class="dup-button-icon">
-              content_copy
-            </mat-icon>
-          </button> -->
+      </div>
+      <div class="right-card-container">
+        <div class="right-card app-card">
+          <div class="title-container">
+            <h2 class="title">Performance Drafts</h2>
+          </div>
+          <div class="children-container">
+            <div class="child-container">
+              <div *ngFor="let perf of draftPerfs" class="child app-card"
+                [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
+                (click)="onSelectRecentPerformance(perf)">
+                <h3 class="performance-title">{{ perf.step_1.title + ", " + perf.step_1.location }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="dup-button-container">
+            <!-- <button mat-icon-button aria-label="Duplicate Recent Performance Button" class="dup-button"
+              (click)="duplicatePerformance(selectedPerformance)">
+              <mat-icon [inline]="true" class="dup-button-icon">
+                content_copy
+              </mat-icon>
+            </button> -->
+          </div>
         </div>
       </div>
     </div>
     <div class="button-overall-container">
-      <button mat-flat-button aria-label="Select Performance" class="button" (click)="onEditPerformance()">
+      <button mat-flat-button aria-label="New Performance" class="button" (click)="onNewPerformance()">
+        new performance
+      </button>
+      <button mat-flat-button aria-label="Edit Performance" class="button" (click)="onEditPerformance()">
         edit
       </button>
       <button mat-flat-button aria-label="Duplicate Performance" class="button"
         (click)="onDuplicatePerformance(selectedPerformance)">
         duplicate
       </button>
-      <button mat-flat-button aria-label="Duplicate Performance" class="button" (click)="onCancelPerformance()">
+      <button mat-flat-button aria-label="Cancel Performance" class="button" (click)="onCancelPerformance()">
         cancel
       </button>
     </div>
@@ -215,9 +244,9 @@
       <div class="app-card right-card" *ngIf="selectedSegment != undefined">
         <div class="toolbar-drag-and-drop-container">
           <div class="cast-tool-container"
-            [ngClass]="selectedSegment.uuid == 'intermission' ? 'cast-tool-container-solo' : ''">
+            [ngClass]="selectedSegment.type == 'SEGMENT' ? 'cast-tool-container-solo' : ''">
             <mat-form-field appearance="fill" class="tool"
-              [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+              [ngStyle]="selectedSegment.type == 'SEGMENT' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Dancing Cast</mat-label>
               <mat-select [(value)]="this.primaryGroupNum" (selectionChange)="onChoosePrimaryCast($event)">
                 <mat-option *ngFor="let num of chooseFromGroupIndices" [value]="num">
@@ -226,23 +255,23 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" class="tool"
-              [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+              [ngStyle]="selectedSegment.type == 'SEGMENT' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Autofill Cast</mat-label>
-              <mat-select (selectionChange)="onAutofillCast($event)">
-                <mat-option *ngFor="let cast of castsForSegment" [value]="cast">
+              <mat-select>
+                <mat-option *ngFor="let cast of castsForSegment" [value]="cast" (click)="onAutofillCast(cast)">
                   {{ cast.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" class="tool"
-              [ngClass]="selectedSegment.uuid == 'intermission' ? 'tool-solo' : ''">
+              [ngClass]="selectedSegment.type == 'SEGMENT' ? 'tool-solo' : ''">
               <mat-label>Length</mat-label>
               <input matInput [value]="segmentLength" (input)="onLengthChange($event)">
             </mat-form-field>
           </div>
           <div class="cast-drag-and-drop-container">
             <app-cast-drag-and-drop #castDnD (castChangeEmitter)="onChangeCast($event)"
-              [ngStyle]="selectedSegment.uuid == 'intermission' ? { 'display': 'none' } : { 'height': '100%' }">
+              [ngStyle]="selectedSegment.type == 'SEGMENT' ? { 'display': 'none' } : { 'height': '100%' }">
             </app-cast-drag-and-drop>
           </div>
         </div>

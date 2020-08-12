@@ -212,17 +212,15 @@ export class PerformanceApi {
     }
     if (this.performances.has(performance.uuid)) {
       let header = await this.headerUtil.generateHeader();
-      return this.requestPerformanceDelete(performance).then(val => {
-        return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
-          this.convertPerformanceToRaw(performance),
-          {
-            headers: header,
-            observe: "response",
-            withCredentials: true
-          }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
-            return this.getAllPerformances().then(() => val);
-          })
-      });
+      return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
+        this.convertPerformanceToRaw(performance),
+        {
+          headers: header,
+          observe: "response",
+          withCredentials: true
+        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
+          return this.getAllPerformances().then(() => val);
+        });
 
     } else {
       let header = await this.headerUtil.generateHeader();

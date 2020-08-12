@@ -1,6 +1,5 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Performance, PerformanceApi } from '../api/performance-api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
@@ -46,6 +45,8 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformances = perfs;
     // this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
+    this.publishedPerfs = perfs.filter(val => val.status == "Published");
+    this.draftPerfs = perfs.filter(val => val.status == "Draft");
     this.performancesLoaded = true;
     this.checkDataLoaded();
   }
@@ -82,9 +83,9 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
       uuid: "performance" + Date.now(),
       status: "Draft",
       step_1: {
-        title: "Program Title",
+        title: "New Performance",
         date: Date.now(),
-        location: "Location",
+        location: "New York, NY",
         description: ""
       },
       step_2: {
@@ -110,6 +111,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.initCastsLoaded = false;
     this.isEditing = false;
     this.performanceSelected = false;
+    this.submitted = false;
     this.selectedPerformance = undefined;
   }
 
@@ -150,6 +152,9 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   performanceSelected = false;
   isEditing = false;
 
+  draftPerfs;
+  publishedPerfs;
+
   onEditPerformance() {
     if (!this.selectedPerformance) {
       this.respHandler.showError({
@@ -165,20 +170,44 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.updateDateString();
     this.initStep2Data();
     this.performanceSelected = true;
-    // this.initStep3Data();
+    this.initStep3Data();
   }
 
   onDuplicatePerformance(perf: Performance) {
+    if (!this.selectedPerformance) {
+      this.respHandler.showError({
+        errorMessage: "Must select a performance to duplicate!",
+        url: "Error ocurred while selecting performance.",
+        status: 400,
+        statusText: "Performance not selected!"
+      });
+      return;
+    }
     this.state = JSON.parse(JSON.stringify(perf));
     this.state.uuid = "performance" + Date.now();
     this.state.step_1.title = this.state.step_1.title + " copy";
     this.updateDateString();
     this.initStep2Data();
     this.performanceSelected = true;
-    // this.initStep3Data();
+    this.initStep3Data();
+  }
+
+
+  onNewPerformance() {
+    this.resetPerformance();
+    this.performanceSelected = true;
   }
 
   onCancelPerformance() {
+    if (!this.selectedPerformance) {
+      this.respHandler.showError({
+        errorMessage: "Must select a performance to cancel!",
+        url: "Error ocurred while selecting performance.",
+        status: 400,
+        statusText: "Performance not selected!"
+      });
+      return;
+    }
     this.performanceAPI.deletePerformance(this.selectedPerformance);
   }
 
@@ -281,7 +310,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   saveCastChanges() {
     let prevCastUUID = this.state.uuid + "cast" + this.selectedSegment.uuid;
-    if (this.selectedSegment && this.castDnD.castSelected) {
+    if (this.selectedSegment && this.castDnD && this.castDnD.cast && this.castDnD.castSelected) {
       let exportedCast: Cast = this.castDnD.dataToCast();
       if (this.castAPI.hasCast(exportedCast.uuid)) {
         this.castAPI.deleteCast(exportedCast);
@@ -332,7 +361,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    this.castDnD.selectCast(castUUID, false);
+    this.castDnD ? this.castDnD.selectCast(castUUID, false) : '';
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
@@ -390,7 +419,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
         } else {
           let cast: Cast = {
             uuid: castUUID,
-            name: "perf-cast",
+            name: "Copied Cast",
             segment: seg.segment,
             filled_positions: seg.custom_groups
           }
@@ -400,6 +429,8 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
       }
       this.initCastsLoaded = true;
     }
+
+    this.onSelectStep3Segment(this.selectedSegment, 0);
   }
 
   onChoosePrimaryCast(groupInd: number) {
@@ -408,8 +439,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   castsForSegment: Cast[] = [];
 
-  onAutofillCast(event: MatSelectChange) {
-    let cast: Cast = event.value;
+  onAutofillCast(cast: Cast) {
     let newCast: Cast = JSON.parse(JSON.stringify(cast));
     newCast.uuid = this.state.uuid + "cast" + this.selectedSegment.uuid;
     this.segmentToCast.set(newCast.uuid, [newCast, 0, this.segmentLength]);
@@ -446,9 +476,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.performanceAPI.setPerformance(finishedPerf).then(val => {
       this.submitted = true;
       this.initCastsLoaded = false;
-      this.resetState();
     }).catch(err => {
-      console.log(err);
       alert("Unable to save performance: " + err.error.status + " " + err.error.error);
     });
   }
@@ -479,7 +507,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
           name: segment.name,
           type: segment.type,
           selected_group: info ? info[1] : 0,
-          length: this.segmentToCast.get(segUUID) ? this.segmentToCast.get(segUUID)[2] : 0,
+          length: info[2] ? info[2] : 0,
           custom_groups: info ? info[0].filled_positions.map(val => {
             let positionName = "";
             this.step2PickFrom.forEach(val2 => {
