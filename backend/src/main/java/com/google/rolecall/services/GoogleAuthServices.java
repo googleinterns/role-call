@@ -79,7 +79,6 @@ public class GoogleAuthServices {
           + e.getMessage());
     }
     
-    logger.log(Level.INFO, id);
     return id;
   }
 
