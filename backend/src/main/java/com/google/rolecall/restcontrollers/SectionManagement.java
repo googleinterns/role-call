@@ -4,6 +4,7 @@ import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.jsonobjects.SectionInfo;
 import com.google.rolecall.models.Section;
+import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
@@ -14,6 +15,7 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import com.google.rolecall.services.SectionServices;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -56,6 +58,8 @@ public class SectionManagement extends AsyncRestEndpoint {
       section = sectionService.getSection(id);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
     }
 
     ResponseSchema<SectionInfo> response = new ResponseSchema<>(section.toSectionInfo());
@@ -73,10 +77,14 @@ public class SectionManagement extends AsyncRestEndpoint {
    *     or valid new user information. See {@link SectionServices.createSection} for specifics.
    */
   @Post
-  public CompletableFuture<ResponseSchema<SectionInfo>> createNewSection(
+  public CompletableFuture<ResponseSchema<SectionInfo>> createNewSection(Principal principal,
       @RequestBody SectionInfo newSection) {
-    Section section;
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManagePieces()) {
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_PIECES));
+    }
 
+    Section section;
     try {
       section = sectionService.createSection(newSection);
     } catch(InvalidParameterException e) {
@@ -98,10 +106,14 @@ public class SectionManagement extends AsyncRestEndpoint {
    *     or valid new user information. See {@link SectionServices.editSection} for specifics.
    */
   @Patch
-  public CompletableFuture<ResponseSchema<SectionInfo>> editSection(
+  public CompletableFuture<ResponseSchema<SectionInfo>> editSection(Principal principal,
       @RequestBody SectionInfo newSection) {
-    Section section;
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManagePieces()) {
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_PIECES));
+    }
 
+    Section section;
     try {
       section = sectionService.editSection(newSection);
     } catch(InvalidParameterException e) {
@@ -123,11 +135,18 @@ public class SectionManagement extends AsyncRestEndpoint {
    *     in the database.
    */
   @Delete(Constants.RequestParameters.SECTION_ID)
-  public CompletableFuture<Void> deleteSection(
+  public CompletableFuture<Void> deleteSection(Principal principal,
       @RequestParam(value=Constants.RequestParameters.SECTION_ID, required=true) int id) {
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManagePieces()) {
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_PIECES));
+    }
+
     try {
       sectionService.deleteSection(id);
     } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     }
     

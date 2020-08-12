@@ -73,8 +73,6 @@ public class User {
   @Column(nullable = false)
   private boolean manageRules = false;
 
-  private int loginCount = 0;
-
   public Integer getId() {
     return id;
   }
@@ -89,10 +87,6 @@ public class User {
 
   public String getEmail() {
     return email;
-  }
-
-  public int getLoginCount() {
-    return loginCount;
   }
 
   public Optional<Calendar> getDateJoined() {
@@ -145,10 +139,6 @@ public class User {
   
   public boolean canManageRules() {
     return manageRules;
-  }
-
-  public void incrementLogin() {
-    loginCount++;
   }
 
   public void addPerformanceCastMember(PerformanceCastMember member) {

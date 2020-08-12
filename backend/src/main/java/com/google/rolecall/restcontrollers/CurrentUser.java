@@ -1,14 +1,13 @@
 package com.google.rolecall.restcontrollers;
 
-import java.security.Principal;
-import java.util.concurrent.CompletableFuture;
-
 import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
+import java.security.Principal;
+import java.util.concurrent.CompletableFuture;
 
 /** Endpoints for actons related to Current User. */
 @Endpoint(Constants.Mappings.CURRENT_USER)

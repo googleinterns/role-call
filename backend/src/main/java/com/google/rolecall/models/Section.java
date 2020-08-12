@@ -12,6 +12,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +25,11 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class Section {
+
+  public enum Type {
+    PIECE,
+    SEGMENT
+  }
 
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
@@ -37,7 +44,9 @@ public class Section {
   @Basic
   private Integer length;
 
-  // TODO: Change Fetch type by implementing lazy fetching
+  @Enumerated(EnumType.ORDINAL)
+  private Type type;
+
   @OneToMany(mappedBy = "section", 
       cascade = CascadeType.ALL, 
       orphanRemoval = true, 
@@ -64,6 +73,10 @@ public class Section {
 
   public Optional<Integer> getLength() {
     return length == null ? Optional.empty() : Optional.of(length);
+  }
+
+  public Type getType() {
+    return type;
   }
 
   public List<Position> getPositions() {
@@ -167,11 +180,13 @@ public class Section {
     private String name;
     private String notes;
     private Integer length;
+    private Type type;
 
     public Builder setName(String name) {
       if(name != null) {
         this.name = name;
       }
+
       return this;
     }
 
@@ -179,6 +194,7 @@ public class Section {
       if(notes != null) {
         this.notes = notes;
       }
+
       return this;
     }
 
@@ -186,17 +202,28 @@ public class Section {
       if(length != null) {
         this.length = length;
       }
+
+      return this;
+    }
+
+    public Builder setType(Type type) {
+      if(type != null) {
+        this.type = type;
+      }
+
       return this;
     }
 
     public Section build() throws InvalidParameterException {
-      if(this.name == null) {
-        throw new InvalidParameterException("Section requires a name");
+      if(this.name == null || this.type == null) {
+        throw new InvalidParameterException("Section requires a name and a type");
       }
+
       section.id = this.id;
       section.name = this.name;
       section.notes = this.notes;
       section.length = this.length;
+      section.type = this.type;
 
       return section;
     }
@@ -207,6 +234,7 @@ public class Section {
       this.name = section.name;
       this.notes = section.notes;
       this.length = section.length;
+      this.type = section.type;
     }
 
     public Builder() {

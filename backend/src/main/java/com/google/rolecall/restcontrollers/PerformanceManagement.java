@@ -1,13 +1,10 @@
 package com.google.rolecall.restcontrollers;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.PerformanceInfo;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.models.Performance;
+import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
@@ -16,7 +13,10 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.E
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.PerformanceServices;
 import com.google.rolecall.services.ServiceResult;
-
+import java.security.Principal;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -60,10 +60,15 @@ public class PerformanceManagement extends AsyncRestEndpoint {
   }
 
   @Post
-  public CompletableFuture<ResponseSchema<PerformanceInfo>> createCast(
+  public CompletableFuture<ResponseSchema<PerformanceInfo>> createCast(Principal principal,
       @RequestBody PerformanceInfo newPerformance) {
-    ServiceResult<Performance> result;
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
+      return CompletableFuture.failedFuture(
+          insufficientPrivileges(Constants.Roles.MANAGE_PERFORMANCES));
+    }
 
+    ServiceResult<Performance> result;
     try {
       result = performanceService.createPerformance(newPerformance);
     } catch(InvalidParameterException e) {
@@ -78,8 +83,14 @@ public class PerformanceManagement extends AsyncRestEndpoint {
   }
 
   @Delete(Constants.RequestParameters.PERFORMANCE_ID)
-  public CompletableFuture<Void> deleteCast(@RequestParam(
+  public CompletableFuture<Void> deleteCast(Principal principal, @RequestParam(
       value=Constants.RequestParameters.PERFORMANCE_ID, required=true) int id) {
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
+      return CompletableFuture.failedFuture(
+          insufficientPrivileges(Constants.Roles.MANAGE_PERFORMANCES));
+    }
+
     try {
       performanceService.deletePerformance(id);
     } catch(EntityNotFoundException e) {

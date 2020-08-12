@@ -12,6 +12,7 @@ import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.UserServices;
+import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -53,6 +54,8 @@ public class UserManagement extends AsyncRestEndpoint {
       user = userService.getUser(id);
     } catch(EntityNotFoundException e) {
       return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
     }
     
     ResponseSchema<UserInfo> response = new ResponseSchema<>(user.toUserInfo());
@@ -68,9 +71,13 @@ public class UserManagement extends AsyncRestEndpoint {
    *     or valid new user information. See {@link UserServices.createUser} for specifics.
    */
   @Post
-  public CompletableFuture<ResponseSchema<UserInfo>> createUser(@RequestBody UserInfo user) {
-    User newUser;
+  public CompletableFuture<ResponseSchema<UserInfo>> createUser(Principal principal,
+      @RequestBody UserInfo user) {
+    if(!getUser(principal).isAdmin()) {
+      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+    }
 
+    User newUser;
     try {
       newUser = userService.createUser(user);
     } catch(InvalidParameterException e) {
@@ -91,16 +98,18 @@ public class UserManagement extends AsyncRestEndpoint {
    *     in the database.
    */
   @Patch
-  public CompletableFuture<ResponseSchema<UserInfo>> editUser(@RequestBody UserInfo user) {
-    if (user.id() == null) {
-      return CompletableFuture.failedFuture(new InvalidParameterException("Missing id"));
+  public CompletableFuture<ResponseSchema<UserInfo>> editUser(Principal principal,
+      @RequestBody UserInfo user) {
+    if(!getUser(principal).isAdmin()) {
+      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
     }
 
     User newUser;
-
     try {
       newUser = userService.editUser(user);
     } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     }
 
@@ -117,8 +126,12 @@ public class UserManagement extends AsyncRestEndpoint {
    *     in the database.
    */
   @Delete(Constants.RequestParameters.USER_ID)
-  public CompletableFuture<Void> deleteUser(
+  public CompletableFuture<Void> deleteUser(Principal principal,
       @RequestParam(value=Constants.RequestParameters.USER_ID, required=true) int id) {
+    if(!getUser(principal).isAdmin()) {
+      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+    }
+
     try {
       userService.deleteUser(id);
     } catch(EntityNotFoundException e) {

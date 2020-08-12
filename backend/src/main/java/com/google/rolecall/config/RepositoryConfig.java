@@ -1,12 +1,8 @@
 package com.google.rolecall.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -39,10 +35,6 @@ public class RepositoryConfig {
     vendorAdapter.setGenerateDdl(true);
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-
-    // Map<String,Boolean> properties = new HashMap<>();
-    // properties.put("hibernate.enable_lazy_load_no_trans", true);
-    // factory.setJpaPropertyMap(properties);
     
     // TODO: Add shared caching here
     factory.setJpaVendorAdapter(vendorAdapter);
