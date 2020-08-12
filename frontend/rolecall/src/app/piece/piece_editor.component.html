@@ -41,7 +41,7 @@
         </mat-form-field>
       </div>
 
-      <div class="app-card positions-card">
+      <div *ngIf="currentSelectedPiece && currentSelectedPiece.type == 'PIECE'" class="app-card positions-card">
         <div cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="drop($event)" id="position-pool">
           <div *ngIf="currentSelectedPiece">
             <div *ngFor="let data of dragAndDropData; let i = index">
@@ -90,7 +90,9 @@
           </div>
         </div>
       </div>
-      <div class="button-container">
+      <div
+        [ngClass]="currentSelectedPiece && currentSelectedPiece.type == 'SEGMENT' ? 'button-container-no-positions' : ''"
+        class="button-container">
         <div class="button-wrapper">
           <button mat-flat-button aria-label="Delete Piece" class="delete-button" (click)="deletePiece()">
             delete

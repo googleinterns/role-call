@@ -111,6 +111,9 @@
   flex-direction: row;
   justify-content: space-between;
   height: min-content;
+  &-no-positions {
+    height: 100%;
+  }
 }
 .button-wrapper {
   display: flex;
