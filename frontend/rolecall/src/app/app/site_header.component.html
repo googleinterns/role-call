@@ -1,10 +1,13 @@
 <div class="site-header-container">
-  <button mat-icon-button aria-label="Toggle Navigation Button" class="nav-trigger-button" (click)="onNavButtonClick()">
+  <button [disabled]="!this.loginAPI.isLoggedIn"
+    [ngStyle]="!this.loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }" mat-icon-button
+    aria-label="Toggle Navigation Button" class="nav-trigger-button" (click)="onNavButtonClick()">
     <mat-icon class="icon" [inline]="true">
       menu
     </mat-icon>
   </button>
-  <img src='/assets/images/AADT-logo.png' class="logo" routerLink="/">
+  <img [ngStyle]="!this.loginAPI.isLoggedIn ? { 'margin-left': '2rem' }: {}" src='/assets/images/AADT-logo.png'
+    class="logo" routerLink="/">
   <div class=" site-header-subcontainer">
   </div>
   <div *ngIf="this.responseRecieved; then showLoginOptions else loadingSpinner">
@@ -13,7 +16,7 @@
 
 <!-- Login Templates -->
 <ng-template #showLoginOptions>
-  <div *ngIf="this.userIsLoggedIn; then profileImageTemp else loginButtonTemp">
+  <div *ngIf="this.loginAPI.isLoggedIn; then profileImageTemp else loginButtonTemp">
   </div>
 </ng-template>
 <ng-template #loginButtonTemp>

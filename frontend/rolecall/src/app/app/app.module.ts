@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CastRoutingModule } from '../cast/cast-routing.module';
+import { LoginModule } from '../login/login.module';
 import { PerformanceRoutingModule } from '../performance/performance-routing.module';
 import { PieceRoutingModule } from '../piece/piece-routing.module';
 import { RequestInterceptorService } from '../services/request-interceptor.service';
@@ -35,6 +36,7 @@ const LOGGING_INTERCEPTOR_PROVIDER: ClassProvider = {
     MatIconModule,
     MatButtonModule,
     NgbModule,
+    LoginModule,
     // Routing
     PerformanceRoutingModule,
     CastRoutingModule,
