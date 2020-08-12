@@ -40,6 +40,7 @@ public class GoogleAuthServices {
       throws IOException {
 
     GoogleIdToken idToken = null;
+    logger.log(Level.INFO, encodedToken);
     try {
       idToken = verifier.verify(encodedToken);
     } catch(GeneralSecurityException e) {
