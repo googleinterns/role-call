@@ -83,12 +83,10 @@ export class PieceApi {
       observe: "response",
       withCredentials: true
     }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
-      console.log(val);
       this.rawPieces = val.data;
       return {
         data: {
           pieces: val.data.map((section) => {
-            console.log(section);
             return {
               uuid: String(section.id),
               name: section.name,

@@ -14,7 +14,6 @@ describe('UserApi', () => {
     service = TestBed.inject(UserApi);
     mockBackend = new MockUserBackend();
     service.mockBackend = mockBackend;
-    console.log(mockBackend);
     service.requestAllUsers = () => { return mockBackend.requestAllUsers() };
     service.requestOneUser = (uuid) => { return mockBackend.requestOneUser(uuid) };
     service.requestUserSet = (user) => { return mockBackend.requestUserSet(user) };

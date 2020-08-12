@@ -116,7 +116,6 @@ export class PieceEditor implements OnInit {
     }
     this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
     this.updateDragAndDropData();
-    console.log(this.currentSelectedPiece);
     this.selectedSegmentType = this.currentSelectedPiece ? this.currentSelectedPiece.type : "SEGMENT";
   }
 

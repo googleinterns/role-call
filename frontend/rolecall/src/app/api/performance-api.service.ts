@@ -99,7 +99,6 @@ export class PerformanceApi {
     private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
   convertRawToPerformance(raw: RawPerformance): Performance {
-    console.log(raw);
     return {
       uuid: String(raw.id),
       status: (raw.status == "Draft" || raw.status == "Published" || raw.status == "Canceled")
@@ -177,7 +176,6 @@ export class PerformanceApi {
         }
       })
     };
-    console.log(ret);
     return ret;
   }
 

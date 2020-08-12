@@ -87,9 +87,9 @@ export class CastEditorV2 implements OnInit {
   }
 
   onPieceLoad(pieces: Piece[]) {
-    this.allPieces = pieces;
-    if (!this.selectedPiece) {
-      this.onSelectPiece(pieces[0]);
+    this.allPieces = pieces.filter(val => val.type == "PIECE");
+    if (!this.selectedPiece && this.allPieces.length > 0) {
+      this.onSelectPiece(this.allPieces[0]);
     }
     this.checkForUrlCompliance();
   }
@@ -154,7 +154,7 @@ export class CastEditorV2 implements OnInit {
     }
     this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
     this.selectedCast = cast;
-    this.dragAndDrop.selectCast(cast ? cast.uuid : this.lastSelectedCast.uuid);
+    this.dragAndDrop.selectCast(cast ? cast.uuid : undefined);
     this.urlUUID = cast ? cast.uuid : "";
     this.setCastURL();
   }
