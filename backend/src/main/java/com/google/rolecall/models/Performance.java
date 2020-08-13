@@ -205,5 +205,6 @@ public class Performance {
     public Builder() {
       this.performance = new Performance();
       performance.status = Status.DRAFT;
+    }
   }
 }
