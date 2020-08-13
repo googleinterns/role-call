@@ -1,3 +1,4 @@
+<app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
 <div *ngIf="dataLoaded">
   <div *ngIf="performanceSelected; else selectPerformanceView">
     <app-stepper #stepper [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
@@ -36,11 +37,14 @@
       </ng-container>
       <ng-template #finalButtons>
         <ng-container *ngIf="(!submitted); else submittedButtons">
-          <button mat-flat-button aria-label="Return to Editor" class="button" (click)="onReturn()">
-            return to editor
+          <button mat-flat-button aria-label="Save Performance Draft" class="button" (click)="onSaveDraft()">
+            save draft
           </button>
           <div>
-            <button mat-flat-button aria-label="Submit Performance" class="button" (click)="onSubmit()">
+            <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
+              previous
+            </button>
+            <button mat-flat-button aria-label="Publish Performance" class="button" (click)="onSubmit()">
               publish
             </button>
           </div>

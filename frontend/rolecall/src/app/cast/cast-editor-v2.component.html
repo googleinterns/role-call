@@ -1,4 +1,5 @@
-<div class="root-container">
+<app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
+<div [ngStyle]="dataLoaded ? {} : { 'display' : 'none' }" class="root-container">
   <div class="cast-selector-container">
     <div class="app-card card-margins left-card">
       <div ngbDropdown #pieceDropdown="ngbDropdown">
@@ -10,7 +11,8 @@
             arrow_drop_down
           </mat-icon>
           <div ngbDropdownMenu aria-labelledby="Piece Dropdown" class="piece-options">
-            <button ngbDropdownItem *ngFor="let piece of allPieces" (click)="onSelectPiece(piece)">
+            <button ngbDropdownItem [ngStyle]="{ 'white-space' : 'pre' }" *ngFor="let piece of allPieces"
+              (click)="onSelectPiece(piece)">
               {{piece.name}}
             </button>
           </div>
