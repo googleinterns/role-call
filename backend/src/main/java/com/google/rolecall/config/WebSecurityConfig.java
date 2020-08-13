@@ -1,6 +1,7 @@
 package com.google.rolecall.config;
 
 import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
+import com.google.rolecall.Constants;
 import com.google.rolecall.authentication.CustomResponseAttributesFilter;
 
 import java.util.Arrays;
@@ -56,7 +57,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
         .permitAll()
         .and()
-        .csrf().disable();
+        .csrf().disable()
+        .exceptionHandling()
+        .authenticationEntryPoint((request, response, e) -> 
+        {
+          response.setContentType("application/json;charset=UTF-8");
+          response.setStatus(HttpStatus.UNAUTHORIZED.value());
+          response.setHeader(Constants.Headers.WWW_AUTHENTICATE, "Bearer");
+          response.getWriter().write("{\"error\": \"Access Denied\",\"status\": 401}");
+        });
   }
 
   @Bean
