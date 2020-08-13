@@ -17,6 +17,7 @@ export type User = {
   first_name: string,
   last_name: string,
   date_joined: number,
+  role?: string,
   contact_info: {
     phone_number: string,
     email: string,
@@ -35,6 +36,7 @@ type RawAllUsersResponse = {
     lastName: string,
     email: string,
     dateJoined: string,
+    role?: string,
     emergencyContactName: string,
     emergencyContactNumber: string,
     comments: string,
@@ -56,6 +58,7 @@ type PatchPostUserBody = {
   lastName: string,
   email: string,
   dateJoined?: string,
+  role?: string,
   emergencyContactName?: string,
   emergencyContactNumber?: string,
   comments?: string,

@@ -1,7 +1,7 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Cast, CastApi } from '../api/cast_api.service';
-import { Performance, PerformanceApi } from '../api/performance-api.service';
+import { Performance, PerformanceApi, PerformanceStatus } from '../api/performance-api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
 import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
@@ -45,8 +45,8 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformances = perfs;
     // this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
-    this.publishedPerfs = perfs.filter(val => val.status == "Published");
-    this.draftPerfs = perfs.filter(val => val.status == "Draft");
+    this.publishedPerfs = perfs.filter(val => val.status == PerformanceStatus.PUBLISHED);
+    this.draftPerfs = perfs.filter(val => val.status == PerformanceStatus.DRAFT);
     this.performancesLoaded = true;
     this.checkDataLoaded();
   }
@@ -81,7 +81,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   createNewPerformance(): Performance {
     return {
       uuid: "performance" + Date.now(),
-      status: "Draft",
+      status: PerformanceStatus.DRAFT,
       step_1: {
         title: "New Performance",
         date: Date.now(),
@@ -98,7 +98,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   }
 
   async onSaveDraft() {
-    this.state.status = "Draft";
+    this.state.status = PerformanceStatus.DRAFT;
     if (this.isEditing) {
       await this.performanceAPI.deletePerformance(this.state);
     }
@@ -470,7 +470,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   async onSubmit() {
     let finishedPerf = this.dataToPerformance();
-    finishedPerf.status = "Published";
+    finishedPerf.status = PerformanceStatus.PUBLISHED;
     if (this.isEditing) {
       await this.performanceAPI.deletePerformance(this.state);
     }
