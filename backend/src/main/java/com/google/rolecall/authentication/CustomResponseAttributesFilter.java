@@ -28,12 +28,12 @@ public class CustomResponseAttributesFilter implements Filter {
 
   private void addSameSiteCookieAttribute(HttpServletResponse response) {
     String header = response.getHeader(HttpHeaders.SET_COOKIE);
-    if(header != null & !header.equals("")) {
+    if(header != null && !header.equals("")) {
       response.setHeader(HttpHeaders.SET_COOKIE,String.format("%s; %s", header, "SameSite=None"));
     }
   }
 
   private void addAuthorizatinAttribute(HttpServletResponse response) {
-    response.setHeader(Constants.Headers.AUTHORIZATION, "Bearer");
+    response.setHeader(Constants.Headers.WWW_AUTHENTICATE, "Bearer");
   }
 }

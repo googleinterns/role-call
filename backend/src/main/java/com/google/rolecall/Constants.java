@@ -23,6 +23,7 @@ public class Constants {
   public static class Headers {
     public static final String EMAIL = "Email";
     public static final String AUTHORIZATION = "Authorization";
+    public static final String WWW_AUTHENTICATE = "www-authenticate";
   }
 
   public static class Roles {
