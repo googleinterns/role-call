@@ -52,6 +52,9 @@ public class User {
   @Basic
   private String comments;
 
+  @Basic
+  private String role;
+
   @Column(nullable = false)
   private Boolean isActive;
 
@@ -103,6 +106,10 @@ public class User {
 
   public String getComments() {
     return comments == null ? "" : comments;
+  }
+
+  public String getRole() {
+    return role == null ? "" : role;
   }
 
   public boolean isActive() {
@@ -180,6 +187,7 @@ public class User {
         .setEmergencyContactName(getEmergencyContactName())
         .setEmergencyContactNumber(getEmergencyContactNumber())
         .setComments(getComments())
+        .setRole(getRole())
         .setIsActive(isActive)
         .setCanLogin(canLogin)
         .setAdmin(admin)
@@ -214,6 +222,7 @@ public class User {
     private String emergencyContactName;
     private String emergencyContactNumber;
     private String comments;
+    private String role;
     private Boolean isActive = true;
     private Boolean canLogin = false;
     private Boolean admin = false;
@@ -269,6 +278,13 @@ public class User {
     public Builder setComments(String comments) {
       if(comments != null) {
         this.comments = comments;
+      }
+      return this;
+    }
+
+    public Builder setRole(String role) {
+      if(role != null) {
+        this.role = role;
       }
       return this;
     }
@@ -349,6 +365,7 @@ public class User {
       user.emergencyContactName = this.emergencyContactName;
       user.emergencyContactNumber = this.emergencyContactNumber;
       user.comments = this.comments;
+      user.role = this.role;
       user.isActive = this.isActive;
       user.canLogin = this.canLogin;
       user.admin = this.admin;
@@ -372,6 +389,7 @@ public class User {
       this.emergencyContactName = user.emergencyContactName;
       this.emergencyContactNumber = user.emergencyContactNumber;
       this.comments = user.comments;
+      this.role = user.role;
       this.isActive = user.isActive;
       this.canLogin = user.canLogin;
       this.admin = user.admin;
