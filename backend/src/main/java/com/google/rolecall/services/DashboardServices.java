@@ -32,7 +32,7 @@ public class DashboardServices {
           {
             @Override
             public boolean test(TruncatedPerformance performance) {
-              return performance.getStatus() == Status.Published;
+              return performance.getStatus() == Status.PUBLISHED;
             }
           }).collect(Collectors.toSet()).forEach(performances::add);
     }

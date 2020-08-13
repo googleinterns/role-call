@@ -45,6 +45,10 @@ public abstract class UserInfo {
   public abstract String comments();
 
   @Nullable
+  @JsonProperty("role")
+  public abstract String role();
+
+  @Nullable
   @JsonProperty("isActive")
   public abstract Boolean isActive();
 
@@ -122,6 +126,9 @@ public abstract class UserInfo {
 
     @JsonProperty("comments")
     public abstract Builder setComments(String comments);
+
+    @JsonProperty("role")
+    public abstract Builder setRole(String role);
 
     @JsonProperty("isActive")
     public abstract Builder setIsActive(Boolean isActive);

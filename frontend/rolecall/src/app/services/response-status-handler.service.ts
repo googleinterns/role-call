@@ -3,6 +3,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, Inject, Injectable, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LoginApi } from '../api/login_api.service';
 
 export type ErrorEvent = {
   url: string,
@@ -20,7 +21,7 @@ export type WarningEvent = {
 })
 export class ResponseStatusHandlerService {
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private loginAPI: LoginApi) { }
 
   pendingErrors: Map<string, [Promise<string>, (value?: string | PromiseLike<string>) => void]> = new Map();
 
@@ -35,6 +36,14 @@ export class ResponseStatusHandlerService {
     res: (value?: T | PromiseLike<T>) => void,
     rej: (reason?: any) => void
   ) {
+
+    if (response.status == 401) {
+      rej('');
+      this.loginAPI.signOut().then(() => {
+        this.loginAPI.login(true);
+      });
+      return;
+    }
 
     if (response.status < 200 || response.status > 299) {
       let errorEvent: ErrorEvent = {

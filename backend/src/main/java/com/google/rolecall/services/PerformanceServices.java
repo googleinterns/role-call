@@ -93,7 +93,7 @@ public class PerformanceServices {
         .setDateTime(info.dateTime())
         .build();
 
-    if(info.status() != null && info.status() == Status.Published) {
+    if(info.status() != null && info.status() == Status.PUBLISHED) {
       performance.publish();
     }
 

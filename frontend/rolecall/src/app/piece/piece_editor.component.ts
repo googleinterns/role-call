@@ -32,6 +32,7 @@ export class PieceEditor implements OnInit {
   pieceSaved: boolean = true;
 
   creatingPiece: boolean = false;
+  piecesLoaded: boolean = false;
 
   offWhite: string = Colors.offWhite;
 
@@ -52,6 +53,7 @@ export class PieceEditor implements OnInit {
   onPieceLoad(pieces: Piece[]) {
     if (pieces.length == 0) {
       this.renderingPieces = [];
+      this.piecesLoaded = true;
       return;
     }
     if (this.renderingPieces) {
@@ -87,6 +89,7 @@ export class PieceEditor implements OnInit {
         this.setCurrentPiece(foundPiece);
       }
     }
+    this.piecesLoaded = true;
   }
 
   setCurrentPiece(piece: WorkingPiece) {

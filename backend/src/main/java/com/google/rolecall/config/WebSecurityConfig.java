@@ -1,7 +1,8 @@
 package com.google.rolecall.config;
 
 import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
-import com.google.rolecall.authentication.SameSiteFilter;
+import com.google.rolecall.Constants;
+import com.google.rolecall.authentication.CustomResponseAttributesFilter;
 
 import java.util.Arrays;
 
@@ -45,8 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.httpBasic()
         .and()
         .cors()
-        .and().addFilter(getFilter())
-        .addFilterAfter(getSameSite(), BasicAuthenticationFilter.class)
+        .and().addFilter(getPreAuthenticationFilter())
+        .addFilterAfter(getCustomResponseAttributes(), BasicAuthenticationFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .sessionFixation().migrateSession()
         .and().authorizeRequests().antMatchers("/api/**").authenticated()
@@ -56,7 +57,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
         .permitAll()
         .and()
-        .csrf().disable();
+        .csrf().disable()
+        .exceptionHandling()
+        .authenticationEntryPoint((request, response, e) -> 
+        {
+          response.setContentType("application/json;charset=UTF-8");
+          response.setStatus(HttpStatus.UNAUTHORIZED.value());
+          response.setHeader(Constants.Headers.WWW_AUTHENTICATE, "Bearer");
+          response.getWriter().write("{\"error\": \"Access Denied\",\"status\": 401}");
+        });
   }
 
   @Bean
@@ -76,14 +85,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /** Initializes the filter for Authentication header information. */
-  private PreAuthTokenHeaderFilter getFilter() throws Exception {
+  private PreAuthTokenHeaderFilter getPreAuthenticationFilter() throws Exception {
     PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter();
     filter.setAuthenticationManager(authenticationManager());
     return filter;
   }
 
-  private Filter getSameSite() throws Exception {
-    Filter filter = new SameSiteFilter();
+  private Filter getCustomResponseAttributes() throws Exception {
+    Filter filter = new CustomResponseAttributesFilter();
     return filter;
   }
 

@@ -17,7 +17,7 @@ import { AppTypes } from 'src/types';
   animations: [
     trigger('openClose', [
       state('open', style({
-        right: '70vw'
+        right: '75vw'
       })),
       state('closed', style({
         right: '100vw'
