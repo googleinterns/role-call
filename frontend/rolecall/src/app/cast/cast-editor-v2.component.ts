@@ -22,6 +22,9 @@ export class CastEditorV2 implements OnInit {
   allPieces: Piece[] = [];
   lastSelectedCastIndex: number;
   lastSelectedCast: Cast;
+  dataLoaded = false;
+  piecesLoaded = false;
+  castsLoaded = false;
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
   constructor(private castAPI: CastApi, private pieceAPI: PieceApi, private route: ActivatedRoute, private location: Location) { }
@@ -39,6 +42,11 @@ export class CastEditorV2 implements OnInit {
       this.onPieceLoad(val);
     });
     this.pieceAPI.getAllPieces();
+  }
+
+  checkDataLoaded(): boolean {
+    this.dataLoaded = this.piecesLoaded && this.castsLoaded;
+    return this.dataLoaded;
   }
 
   updateFilteredCasts() {
@@ -92,6 +100,8 @@ export class CastEditorV2 implements OnInit {
       this.onSelectPiece(this.allPieces[0]);
     }
     this.checkForUrlCompliance();
+    this.piecesLoaded = true;
+    this.checkDataLoaded();
   }
 
   onCastLoad(casts: Cast[]) {
@@ -103,6 +113,8 @@ export class CastEditorV2 implements OnInit {
     this.updateFilteredCasts();
     if (casts.length == 0) {
       this.selectedCast = undefined;
+      this.castsLoaded = true;
+      this.checkDataLoaded();
       return;
     }
     if (!this.dragAndDrop.castSelected) {
@@ -131,6 +143,8 @@ export class CastEditorV2 implements OnInit {
       this.setCurrentCast(this.castAPI.castFromUUID(this.urlUUID));
     }
     this.checkForUrlCompliance();
+    this.castsLoaded = true;
+    this.checkDataLoaded();
   }
 
   setCastURL() {
