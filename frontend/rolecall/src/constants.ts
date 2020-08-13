@@ -21,8 +21,8 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
     icon: 'person'
   },
   {
-    name: 'Pieces',
-    routerLinkUrl: 'piece/',
+    name: 'Segments',
+    routerLinkUrl: 'segment/',
     icon: 'extension'
   },
   {

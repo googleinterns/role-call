@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { APITypes } from 'src/types';
+import { APITypes, PerformanceStatus } from 'src/api_types';
 import { AllPerformancesResponse, OnePerformanceResponse, Performance } from '../api/performance-api.service';
 
 /**
@@ -11,7 +11,7 @@ export class MockPerformanceBackend {
   mockPerformanceDB: Performance[] = [
     {
       uuid: "performance1:" + Date.now(),
-      status: "Published",
+      status: PerformanceStatus.PUBLISHED,
       step_1: {
         title: "Test Title 1",
         date: (Date.now() - 600000),
@@ -70,7 +70,7 @@ export class MockPerformanceBackend {
     },
     {
       uuid: "performance2:" + Date.now(),
-      status: "Draft",
+      status: PerformanceStatus.DRAFT,
       step_1: {
         title: "Test Title 2",
         date: (Date.now() - 600000),

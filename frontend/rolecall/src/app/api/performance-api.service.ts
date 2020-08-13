@@ -1,16 +1,17 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { APITypes, PerformanceStatus } from 'src/api_types';
 import { environment } from 'src/environments/environment';
-import { APITypes } from 'src/types';
 import { MockPerformanceBackend } from '../mocks/mock_performance_backend';
 import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
-
 export type Performance = {
   uuid: string,
-  status: "Draft" | "Published" | "Canceled",
+  status: PerformanceStatus.DRAFT |
+  PerformanceStatus.PUBLISHED |
+  PerformanceStatus.CANCELED,
   step_1: {
     title: string,
     date: number,
@@ -101,8 +102,8 @@ export class PerformanceApi {
   convertRawToPerformance(raw: RawPerformance): Performance {
     return {
       uuid: String(raw.id),
-      status: (raw.status == "Draft" || raw.status == "Published" || raw.status == "Canceled")
-        ? raw.status : "Draft",
+      status: (raw.status == "DRAFT" || raw.status == "PUBLISHED" || raw.status == "CANCELED")
+        ? PerformanceStatus[raw.status] : PerformanceStatus.DRAFT,
       step_1: {
         title: raw.title,
         description: raw.description,
@@ -150,7 +151,7 @@ export class PerformanceApi {
       description: perf.step_1.description,
       location: perf.step_1.location,
       dateTime: perf.step_1.date,
-      status: perf.status ? perf.status : "Draft",
+      status: perf.status ? perf.status : PerformanceStatus.DRAFT,
       performanceSections: perf.step_3.segments.map((seg, ind) => {
         return {
           sectionPosition: ind,
