@@ -27,7 +27,7 @@ import javax.persistence.Table;
 public class Performance {
 
   public enum Status {
-    Published, Canceled, Draft;
+    PUBLISHED, CANCLED, DRAFT;
   }
   
   @Id
@@ -85,13 +85,13 @@ public class Performance {
   }
 
   public void publish() {
-    if(status == Status.Draft) {
-      this.status = Status.Published;
+    if(status == Status.DRAFT) {
+      this.status = Status.PUBLISHED;
     }
   }
 
   public void cancel() {
-    this.status = Status.Canceled;
+    this.status = Status.CANCLED;
   }
 
   public void addPerformanceSection(PerformanceSection performanceSection) {
@@ -204,7 +204,6 @@ public class Performance {
 
     public Builder() {
       this.performance = new Performance();
-      performance.status = Status.Draft;
-    }
+      performance.status = Status.DRAFT;
   }
 }
