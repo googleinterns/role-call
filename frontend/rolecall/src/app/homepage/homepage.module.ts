@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { HomepageBase } from './homepage_base.component';
-import { HomepageHeader } from './homepage_header.component';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button'
 
 @NgModule({
-  declarations: [HomepageHeader, HomepageBase],
+  declarations: [HomepageBase],
   imports: [
-    CommonModule
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   exports: [HomepageBase]
 })

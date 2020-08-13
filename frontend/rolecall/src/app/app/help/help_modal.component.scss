@@ -1,0 +1,12 @@
+.header, .dialog-message {
+  text-transform: lowercase;
+}
+
+.header::first-letter, .dialog-message::first-letter {
+  text-transform: uppercase;
+}
+
+.btn-confirm { //'Ok Button Color'
+  background-color: rgb(102, 219, 102);
+  color: black;
+}

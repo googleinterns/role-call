@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PerformanceEditor } from './performance-editor.component';
-
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PerformanceEditorComponent', () => {
   let component: PerformanceEditor;
@@ -8,7 +8,9 @@ describe('PerformanceEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PerformanceEditor]
+      declarations: [
+        RouterTestingModule,
+      ]
     })
       .compileComponents();
   }));

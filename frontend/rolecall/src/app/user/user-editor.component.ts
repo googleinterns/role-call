@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 import { PrivilegeClassApi } from '../api/privilege_class_api.service';
 import { User, UserApi } from '../api/user_api.service';
-
+import { HelpModalService } from '../app/help/help_modal.service';
 
 /**
  * The view for the User Editor, allowing users to create other users
@@ -39,7 +39,17 @@ export class UserEditor implements OnInit {
 
   constructor(private route: ActivatedRoute, private userAPI: UserApi,
     private privilegeClassAPI: PrivilegeClassApi,
-    private location: Location) { }
+    private location: Location, private dialogService: HelpModalService) { }
+  
+  //Modal Text
+  openDialog(): void {
+    const options = {
+      title: 'Dashboard',
+      message: 'Dashboard Text',
+      confirmText: 'Exit',
+    };
+    this.dialogService.open(options);
+  } 
 
   ngOnInit(): void {
     let uuid = this.route.snapshot.params.uuid;

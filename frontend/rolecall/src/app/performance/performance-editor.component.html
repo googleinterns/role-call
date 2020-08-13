@@ -1,3 +1,10 @@
+<!-- Bottom Right User Help Button -->
+<div>
+  <button mat-fab class="help-button" (click)="openDialog()">
+    <mat-icon>help</mat-icon></button>
+</div>
+
+
 <div *ngIf="dataLoaded">
   <div *ngIf="performanceSelected; else selectPerformanceView">
     <app-stepper #stepper [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"

@@ -1,6 +1,20 @@
 @import "src/colors";
 @import "src/constants";
 
+//puts help button at bottom right of screen
+.help-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: orangered;
+  mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    line-height: 26px;
+  }
+}
+
 .root-container {
   display: flex;
   flex-direction: row;

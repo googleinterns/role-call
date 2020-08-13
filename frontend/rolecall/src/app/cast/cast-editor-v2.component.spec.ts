@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CastEditorV2 } from './cast-editor-v2.component';
-
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CastEditorV2Component', () => {
   let component: CastEditorV2;
@@ -8,7 +8,10 @@ describe('CastEditorV2Component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CastEditorV2]
+      declarations: [
+        CastEditorV2,
+        RouterTestingModule,
+      ]
     })
       .compileComponents();
   }));

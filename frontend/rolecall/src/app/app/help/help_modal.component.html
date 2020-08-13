@@ -1,0 +1,9 @@
+<div class="header"> <!--Modal Title-->
+  <h1 mat-dialog-title>{{ data.title }}</h1>
+</div>
+<div mat-dialog-content> <!--Modal Body-->
+  <p class="dialog-message">{{ data.message }}</p>
+</div>
+<div mat-dialog-actions> <!--'OK' button-->
+  <button class="btn-confirm" (click)="confirm()">{{ data.confirmText }}</button>
+</div>

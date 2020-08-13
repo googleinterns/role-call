@@ -7,6 +7,8 @@ import { User, UserApi } from '../api/user_api.service';
 import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
 import { Stepper } from '../common_components/stepper.component';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import { HelpModalService } from '../app/help/help_modal.service';
+
 
 @Component({
   selector: 'app-performance-editor',
@@ -28,7 +30,18 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi,
     private castAPI: CastApi, private respHandler: ResponseStatusHandlerService,
-    private userAPI: UserApi, private changeDetectorRef: ChangeDetectorRef) { }
+    private userAPI: UserApi, private changeDetectorRef: ChangeDetectorRef,
+    private dialogService: HelpModalService ) { }
+  
+  //Modal Text
+  openDialog(): void {
+    const options = {
+      title: 'Performances',
+      message: 'Performance Text',
+      confirmText: 'Exit',
+    };
+    this.dialogService.open(options);
+  }
 
   ngOnInit(): void {
     this.state = this.createNewPerformance();

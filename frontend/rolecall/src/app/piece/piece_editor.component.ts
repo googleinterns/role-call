@@ -7,6 +7,7 @@ import { Colors } from 'src/constants';
 import { isNullOrUndefined } from 'util';
 import { Piece, PieceApi, Position } from '../api/piece_api.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import { HelpModalService } from '../app/help/help_modal.service';
 
 type WorkingPiece = Piece & {
   addingPositions: { index: number, value: Position, type: "adding" | "added" }[],
@@ -37,8 +38,20 @@ export class PieceEditor implements OnInit {
 
   lastSelectedPieceName: string;
 
+
   constructor(private route: ActivatedRoute, private pieceAPI: PieceApi,
-    private location: Location, private respHandler: ResponseStatusHandlerService) { }
+    private location: Location, private respHandler: ResponseStatusHandlerService,
+    private dialogService: HelpModalService) { }
+
+  //Help Modal Text
+  openDialog(): void {
+    const options = {
+      title: 'Ballets',
+      message: 'Ballet Text',
+      confirmText: 'Exit',
+    };
+    this.dialogService.open(options);
+  }
 
   ngOnInit(): void {
     let uuid = this.route.snapshot.params.uuid;

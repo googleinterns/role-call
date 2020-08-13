@@ -6,6 +6,7 @@ import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
 import { CastDragAndDrop } from './cast-drag-and-drop.component';
+import { HelpModalService } from '../app/help/help_modal.service';
 
 @Component({
   selector: 'app-cast-editor-v2',
@@ -24,8 +25,20 @@ export class CastEditorV2 implements OnInit {
   lastSelectedCast: Cast;
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
-  constructor(private castAPI: CastApi, private pieceAPI: PieceApi, private route: ActivatedRoute, private location: Location) { }
+  constructor(private castAPI: CastApi, private pieceAPI: PieceApi, 
+    private route: ActivatedRoute, private location: Location,
+    private dialogService: HelpModalService) { }
 
+  //Help Modal Text
+  openDialog(): void {
+    const options = {
+      title: 'Cast Creator',
+      message: 'Cast Creator Text',
+      confirmText: 'Exit',
+    };
+    this.dialogService.open(options);
+  }
+  
   ngOnInit() {
     let uuid = this.route.snapshot.params.uuid;
     if (!isNullOrUndefined(uuid)) {

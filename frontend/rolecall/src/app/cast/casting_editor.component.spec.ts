@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CastingEditor } from './casting_editor.component';
-
+import { Router } from 'express';
 
 describe('CastingEditorComponent', () => {
   let component: CastingEditor;
@@ -8,7 +8,9 @@ describe('CastingEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CastingEditor]
+      declarations: [
+        CastingEditor,
+      ]
     })
       .compileComponents();
   }));

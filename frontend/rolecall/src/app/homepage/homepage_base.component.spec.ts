@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatIconModule } from '@angular/material/icon';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HomepageBase } from './homepage_base.component';
 
 
@@ -9,10 +9,10 @@ describe('HomepageBase', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [HomepageBase],
-      imports: [
-        MatIconModule
-      ]
+      declarations: [
+        HomepageBase,
+        RouterTestingModule,
+      ],
     })
       .compileComponents();
   }));

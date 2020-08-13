@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { HelpModalService } from '../app/help/help_modal.service';
 
 /**
  * The base component of the Homepage view. Arranges all
@@ -10,4 +10,16 @@ import { Component } from '@angular/core';
   templateUrl: './homepage_base.component.html',
   styleUrls: ['./homepage_base.component.scss']
 })
-export class HomepageBase { }
+export class HomepageBase { 
+
+  constructor(private dialogService: HelpModalService) {}
+
+  openDialog(): void {
+    const options = {
+      title: 'Dashboard',
+      message: 'Dashboard Text',
+      confirmText: 'Exit',
+    };
+    this.dialogService.open(options);
+  }
+}

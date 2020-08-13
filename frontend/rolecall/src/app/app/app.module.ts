@@ -15,6 +15,7 @@ import { App } from './app.component';
 import { AppRoutingModule } from './app_routing.module';
 import { SideNav } from './side_nav.component';
 import { SiteHeader } from './site_header.component';
+import { HelpModalService } from '../app/help/help_modal.service';
 
 const LOGGING_INTERCEPTOR_PROVIDER: ClassProvider = {
   provide: HTTP_INTERCEPTORS,
@@ -45,7 +46,8 @@ const LOGGING_INTERCEPTOR_PROVIDER: ClassProvider = {
     AppRoutingModule,
   ],
   providers: [
-    LOGGING_INTERCEPTOR_PROVIDER
+    LOGGING_INTERCEPTOR_PROVIDER,
+    HelpModalService
   ],
   bootstrap: [App]
 })
