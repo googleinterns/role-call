@@ -1,4 +1,4 @@
-.welcome-container {
+.welcome-container { 
   margin-left: 2rem;
   margin-top: 2rem;
 
@@ -9,4 +9,19 @@
   .message {
     font-size: 1.5rem;
   }
+}
+
+html,
+body,
+header,
+#intro {
+    height: 100%;
+}
+
+#intro {
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("https://www.scfta.org/scfta/media/Event/AlvinAiley1516_6_615x400.jpg?width=615&height=400&ext=.jpg")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
