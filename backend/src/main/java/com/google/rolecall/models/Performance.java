@@ -2,6 +2,7 @@ package com.google.rolecall.models;
 
 import com.google.rolecall.jsonobjects.PerformanceInfo;
 import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -91,7 +92,9 @@ public class Performance {
   }
 
   public void cancel() {
-    this.status = Status.CANCLED;
+    if(status == Status.PUBLISHED) {
+      this.status = Status.CANCLED;
+    }
   }
 
   public void addPerformanceSection(PerformanceSection performanceSection) {
@@ -110,6 +113,22 @@ public class Performance {
 
   public void removePerformanceCastMember(PerformanceCastMember member) {
     member.setPerformance(null);
+  }
+
+  public PerformanceSection getPerformanceSectionById(Integer id)
+      throws EntityNotFoundException, InvalidParameterException {
+    if(id == null) {
+      throw new InvalidParameterException("PerformanceSectionId cannot be null");
+    }
+
+    for (PerformanceSection section : performanceSections) {
+      if((int) section.getId() == (int) id) {
+        return section;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "PerformacneSection with id %d does not exist for this Performance", id));
   }
 
   public PerformanceInfo toPerformanceInfo() {

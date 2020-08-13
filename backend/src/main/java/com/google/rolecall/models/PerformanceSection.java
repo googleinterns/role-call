@@ -4,6 +4,7 @@ import com.google.rolecall.jsonobjects.PerformanceCastInfo;
 import com.google.rolecall.jsonobjects.PerformanceCastMemberInfo;
 import com.google.rolecall.jsonobjects.PerformancePositionInfo;
 import com.google.rolecall.jsonobjects.PerformanceSectionInfo;
+import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -80,6 +81,22 @@ public class PerformanceSection {
   public void removePerformanceCastMember(PerformanceCastMember member) {
     member.setPerformanceSection(null);
     performanceCastMembers.remove(member);
+  }
+
+  public PerformanceCastMember getPerformanceCastMemberById(Integer id)
+      throws EntityNotFoundException, InvalidParameterException {
+    if(id == null) {
+      throw new InvalidParameterException("PerformanceCastMemberId cannot be null");
+    }
+
+    for (PerformanceCastMember member : performanceCastMembers) {
+      if((int) member.getId() == (int) id) {
+        return member;
+      }
+    }
+
+    throw new EntityNotFoundException(String.format(
+        "PerformanceCastMember with id %d does not exist for this Performance", id));
   }
 
   public PerformanceSectionInfo toPerformanceSectionInfo() {

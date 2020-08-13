@@ -63,10 +63,14 @@ public class PerformanceServices {
     return result;
   }
 
-  // TODO: Edit Performances
   public ServiceResult<Performance> editPerformance(PerformanceInfo newPerformance)
       throws InvalidParameterException, EntityNotFoundException {
-    ServiceResult<Performance> result = new ServiceResult<>();
+    Performance performance = updatePerformance(newPerformance);
+    List<String> warnings = verifyPerformance(performance);
+
+    performance = performanceRepo.save(performance);
+
+    ServiceResult<Performance> result = new ServiceResult<>(performance, warnings);
     return result;
   }
 
@@ -93,7 +97,7 @@ public class PerformanceServices {
         .setDateTime(info.dateTime())
         .build();
 
-    if(info.status() != null && info.status() == Status.PUBLISHED) {
+    if(info.status() == Status.PUBLISHED) {
       performance.publish();
     }
 
@@ -118,6 +122,36 @@ public class PerformanceServices {
 
       if(info.positions() != null) {
         performanceSection = addNewCastMembers(performanceSection, info.positions());
+      }
+    }
+
+    return performance;
+  }
+
+  private Performance deleteSections(Performance performance,
+      List<PerformanceSectionInfo> deleteSections) throws InvalidParameterException,
+      EntityNotFoundException {
+    for(PerformanceSectionInfo info: deleteSections) {
+      PerformanceSection performanceSection = performance.getPerformanceSectionById(info.id());
+      performance.removePerformanceSection(performanceSection);
+      performanceSection.getSection().removePerformanceSection(performanceSection);
+    }
+
+    return performance;
+  }
+
+  private Performance editExistingSections(Performance performance,
+      List<PerformanceSectionInfo> editSections) throws InvalidParameterException,
+      EntityNotFoundException {
+    for(PerformanceSectionInfo info: editSections) {
+      PerformanceSection performanceSection = performance.getPerformanceSectionById(info.id())
+          .toBuilder()
+          .setPrimaryCast(info.primaryCast())
+          .setSectionPosition(info.sectionPosition())
+          .build();
+
+      if(info.positions() != null) {
+        performanceSection = updateCastMembers(performanceSection, info.positions());
       }
     }
 
@@ -162,6 +196,97 @@ public class PerformanceServices {
     }
 
     return performanceSection;
+  }
+
+  private PerformanceSection updateCastMembers(PerformanceSection performanceSection,
+      List<PerformancePositionInfo> performancePositions) throws InvalidParameterException,
+      EntityNotFoundException {
+    for(PerformancePositionInfo positionInfo: performancePositions) {
+      Position currentPosition = performanceSection.getSection()
+          .getPositionById(positionInfo.positionId());
+
+      if(positionInfo.performanceCasts() == null || positionInfo.performanceCasts().isEmpty()) {
+        continue;
+      }
+
+      for(PerformanceCastInfo castsInfo: positionInfo.performanceCasts()) {
+        Integer currentCastNumber = castsInfo.castNumber();
+        boolean isPerforming = currentCastNumber == performanceSection.getPrimaryCast();
+        
+        if(castsInfo.performanceCastMembers() == null) {
+          continue;
+        }
+
+        for(PerformanceCastMemberInfo memberInfo: castsInfo.performanceCastMembers()) {
+          if(memberInfo.delete() != null && memberInfo.delete()) {
+            deletePerformanceCastMember(performanceSection, memberInfo);
+          } else if(memberInfo.id() == null) {
+            addCastmembers;
+          } else {
+            editCastMembers;
+          }
+        }
+      }
+    }
+
+    return performanceSection;
+  }
+
+  private PerformanceSection deletePerformanceCastMember(PerformanceSection performanceSection,
+      PerformanceCastMemberInfo info) throws InvalidParameterException,
+      EntityNotFoundException {
+    PerformanceCastMember member = performanceSection.getPerformanceCastMemberById(info.id());
+
+    performanceSection.removePerformanceCastMember(member);
+    member.getPosition().removePerformanceCastMember(member);
+    member.getUser().removePerformanceCastMember(member);
+    member.getPerformance().removePerformanceCastMember(member);
+
+    return performanceSection;
+  }
+
+  private Performance updatePerformance(PerformanceInfo info) 
+    throws InvalidParameterException, EntityNotFoundException {
+    Performance performance = getPerformance(info.id()).toBuilder()
+        .setTitle(info.title())
+        .setDescription(info.description())
+        .setLocation(info.location())
+        .setDateTime(info.dateTime())
+        .build();
+
+    if(info.status() == Status.PUBLISHED) {
+      performance.publish();
+    } else if(info.status() == Status.CANCLED) {
+      performance.cancel();
+    }
+
+    if(info.performanceSections() != null && !info.performanceSections().isEmpty()) {
+      performance = updateSections(performance, info.performanceSections());
+    }
+    
+    return performance;  
+  }
+
+  private Performance updateSections(Performance performance, List<PerformanceSectionInfo> program)
+      throws InvalidParameterException, EntityNotFoundException {
+    List<PerformanceSectionInfo> deleteSections = new ArrayList<>();
+    List<PerformanceSectionInfo> addSections = new ArrayList<>();
+    List<PerformanceSectionInfo> editSections = new ArrayList<>();
+
+    for(PerformanceSectionInfo info: program) {
+      if(info.delete() != null && info.delete()) {
+        deleteSections.add(info);
+      } else if(info.id() == null) {
+        addSections.add(info);
+      } else {
+        editSections.add(info);
+      }
+    }
+    performance = deleteSections(performance, deleteSections);
+    performance = addNewSections(performance, addSections);
+    performance = editExistingSections(performance, editSections);
+
+    return performance;
   }
 
   private List<String> verifyPerformance(Performance performance) throws InvalidParameterException {
