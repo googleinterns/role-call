@@ -112,9 +112,9 @@ export class PieceEditor implements OnInit {
     }
     this.currentSelectedPiece = piece;
     this.urlPointingUUID = piece ? piece.uuid : "";
-    if (this.location.path().startsWith("/piece") || this.location.path().startsWith("/piece/")) {
+    if (this.location.path().startsWith("/segment") || this.location.path().startsWith("/piece/")) {
       if (piece) {
-        this.location.replaceState("/piece/" + this.urlPointingUUID);
+        this.location.replaceState("/segment/" + this.urlPointingUUID);
       }
     }
     this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
@@ -129,7 +129,7 @@ export class PieceEditor implements OnInit {
     this.creatingPiece = true;
     this.prevWorkingState = undefined;
     let newPiece: WorkingPiece = {
-      uuid: "piece:" + Date.now(),
+      uuid: "segment:" + Date.now(),
       name: "New Piece",
       positions: [],
       type: "PIECE",
@@ -169,7 +169,7 @@ export class PieceEditor implements OnInit {
         this.workingPiece = undefined;
         await this.pieceAPI.getAllPieces();
         let foundSame = this.renderingPieces.find(val => val.uuid == prevUUID);
-        if (foundSame && this.location.path().startsWith("/piece")) {
+        if (foundSame && this.location.path().startsWith("/segment")) {
           this.setCurrentPiece(foundSame);
         }
       }
@@ -228,6 +228,7 @@ export class PieceEditor implements OnInit {
   onSelectSegmentType(event: MatSelectChange) {
     this.selectedSegmentType = event.value;
     this.currentSelectedPiece.type = event.value;
+    this.pieceSaved = false;
   }
 
   deletePiece() {

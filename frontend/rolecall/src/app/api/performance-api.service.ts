@@ -1,17 +1,11 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { APITypes, PerformanceStatus } from 'src/api_types';
 import { environment } from 'src/environments/environment';
-import { APITypes } from 'src/types';
 import { MockPerformanceBackend } from '../mocks/mock_performance_backend';
 import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
-
-export enum PerformanceStatus {
-  DRAFT = "DRAFT",
-  PUBLISHED = "PUBLISHED",
-  CANCELED = "CANCELED"
-}
 
 export type Performance = {
   uuid: string,

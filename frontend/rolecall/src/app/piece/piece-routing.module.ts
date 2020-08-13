@@ -5,8 +5,8 @@ import { PieceEditor } from './piece_editor.component';
 
 
 const routes: Routes = [
-  { path: 'piece/:uuid', component: PieceEditor },
-  { path: 'piece', component: PieceEditor }
+  { path: 'segment/:uuid', component: PieceEditor },
+  { path: 'segment', component: PieceEditor }
 ];
 
 @NgModule({

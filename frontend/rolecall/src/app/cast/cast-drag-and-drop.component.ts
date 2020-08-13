@@ -1,6 +1,6 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { APITypes } from 'src/types';
+import { APITypes } from 'src/api_types';
 import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi, Position } from '../api/piece_api.service';

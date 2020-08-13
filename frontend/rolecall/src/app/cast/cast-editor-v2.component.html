@@ -11,8 +11,7 @@
             arrow_drop_down
           </mat-icon>
           <div ngbDropdownMenu aria-labelledby="Piece Dropdown" class="piece-options">
-            <button ngbDropdownItem [ngStyle]="{ 'white-space' : 'pre' }" *ngFor="let piece of allPieces"
-              (click)="onSelectPiece(piece)">
+            <button ngbDropdownItem *ngFor="let piece of allPieces" (click)="onSelectPiece(piece)">
               {{piece.name}}
             </button>
           </div>

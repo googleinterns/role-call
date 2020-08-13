@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { APITypes } from 'src/types';
+import { APITypes } from 'src/api_types';
 import { AllCastsResponse, Cast, OneCastResponse } from '../api/cast_api.service';
 
 /**

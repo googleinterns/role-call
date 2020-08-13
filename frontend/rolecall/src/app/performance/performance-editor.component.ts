@@ -1,7 +1,8 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { PerformanceStatus } from 'src/api_types';
 import { Cast, CastApi } from '../api/cast_api.service';
-import { Performance, PerformanceApi, PerformanceStatus } from '../api/performance-api.service';
+import { Performance, PerformanceApi } from '../api/performance-api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
 import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';

@@ -1,7 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { APITypes } from 'src/api_types';
 import { environment } from 'src/environments/environment';
-import { APITypes } from 'src/types';
 import { MockPieceBackend } from '../mocks/mock_piece_backend';
 import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
