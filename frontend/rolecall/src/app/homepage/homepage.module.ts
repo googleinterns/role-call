@@ -1,13 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
+import { CommonComponentsModule } from '../common_components/common_components.module';
+import { Dashboard } from './dashboard.component';
 import { HomepageBase } from './homepage_base.component';
-import { HomepageHeader } from './homepage_header.component';
 
 
 @NgModule({
-  declarations: [HomepageHeader, HomepageBase],
+  declarations: [HomepageBase, Dashboard],
   imports: [
-    CommonModule
+    CommonModule,
+    CommonComponentsModule,
+    RouterModule,
+    MatButtonModule
   ],
   exports: [HomepageBase]
 })

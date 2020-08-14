@@ -341,7 +341,6 @@ export class CastApi {
   setCast(cast: Cast, isWorkingCast?: boolean): Promise<APITypes.SuccessIndicator> {
     if (!isNullOrUndefined(isWorkingCast) && isWorkingCast) {
       this.workingCasts.set(cast.uuid, cast);
-      this.getAllCasts();
       return Promise.resolve({
         successful: true
       });
@@ -366,7 +365,6 @@ export class CastApi {
   deleteCast(cast: Cast): Promise<APITypes.SuccessIndicator> {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
-      this.getAllCasts();
       return Promise.resolve({
         successful: true
       });

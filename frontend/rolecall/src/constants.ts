@@ -7,7 +7,7 @@ import { AppTypes } from 'src/types';
 export let constNavBarEntries: AppTypes.NavBarChild[] = [
   {
     name: 'Dashboard',
-    routerLinkUrl: '/',
+    routerLinkUrl: '/dashboard',
     icon: 'dashboard'
   },
   // {

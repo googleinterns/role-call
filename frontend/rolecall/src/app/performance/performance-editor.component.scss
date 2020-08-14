@@ -197,6 +197,7 @@ $buttonRowHeight: 5rem;
             display: flex;
             flex-direction: row;
             justify-content: flex-end;
+            width: 6vh;
 
             .reset-button {
               background: $white;
@@ -212,14 +213,16 @@ $buttonRowHeight: 5rem;
           }
 
           .title-input {
-            background: none;
             border: none;
             color: black;
             font-size: xx-large;
             font-weight: bold;
             margin-left: 2rem;
+            margin-right: 1em;
             margin-top: 0.5em;
-            position: relative;
+            max-width: 90%;
+            padding-left: 1rem;
+            width: auto;
             &:focus {
               border: none;
             }

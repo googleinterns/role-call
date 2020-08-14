@@ -74,7 +74,8 @@
               <div *ngFor="let perf of publishedPerfs" class="child app-card"
                 [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)">
-                <h3 class="performance-title">{{ perf.step_1.title + ", " + perf.step_1.location }}</h3>
+                <h3 class="performance-title">
+                  {{ toDateString(perf.step_1.date) + " - " + perf.step_1.location + " - " + perf.step_1.title }}</h3>
               </div>
             </div>
           </div>
@@ -98,7 +99,8 @@
               <div *ngFor="let perf of draftPerfs" class="child app-card"
                 [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)">
-                <h3 class="performance-title">{{ perf.step_1.title + ", " + perf.step_1.location }}</h3>
+                <h3 class="performance-title">
+                  {{ toDateString(perf.step_1.date) + " - " + perf.step_1.location + " - " + perf.step_1.title }}</h3>
               </div>
             </div>
           </div>
@@ -139,7 +141,8 @@
       <div class="right-card app-card">
         <div class="content">
           <div class="title-reset-container">
-            <input type="text" class="title-input" [value]="state.step_1.title"
+            <input type="text" class="title-input app-card" [value]="state.step_1.title"
+              [size]="state.step_1.title.length < 15 ? 15 : state.step_1.title.length"
               (input)="onStep1Input('title', $event)" />
             <div class="reset-button-container">
               <button mat-icon-button aria-label="Reset Performance Button" class="reset-button"

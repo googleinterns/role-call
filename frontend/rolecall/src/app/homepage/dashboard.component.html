@@ -1,0 +1,51 @@
+<div class="page-container">
+  <div class="notif-container">
+    <div class="notif-card app-card">
+      <div class="content">
+        <h2 class="title">Notifications</h2>
+        <p>Coming soon...</p>
+      </div>
+    </div>
+  </div>
+  <div class="performances-container">
+    <app-loading-spinner *ngIf="!dashPerfsLoaded"></app-loading-spinner>
+    <div *ngIf="dashPerfsLoaded" class="left-container">
+      <div class="left-card app-card">
+        <div class="content">
+          <h2 class="title">Past Performances</h2>
+          <div class="children-container">
+            <div class="child app-card" *ngFor="let dashPerf of processedPastDashPerfs">
+              <div class="child-content">
+                <h3 class="title">{{dashPerf.title}}</h3>
+                <h4 class="date">{{dashPerf.dateStr}}</h4>
+                <h4 class="time">{{dashPerf.timeStr}}</h4>
+                <button mat-flat-button class="action-button" [routerLink]="dashPerf.routerLink">
+                  Go To
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="dashPerfsLoaded" class="right-container">
+      <div class="right-card app-card">
+        <div class="content">
+          <h2 class="title">Upcoming Performances</h2>
+          <div class="children-container">
+            <div class="child app-card" *ngFor="let dashPerf of processedUpcomingDashPerfs">
+              <div class="child-content">
+                <h3 class="title">{{dashPerf.title}}</h3>
+                <h4 class="date">{{dashPerf.dateStr}}</h4>
+                <h4 class="time">{{dashPerf.timeStr}}</h4>
+                <button mat-flat-button class="action-button" [routerLink]="dashPerf.routerLink">
+                  Go To
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

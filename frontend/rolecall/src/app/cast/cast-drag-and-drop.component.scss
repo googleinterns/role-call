@@ -68,7 +68,11 @@ $cellHeight: 4rem;
   font-weight: bold;
   margin-left: 2rem;
   margin-top: 1em;
+  padding-bottom: 0.25em;
+  padding-left: 0.5em;
+  padding-top: 0.25em;
   position: relative;
+  max-width: 95%;
   &:focus {
     border: none;
   }

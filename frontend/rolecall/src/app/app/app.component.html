@@ -1,3 +1,7 @@
 <app-side-nav #sideNav></app-side-nav>
-<app-site-header [navBar]="sideNav"></app-site-header>
-<router-outlet></router-outlet>
+<div style="height: 10%;">
+  <app-site-header [navBar]="sideNav"></app-site-header>
+</div>
+<div style="height: 90%;">
+  <router-outlet></router-outlet>
+</div>
