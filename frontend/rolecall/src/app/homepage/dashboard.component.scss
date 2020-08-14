@@ -127,23 +127,29 @@
         background: $offWhite;
         height: calc(100% - 2rem);
         margin: 1rem;
-        overflow-y: scroll;
 
         .content {
-          margin-bottom: 1rem;
-          margin-left: 1rem;
-          margin-right: 1rem;
+          height: inherit;
 
           .title {
             font-size: 2rem;
             font-weight: bold;
-            margin-top: 1rem;
+            margin: 0;
+            padding-left: 1rem;
+            padding-top: 1rem;
           }
 
           .children-container {
+            height: inherit;
+            overflow-y: scroll;
+            padding-bottom: 1rem;
+            width: 100%;
+
             .child {
-              margin-top: 1rem;
+              margin-left: 1rem;
+              margin-right: 1rem;
               min-height: 8rem;
+              margin-top: 1rem;
               position: relative;
 
               .child-content {
