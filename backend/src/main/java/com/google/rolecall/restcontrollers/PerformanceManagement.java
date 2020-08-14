@@ -8,6 +8,7 @@ import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
+import com.google.rolecall.restcontrollers.Annotations.Patch;
 import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
@@ -71,6 +72,29 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     ServiceResult<Performance> result;
     try {
       result = performanceService.createPerformance(newPerformance);
+    } catch(InvalidParameterException e) {
+      return CompletableFuture.failedFuture(e);
+    } catch(EntityNotFoundException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+
+    ResponseSchema<PerformanceInfo> response = new ResponseSchema<>(
+        result.getResult().toPerformanceInfo(),result.getWarnings());
+    return CompletableFuture.completedFuture(response);
+  }
+
+  @Patch
+  public CompletableFuture<ResponseSchema<PerformanceInfo>> editCast(Principal principal,
+      @RequestBody PerformanceInfo newPerformance) {
+    User currentUser = getUser(principal);
+    if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
+      return CompletableFuture.failedFuture(
+          insufficientPrivileges(Constants.Roles.MANAGE_PERFORMANCES));
+    }
+
+    ServiceResult<Performance> result;
+    try {
+      result = performanceService.editPerformance(newPerformance);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     } catch(EntityNotFoundException e) {
