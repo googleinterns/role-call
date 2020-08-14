@@ -1,0 +1,203 @@
+@import "src/colors";
+
+.page-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: space-evenly;
+  width: 100%;
+
+  .notif-container {
+    height: 100%;
+    width: 30rem;
+
+    .notif-card {
+      background: $offWhite;
+      height: calc(100% - 2rem);
+      margin: 1rem;
+      overflow-y: scroll;
+
+      .content {
+        margin-bottom: 1rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+
+        .title {
+          font-size: 2rem;
+          font-weight: bold;
+          margin-top: 1rem;
+        }
+      }
+    }
+  }
+
+  .performances-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    justify-content: space-evenly;
+    width: calc(100% - 30rem);
+
+    .left-container {
+      height: 100%;
+      width: 35rem;
+
+      .left-card {
+        background: $offWhite;
+        height: calc(100% - 2rem);
+        margin: 1rem;
+
+        .content {
+          height: inherit;
+
+          .title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+            padding-left: 1rem;
+            padding-top: 1rem;
+          }
+
+          .children-container {
+            height: inherit;
+            overflow-y: scroll;
+            padding-bottom: 1rem;
+            width: 100%;
+
+            .child {
+              margin-left: 1rem;
+              margin-right: 1rem;
+              min-height: 8rem;
+              margin-top: 1rem;
+              position: relative;
+
+              .child-content {
+                .title {
+                  font-size: 1.5rem;
+                  font-weight: bold;
+                  height: fit-content;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                  padding-right: 1rem;
+                  padding-top: 1rem;
+                  text-overflow: ellipsis;
+                  overflow-x: hidden;
+                  overflow-y: hidden;
+                  white-space: nowrap;
+                  width: 100%;
+                }
+
+                .date {
+                  color: $gray;
+                  font-size: 1rem;
+                  // font-weight: bold;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                }
+
+                .time {
+                  color: $gray;
+                  font-size: 1rem;
+                  // font-weight: bold;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                }
+
+                .action-button {
+                  bottom: 1rem;
+                  background: $AAOrange;
+                  color: white;
+                  font-size: 1.2rem;
+                  font-weight: bold;
+                  position: absolute;
+                  right: 1rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .right-container {
+      height: 100%;
+      width: 35rem;
+
+      .right-card {
+        background: $offWhite;
+        height: calc(100% - 2rem);
+        margin: 1rem;
+
+        .content {
+          height: inherit;
+
+          .title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+            padding-left: 1rem;
+            padding-top: 1rem;
+          }
+
+          .children-container {
+            height: inherit;
+            overflow-y: scroll;
+            padding-bottom: 1rem;
+            width: 100%;
+
+            .child {
+              margin-left: 1rem;
+              margin-right: 1rem;
+              min-height: 8rem;
+              margin-top: 1rem;
+              position: relative;
+
+              .child-content {
+                .title {
+                  font-size: 1.5rem;
+                  font-weight: bold;
+                  height: fit-content;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                  padding-right: 1rem;
+                  padding-top: 1rem;
+                  text-overflow: ellipsis;
+                  overflow-x: hidden;
+                  overflow-y: hidden;
+                  white-space: nowrap;
+                  width: 100%;
+                }
+
+                .date {
+                  color: $gray;
+                  font-size: 1rem;
+                  // font-weight: bold;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                }
+
+                .time {
+                  color: $gray;
+                  font-size: 1rem;
+                  // font-weight: bold;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                }
+
+                .action-button {
+                  bottom: 1rem;
+                  background: $AAOrange;
+                  color: white;
+                  font-size: 1.2rem;
+                  font-weight: bold;
+                  position: absolute;
+                  right: 1rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

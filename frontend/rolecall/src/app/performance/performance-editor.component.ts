@@ -1,5 +1,7 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
-import { AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { PerformanceStatus } from 'src/api_types';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Performance, PerformanceApi } from '../api/performance-api.service';
@@ -14,12 +16,14 @@ import { ResponseStatusHandlerService } from '../services/response-status-handle
   templateUrl: './performance-editor.component.html',
   styleUrls: ['./performance-editor.component.scss']
 })
-export class PerformanceEditor implements OnInit, AfterViewChecked {
+export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild('stepper') stepper: Stepper;
   stepperOpts = ["Performance Details", "Pieces & Intermissions", "Fill Casts", "Finalize"];
 
   state: Performance;
+
+  urlUUID: string;
 
   performancesLoaded = false;
   usersLoaded = false;
@@ -27,11 +31,17 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   castsLoaded = false;
   dataLoaded = false;
 
+  toDateString(number) {
+    return new Date(number).toLocaleDateString('en-US');
+  }
+
   constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi,
     private castAPI: CastApi, private respHandler: ResponseStatusHandlerService,
-    private userAPI: UserApi, private changeDetectorRef: ChangeDetectorRef) { }
+    private userAPI: UserApi, private changeDetectorRef: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute, private location: Location) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.urlUUID = this.activatedRoute.snapshot.params.uuid;
     this.state = this.createNewPerformance();
     this.performanceAPI.performanceEmitter.subscribe(val => this.onPerformanceLoad(val));
     this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
@@ -43,11 +53,15 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.userAPI.getAllUsers();
   }
 
+  ngOnDestroy() {
+    this.deleteWorkingCasts();
+  }
+
   onPerformanceLoad(perfs: Performance[]) {
-    this.allPerformances = perfs;
+    this.allPerformances = perfs.sort((a, b) => a.step_1.date - b.step_1.date);
     // this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
-    this.publishedPerfs = perfs.filter(val => val.status == PerformanceStatus.PUBLISHED);
-    this.draftPerfs = perfs.filter(val => val.status == PerformanceStatus.DRAFT);
+    this.publishedPerfs = this.allPerformances.filter(val => val.status == PerformanceStatus.PUBLISHED);
+    this.draftPerfs = this.allPerformances.filter(val => val.status == PerformanceStatus.DRAFT);
     this.performancesLoaded = true;
     this.checkDataLoaded();
   }
@@ -74,7 +88,34 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
   checkDataLoaded(): boolean {
     this.dataLoaded = this.performancesLoaded && this.piecesLoaded && this.castsLoaded && this.usersLoaded;
+    if (this.dataLoaded && this.urlUUID && !this.performanceSelected) {
+      this.startAtPerformance(this.urlUUID);
+    }
     return this.dataLoaded;
+  }
+
+  startAtPerformance(uuid: string) {
+    let foundPerf = this.allPerformances.find(val => val.uuid == uuid);
+    if (foundPerf) {
+      this.onSelectRecentPerformance(foundPerf);
+      this.onEditPerformance();
+    } else {
+      this.location.replaceState("/performance");
+      this.urlUUID = undefined;
+    }
+  }
+
+  updateUrl(perf: Performance) {
+    if (perf && this.location.path().startsWith("/performance")) {
+      if (perf.uuid) {
+        this.urlUUID = perf.uuid;
+        this.location.replaceState("/performance/" + perf.uuid);
+      }
+      else {
+        this.urlUUID = undefined;
+        this.location.replaceState("/performance");
+      }
+    }
   }
 
   // All Steps ----------------------------------------------------
@@ -110,11 +151,14 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
 
 
   resetState() {
+    this.deleteWorkingCasts();
     this.initCastsLoaded = false;
     this.isEditing = false;
     this.performanceSelected = false;
     this.submitted = false;
     this.selectedPerformance = undefined;
+    this.urlUUID = undefined;
+    this.location.replaceState("/performance");
   }
 
   onNextClick() {
@@ -173,6 +217,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.initStep2Data();
     this.performanceSelected = true;
     this.initStep3Data();
+    this.updateUrl(this.state);
   }
 
   onDuplicatePerformance(perf: Performance) {
@@ -192,12 +237,14 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     this.initStep2Data();
     this.performanceSelected = true;
     this.initStep3Data();
+    this.updateUrl(this.state);
   }
 
 
   onNewPerformance() {
     this.resetPerformance();
     this.performanceSelected = true;
+    this.updateUrl(this.state);
   }
 
   onCancelPerformance() {
@@ -311,17 +358,20 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
   allCasts: Cast[] = [];
 
   saveCastChanges() {
-    let prevCastUUID = this.state.uuid + "cast" + this.selectedSegment.uuid;
-    if (this.selectedSegment && this.castDnD && this.castDnD.cast && this.castDnD.castSelected) {
-      let exportedCast: Cast = this.castDnD.dataToCast();
-      if (this.castAPI.hasCast(exportedCast.uuid)) {
-        this.castAPI.deleteCast(exportedCast);
+    if (this.selectedSegment) {
+      let prevCastUUID = this.state.uuid + "cast" + this.selectedSegment.uuid;
+      if (this.selectedSegment && this.castDnD && this.castDnD.cast && this.castDnD.castSelected) {
+        let exportedCast: Cast = this.castDnD.dataToCast();
+        if (this.castAPI.hasCast(exportedCast.uuid)) {
+          this.castAPI.deleteCast(exportedCast);
+        }
+        this.segmentToCast.set(prevCastUUID, [exportedCast, this.primaryGroupNum, this.segmentLength]);
+        this.castAPI.setCast(exportedCast, true);
+        this.castAPI.getAllCasts();
       }
-      this.segmentToCast.set(prevCastUUID, [exportedCast, this.primaryGroupNum, this.segmentLength]);
-      this.castAPI.setCast(exportedCast, true);
-    }
-    if (this.selectedSegment && this.selectedSegment.type == "SEGMENT") {
-      this.intermissions.set(this.selectedIndex, this.segmentLength);
+      if (this.selectedSegment && this.selectedSegment.type == "SEGMENT") {
+        this.intermissions.set(this.selectedIndex, this.segmentLength);
+      }
     }
   }
 
@@ -360,6 +410,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
       };
       this.segmentToCast.set(newCast.uuid, [newCast, 0, 0]);
       this.castAPI.setCast(newCast, true);
+      this.castAPI.getAllCasts();
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
@@ -427,12 +478,14 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
           }
           this.segmentToCast.set(castUUID, [cast, seg.selected_group, seg.length ? seg.length : 0]);
           this.castAPI.setCast(cast, true);
+          this.castAPI.getAllCasts();
         }
       }
       this.initCastsLoaded = true;
     }
-
-    this.onSelectStep3Segment(this.selectedSegment, 0);
+    if (this.selectedSegment) {
+      this.onSelectStep3Segment(this.selectedSegment, 0);
+    }
   }
 
   onChoosePrimaryCast(groupInd: number) {
@@ -446,6 +499,7 @@ export class PerformanceEditor implements OnInit, AfterViewChecked {
     newCast.uuid = this.state.uuid + "cast" + this.selectedSegment.uuid;
     this.segmentToCast.set(newCast.uuid, [newCast, 0, this.segmentLength]);
     this.castAPI.setCast(newCast, true);
+    this.castAPI.getAllCasts();
     this.updateGroupIndices(newCast);
   }
 

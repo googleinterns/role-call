@@ -29,7 +29,8 @@
     <div *ngIf="renderingPieces && renderingPieces.length > 0" class="app-card card-margins right-card">
       <div *ngIf="currentSelectedPiece">
         <div class="right-title-edit">
-          <input type="text" class="name-input right-card-title" (input)="onTitleInput($event)"
+          <input type="text" class="name-input right-card-title app-card" (input)="onTitleInput($event)"
+            [size]="(((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length'] < 15) ? 15 : ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length']"
             [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)" />
         </div>
         <mat-form-field appearance="fill" class="type-dropdown">
