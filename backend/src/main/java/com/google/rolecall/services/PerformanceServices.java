@@ -77,11 +77,10 @@ public class PerformanceServices {
   public void deletePerformance(int id) throws EntityNotFoundException,
       InvalidParameterException{
     Performance performance = getPerformance(id);
-    // TODO: Uncomment this when patch is implemented
-    // if(performance.getStatus() == Status.Published || performance.getStatus() == Status.Canceled) {
-    //   throw new InvalidParameterException(
-    //       "Cannot delete performance that has been published or cancled");
-    // }
+    if(performance.getStatus() == Status.PUBLISHED || performance.getStatus() == Status.CANCLED) {
+      throw new InvalidParameterException(
+          "Cannot delete performance that has been published or cancled");
+    }
 
     performanceRepo.deleteById(id);
   }
@@ -216,9 +215,9 @@ public class PerformanceServices {
 
   private PerformanceSection updatePerformanceCastMember(PerformanceSection performanceSection, 
       PerformanceCastMemberInfo memberInfo, Position position, int castNumber)
-      throws InvalidParameterException {
+      throws InvalidParameterException, EntityNotFoundException {
 
-    PerformanceCastMember.newBuilder()
+    performanceSection.getPerformanceCastMemberById(memberInfo.id()).toBuilder()
         .setOrder(memberInfo.order())
         .setCastNumber(castNumber)
         .build();
