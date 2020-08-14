@@ -37,7 +37,6 @@ export class Dashboard implements OnInit {
     let now = Date.now();
     this.upcomingDashPerfs = this.allDashPerfs.filter(val => val.dateTime >= now);
     this.pastDashPerfs = this.allDashPerfs.filter(val => val.dateTime < now);
-    this.upcomingDashPerfs.push(...this.upcomingDashPerfs);
     let dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     let timeOpts = { hour: '2-digit', minute: '2-digit' };
     this.processedUpcomingDashPerfs = this.upcomingDashPerfs.map(perf => {
