@@ -18,6 +18,16 @@ header,
   height: 100%;
 }
 
+hr {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 5px;
+}
+
 #intro {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url("https://www.scfta.org/scfta/media/Event/AlvinAiley1516_6_615x400.jpg?width=615&height=400&ext=.jpg") no-repeat
