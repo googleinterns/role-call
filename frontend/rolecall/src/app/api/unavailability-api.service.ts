@@ -89,6 +89,7 @@ export class UnavailabilityApi {
       }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
+      unav.id = undefined;
       return this.http.post(environment.backendURL + "api/unavailable", unav, {
         observe: "response",
         headers: await this.headerUtil.generateHeader(),

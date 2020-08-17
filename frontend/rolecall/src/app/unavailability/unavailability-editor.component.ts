@@ -56,7 +56,6 @@ export class UnavailabilityEditor implements OnInit {
     let now = Date.now();
     this.currentUnavailabilities = unavs.filter(ua => ua.endDate > now).sort(dateOldToNewComp);
     this.pastUnavailabilities = unavs.filter(ua => ua.endDate <= now).sort(dateNewToOldComp);
-    this.currentUnavailabilities = this.pastUnavailabilities;
     this.unavsLoaded = true;
     this.checkDataLoaded();
   }
