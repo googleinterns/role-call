@@ -1,0 +1,76 @@
+<div class="page-container">
+  <app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
+  <div *ngIf="dataLoaded" class="main-container app-card">
+    <div class="left-cards-container">
+      <div class="left-card app-card">
+        <div class="content">
+          <h2 class="title">Current Unavailabilites</h2>
+          <div class="children-container">
+            <div class="child app-card" *ngFor="let procUnav of processedCurrUnavs">
+              <div class="child-content">
+                <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
+                <h4 class="date">{{"From " + procUnav.fromDateStr + " to " + procUnav.toDateStr }}</h4>
+                <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="left-card app-card">
+        <div class="content">
+          <h2 class="title">Past Unavailabilites</h2>
+          <div class="children-container">
+            <div class="child app-card" *ngFor="let procUnav of processedPastUnavs">
+              <div class="child-content">
+                <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
+                <h4 class="date">{{"From " + procUnav.fromDateStr + " to " + procUnav.toDateStr }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="unav-editor-container app-card">
+      <div class="title-container">
+        <h2 class="title" type="text">Unavailability Reporter</h2>
+      </div>
+      <div class="user-select-container">
+        <mat-form-field appearance="fill" class="user-select">
+          <mat-label>For User</mat-label>
+          <mat-select [(value)]="selectedUser" (selectionChange)="onSelectUser($event)">
+            <mat-option *ngFor="let user of allUsers; let i = index" [value]="user">
+              {{ user.first_name + " " + user.last_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="datepickers-container">
+        <mat-form-field appearance="fill" class="date-select">
+          <mat-label>From Date</mat-label>
+          <input matInput [matDatepicker]="fromPicker" (dateChange)="onFromDateChange($event)" [(ngModel)]="startDate">
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="date-select">
+          <mat-label>To Date</mat-label>
+          <input matInput [matDatepicker]="toPicker" (dateChange)="onToDateChange($event)" [(ngModel)]="endDate">
+          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="description-container app-card">
+        <h3 class="description-title">Description</h3>
+        <textarea class="description-input" [(ngModel)]="state.description" (input)="onDescChange($event)"></textarea>
+      </div>
+      <button mat-flat-button class="action-button" [ngStyle]="!canSave ? { 'background': 'none' } : {}"
+        [disabled]="!canSave" (click)="onSaveUnav()">
+        Save
+      </button>
+      <button mat-flat-button class="action-button-left action-button" (click)="onNewUnav()">
+        New
+      </button>
+    </div>
+  </div>
+</div>

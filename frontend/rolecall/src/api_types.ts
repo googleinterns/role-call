@@ -13,6 +13,7 @@ export namespace APITypes {
   export type PieceUUID = string;
   export type CastUUID = string;
   export type PerformanceUUID = string;
+  export type UnavailabilityUUID = number;
   export type SuccessIndicator = {
     successful: boolean,
     error?: string

@@ -35,6 +35,11 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
     routerLinkUrl: 'performance/',
     icon: 'sports_kabaddi'
   },
+  {
+    name: 'Unavailabilities',
+    routerLinkUrl: 'unavailability',
+    icon: 'report_problem'
+  }
 ];
 
 /** Color variables */
