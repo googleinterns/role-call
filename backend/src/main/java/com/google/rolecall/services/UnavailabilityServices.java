@@ -1,6 +1,7 @@
 package com.google.rolecall.services;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +36,27 @@ public class UnavailabilityServices {
   }
 
   public List<Unavailability> getUnavailabilityByDateRange(Date startDate, Date endDate) {
-    List<Unavailability> allUnavailabilities =
-        unavailabilityRepo.findAllByStartDateLessThanEqualAndEndDateGreaterThanEqual(startDate,
-        endDate);
+    List<Unavailability> allUnavailabilities = new ArrayList<>();
+    unavailabilityRepo.findAll().forEach(u -> {
+        if(overlapsDateRange(u, startDate, endDate)) {
+          allUnavailabilities.add(u);
+        }
+    });
 
     return allUnavailabilities;
+  }
+
+  private boolean overlapsDateRange(Unavailability u, Date startDate, Date endDate) {
+    boolean uStartDateIsAfterStartDate = u.getStartDate().compareTo(startDate) >= 0;
+    boolean uStartDateIsBeforeEndDate = u.getStartDate().compareTo(endDate) <= 0;
+    boolean uEndDateIsAfterStartDate = u.getEndDate().compareTo(startDate) >= 0;
+    boolean uEndDateIsBeforeEndDate = u.getStartDate().compareTo(endDate) <= 0;
+
+    boolean isStartBetween = uStartDateIsAfterStartDate && uStartDateIsBeforeEndDate;
+    boolean isEndBetween = uEndDateIsAfterStartDate && uEndDateIsBeforeEndDate;
+    boolean isEncompassing = !uStartDateIsAfterStartDate && !uEndDateIsBeforeEndDate;
+
+    return isStartBetween || isEndBetween || isEncompassing;
   }
 
   public Unavailability createUnavailability(UnavailabilityInfo info)
