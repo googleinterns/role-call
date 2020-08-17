@@ -127,7 +127,7 @@
         duplicate
       </button>
       <button mat-flat-button aria-label="Cancel Performance" class="button" (click)="onCancelPerformance()">
-        cancel
+        {{ selectedPerformance ? (selectedPerformance.status == "PUBLISHED" ? "cancel": "delete") : "cancel" }}
       </button>
     </div>
   </div>
