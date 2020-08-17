@@ -156,6 +156,14 @@ public class User {
     member.setUser(null);
   }
 
+  public void addUnavailability(Unavailability unavailable) {
+    unavailable.setUser(this);
+  }
+
+  public void removeUnavailability(Unavailability unavailable) {
+    unavailable.setUser(null);
+  }
+
   public String[] getRoles() {
     List<Boolean> permissions = new ArrayList<>();
     permissions.add(isAdmin()); // ADMIN

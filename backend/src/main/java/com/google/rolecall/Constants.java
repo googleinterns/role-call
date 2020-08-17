@@ -10,6 +10,7 @@ public class Constants {
     public static final String CAST_MANAGEMENT = "/api/cast";
     public static final String PERFORMANCE_MANAGEMENT = "/api/performance";
     public static final String DASHBOARD_MANAGEMENT = "/api/dashboard";
+    public static final String UNAVAILABILITY_MANAGEMENT = "/api/unavailable";
   }
 
   public static class RequestParameters {
@@ -18,6 +19,9 @@ public class Constants {
     public static final String CAST_ID = "castid";
     public static final String SECTION_ID = "sectionid";
     public static final String PERFORMANCE_ID = "performanceid";
+    public static final String UNAVAILABLE_ID = "unavailableid";
+    public static final String START_DATE = "startdate";
+    public static final String END_DATE = "enddate";
   }
 
   public static class Headers {
