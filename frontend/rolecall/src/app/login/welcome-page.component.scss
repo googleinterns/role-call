@@ -1,21 +1,19 @@
-.welcome-container {
-  margin-left: 2rem;
-  margin-top: 2rem;
-
-  .title {
-    font-size: 4rem;
-    font-weight: bold;
-  }
-  .message {
-    font-size: 1.5rem;
-  }
-}
 
 html,
 body,
 header,
 #intro {
   height: 100%;
+}
+
+hr {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 5px;
 }
 
 #intro {
@@ -25,5 +23,5 @@ header,
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  background-size: cover; 
 }
