@@ -75,7 +75,7 @@
                 [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)">
                 <h3 class="performance-title">
-                  {{ toDateString(perf.step_1.date) + " - " + perf.step_1.location + " - " + perf.step_1.title }}</h3>
+                  {{ perf.step_1.location + " - " + toDateString(perf.step_1.date) + " - " + perf.step_1.title }}</h3>
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@
                 [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)">
                 <h3 class="performance-title">
-                  {{ toDateString(perf.step_1.date) + " - " + perf.step_1.location + " - " + perf.step_1.title }}</h3>
+                  {{ perf.step_1.location + " - " + toDateString(perf.step_1.date) + " - " + perf.step_1.title }}</h3>
               </div>
             </div>
           </div>
@@ -174,8 +174,21 @@
           <div class="description-container">
             <h3 class="input-title">Description</h3>
             <div class="description-card app-card">
-              <textarea type="text" class="description-input" rows="8" [value]="state.step_1.description"
+              <textarea type="text" class="description-input" rows="2" [value]="state.step_1.description"
                 (input)="onStep1Input('description', $event)"></textarea>
+            </div>
+            <div class="segment-list app-card">
+              <div class="segment-container" *ngFor="let segment of state.step_3.segments">
+                <h3 class="title">{{segment['name']}}</h3>
+                <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  <ng-container *ngFor="let group of pos.groups">
+                    <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
+                      <p class="names">{{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -205,7 +218,7 @@
     <div class="right-card-container">
       <div class="right-card app-card">
         <div class="content">
-          <h2 class="program-title">Program</h2>
+          <h2 class="program-title">Program Order</h2>
           <div id="program-list" cdkDropList (cdkDropListDropped)="step2Drop($event)" [cdkDropListData]="step2Data">
             <div *ngFor="let data of step2Data; let i = index">
               <div cdkDrag class="piece-container" [cdkDragData]="data">

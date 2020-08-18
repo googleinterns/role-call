@@ -18,7 +18,8 @@
             <div class="cell cellRowHeader">
               {{ positionVals[i1].name + " " + (i2 + 1) }}
             </div>
-            <div class="cell" *ngFor="let person of row; let i3 = index" cdkDrag [cdkDragData]="person">
+            <div class="cell" *ngFor="let person of row; let i3 = index" cdkDrag [cdkDragData]="person"
+              [ngStyle]="i3 == boldedCast ? {'font-weight' : 'bold'} : {}">
               <img class="user-image"
                 [src]="'https://i.pravatar.cc/150?u=' + person.first_name + '::::' + person.last_name + person.contact_info.email">
               {{person.first_name + " " + person.last_name}}

@@ -13,6 +13,10 @@
                 <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
                   Edit
                 </button>
+                <button mat-flat-button class="action-button-delete action-button"
+                  (click)="onDeleteUnav(procUnav.unav)">
+                  Delete
+                </button>
               </div>
             </div>
           </div>
@@ -26,6 +30,9 @@
               <div class="child-content">
                 <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
                 <h4 class="date">{{"From " + procUnav.fromDateStr + " to " + procUnav.toDateStr }}</h4>
+                <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
+                  Edit
+                </button>
               </div>
             </div>
           </div>

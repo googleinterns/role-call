@@ -103,7 +103,7 @@ export class UnavailabilityApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUnavailabilityDelete(unav);
     }
-    return this.http.delete(environment.backendURL + 'api/unavailable?id=' + unav.id, {
+    return this.http.delete(environment.backendURL + 'api/unavailable?unavailableid=' + unav.id, {
       observe: "response",
       headers: await this.headerUtil.generateHeader(),
       withCredentials: true
