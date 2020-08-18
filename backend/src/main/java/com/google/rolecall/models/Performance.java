@@ -42,7 +42,16 @@ public class Performance {
   private String description;
 
   @Column(nullable = false)
-  private String location;
+  private String city;
+
+  @Column(nullable = false)
+  private String state;
+
+  @Column(nullable = false)
+  private String country;
+
+  @Column(nullable = false)
+  private String venue;
 
   @Column(nullable = false)
   private Timestamp dateTime;
@@ -69,8 +78,20 @@ public class Performance {
     return description == null ? "" : description;
   }
 
-  public String getLocation() {
-    return location;
+  public String getCity() {
+    return city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public String getVenue() {
+    return venue;
   }
 
   public Timestamp getDate() {
@@ -140,7 +161,10 @@ public class Performance {
         .setId(id)
         .setTitle(getTitle())
         .setDescription(getDescription())
-        .setLocation(getLocation())
+        .setCity(getCity())
+        .setState(getState())
+        .setCountry(getCountry())
+        .setVenue(getVenue())
         .setDateTime(getDate().getTime())
         .setStatus(getStatus())
         .setPerformanceSections(sections)
@@ -164,7 +188,10 @@ public class Performance {
     private Performance performance;
     private String title;
     private String description;
-    private String location;
+    private String city;
+    private String state;
+    private String country;
+    private String venue;
     private Timestamp dateTime;
 
     public Builder setTitle(String title) {
@@ -183,9 +210,33 @@ public class Performance {
       return this;
     }
 
-    public Builder setLocation(String location) {
-      if(location != null) {
-        this.location = location;
+    public Builder setCity(String city) {
+      if(city != null) {
+        this.city = city;
+      }
+
+      return this;
+    }
+
+    public Builder setState(String state) {
+      if(state != null) {
+        this.state = state;
+      }
+
+      return this;
+    }
+
+    public Builder setCountry(String country) {
+      if(country != null) {
+        this.country = country;
+      }
+
+      return this;
+    }
+
+    public Builder setVenue(String venue) {
+      if(venue != null) {
+        this.venue = venue;
       }
 
       return this;
@@ -200,14 +251,17 @@ public class Performance {
     }
 
     public Performance build() throws InvalidParameterException {
-      if(title == null || location == null || dateTime == null) {
+      if(title == null || city == null ||  state == null ||  country == null || dateTime == null) {
         throw new InvalidParameterException("Performance requires a Title, Location, and a Time");
       }
 
       performance.title = this.title;
       performance.description = this.description;
-      performance.location = this.location;
+      performance.city = this.city;
+      performance.state = this.state;
+      performance.country = this.country;
       performance.dateTime = this.dateTime;
+      performance.venue = this.venue;
 
       return performance;
     }
@@ -217,12 +271,16 @@ public class Performance {
       this.performance = performance;
       this.title = performance.getTitle();
       this.description = performance.getDescription();
-      this.location = performance.getLocation();
+      this.city = performance.city;
+      this.state = performance.state;
+      this.country = performance.country;
       this.dateTime = performance.getDate();
+      this.venue = performance.getVenue();
     }
 
     public Builder() {
       this.performance = new Performance();
+      this.venue = "";
       performance.status = Status.DRAFT;
     }
   }

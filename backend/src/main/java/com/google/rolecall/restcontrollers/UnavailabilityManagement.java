@@ -1,10 +1,5 @@
 package com.google.rolecall.restcontrollers;
 
-import java.sql.Date;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.jsonobjects.UnavailabilityInfo;
@@ -17,7 +12,10 @@ import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.UnavailabilityServices;
-
+import java.sql.Date;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 

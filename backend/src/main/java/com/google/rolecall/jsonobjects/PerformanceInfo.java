@@ -25,8 +25,20 @@ public abstract class PerformanceInfo {
   public abstract String description();
 
   @Nullable
-  @JsonProperty("location")
-  public abstract String location();
+  @JsonProperty("city")
+  public abstract String city();
+
+  @Nullable
+  @JsonProperty("state")
+  public abstract String state();
+
+  @Nullable
+  @JsonProperty("country")
+  public abstract String country();
+
+  @Nullable
+  @JsonProperty("venue")
+  public abstract String venue();
 
   @Nullable
   @JsonProperty("dateTime")
@@ -67,8 +79,17 @@ public abstract class PerformanceInfo {
     @JsonProperty("description")
     public abstract Builder setDescription(String description);
 
-    @JsonProperty("location")
-    public abstract Builder setLocation(String location);
+    @JsonProperty("city")
+    public abstract Builder setCity(String city);
+    
+    @JsonProperty("state")
+    public abstract Builder setState(String state);
+
+    @JsonProperty("country")
+    public abstract Builder setCountry(String country);
+
+    @JsonProperty("venue")
+    public abstract Builder setVenue(String venue);
 
     @JsonProperty("dateTime")
     public abstract Builder setDateTime(Long dateTime);
