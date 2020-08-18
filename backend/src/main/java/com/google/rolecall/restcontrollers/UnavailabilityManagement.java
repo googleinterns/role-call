@@ -79,7 +79,7 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
   }
 
   @Delete(Constants.RequestParameters.UNAVAILABLE_ID)
-  public CompletableFuture<Void> deleteSection(@RequestParam(value=Constants.RequestParameters.SECTION_ID, required=true) 
+  public CompletableFuture<Void> deleteSection(@RequestParam(value=Constants.RequestParameters.UNAVAILABLE_ID, required=true) 
       int id) {
     try {
       unavailabilityService.deleteUnavailability(id);
