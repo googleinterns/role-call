@@ -39,7 +39,7 @@ export type OneUnavailbilityResponse = {
   "warnings": []
 }
 
-const MonthInMS = 2629800000;
+const SixMonthInMS = 6 * 2629800000;
 
 
 @Injectable({
@@ -59,8 +59,8 @@ export class UnavailabilityApi {
       return this.mockBackend.requestAllUnavailabilites();
     }
     return this.http.get<AllUnavailbilitiesResponse>(
-      environment.backendURL + "api/unavailable?startdate=" + (Date.now() - MonthInMS)
-      + "&enddate=" + (Date.now() + MonthInMS), {
+      environment.backendURL + "api/unavailable?startdate=" + (Date.now() - SixMonthInMS)
+      + "&enddate=" + (Date.now() + SixMonthInMS), {
       headers: await this.headerUtil.generateHeader(),
       observe: "response",
       withCredentials: true
