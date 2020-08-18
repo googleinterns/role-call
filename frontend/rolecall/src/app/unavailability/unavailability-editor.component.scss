@@ -99,6 +99,9 @@
                   font-weight: bold;
                   position: absolute;
                   right: 1rem;
+                  &-delete {
+                    right: 6rem;
+                  }
                 }
               }
             }
@@ -186,6 +189,7 @@
           padding: 1rem;
           padding-bottom: 0rem;
           padding-top: 0.5rem;
+          resize: none;
           width: 100%;
         }
       }

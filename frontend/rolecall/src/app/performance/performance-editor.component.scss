@@ -184,9 +184,11 @@ $buttonRowHeight: 5rem;
       margin: 0.5rem;
 
       .content {
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        overflow-y: scroll;
 
         .title-reset-container {
           display: flex;
@@ -295,9 +297,68 @@ $buttonRowHeight: 5rem;
         }
 
         .description-container {
-          margin-top: 1rem;
+          // max-height: 60%;
+          min-height: 0;
+          // margin-top: 1rem;
+
+          .segment-list {
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            justify-content: flex-start;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            overflow-y: scroll;
+
+            .segment-container {
+              border-left: 4px solid;
+              border-color: $lightLightGray;
+              margin-bottom: 0.5rem;
+              margin-left: 1rem;
+              margin-top: 0.5rem;
+
+              .title {
+                font-size: x-large;
+                font-weight: bold;
+                margin-bottom: 0;
+                margin-right: 0.5em;
+                padding-bottom: 0.5rem;
+                padding-left: 1rem;
+                padding-top: 0.5rem;
+              }
+
+              .pos-container {
+                border-left: 4px solid;
+                border-color: $offoffWhite;
+                margin-left: 2rem;
+
+                .pos-title {
+                  font-size: larger;
+                  font-weight: bold;
+                  margin-bottom: 0;
+                  margin-right: 0.5em;
+                  padding-left: 1em;
+                }
+
+                .dancer-list {
+                  border-left: 4px solid;
+                  border-color: $offWhite;
+                  margin-left: 3rem;
+
+                  .names {
+                    font-size: large;
+                    margin-bottom: 0;
+                    margin-right: 0.5em;
+                    padding-left: 1em;
+                  }
+                }
+              }
+            }
+          }
 
           .description-card {
+            margin-bottom: 1em;
             margin-left: 2rem;
             margin-right: 2rem;
             margin-top: 1em;

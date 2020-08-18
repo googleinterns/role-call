@@ -157,8 +157,16 @@ export class UnavailabilityEditor implements OnInit {
     })
   }
 
+  onDeleteUnav(ua: Unavailability) {
+    this.doDeleteUnav(ua);
+  }
+
   doSetUnav() {
     return this.unavAPI.setUnavailability(this.state);
+  }
+
+  doDeleteUnav(ua: Unavailability) {
+    return this.unavAPI.deleteUnavailability(ua);
   }
 
 }

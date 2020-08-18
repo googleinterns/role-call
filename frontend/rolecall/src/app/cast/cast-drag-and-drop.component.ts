@@ -26,6 +26,8 @@ export class CastDragAndDrop implements OnInit {
 
   buttonsEnabled = true;
 
+  boldedCast: number;
+
   usersLoaded = false;
   castsLoaded = false;
   piecesLoaded = false;
@@ -48,6 +50,10 @@ export class CastDragAndDrop implements OnInit {
     this.castAPI.getAllCasts();
     this.userAPI.getAllUsers();
     this.pieceAPI.getAllPieces();
+  }
+
+  setBoldedCast(num: number) {
+    this.boldedCast = num;
   }
 
   onTitleInput(inputEvent: InputEvent) {

@@ -1,6 +1,7 @@
 import { CdkDragDrop, copyArrayItem, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { PerformanceStatus } from 'src/api_types';
 import { Cast, CastApi } from '../api/cast_api.service';
@@ -140,6 +141,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async onSaveDraft() {
+    this.initStep4();
     this.state.status = PerformanceStatus.DRAFT;
     if (this.isEditing) {
       await this.performanceAPI.deletePerformance(this.state);
@@ -215,8 +217,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.state = JSON.parse(JSON.stringify(this.selectedPerformance));
     this.updateDateString();
     this.initStep2Data();
+    this.updateStep2State();
     this.performanceSelected = true;
     this.initStep3Data();
+    this.initStep4();
     this.updateUrl(this.state);
   }
 
@@ -372,6 +376,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       if (this.selectedSegment && this.selectedSegment.type == "SEGMENT") {
         this.intermissions.set(this.selectedIndex, this.segmentLength);
       }
+      this.castDnD ? this.castDnD.setBoldedCast(this.segmentToCast.get(prevCastUUID)[1]) : '';
     }
   }
 
@@ -419,6 +424,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
     this.changeDetectorRef.detectChanges();
+    this.castDnD ? this.castDnD.setBoldedCast(this.segmentToCast.get(castUUID)[1]) : '';
   }
 
   updateGroupIndices(cast: Cast) {
@@ -488,8 +494,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  onChoosePrimaryCast(groupInd: number) {
+  onChoosePrimaryCast(event: MatSelectChange) {
     this.saveCastChanges();
+    this.castDnD ? this.castDnD.setBoldedCast(event.value) : '';
   }
 
   castsForSegment: Cast[] = [];
