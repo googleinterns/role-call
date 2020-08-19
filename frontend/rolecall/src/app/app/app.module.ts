@@ -2,6 +2,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ClassProvider, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -36,6 +37,7 @@ const LOGGING_INTERCEPTOR_PROVIDER: ClassProvider = {
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
+    MatDividerModule,
     NgbModule,
     LoginModule,
     // Routing

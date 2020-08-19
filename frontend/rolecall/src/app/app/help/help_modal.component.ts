@@ -3,17 +3,19 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-confirm-dialog',
+  selector: 'help-modal',
   templateUrl: './help_modal.component.html',
   styleUrls: ['./help_modal.component.scss']
 })
 export class HelpModalComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {
-                  confirmText: string,
-                  message: string,
-                  title: string
-              }, private mdDialogRef: MatDialogRef<HelpModalComponent>) { }
+      confirmText: string,
+      footer: string,
+      sections: Array<string>,
+      messages: Array<string>,
+      title: string,
+  }, private mdDialogRef: MatDialogRef<HelpModalComponent>) { }
 
   //Conditions that close the help modal
   public close(value) {
@@ -24,7 +26,7 @@ export class HelpModalComponent {
     this.close(true);
   }
   
-  @HostListener("keydown.esc") 
+  @HostListener("keydown.esc")
   public onEsc() {
     this.close(false);
   }

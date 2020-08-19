@@ -41,11 +41,21 @@ export class UserEditor implements OnInit {
     private privilegeClassAPI: PrivilegeClassApi,
     private location: Location, private dialogService: HelpModalService) { }
   
+
   //Modal Text
   openDialog(): void {
     const options = {
-      title: 'Dashboard',
-      message: 'Dashboard Text',
+      title: 'Users Page',
+      sections: ["Creating a New User", "Opening a User's Information Page", "Deleting a User"],
+      messages: [`Press the plus button at the bottom left of the page to open a new user information page.
+      Click on a field to input information for the new user. The permissions/priviledge fields will open a dropdown
+      menu when clicked. Just select which classes/permissions you wish to give the user and click out of the dropdown menu when done.
+      When you are satisfied with the new user's information, press the save button at the bottom right to add the new user to the
+      users section.`,
+      `Click on the user's name on the left panel to open the user's 
+      information page. You can modify the user's information/priviledges just as you would when creating a new user.`,
+      `Click the "delete" button at the bottom left of the user's information page to delete a user.`
+    ],
       confirmText: 'Exit',
     };
     this.dialogService.open(options);

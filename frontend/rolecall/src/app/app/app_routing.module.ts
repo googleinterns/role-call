@@ -6,6 +6,7 @@ import { WelcomePage } from '../login/welcome-page.component';
 import { SettingsModule } from '../settings/settings.module';
 import { SettingsBase } from '../settings/settings_base.component';
 import { UserModule } from '../user/user.module';
+import { HelpModule } from '../app/help/help.module'
 
 
 const routes: Routes = [
@@ -19,7 +20,8 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes),
     HomepageModule,
     SettingsModule,
-    UserModule
+    UserModule,
+    HelpModule
   ],
   exports: [RouterModule],
   providers: []

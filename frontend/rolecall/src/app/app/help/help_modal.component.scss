@@ -1,12 +1,18 @@
-.header, .dialog-message {
-  text-transform: lowercase;
-}
-
-.header::first-letter, .dialog-message::first-letter {
+.header, .modal-body::first-letter {
   text-transform: uppercase;
 }
 
+.modal-header {
+  height: 60px;
+}
+
+.modal-body {
+  overflow-y: auto;
+  font-size: 18px;
+}
+
 .btn-confirm { //'Ok Button Color'
-  background-color: rgb(102, 219, 102);
+  background-color: orangered;
   color: black;
+  font-size: 18px;
 }

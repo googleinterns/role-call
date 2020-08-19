@@ -46,8 +46,26 @@ export class PieceEditor implements OnInit {
   //Help Modal Text
   openDialog(): void {
     const options = {
-      title: 'Ballets',
-      message: 'Ballet Text',
+      title: 'Ballets Screen',
+      sections: [`Viewing a Ballet`, `Creating a New Ballet`, `Editing a ballet`, `Saving/Deleting a Ballet`],
+      messages: [`Find the ballet's name on the left panel and click on it to open the ballet page.`,
+      `Press the plus button at the bottom left to open a new ballet/segment page.`,
+      `By default, the segment type will be set to "piece". If you want to create something new other than a ballet or a pause/intermission, click 
+      on the "Segment Type" field and select segment on the dropdown menu. To name a Ballet/Segment, just click the title field at the top that
+      says "New Piece" and type in its name. To add positions to a ballet, hit the plus button on the right to create a new position. Click on the 
+      position's text field and input the position name.`,
+      `When you are finished creating a new ballet, hit the "save" button on the right. Once saved, a ballet will appear on the left panel titled 
+      "Segments". Likewise, if you want to delete a ballet, just hit the "delete" button on the left to remove it from the left panel.`
+    ],
+      message: `To create a new ballet, press the plus button on the bottom left. When pressed, a new ballet/segment page will
+      open. By default, the segment type will be set to "piece". If you want to create something new other than a ballet
+      or a pause/intermission (Ex. Speech), click on the "Segment Type" field and select segment on the dropdown menu. To name a
+      segment or speech, just click the title field at the top that says "New Piece" and type in the name. To add positions to a ballet,
+      hit the plus button on the right and click on the position's text field and type the position name. When you are finished creating
+      a new ballet, hit the save button. Once saved, a ballet will appear on the left panel titled "Segments". To view a ballet/segment,
+      just click on it's name on the left to view or edit it. To delete a ballet, open the ballet page up and hit the delete button on
+      the bottom left of the page. Ballet/segment lengths are set in the performance editor while casts for ballets are set in the cast
+      editor page.`,
       confirmText: 'Exit',
     };
     this.dialogService.open(options);

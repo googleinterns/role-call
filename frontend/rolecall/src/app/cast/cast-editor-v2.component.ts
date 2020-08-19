@@ -32,8 +32,17 @@ export class CastEditorV2 implements OnInit {
   //Help Modal Text
   openDialog(): void {
     const options = {
-      title: 'Cast Creator',
-      message: 'Cast Creator Text',
+      title: 'Casts Creator Page',
+      sections: [`Viewing Casts`, `Creating a new Cast`, `Editing a Cast`, `Saving/Deleting a Cast`],
+      messages: [`First, click on the Piece Selector field to open up the piece dropdown menu and select which 
+      ballet you created the cast for. Click on the name of the premade cast on the left panel to open the cast editor page.`,
+      `Make sure to have the ballet which you want to create the cast for selected up at the top left. When you've done that,
+      click the plus button on the bottom left to open a new cast editor page.`,
+      `Drag and drop dancers from the dancer table at the bottom of the page into each position. Once a dancer has been placed in
+      the first cast, the second cast column will appear for that position and so on.`,
+      `On the right of the dancer table are a trash icon and a save icon. To delete a cast and remove it from the left panel, hit 
+      the delete button. Likewise, to save your changes to a cast or add a new cast to the left panel, hit the save button.`,
+    ],
       confirmText: 'Exit',
     };
     this.dialogService.open(options);

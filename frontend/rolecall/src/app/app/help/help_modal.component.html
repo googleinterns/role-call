@@ -1,9 +1,35 @@
-<div class="header"> <!--Modal Title-->
-  <h1 mat-dialog-title>{{ data.title }}</h1>
-</div>
-<div mat-dialog-content> <!--Modal Body-->
-  <p class="dialog-message">{{ data.message }}</p>
-</div>
-<div mat-dialog-actions> <!--'OK' button-->
-  <button class="btn-confirm" (click)="confirm()">{{ data.confirmText }}</button>
+<div class="modal-dialog" style="overflow-y: scroll; max-height:95%; margin-top:25px; margin-bottom:25px;">
+  <div class="modal-content"> 
+    <div class="modal-header"> 
+      <h2 class="modal-title"><B>{{data.title}}</B></h2>
+    </div>
+
+    <div class="modal-body" style="height: 250px">
+      <div *ngFor="let section of data.sections; let i = index">
+        <B>{{section}}</B>: {{data.messages[i]}}
+      </div>
+    </div>
+    
+    <mat-divider></mat-divider>
+
+    <!--Freshdesk Support Text on Every Page-->
+    <div class="modal-header"> 
+      <h2 class="modal-title"><B>Logging App Enhancement Requests and Issues</B></h2>
+    </div>
+    <div class="modal-body" style="height: 150px"> To log any enhancement requests or issues, please create a ticket via the
+      <a href="https://rollcallhelp.freshdesk.com/support/home" target="_blank">Support Tool.</a>
+      You can also send an email directly to <B>support@rollcallhelpsupport.freshdesk.com</B>
+        which will create a support ticket on your behalf. <br>
+      When creating the ticket, we ask that you indicate in the Subject line what type of ticket it is by including any of the following keywords:<br>
+      <B>Feature Request</B>: Enhancement requests, features that are not currently in the tool that would be nice to have<br>
+      <B>Tool Issue</B>: Issue with the tool; ex. A feature not working as intended, page doesn’t load, unable to save, etc<br>
+      <B>Tool Help</B>: Help with how to use the tool or how to complete a user journey on the tool<br>
+      </div>
+
+    <div class = "modal-footer">
+      <div modal-actions>
+        <button class="btn-confirm" (click)="confirm()">{{data.confirmText}}</button>
+      </div>
+    </div>
+  </div>
 </div>

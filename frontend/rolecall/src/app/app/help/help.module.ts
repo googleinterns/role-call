@@ -4,6 +4,7 @@ import { HelpModalService } from './help_modal.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { HelpModalComponent } from './help_modal.component';
 
 
@@ -12,7 +13,8 @@ import { HelpModalComponent } from './help_modal.component';
         CommonModule,
         MatDialogModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        MatDividerModule,
     ],
     declarations: [
         HelpModalComponent,
@@ -22,3 +24,4 @@ import { HelpModalComponent } from './help_modal.component';
     providers: [HelpModalService]
   })
   export class HelpModule {}
+     

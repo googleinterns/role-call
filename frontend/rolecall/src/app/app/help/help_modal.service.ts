@@ -11,7 +11,8 @@ export class HelpModalService {
     this.dialogRef = this.dialog.open(HelpModalComponent, {    
          data: {
            title: options.title, //Modal Title/Header
-           message: options.message, //Modal Body Text
+           sections: options.sections, //Modal Body Sections
+           messages: options.messages, //Modal Body Section Text
            confirmText: options.confirmText //'Ok' Button
          }
     });
