@@ -92,7 +92,10 @@ public class PerformanceServices {
     Performance performance = Performance.newBuilder()
         .setTitle(info.title())
         .setDescription(info.description())
-        .setLocation(info.location())
+        .setCity(info.city())
+        .setCountry(info.country())
+        .setState(info.state())
+        .setVenue(info.venue())
         .setDateTime(info.dateTime())
         .build();
 
@@ -279,7 +282,10 @@ public class PerformanceServices {
     Performance performance = getPerformance(info.id()).toBuilder()
         .setTitle(info.title())
         .setDescription(info.description())
-        .setLocation(info.location())
+        .setCity(info.city())
+        .setCountry(info.country())
+        .setState(info.state())
+        .setVenue(info.venue())
         .setDateTime(info.dateTime())
         .build();
 

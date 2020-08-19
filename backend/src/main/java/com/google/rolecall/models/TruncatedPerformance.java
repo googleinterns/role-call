@@ -26,7 +26,16 @@ public class TruncatedPerformance {
   private String description;
 
   @Column(nullable = false)
-  private String location;
+  private String city;
+
+  @Column(nullable = false)
+  private String state;
+
+  @Column(nullable = false)
+  private String country;
+
+  @Column(nullable = false)
+  private String venue;
 
   @Column(nullable = false)
   private Timestamp dateTime;
@@ -46,8 +55,20 @@ public class TruncatedPerformance {
     return description == null ? "" : description;
   }
 
-  public String getLocation() {
-    return location;
+  public String getCity() {
+    return city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public String getVenue() {
+    return venue;
   }
 
   public Timestamp getDate() {
@@ -62,7 +83,10 @@ public class TruncatedPerformance {
     return PerformanceInfo.newBuilder()
         .setId(getId())
         .setTitle(getTitle())
-        .setLocation(getLocation())
+        .setCity(getCity())
+        .setCountry(getCountry())
+        .setState(getState())
+        .setVenue(getVenue())
         .setDescription(getDescription())
         .setDateTime(getDate().getTime())
         .setStatus(getStatus())
