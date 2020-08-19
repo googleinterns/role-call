@@ -77,7 +77,7 @@ public class PerformanceServices {
   public void deletePerformance(int id) throws EntityNotFoundException,
       InvalidParameterException{
     Performance performance = getPerformance(id);
-    if(performance.getStatus() == Status.PUBLISHED || performance.getStatus() == Status.CANCLED) {
+    if(performance.getStatus() == Status.PUBLISHED || performance.getStatus() == Status.CANCELED) {
       throw new InvalidParameterException(
           "Cannot delete performance that has been published or cancled");
     }
@@ -291,7 +291,7 @@ public class PerformanceServices {
 
     if(info.status() == Status.PUBLISHED) {
       performance.publish();
-    } else if(info.status() == Status.CANCLED) {
+    } else if(info.status() == Status.CANCELED) {
       performance.cancel();
     }
 

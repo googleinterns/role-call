@@ -28,7 +28,7 @@ import javax.persistence.Table;
 public class Performance {
 
   public enum Status {
-    PUBLISHED, CANCLED, DRAFT;
+    PUBLISHED, CANCELED, DRAFT;
   }
   
   @Id
@@ -114,7 +114,7 @@ public class Performance {
 
   public void cancel() {
     if(status == Status.PUBLISHED) {
-      this.status = Status.CANCLED;
+      this.status = Status.CANCELED;
     }
   }
 
