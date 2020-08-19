@@ -91,7 +91,7 @@ export class CsvGenerator {
       allVals.sort((a, b) => a['Cast Number'] < b['Cast Number'] ? -1 : 1)
         .sort((a, b) => a['Piece'] < b['Piece'] ? -1 : 1),
       headers,
-      perf.step_1.location + " - " +
+      perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - " + perf.step_1.venue + " - " +
       (new Date(perf.step_1.date)).toLocaleDateString().replace(/\//g, '-') + " - " +
       perf.step_1.title + " Performance Casting");
   }

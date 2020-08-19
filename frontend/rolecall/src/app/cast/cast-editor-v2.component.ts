@@ -190,8 +190,8 @@ export class CastEditorV2 implements OnInit {
         }
       })
     };
-    this.castAPI.setCast(newCast, true);
+    await this.setCurrentCast(newCast);
+    await this.castAPI.setCast(newCast, true);
     await this.castAPI.getAllCasts();
-    this.setCurrentCast(newCast);
   }
 }

@@ -260,18 +260,24 @@ $buttonRowHeight: 5rem;
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
+          margin-left: 2rem;
+          margin-right: 1rem;
 
           .location-title-container {
             display: flex;
             flex-direction: column;
             height: 100%;
             justify-content: center;
+
+            .location-title {
+              margin-left: 0;
+            }
           }
 
           .location-card {
             height: min-content;
-            margin-left: 2rem;
-            margin-right: 2rem;
+            margin-left: 0.5rem;
+            margin-right: 1rem;
             width: 100%;
 
             .location-input {

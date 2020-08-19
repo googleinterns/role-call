@@ -15,7 +15,10 @@ export type Performance = {
   step_1: {
     title: string,
     date: number,
-    location: string,
+    city: string,
+    state: string,
+    country: string,
+    venue: string,
     description: string,
   },
   step_2: {
@@ -23,6 +26,7 @@ export type Performance = {
   },
   step_3: {
     segments: {
+      id: string,
       segment: string,
       length: number,
       selected_group: number,
@@ -46,7 +50,10 @@ export type RawPerformance = {
   "id": number,
   "title": string,
   "description": string,
-  "location": string,
+  "city": string,
+  "state": string,
+  "country": string,
+  "venue": string,
   "dateTime": number,
   "status": string,
   "performanceSections":
@@ -108,7 +115,10 @@ export class PerformanceApi {
         title: raw.title,
         description: raw.description,
         date: raw.dateTime,
-        location: raw.location
+        city: raw.city,
+        venue: raw.venue,
+        country: raw.country,
+        state: raw.state
       },
       step_2: {
         segments: raw.performanceSections.map(val => val).sort((a, b) => {
@@ -118,6 +128,7 @@ export class PerformanceApi {
       step_3: {
         segments: raw.performanceSections.map(val => {
           return {
+            id: String(val.id),
             segment: String(val.sectionId),
             length: 0,
             selected_group: val.primaryCast,
@@ -145,15 +156,19 @@ export class PerformanceApi {
   }
 
   convertPerformanceToRaw(perf: Performance): RawPerformance {
-    let ret = {
+    let ret: RawPerformance = {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
       description: perf.step_1.description,
-      location: perf.step_1.location,
+      city: perf.step_1.city,
+      country: perf.step_1.country,
+      venue: perf.step_1.venue,
+      state: perf.step_1.state,
       dateTime: perf.step_1.date,
       status: perf.status ? perf.status : PerformanceStatus.DRAFT,
       performanceSections: perf.step_3.segments.map((seg, ind) => {
         return {
+          id: seg.id ? Number(seg.id) : undefined,
           sectionPosition: ind,
           primaryCast: seg.selected_group,
           sectionId: Number(seg.segment),
@@ -178,6 +193,25 @@ export class PerformanceApi {
       })
     };
     return ret;
+  }
+
+  deletePreviousGroups(rawPerf: RawPerformance) {
+    rawPerf.performanceSections.push(
+      ...(rawPerf.performanceSections.map(sec => {
+        let copy = JSON.parse(JSON.stringify(sec));
+        copy['delete'] = true;
+        return copy;
+      }))
+    );
+    rawPerf.performanceSections = rawPerf.performanceSections.map(val => {
+      if (!val['delete']) {
+        val['id'] = undefined;
+        return val;
+      } else {
+        return val;
+      }
+    });
+    return rawPerf;
   }
 
   /** Hits backend with all performances GET request */
@@ -211,8 +245,8 @@ export class PerformanceApi {
     }
     if (this.performances.has(performance.uuid)) {
       let header = await this.headerUtil.generateHeader();
-      return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
-        this.convertPerformanceToRaw(performance),
+      return this.http.patch<HttpResponse<any>>(environment.backendURL + "api/performance",
+        this.deletePreviousGroups(this.convertPerformanceToRaw(performance)),
         {
           headers: header,
           observe: "response",
@@ -220,7 +254,6 @@ export class PerformanceApi {
         }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
           return this.getAllPerformances().then(() => val);
         });
-
     } else {
       let header = await this.headerUtil.generateHeader();
       return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",

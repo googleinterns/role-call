@@ -75,7 +75,8 @@
                 [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)">
                 <h3 class="performance-title">
-                  {{ perf.step_1.location + " - " + toDateString(perf.step_1.date) + " - " + perf.step_1.title }}</h3>
+                  {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - " + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - " + perf.step_1.title }}
+                </h3>
               </div>
             </div>
           </div>
@@ -100,7 +101,8 @@
                 [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)">
                 <h3 class="performance-title">
-                  {{ perf.step_1.location + " - " + toDateString(perf.step_1.date) + " - " + perf.step_1.title }}</h3>
+                  {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - " + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - " + perf.step_1.title }}
+                </h3>
               </div>
             </div>
           </div>
@@ -164,11 +166,32 @@
           </div>
           <div class="location-container">
             <div class="location-title-container">
-              <h3 class="input-title location-title">Location</h3>
+              <h3 class="input-title location-title">City</h3>
             </div>
             <div class="location-card app-card">
-              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.location"
-                (input)="onStep1Input('location', $event)"></textarea>
+              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.city"
+                (input)="onStep1Input('city', $event)"></textarea>
+            </div>
+            <div class="location-title-container">
+              <h3 class="input-title location-title">State</h3>
+            </div>
+            <div class="location-card app-card">
+              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.state"
+                (input)="onStep1Input('state', $event)"></textarea>
+            </div>
+            <div class="location-title-container">
+              <h3 class="input-title location-title">Country</h3>
+            </div>
+            <div class="location-card app-card">
+              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.country"
+                (input)="onStep1Input('country', $event)"></textarea>
+            </div>
+            <div class="location-title-container">
+              <h3 class="input-title location-title">Venue</h3>
+            </div>
+            <div class="location-card app-card">
+              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.venue"
+                (input)="onStep1Input('venue', $event)"></textarea>
             </div>
           </div>
           <div class="description-container">

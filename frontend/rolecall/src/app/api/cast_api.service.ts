@@ -365,6 +365,7 @@ export class CastApi {
   deleteCast(cast: Cast): Promise<APITypes.SuccessIndicator> {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
+      this.getAllCasts();
       return Promise.resolve({
         successful: true
       });

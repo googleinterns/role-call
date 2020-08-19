@@ -130,7 +130,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       step_1: {
         title: "New Performance",
         date: Date.now(),
-        location: "New York, NY",
+        state: "NY",
+        city: "New York",
+        country: "USA",
+        venue: "",
         description: ""
       },
       step_2: {
@@ -263,7 +266,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       });
       return;
     }
-    this.performanceAPI.deletePerformance(this.selectedPerformance);
+    if (this.selectedPerformance.status == PerformanceStatus.DRAFT) {
+      this.performanceAPI.deletePerformance(this.selectedPerformance);
+    } else if (this.selectedPerformance.status == PerformanceStatus.PUBLISHED) {
+      this.selectedPerformance.status = PerformanceStatus.CANCELED;
+      this.selectedPerformance.step_3.segments = [];
+      this.selectedPerformance.step_2.segments = [];
+      this.performanceAPI.setPerformance(this.selectedPerformance);
+    }
   }
 
   // --------------------------------------------------------------
@@ -293,9 +303,21 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       let val = value as InputEvent;
       this.state.step_1.title = val.target['value'];
     }
-    if (field == "location") {
+    if (field == "city") {
       let val2 = value as InputEvent;
-      this.state.step_1.location = val2.target['value'];
+      this.state.step_1.city = val2.target['value'];
+    }
+    if (field == "country") {
+      let val2 = value as InputEvent;
+      this.state.step_1.country = val2.target['value'];
+    }
+    if (field == "state") {
+      let val2 = value as InputEvent;
+      this.state.step_1.state = val2.target['value'];
+    }
+    if (field == "venue") {
+      let val2 = value as InputEvent;
+      this.state.step_1.venue = val2.target['value'];
     }
     if (field == "date") {
       let val3 = value as InputEvent;
@@ -357,6 +379,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('castDnD') castDnD: CastDragAndDrop;
   // segment uuid to cast, primary cast, and length
   segmentToCast: Map<string, [Cast, number, number]> = new Map();
+  // segment uuid to performance section ID
+  segmentToPerfSectionID: Map<string, string> = new Map();
   // segement index to length
   intermissions: Map<number, number> = new Map();
   chooseFromGroupIndices: number[] = [];
@@ -477,6 +501,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         let castUUID = this.state.uuid + "cast" + seg.segment;
         if (this.piecesAPI.pieces.get(seg.segment).type == "SEGMENT") {
           this.intermissions.set(i, seg.length ? seg.length : 0);
+          this.segmentToPerfSectionID.set(castUUID, seg.id);
         } else {
           let cast: Cast = {
             uuid: castUUID,
@@ -485,6 +510,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
             filled_positions: seg.custom_groups
           }
           this.segmentToCast.set(castUUID, [cast, seg.selected_group, seg.length ? seg.length : 0]);
+          this.segmentToPerfSectionID.set(castUUID, seg.id);
           this.castAPI.setCast(cast, true);
           this.castAPI.getAllCasts();
         }
@@ -535,9 +561,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   async onSubmit() {
     let finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
-    if (this.isEditing) {
-      await this.performanceAPI.deletePerformance(this.state);
-    }
     this.performanceAPI.setPerformance(finishedPerf).then(val => {
       this.submitted = true;
       this.initCastsLoaded = false;
@@ -569,8 +592,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     let newState: Performance = JSON.parse(JSON.stringify(this.state));
     newState.step_3.segments =
       this.step2Data.map((segment, ind) => {
+        let segUUID = newState.uuid + "cast" + segment.uuid;
         if (segment.type == "SEGMENT") {
           return {
+            id: this.segmentToPerfSectionID.has(segUUID) ? this.segmentToPerfSectionID.get(segUUID) : undefined,
             segment: segment.uuid,
             name: segment.name,
             type: segment.type,
@@ -579,9 +604,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
             custom_groups: []
           };
         }
-        let segUUID = newState.uuid + "cast" + segment.uuid;
         let info: [Cast, number, number] = this.segmentToCast.get(segUUID);
         return {
+          id: this.segmentToPerfSectionID.has(segUUID) ? this.segmentToPerfSectionID.get(segUUID) : undefined,
           segment: segment.uuid,
           name: segment.name,
           type: segment.type,
