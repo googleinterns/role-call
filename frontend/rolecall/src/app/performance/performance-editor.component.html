@@ -285,7 +285,7 @@
             </mat-form-field>
             <mat-form-field appearance="fill" class="tool"
               [ngClass]="selectedSegment.type == 'SEGMENT' ? 'tool-solo' : ''">
-              <mat-label>Length</mat-label>
+              <mat-label>Length (min)</mat-label>
               <input matInput [value]="segmentLength" (input)="onLengthChange($event)">
             </mat-form-field>
           </div>
@@ -307,7 +307,15 @@
         <div class="finalize-card-container">
           <div class="finalize-card app-card">
             <div class="content">
-              <h2 class="title">Review Casting</h2>
+              <div class="title-export-container">
+                <h2 class="title">Review Casting</h2>
+                <button mat-icon-button aria-label="Export Cast Button" class="export-button"
+                  (click)="exportPerformance()">
+                  <mat-icon [inline]="true" class="export-button-icon">
+                    save_alt
+                  </mat-icon>
+                </button>
+              </div>
               <div class="segment-list app-card">
                 <div class="segment-container" *ngFor="let segment of state.step_3.segments">
                   <h3 class="title">{{segment['name']}}</h3>

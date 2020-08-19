@@ -1,4 +1,5 @@
 @import "src/colors";
+@import "src/constants";
 
 $cellWidth: 14rem;
 $cellHeight: 4rem;
@@ -72,7 +73,7 @@ $cellHeight: 4rem;
   padding-left: 0.5em;
   padding-top: 0.25em;
   position: relative;
-  max-width: 95%;
+  max-width: 90%;
   &:focus {
     border: none;
   }
@@ -92,6 +93,25 @@ $cellHeight: 4rem;
 .position-pool {
   max-height: 65vh;
   overflow-y: scroll;
+}
+
+.name-export-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.export-button {
+  background: $offWhite;
+  border-radius: $borderRadius;
+  height: 6vh;
+  margin-right: 2rem;
+  margin-top: 2rem;
+  width: 6vh;
+}
+.export-button-icon {
+  font-size: 2.5rem;
+  vertical-align: middle;
 }
 
 .user-pool {

@@ -6,6 +6,7 @@ import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi, Position } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
 import { NumberToPlacePipe } from '../common_components/number_to_place.pipe';
+import { CsvGenerator } from '../services/csv-generator.service';
 import { LoggingService } from '../services/logging.service';
 
 @Component({
@@ -35,7 +36,8 @@ export class CastDragAndDrop implements OnInit {
   castSelected = false;
 
   constructor(private userAPI: UserApi, private castAPI: CastApi,
-    private pieceAPI: PieceApi, private logging: LoggingService) { }
+    private pieceAPI: PieceApi, private logging: LoggingService,
+    private csvGenerator: CsvGenerator) { }
 
   ngOnInit(): void {
     this.userAPI.userEmitter.subscribe((val) => {
@@ -300,6 +302,10 @@ export class CastDragAndDrop implements OnInit {
         alert(val.error);
       }
     });
+  }
+
+  async exportCast() {
+    return this.csvGenerator.generateCSVFromCast(this.cast);
   }
 
   async deleteCast() {

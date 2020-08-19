@@ -1,7 +1,14 @@
 <div *ngIf="dataLoaded && castSelected" class="drop-group-container" cdkDropListGroup>
   <div class="position-pool">
-    <input *ngIf="buttonsEnabled" type="text" class="name-input" (input)="onTitleInput($event)" [value]="this.cast.name"
-      [size]="this.cast.name.length < 15 ? 15 : this.cast.name.length" />
+    <div *ngIf="buttonsEnabled" class="name-export-container">
+      <input type="text" class="name-input" (input)="onTitleInput($event)" [value]="this.cast.name"
+        [size]="this.cast.name.length < 15 ? 15 : this.cast.name.length" />
+      <button mat-icon-button aria-label="Export Cast Button" class="export-button" (click)="exportCast()">
+        <mat-icon [inline]="true" class="export-button-icon">
+          save_alt
+        </mat-icon>
+      </button>
+    </div>
     <div *ngFor="let position of data; let i1 = index" class="position-container">
       <div *ngIf="i1 < positionVals.length">
         <h3 class="position-title">{{positionVals[i1].name}}</h3>

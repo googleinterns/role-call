@@ -10,6 +10,7 @@ import { Piece, PieceApi } from '../api/piece_api.service';
 import { User, UserApi } from '../api/user_api.service';
 import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
 import { Stepper } from '../common_components/stepper.component';
+import { CsvGenerator } from '../services/csv-generator.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 @Component({
@@ -39,7 +40,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   constructor(private performanceAPI: PerformanceApi, private piecesAPI: PieceApi,
     private castAPI: CastApi, private respHandler: ResponseStatusHandlerService,
     private userAPI: UserApi, private changeDetectorRef: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute, private location: Location) { }
+    private activatedRoute: ActivatedRoute, private location: Location,
+    private csvGenerator: CsvGenerator) { }
 
   ngOnInit() {
     this.urlUUID = this.activatedRoute.snapshot.params.uuid;
@@ -556,6 +558,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   initStep4() {
     this.state = this.dataToPerformance();
+  }
+
+  exportPerformance() {
+    this.csvGenerator.generateCSVFromPerformance(this.state);
   }
 
   dataToPerformance(): Performance {
