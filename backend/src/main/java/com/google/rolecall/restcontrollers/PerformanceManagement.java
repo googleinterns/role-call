@@ -107,7 +107,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
   }
 
   @Delete(Constants.RequestParameters.PERFORMANCE_ID)
-  public CompletableFuture<Void> deleteCast(Principal principal, @RequestParam(
+  public CompletableFuture<Void> deletePerformance(Principal principal, @RequestParam(
       value=Constants.RequestParameters.PERFORMANCE_ID, required=true) int id) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
