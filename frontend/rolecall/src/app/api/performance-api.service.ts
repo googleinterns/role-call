@@ -156,7 +156,6 @@ export class PerformanceApi {
   }
 
   convertPerformanceToRaw(perf: Performance): RawPerformance {
-    console.log(perf);
     let ret: RawPerformance = {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
@@ -197,7 +196,6 @@ export class PerformanceApi {
   }
 
   deletePreviousGroups(rawPerf: RawPerformance) {
-    console.log(this.performances.get(String(rawPerf.id)));
     rawPerf.performanceSections.push(
       ...(rawPerf.performanceSections.map(sec => {
         let copy = JSON.parse(JSON.stringify(sec));
@@ -238,7 +236,6 @@ export class PerformanceApi {
         return val;
       }
     }).filter(val => (!(val['delete'] && val['id'] == undefined)));
-    console.log(rawPerf);
     return rawPerf;
   }
 
@@ -268,7 +265,6 @@ export class PerformanceApi {
 
   /** Hits backend with create/edit performance POST request */
   async requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
-    console.log(performance);
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceSet(performance);
     }
