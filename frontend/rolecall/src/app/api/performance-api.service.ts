@@ -156,6 +156,7 @@ export class PerformanceApi {
   }
 
   convertPerformanceToRaw(perf: Performance): RawPerformance {
+    console.log(perf);
     let ret: RawPerformance = {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
@@ -196,13 +197,39 @@ export class PerformanceApi {
   }
 
   deletePreviousGroups(rawPerf: RawPerformance) {
+    console.log(this.performances.get(String(rawPerf.id)));
     rawPerf.performanceSections.push(
       ...(rawPerf.performanceSections.map(sec => {
         let copy = JSON.parse(JSON.stringify(sec));
         copy['delete'] = true;
+        copy.sectionPosition = undefined;
+        copy.positions = [];
         return copy;
       }))
     );
+    // Using the original data in the map, find the deleted sections
+    // in the performance
+    let deletedSections = this.performances.get(String(rawPerf.id)).step_3.segments.filter(
+      val => {
+        return rawPerf.performanceSections.find(perfSec => String(perfSec.id) == val.id) == undefined;
+      }
+    );
+    // Add the deleted sections with delete tags
+    rawPerf.performanceSections.push(
+      ...(deletedSections.map(sec => {
+        return {
+          delete: true,
+          id: Number(sec.id),
+          segment: sec.segment,
+          primaryCast: sec.selected_group,
+          sectionId: Number(sec.id),
+          sectionPosition: undefined,
+          positions: []
+        };
+      }))
+    );
+    // If we are not deleting the section, meaning we are uploading it,
+    // give it an undefined id to be set by the backend
     rawPerf.performanceSections = rawPerf.performanceSections.map(val => {
       if (!val['delete']) {
         val['id'] = undefined;
@@ -211,6 +238,7 @@ export class PerformanceApi {
         return val;
       }
     }).filter(val => (!(val['delete'] && val['id'] == undefined)));
+    console.log(rawPerf);
     return rawPerf;
   }
 
@@ -240,6 +268,7 @@ export class PerformanceApi {
 
   /** Hits backend with create/edit performance POST request */
   async requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
+    console.log(performance);
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceSet(performance);
     }
@@ -350,8 +379,8 @@ export class PerformanceApi {
    * request fails for some other reason.
    */
   setPerformance(performance: Performance): Promise<APITypes.SuccessIndicator> {
-    return this.setPerformanceResponse(performance).then(val => {
-      this.getAllPerformances();
+    return this.setPerformanceResponse(performance).then(async val => {
+      await this.getAllPerformances();
       return {
         successful: true
       }

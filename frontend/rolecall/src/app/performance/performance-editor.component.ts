@@ -163,6 +163,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.submitted = false;
     this.selectedPerformance = undefined;
     this.urlUUID = undefined;
+    this.segmentToCast.clear();
+    this.segmentToPerfSectionID.clear();
+    this.intermissions.clear();
+    this.selectedSegment = undefined;
+    this.selectedIndex = undefined;
+    this.chooseFromGroupIndices = [];
+    this.primaryGroupNum = 0;
+    this.allCasts = [];
     this.location.replaceState("/performance");
   }
 
@@ -393,14 +401,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         if (this.castAPI.hasCast(exportedCast.uuid)) {
           this.castAPI.deleteCast(exportedCast);
         }
-        this.segmentToCast.set(prevCastUUID, [exportedCast, this.primaryGroupNum, this.segmentLength]);
+        this.segmentToCast.set(exportedCast.uuid, [exportedCast, this.primaryGroupNum, this.segmentLength]);
         this.castAPI.setCast(exportedCast, true);
         this.castAPI.getAllCasts();
       }
       if (this.selectedSegment && this.selectedSegment.type == "SEGMENT") {
         this.intermissions.set(this.selectedIndex, this.segmentLength);
       }
-      this.castDnD ? this.castDnD.setBoldedCast(this.segmentToCast.get(prevCastUUID)[1]) : '';
+      this.castDnD ? this.castDnD.setBoldedCast(this.segmentToCast.get(prevCastUUID) ? this.segmentToCast.get(prevCastUUID)[1] : undefined) : '';
     }
   }
 
@@ -563,6 +571,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
+      this.resetState();
     }).catch(err => {
       alert("Unable to save performance: " + err.error.status + " " + err.error.error);
     });
