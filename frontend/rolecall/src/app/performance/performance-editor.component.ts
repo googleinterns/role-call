@@ -148,9 +148,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   async onSaveDraft() {
     this.initStep4();
     this.state.status = PerformanceStatus.DRAFT;
-    if (this.isEditing) {
-      await this.performanceAPI.deletePerformance(this.state);
-    }
     this.performanceAPI.setPerformance(this.state);
     this.deleteWorkingCasts();
     this.resetState();
