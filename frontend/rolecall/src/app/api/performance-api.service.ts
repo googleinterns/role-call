@@ -210,7 +210,7 @@ export class PerformanceApi {
       } else {
         return val;
       }
-    });
+    }).filter(val => (!(val['delete'] && val['id'] == undefined)));
     return rawPerf;
   }
 
