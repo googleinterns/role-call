@@ -60,6 +60,10 @@ export type OnePieceResponse = {
   warnings: string[]
 };
 
+/**
+ * A service responsible for interfacing with the Sections API and
+ * maintaining section/piece data.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -111,6 +115,8 @@ export class PieceApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceSet(piece);
     }
+    // If we already have the piece by UUID (i.e. it exists on the backend),
+    // then do a PATCH, else do a POST
     if (this.pieces.has(piece.uuid)) {
       // Do patch
       let header = await this.headerUtil.generateHeader();
@@ -148,6 +154,7 @@ export class PieceApi {
       }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
+
   /** 
    * Hits backend with delete piece POST request */
   async requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
@@ -165,12 +172,13 @@ export class PieceApi {
   /** All the loaded pieces mapped by UUID */
   pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
 
+  /** The raw piece structures given by the backend */
   rawPieces: RawPiece[] = [];
 
   /** Emitter that is called whenever pieces are loaded */
   pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
 
-  /** Takes backend response, updates data structures for all users */
+  /** Takes backend response, updates data structures for all pieces */
   private getAllPiecesResponse(): Promise<AllPiecesResponse> {
     return this.requestAllPieces().then(val => {
       // Update the pieces map

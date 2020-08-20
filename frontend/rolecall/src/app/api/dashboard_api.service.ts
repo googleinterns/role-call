@@ -24,8 +24,8 @@ export type AllDashResponse = {
 
 
 /**
- * A service responsible for interfacing with the User API and
- * keeping track of all users by ID
+ * A service responsible for interfacing with the Dashboard APIs and
+ * keeping track of all dashboard objects by ID
  */
 @Injectable({
   providedIn: 'root'
@@ -74,7 +74,7 @@ export class DashboardApi {
     });
   }
 
-  /** Gets all the users from the backend and returns them */
+  /** Gets all the dash performances from the backend and returns them */
   getAllDashboard(): Promise<DashPerformance[]> {
     return this.getAllDashResponse().then(val => {
       this.dashPerformanceEmitter.emit(Array.from(this.dashPerformances.values()));

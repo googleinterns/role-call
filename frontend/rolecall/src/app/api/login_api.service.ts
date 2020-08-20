@@ -72,6 +72,7 @@ export class LoginApi {
     return prom.then(() => {
       // Return user if already signed in and token not expired
       if (this.authInstance.isSignedIn.get()) {
+        // Check if token is expired, and refresh if needed
         if (Date.now() < this.authInstance.currentUser.get().getAuthResponse().expires_at) {
           return prom.then(() => {
             return this.getLoginResponse(true, true, this.authInstance.currentUser.get())
@@ -146,6 +147,7 @@ export class LoginApi {
       this.refresh();
     }
     else {
+      // Hit the logout endpoint to invalidate session
       this.http.get(environment.backendURL + "logout",
         {
           observe: "response",
@@ -158,6 +160,7 @@ export class LoginApi {
         if (resp.status > 299 || resp.status < 200) { return Promise.reject("Sign in failed") }
         else { return resp }
       }).then(() => {
+        // If session invalid, go ahead and log out of OAuth
         if (this.isLoggedIn) {
           this.authInstance.signOut();
         }

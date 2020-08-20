@@ -94,6 +94,10 @@ export type OnePerformanceResponse = {
   warnings: string[]
 };
 
+/**
+ * A service responsible for interfacing with the Performance APIs, as well
+ * as maintaining the performance data
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -106,6 +110,12 @@ export class PerformanceApi {
   constructor(private loggingService: LoggingService, private http: HttpClient,
     private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
+  /**
+   * Converts a raw performance response to the performance structure
+   * for the performance editor
+   * 
+   * @param raw The raw performance from the backend
+   */
   convertRawToPerformance(raw: RawPerformance): Performance {
     return {
       uuid: String(raw.id),
@@ -155,6 +165,12 @@ export class PerformanceApi {
     }
   }
 
+  /**
+   * Converts a performance editor performance into a 
+   * backend performance to be set on the backend
+   * 
+   * @param perf The performance editor performance state
+   */
   convertPerformanceToRaw(perf: Performance): RawPerformance {
     let ret: RawPerformance = {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
@@ -195,6 +211,15 @@ export class PerformanceApi {
     return ret;
   }
 
+  /**
+   * Takes a raw performance and calculates which performance sections
+   * are missing from it since the last backend update, and resolves
+   * the deleted sections to be marked for deletion on the backend
+   * (since the backend requires a delete tag to remove objects rather
+   * than simply omitting them).
+   * 
+   * @param rawPerf The raw performance being patched
+   */
   deletePreviousGroups(rawPerf: RawPerformance) {
     rawPerf.performanceSections.push(
       ...(rawPerf.performanceSections.map(sec => {
@@ -218,7 +243,7 @@ export class PerformanceApi {
         return {
           delete: true,
           id: Number(sec.id),
-          segment: sec.segment,
+          segment: Number(sec.segment),
           primaryCast: sec.selected_group,
           sectionId: Number(sec.id),
           sectionPosition: undefined,
@@ -236,6 +261,19 @@ export class PerformanceApi {
         return val;
       }
     }).filter(val => (!(val['delete'] && val['id'] == undefined)));
+    // Ensure only 1 deleted perf section for each performance section to be deleted
+    let uuidSet: Set<number> = new Set();
+    rawPerf.performanceSections = rawPerf.performanceSections.filter(pS => {
+      if (pS.id == undefined || (!pS['delete'])) {
+        return true;
+      }
+      if (uuidSet.has(pS.id)) {
+        return false;
+      } else {
+        uuidSet.add(pS.id);
+        return true;
+      }
+    });
     return rawPerf;
   }
 
@@ -313,7 +351,7 @@ export class PerformanceApi {
   /** Emitter that is called whenever performances are loaded */
   performanceEmitter: EventEmitter<Performance[]> = new EventEmitter();
 
-  /** Takes backend response, updates data structures for all users */
+  /** Takes backend response, updates data structures for all performances */
   private getAllPerformancesResponse(): Promise<AllPerformancesResponse> {
     return this.requestAllPerformances().then(val => {
       // Update the performances map
@@ -342,12 +380,12 @@ export class PerformanceApi {
     })
   }
 
-  /** Sends backend request and awaits reponse */
+  /** Sends backend request and awaits response */
   private setPerformanceResponse(performance: Performance): Promise<HttpResponse<any>> {
     return this.requestPerformanceSet(performance);
   }
 
-  /** Sends backend request and awaits reponse */
+  /** Sends backend request and awaits response */
   private deletePerformanceResponse(performance: Performance): Promise<HttpResponse<any>> {
     return this.requestPerformanceDelete(performance);
   }

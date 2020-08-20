@@ -63,6 +63,11 @@ export type OneCastResponse = {
   warnings: string[]
 };
 
+/**
+ * A service responsible for interfacing with the Cast APIs,
+ * and maintaing all cast objects in the system, including those
+ * acting as intermediaries for a performance's custom casts
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -72,8 +77,16 @@ export class CastApi {
   /** Mock backend */
   mockBackend: MockCastBackend = new MockCastBackend();
 
+  /** The casts which are not on the backend but are currently needed by
+   * multiple components (namely the performance editor and cast drag and drop).
+   * This should not include the cast creator's casts, it should only be the casts
+   * which will not be set as cast objects on the backend, i.e. the cast objects
+   * needed to pass between the cast drag and drop and the performance editor,
+   * since these casts will be set as performance groups, not casts.
+   */
   workingCasts: Map<APITypes.CastUUID, Cast> = new Map();
 
+  /** The raw casts handed over by the backend */
   rawCasts: RawCast[] = [];
 
   constructor(private loggingService: LoggingService, private http: HttpClient, private pieceAPI: PieceApi,
@@ -171,6 +184,7 @@ export class CastApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestCastSet(cast);
     }
+    // Check if we have record of the cast and patch if we do
     if (this.hasCast(cast.uuid)) {
       // Do patch
       let header = await this.headerUtil.generateHeader();
@@ -255,6 +269,7 @@ export class CastApi {
       }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
+
   /** 
    * Hits backend with delete cast POST request */
   async requestCastDelete(cast: Cast): Promise<HttpResponse<any>> {
@@ -384,10 +399,14 @@ export class CastApi {
     });
   }
 
+  /** Check if the cached casts (working casts and backend casts) includes
+   * a cast with a specific UUID
+   */
   hasCast(castUUID: APITypes.CastUUID) {
     return this.casts.has(castUUID) || this.workingCasts.has(castUUID);
   }
 
+  /** Return the cast (working or backend) with a specific cast UUID */
   castFromUUID(castUUID: APITypes.CastUUID) {
     if (this.casts.has(castUUID)) {
       return this.casts.get(castUUID);

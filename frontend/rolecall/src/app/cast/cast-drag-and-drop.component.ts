@@ -16,17 +16,26 @@ import { LoggingService } from '../services/logging.service';
 })
 export class CastDragAndDrop implements OnInit {
 
+  /** The drag and drop data */
   data: User[][][];
   positionVals: Position[];
   columnHeaders: string[][] = [];
   emptyCells: string[][][] = [];
+
+  /** The current cast we're editing, as well as the UUID of it */
   selectedCastUUID: APITypes.CastUUID;
   cast: Cast;
+
+  /** All users to display in user pool */
   allUsers: User[] = [];
+
+  /** Output by which other components can listen to cast changes */
   @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
 
+  /** Whether or not the save/delete buttons should be rendered */
   buttonsEnabled = true;
 
+  /** The cast that should be bolded, or undefined if none should be */
   boldedCast: number;
 
   usersLoaded = false;
@@ -54,15 +63,18 @@ export class CastDragAndDrop implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
+  /** Setter to set the bolded cast number */
   setBoldedCast(num: number) {
     this.boldedCast = num;
   }
 
+  /** Called when the title input is changed */
   onTitleInput(inputEvent: InputEvent) {
     this.cast.name = inputEvent.srcElement['value'];
     this.castChangeEmitter.emit(this.cast);
   }
 
+  /** Called when pieces are loaded from the Piece API */
   onPieceLoad(pieces: Piece[]) {
     this.piecesLoaded = true;
     if (this.checkAllLoaded()) {
@@ -70,6 +82,9 @@ export class CastDragAndDrop implements OnInit {
     }
   }
 
+  /** Checks that all the required data is loaded to begin
+   * rendering
+   */
   checkAllLoaded() {
     if (this.usersLoaded && this.castsLoaded && this.piecesLoaded) {
       this.dataLoaded = true;
@@ -77,6 +92,7 @@ export class CastDragAndDrop implements OnInit {
     return this.dataLoaded;
   }
 
+  /** Called when users are loaded from the User API */
   onUserLoad(users: User[]) {
     this.usersLoaded = true;
     this.allUsers = users.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
@@ -85,6 +101,7 @@ export class CastDragAndDrop implements OnInit {
     }
   }
 
+  /** Called when casts are loaded from the Cast API */
   onCastLoad(casts: Cast[]) {
     this.castsLoaded = true;
     if (this.checkAllLoaded()) {
@@ -92,6 +109,9 @@ export class CastDragAndDrop implements OnInit {
     }
   }
 
+  /** Selects the current cast from the Cast API to copy and render in the drag and
+   * drop
+   */
   selectCast(uuid: APITypes.CastUUID, saveDeleteEnabled?: boolean) {
     this.buttonsEnabled = saveDeleteEnabled ? true : (isNullOrUndefined(saveDeleteEnabled) ? true : false);
     this.castSelected = true;
@@ -101,6 +121,7 @@ export class CastDragAndDrop implements OnInit {
     }
   }
 
+  /** Output the drag and drop data as a cast object */
   dataToCast(): Cast {
     let newCast: Cast = {
       uuid: this.selectedCastUUID,
@@ -133,6 +154,8 @@ export class CastDragAndDrop implements OnInit {
     return newCast;
   }
 
+  /** Gets the max number of dancers in any specific position (i.e. max number
+   * of subcasts [the columns]) for the position in the cast */
   getMaxNumberInDancerPositionForCast(positionIndex: number): number {
     let numSubCasts = 0;
     this.cast.filled_positions[positionIndex].groups.forEach((val, ind) => {
@@ -143,6 +166,7 @@ export class CastDragAndDrop implements OnInit {
     return numSubCasts;
   }
 
+  /** Gets the largest number of individual dancers in a position (the max rows)*/
   getMaxDancerIndexForCast(positionIndex: number): number {
     let numBackups = 0;
     this.cast.filled_positions[positionIndex].groups.forEach((val, ind) => {
@@ -153,6 +177,8 @@ export class CastDragAndDrop implements OnInit {
     return numBackups;
   }
 
+  /** Gets the max number of dancers in any specific position (i.e. max number
+   * of subcasts [the columns]) for the position in the drag and drop data */
   getMaxNumberInDancerPositionForData(positionIndex: number): number {
     let numSubCasts = 0;
     if (isNullOrUndefined(this.data[positionIndex])) {

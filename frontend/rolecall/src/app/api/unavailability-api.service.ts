@@ -41,7 +41,10 @@ export type OneUnavailbilityResponse = {
 
 const SixMonthInMS = 6 * 2629800000;
 
-
+/**
+ * A service responsible for interfacing with the Unavailability APIs
+ * and keeping track of unavailability data.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -80,6 +83,7 @@ export class UnavailabilityApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUnavailabilitySet(unav);
     }
+    // If this is an unavailability from the backend, do a PATCH, else do a POST
     if (this.unavailabilities.has(unav.id)) {
       // Do patch
       return this.http.patch(environment.backendURL + "api/unavailable", unav, {
