@@ -571,7 +571,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
-      this.resetState();
     }).catch(err => {
       alert("Unable to save performance: " + err.error.status + " " + err.error.error);
     });

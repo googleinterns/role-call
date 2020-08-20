@@ -641,6 +641,15 @@ $buttonRowHeight: 5rem;
         flex-direction: column;
         justify-content: flex-start;
 
+        .title {
+          font-size: xx-large;
+          font-weight: bold;
+          height: 3rem;
+          margin-left: 1rem;
+          margin-right: 0.5em;
+          padding-top: 1rem;
+        }
+
         .title-export-container {
           display: flex;
           justify-content: space-between;
@@ -677,6 +686,10 @@ $buttonRowHeight: 5rem;
           margin-right: 1rem;
           margin-bottom: 1rem;
           overflow-y: scroll;
+
+          &-submitted {
+            height: calc(90vh - 16rem);
+          }
 
           .segment-container {
             border-left: 4px solid;

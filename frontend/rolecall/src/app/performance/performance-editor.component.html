@@ -325,47 +325,58 @@
 
 <ng-template #step4>
   <div class="step4">
-    <div>
-      <ng-container *ngIf="!submitted; else submittedCard">
-        <div class="finalize-card-container">
-          <div class="finalize-card app-card">
-            <div class="content">
-              <div class="title-export-container">
-                <h2 class="title">Review Casting</h2>
-                <button mat-icon-button aria-label="Export Cast Button" class="export-button"
-                  (click)="exportPerformance()">
-                  <mat-icon [inline]="true" class="export-button-icon">
-                    save_alt
-                  </mat-icon>
-                </button>
-              </div>
-              <div class="segment-list app-card">
-                <div class="segment-container" *ngFor="let segment of state.step_3.segments">
-                  <h3 class="title">{{segment['name']}}</h3>
-                  <div class="pos-container" *ngFor="let pos of segment.custom_groups">
-                    <h4 class="pos-title">{{pos['name']}}</h4>
-                    <ng-container *ngFor="let group of pos.groups">
-                      <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
-                        <p class="names">{{group['memberNames'].join(", ")}}</p>
-                      </div>
-                    </ng-container>
-                  </div>
+    <ng-container *ngIf="!submitted; else submittedCard">
+      <div class="finalize-card-container">
+        <div class="finalize-card app-card">
+          <div class="content">
+            <div class="title-export-container">
+              <h2 class="title">Review Casting</h2>
+              <button mat-icon-button aria-label="Export Cast Button" class="export-button"
+                (click)="exportPerformance()">
+                <mat-icon [inline]="true" class="export-button-icon">
+                  save_alt
+                </mat-icon>
+              </button>
+            </div>
+            <div class="segment-list app-card">
+              <div class="segment-container" *ngFor="let segment of state.step_3.segments">
+                <h3 class="title">{{segment['name']}}</h3>
+                <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  <ng-container *ngFor="let group of pos.groups">
+                    <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
+                      <p class="names">{{group['memberNames'].join(", ")}}</p>
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </ng-container>
-      <ng-template #submittedCard>
-        <div class="finalize-card-container">
-          <div class="finalize-card-submitted finalize-card app-card">
-            <div class="content">
-              <h2 class="title">Performance Submitted!</h2>
-              <h2 class="title">{{'Scheduled ' + state.step_1.title + ' for ' + date.toLocaleDateString()}}</h2>
+      </div>
+    </ng-container>
+    <ng-template #submittedCard>
+      <div class="finalize-card-container">
+        <div class="finalize-card-submitted finalize-card app-card">
+          <div class="content">
+            <h2 class="title">Performance Submitted!</h2>
+            <h2 class="title">{{'Scheduled ' + state.step_1.title + ' for ' + date.toLocaleDateString()}}</h2>
+            <div class="segment-list-submitted segment-list app-card">
+              <div class="segment-container" *ngFor="let segment of state.step_3.segments">
+                <h3 class="title">{{segment['name']}}</h3>
+                <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  <ng-container *ngFor="let group of pos.groups">
+                    <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
+                      <p class="names">{{group['memberNames'].join(", ")}}</p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </ng-template>
-    </div>
+      </div>
+    </ng-template>
   </div>
 </ng-template>
