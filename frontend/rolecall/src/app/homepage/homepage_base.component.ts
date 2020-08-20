@@ -18,8 +18,7 @@ export class HomepageBase {
     const options = {
       title: 'Dashboard Page',
       sections: ['Panels', 'Viewing/Editing a Performance', 'Performance Details', 'Pieces and Intermissions', 'Fill Casts', 'Finalize'],
-      messages: [`For now, the left panel is empty, but in the future, it will display notifications. The middle panel displays
-      recent performances while the right panel displays upcoming performances.`,
+      messages: [`The left panel displays recent performances while the right panel displays upcoming performances.`,
       `To view/edit the details of a performance, click on the "Go To" button. This will open the description pages of the 
       performance. Here, you can edit the following things:`,
       `These are the name, date/time, location, and description of the performance. To edit the date, click on the calendar icon of the date
