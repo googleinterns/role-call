@@ -98,7 +98,7 @@ public class DataSourceConfig {
       throw new RuntimeException("Unable to access secret manager. "
           + "Applications calling this method should be run on App Engine.");
     } catch (ApiException e) {
-      logger.log(Level.SEVERE, e.getMessage());
+      logger.log(Level.SEVERE, "Error: " + e.getMessage());
       throw new RuntimeException("Unable to get cloud db password. Call for password failed. "
           + "Check spring.cloud.gcp.projectId and cloud.secret.name for correctness.");
     } catch (Exception e) {
