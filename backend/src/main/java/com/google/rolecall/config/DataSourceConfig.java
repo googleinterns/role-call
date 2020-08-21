@@ -8,6 +8,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -24,6 +27,8 @@ import org.springframework.core.env.Environment;
 public class DataSourceConfig {
 
   private final Environment env;
+
+  private Logger logger = Logger.getLogger(DataSourceConfig.class.getName());
 
   /*
    * Conncects to a mysql database given valid spring.datasource.url, 
@@ -93,6 +98,7 @@ public class DataSourceConfig {
       throw new RuntimeException("Unable to access secret manager. "
           + "Applications calling this method should be run on App Engine.");
     } catch (ApiException e) {
+      logger.log(Level.SEVERE, e.getMessage());
       throw new RuntimeException("Unable to get cloud db password. Call for password failed. "
           + "Check spring.cloud.gcp.projectId and cloud.secret.name for correctness.");
     } catch (Exception e) {
