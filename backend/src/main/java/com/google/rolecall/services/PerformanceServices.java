@@ -202,8 +202,6 @@ public class PerformanceServices {
     User user = userService.getUser(memberInfo.userId());
 
     PerformanceCastMember member = PerformanceCastMember.newBuilder()
-        // .setOrder(memberInfo.order())
-        // YHE
         .setOrder(position.getOrder())
         .setCastNumber(castNumber)
         .build();

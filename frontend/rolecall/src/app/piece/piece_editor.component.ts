@@ -117,7 +117,7 @@ export class PieceEditor implements OnInit {
         this.location.replaceState("/segment/" + this.urlPointingUUID);
       }
     }
-    this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
+    this.renderingPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedPiece ? this.currentSelectedPiece.type : "SEGMENT";
   }

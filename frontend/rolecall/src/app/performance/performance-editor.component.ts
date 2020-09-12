@@ -503,8 +503,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.intermissions = newInterms;
     if (!this.initCastsLoaded) {
-      for (let s = 0; s < this.state.step_3.segments.length; s++) {
-        let segment = this.state.step_3.segments[s];
+      // Sort the positions (=custom_groups) of all ballets (=segments) in the performance
+      for (let i = 0; i < this.state.step_3.segments.length; i++) {
+        const segment = this.state.step_3.segments[i];
         segment.custom_groups.sort((a, b) => a.position_order < b.position_order ? -1 : 1 );
       }
       for (let [i, seg] of this.state.step_3.segments.entries()) {
