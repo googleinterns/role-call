@@ -34,6 +34,7 @@ export class MockPerformanceBackend {
             custom_groups: [
               {
                 "position_uuid": "213",
+                "position_order": 0,
                 "groups": [
                   {
                     "group_index": 0, "members": [
@@ -98,6 +99,7 @@ export class MockPerformanceBackend {
             custom_groups: [
               {
                 "position_uuid": "213",
+                "position_order": 0,
                 "groups": [
                   {
                     "group_index": 0, "members": [

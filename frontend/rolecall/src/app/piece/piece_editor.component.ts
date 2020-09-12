@@ -130,10 +130,12 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     let newPiece: WorkingPiece = {
       uuid: "segment:" + Date.now(),
-      name: "New Piece",
+      // YHE
+      name: "New Ballet",
       positions: [],
       type: "PIECE",
-      originalName: "New Piece",
+      // YHE
+      originalName: "New Ballet",
       addingPositions: [],
       deletePositions: []
     }
@@ -222,7 +224,7 @@ export class PieceEditor implements OnInit {
   }
 
   segmentTypes = ["PIECE", "SEGMENT"];
-  segmentPrettyNames = ["Piece", "Segment"]
+  segmentPrettyNames = ["Ballet", "Segment"]
   selectedSegmentType: "SEGMENT" | "PIECE";
 
   onSelectSegmentType(event: MatSelectChange) {
@@ -261,7 +263,8 @@ export class PieceEditor implements OnInit {
       if (found)
         found.value.name = val;
     }
-    if (key == "New Piece Name") {
+    // YHE
+    if (key == "New Ballet Name") {
       this.currentSelectedPiece.name = val;
     }
   }
