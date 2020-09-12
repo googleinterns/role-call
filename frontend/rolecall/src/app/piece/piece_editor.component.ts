@@ -130,11 +130,9 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     let newPiece: WorkingPiece = {
       uuid: "segment:" + Date.now(),
-      // YHE
       name: "New Ballet",
       positions: [],
       type: "PIECE",
-      // YHE
       originalName: "New Ballet",
       addingPositions: [],
       deletePositions: []
@@ -263,7 +261,6 @@ export class PieceEditor implements OnInit {
       if (found)
         found.value.name = val;
     }
-    // YHE
     if (key == "New Ballet Name") {
       this.currentSelectedPiece.name = val;
     }

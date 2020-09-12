@@ -625,20 +625,17 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           length: info[2] ? info[2] : 0,
           custom_groups: info ? info[0].filled_positions.map(val => {
             let positionName = "";
-            // YHE
             let positionOrder = 0;
             this.step2PickFrom.forEach(val2 => {
               let foundPos = val2.positions.find(val3 => val3.uuid == val.position_uuid);
               if (foundPos) {
                 positionName = foundPos.name;
-                // YHE
                 positionOrder = foundPos.order;
               }
             });
             return {
               ...val,
               name: positionName,
-              // YHE
               position_order: positionOrder,
               groups: val.groups.map(g => {
                 return {

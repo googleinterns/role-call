@@ -32,7 +32,6 @@ export type Performance = {
       selected_group: number,
       custom_groups: {
         position_uuid: string,
-        // YHE
         position_order: number,
         groups: {
           group_index: number,
@@ -147,7 +146,6 @@ export class PerformanceApi {
             custom_groups: val.positions.map(pos => {
               return {
                 position_uuid: String(pos.positionId),
-                // YHE
                 position_order: pos.casts[0].members[0].order,
                 groups: pos.casts.map(c => {
                   return {
