@@ -117,7 +117,7 @@ export class PieceEditor implements OnInit {
         this.location.replaceState("/segment/" + this.urlPointingUUID);
       }
     }
-    this.renderingPieces.sort((a, b) => a.uuid < b.uuid ? -1 : 1);
+    this.renderingPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedPiece ? this.currentSelectedPiece.type : "SEGMENT";
   }
@@ -130,10 +130,10 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     let newPiece: WorkingPiece = {
       uuid: "segment:" + Date.now(),
-      name: "New Piece",
+      name: "New Ballet",
       positions: [],
       type: "PIECE",
-      originalName: "New Piece",
+      originalName: "New Ballet",
       addingPositions: [],
       deletePositions: []
     }
@@ -222,7 +222,7 @@ export class PieceEditor implements OnInit {
   }
 
   segmentTypes = ["PIECE", "SEGMENT"];
-  segmentPrettyNames = ["Piece", "Segment"]
+  segmentPrettyNames = ["Ballet", "Segment"]
   selectedSegmentType: "SEGMENT" | "PIECE";
 
   onSelectSegmentType(event: MatSelectChange) {
@@ -261,7 +261,7 @@ export class PieceEditor implements OnInit {
       if (found)
         found.value.name = val;
     }
-    if (key == "New Piece Name") {
+    if (key == "New Ballet Name") {
       this.currentSelectedPiece.name = val;
     }
   }

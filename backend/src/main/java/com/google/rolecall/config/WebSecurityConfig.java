@@ -44,8 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.httpBasic()
-        .and()
-        .cors()
+        .and().cors()
         .and().addFilter(getPreAuthenticationFilter())
         .addFilterAfter(getCustomResponseAttributes(), BasicAuthenticationFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -56,11 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
         .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
         .permitAll()
-        .and()
-        .csrf().disable()
+        .and().csrf().disable()
         .exceptionHandling()
-        .authenticationEntryPoint((request, response, e) -> 
-        {
+        .authenticationEntryPoint((request, response, e) -> {
           response.setContentType("application/json;charset=UTF-8");
           response.setStatus(HttpStatus.UNAUTHORIZED.value());
           response.setHeader(Constants.Headers.WWW_AUTHENTICATE, "Bearer");

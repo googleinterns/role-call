@@ -242,8 +242,16 @@ export class CastDragAndDrop implements OnInit {
     this.data = [[]];
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
     this.ensureAllPositionsMet(this.cast);
-    this.positionVals = this.positionVals.sort((a, b) => { return a.name < b.name ? -1 : 1 });
-    this.cast.filled_positions = this.cast.filled_positions.filter(val => this.positionVals.find(val2 => val2.uuid == val.position_uuid)).sort((a, b) => { return this.positionVals.find(val => val.uuid == a.position_uuid).name < this.positionVals.find(val => val.uuid == b.position_uuid).name ? -1 : 1 });
+    // Sort positions by position order
+    this.positionVals = this.positionVals.sort((a, b) => { return a.order < b.order ? -1 : 1 });
+    // Sort cast members by position order
+    this.cast.filled_positions = this.cast.filled_positions
+        .filter(val => this.positionVals.find(val2 => val2.uuid == val.position_uuid))
+        .sort((a, b) => {
+          const castPositionOrerA = this.positionVals.find(val => val.uuid == a.position_uuid).order;
+          const castPositionOrerB = this.positionVals.find(val => val.uuid == b.position_uuid).order;
+          return castPositionOrerA < castPositionOrerB ? -1 : 1
+        });
     let filledPoses = this.cast.filled_positions;
     let tempData = filledPoses.map((val, posInd) => {
       let colObs = val.groups.sort((a, b) => a.group_index < b.group_index ? -1 : 1);

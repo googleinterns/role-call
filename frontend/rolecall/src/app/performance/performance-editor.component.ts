@@ -503,6 +503,11 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.intermissions = newInterms;
     if (!this.initCastsLoaded) {
+      // Sort the positions (=custom_groups) of all ballets (=segments) in the performance
+      for (let i = 0; i < this.state.step_3.segments.length; i++) {
+        const segment = this.state.step_3.segments[i];
+        segment.custom_groups.sort((a, b) => a.position_order < b.position_order ? -1 : 1 );
+      }
       for (let [i, seg] of this.state.step_3.segments.entries()) {
         let castUUID = this.state.uuid + "cast" + seg.segment;
         if (this.piecesAPI.pieces.get(seg.segment).type == "SEGMENT") {
@@ -620,13 +625,18 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           length: info[2] ? info[2] : 0,
           custom_groups: info ? info[0].filled_positions.map(val => {
             let positionName = "";
+            let positionOrder = 0;
             this.step2PickFrom.forEach(val2 => {
               let foundPos = val2.positions.find(val3 => val3.uuid == val.position_uuid);
-              if (foundPos) { positionName = foundPos.name }
+              if (foundPos) {
+                positionName = foundPos.name;
+                positionOrder = foundPos.order;
+              }
             });
             return {
               ...val,
               name: positionName,
+              position_order: positionOrder,
               groups: val.groups.map(g => {
                 return {
                   ...g,
