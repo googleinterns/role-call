@@ -253,6 +253,7 @@ export class CastDragAndDrop implements OnInit {
           return castPositionOrerA < castPositionOrerB ? -1 : 1
         });
     let filledPoses = this.cast.filled_positions;
+    // XXXXX
     let tempData = filledPoses.map((val, posInd) => {
       let colObs = val.groups.sort((a, b) => a.group_index < b.group_index ? -1 : 1);
       let maxInd = this.getMaxDancerIndexForCast(posInd);
@@ -262,6 +263,7 @@ export class CastDragAndDrop implements OnInit {
       }
       for (let col of colObs) {
         for (let i = 0; i < col.members.length; i++) {
+          // XXXXX
           let member = col.members[i];
           subcastStrs[member.position_number].push(member.uuid);
         }

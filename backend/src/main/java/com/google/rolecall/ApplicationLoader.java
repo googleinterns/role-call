@@ -52,7 +52,7 @@ public class ApplicationLoader implements ApplicationRunner {
           .setEmail(adminEmail)
           .setIsActive(true)
           .setCanLogin(true)
-          .setAdmin(true)
+          .setIsAdmin(true)
           .build();
     } catch(InvalidParameterException e) {
       logger.log(Level.SEVERE, "Unable to Create admin. Insufficient Properties.");

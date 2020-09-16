@@ -14,7 +14,6 @@ export class MockUserBackend {
       "uuid": "1",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": true,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -22,7 +21,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": "System",
       "last_name": "Admin",
@@ -41,7 +45,6 @@ export class MockUserBackend {
       "uuid": "183",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -49,7 +52,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Bozeman",
@@ -68,7 +76,6 @@ export class MockUserBackend {
       "uuid": "184",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -76,7 +83,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Monteiro",
@@ -95,7 +107,6 @@ export class MockUserBackend {
       "uuid": "185",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -103,7 +114,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Lebrun",
@@ -122,7 +138,6 @@ export class MockUserBackend {
       "uuid": "186",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -130,7 +145,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Jackson",
@@ -149,7 +169,6 @@ export class MockUserBackend {
       "uuid": "187",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -157,7 +176,13 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
+
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Maurice",
@@ -176,7 +201,6 @@ export class MockUserBackend {
       "uuid": "188",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -184,7 +208,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Dumas",
@@ -203,7 +232,6 @@ export class MockUserBackend {
       "uuid": "189",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -211,7 +239,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "DeVore-Strokes",
@@ -230,7 +263,6 @@ export class MockUserBackend {
       "uuid": "190",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -238,7 +270,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Green",
@@ -257,7 +294,6 @@ export class MockUserBackend {
       "uuid": "191",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -265,7 +301,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Paulos",
@@ -284,7 +325,6 @@ export class MockUserBackend {
       "uuid": "192",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -292,7 +332,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Daley-Perdomo",
@@ -311,7 +356,6 @@ export class MockUserBackend {
       "uuid": "193",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -319,7 +363,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Harris",
@@ -338,7 +387,6 @@ export class MockUserBackend {
       "uuid": "194",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -346,7 +394,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Figgins",
@@ -365,7 +418,6 @@ export class MockUserBackend {
       "uuid": "195",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -373,7 +425,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Quinn",
@@ -392,7 +449,6 @@ export class MockUserBackend {
       "uuid": "196",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -400,8 +456,13 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
-      "knows_positions": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
+     "knows_positions": [],
       "first_name": " ",
       "last_name": "Wilson",
       "date_joined": 1596168000000,
@@ -419,7 +480,6 @@ export class MockUserBackend {
       "uuid": "197",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -427,7 +487,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Gilmore",
@@ -446,7 +511,6 @@ export class MockUserBackend {
       "uuid": "198",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -454,7 +518,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Brown",
@@ -473,7 +542,6 @@ export class MockUserBackend {
       "uuid": "199",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -481,7 +549,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Gilmer",
@@ -500,7 +573,6 @@ export class MockUserBackend {
       "uuid": "200",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -508,7 +580,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Coker",
@@ -527,7 +604,6 @@ export class MockUserBackend {
       "uuid": "201",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -535,7 +611,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Spears",
@@ -554,7 +635,6 @@ export class MockUserBackend {
       "uuid": "202",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -562,7 +642,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Parker",
@@ -581,7 +666,6 @@ export class MockUserBackend {
       "uuid": "203",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -589,7 +673,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Pereyra",
@@ -608,7 +697,6 @@ export class MockUserBackend {
       "uuid": "204",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -616,7 +704,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Woolridge",
@@ -635,7 +728,6 @@ export class MockUserBackend {
       "uuid": "205",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -643,7 +735,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Campbell",
@@ -662,7 +759,6 @@ export class MockUserBackend {
       "uuid": "206",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -670,7 +766,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Terry",
@@ -689,7 +790,6 @@ export class MockUserBackend {
       "uuid": "207",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -697,7 +797,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Mitchell",
@@ -716,7 +821,6 @@ export class MockUserBackend {
       "uuid": "208",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -724,7 +828,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Segwa",
@@ -743,7 +852,6 @@ export class MockUserBackend {
       "uuid": "209",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -751,7 +859,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Pinkett",
@@ -770,7 +883,6 @@ export class MockUserBackend {
       "uuid": "210",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -778,7 +890,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Laidler",
@@ -797,7 +914,6 @@ export class MockUserBackend {
       "uuid": "211",
       "has_permissions": {
         "canLogin": true,
-        "isAdmin": false,
         "notifications": true,
         "managePerformances": false,
         "manageCasts": false,
@@ -805,7 +921,12 @@ export class MockUserBackend {
         "manageRoles": false,
         "manageRules": false
       },
-      "has_privilege_classes": [],
+      "has_roles": {
+        "isAdmin": false,
+        "isCoreographer": false,
+        "isDancer": true,
+        "isOther": false,
+      },
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Stamatiou",

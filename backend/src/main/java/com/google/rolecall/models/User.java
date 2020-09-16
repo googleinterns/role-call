@@ -39,30 +39,26 @@ public class User {
   private String email;
 
   @Basic
+  private String phoneNumber;
+
+  @Basic
   @Temporal(TemporalType.DATE)
   @JsonFormat(pattern="MM-dd-yyyy")
   private Calendar dateJoined;
 
-  @Basic
-  private String emergencyContactName;
-
-  @Basic
-  private String emergencyContactNumber;
-
-  @Basic
-  private String comments;
-
-  @Basic
-  private String role;
-
+  // Roles with defaults
   @Column(nullable = false)
-  private Boolean isActive;
+  private boolean isAdmin = false;
+  @Column(nullable = false)
+  private boolean isCoreographer = false;
+  @Column(nullable = false)
+  private boolean isDancer = false;
+  @Column(nullable = false)
+  private boolean isOther = false;
 
   // Permissions with defaults
   @Column(nullable = false)
   private boolean canLogin = true;
-  @Column(nullable = false)
-  private boolean admin = false;
   @Column(nullable = false)
   private boolean notifications = true;
   @Column(nullable = false)
@@ -75,6 +71,19 @@ public class User {
   private boolean manageRoles = false;
   @Column(nullable = false)
   private boolean manageRules = false;
+
+  // Trailer
+  @Basic
+  private String emergencyContactName;
+
+  @Basic
+  private String emergencyContactNumber;
+
+  @Basic
+  private String comments;
+
+  @Column(nullable = false)
+  private boolean isActive;
 
   public Integer getId() {
     return id;
@@ -92,36 +101,34 @@ public class User {
     return email;
   }
 
+  public String getPhoneNumber() {
+    return phoneNumber == null ? "" : phoneNumber;
+  }
+
   public Optional<Calendar> getDateJoined() {
     return dateJoined == null ? Optional.empty(): Optional.of(dateJoined);
   }
 
-  public String getEmergencyContactName() {
-    return emergencyContactName == null ? "" : emergencyContactName;
+  // Roles
+  public boolean isAdmin() {
+    return isAdmin;
   }
 
-  public String getEmergencyContactNumber() {
-    return emergencyContactNumber == null ? "" : emergencyContactNumber;
+  public boolean isCoreographer() {
+    return isCoreographer;
   }
 
-  public String getComments() {
-    return comments == null ? "" : comments;
+  public boolean isDancer() {
+    return isDancer;
   }
 
-  public String getRole() {
-    return role == null ? "" : role;
+  public boolean isOther() {
+    return isOther;
   }
 
-  public boolean isActive() {
-    return isActive;
-  }
-
+  // Permissions
   public boolean canLogin() {
     return canLogin;
-  }
-
-  public boolean isAdmin() {
-    return admin;
   }
 
   public boolean recievesNotifications() {
@@ -148,6 +155,23 @@ public class User {
     return manageRules;
   }
 
+  // Trailer
+  public String getEmergencyContactName() {
+    return emergencyContactName == null ? "" : emergencyContactName;
+  }
+
+  public String getEmergencyContactNumber() {
+    return emergencyContactNumber == null ? "" : emergencyContactNumber;
+  }
+
+  public String getComments() {
+    return comments == null ? "" : comments;
+  }
+
+  public boolean isActive() {
+    return isActive;
+  }
+
   public void addPerformanceCastMember(PerformanceCastMember member) {
     member.setUser(this);
   }
@@ -165,24 +189,40 @@ public class User {
   }
 
   public String[] getRoles() {
-    List<Boolean> permissions = new ArrayList<>();
-    permissions.add(isAdmin()); // ADMIN
-    permissions.add(isAdmin() || canLogin()); // LOGIN
-    permissions.add(recievesNotifications()); // NOTIFICATIONS
-    permissions.add(isAdmin() || canManagePerformances()); // MANGAGE_PERFORMANCES
-    permissions.add(isAdmin() || canManageCasts()); // MANAGE_CASTS
-    permissions.add(isAdmin() || canManagePieces()); // MANAGE_PIECES
-    permissions.add(isAdmin() || canManageRoles()); // MANAGE_ROLES
-    permissions.add(isAdmin() || canManageRules()); // MANAGE_RULES
+    List<Boolean> roleIn = new ArrayList<>();
+    roleIn.add(isAdmin()); // ADMIN
+    roleIn.add(isCoreographer()); // COREOGRAPHER
+    roleIn.add(isDancer()); // DANCER
+    roleIn.add(isOther()); // OTHER
 
-    ArrayList<String> roles = new ArrayList<>();
+    ArrayList<String> rolesOut = new ArrayList<>();
     for(int i = 0; i < Constants.Roles.ROLES.length; i++) {
-      if (permissions.get(i)) {
-        roles.add(Constants.Roles.ROLES[i]);
+      if (roleIn.get(i)) {
+        rolesOut.add(Constants.Roles.ROLES[i]);
       }
     }
-    String[] out = new String[roles.size()];
-    return roles.toArray(out);
+    String[] out = new String[rolesOut.size()];
+    return rolesOut.toArray(out);
+  }
+
+  public String[] getPermissions() {
+    List<Boolean> permissionsIn = new ArrayList<>();
+    permissionsIn.add(isAdmin() || canLogin()); // LOGIN
+    permissionsIn.add(recievesNotifications()); // NOTIFICATIONS
+    permissionsIn.add(isAdmin() || canManagePerformances()); // MANGAGE_PERFORMANCES
+    permissionsIn.add(isAdmin() || canManageCasts()); // MANAGE_CASTS
+    permissionsIn.add(isAdmin() || canManagePieces()); // MANAGE_PIECES
+    permissionsIn.add(isAdmin() || canManageRoles()); // MANAGE_ROLES
+    permissionsIn.add(isAdmin() || canManageRules()); // MANAGE_RULES
+
+    ArrayList<String> permissionsOut = new ArrayList<>();
+    for(int i = 0; i < Constants.Roles.ROLES.length; i++) {
+      if (permissionsIn.get(i)) {
+        permissionsOut.add(Constants.Roles.ROLES[i]);
+      }
+    }
+    String[] out = new String[permissionsOut.size()];
+    return permissionsOut.toArray(out);
   }
 
   public UserInfo toUserInfo() {
@@ -191,20 +231,23 @@ public class User {
         .setFirstName(firstName)
         .setLastName(lastName)
         .setEmail(email)
+        .setPhoneNumber(phoneNumber)
         .setDateJoined(dateJoined)
-        .setEmergencyContactName(getEmergencyContactName())
-        .setEmergencyContactNumber(getEmergencyContactNumber())
-        .setComments(getComments())
-        .setRole(getRole())
-        .setIsActive(isActive)
+        .setIsAdmin(isAdmin)
+        .setIsCoreographer(isCoreographer)
+        .setIsDancer(isDancer)
+        .setIsOther(isOther)
         .setCanLogin(canLogin)
-        .setAdmin(admin)
         .setNotifications(notifications)
         .setManagePerformances(managePerformances)
         .setManageCasts(manageCasts)
         .setManagePieces(managePieces)
         .setManageRoles(manageRoles)
         .setManageRules(manageRules)
+        .setEmergencyContactName(getEmergencyContactName())
+        .setEmergencyContactNumber(getEmergencyContactNumber())
+        .setComments(getComments())
+        .setIsActive(isActive)
         .build();
   }
 
@@ -226,20 +269,23 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String phoneNumber;
     private Calendar dateJoined;
-    private String emergencyContactName;
-    private String emergencyContactNumber;
-    private String comments;
-    private String role;
-    private Boolean isActive = true;
+    private Boolean isAdmin = false;
+    private Boolean isCoreographer = false;
+    private Boolean isDancer = false;
+    private Boolean isOther = false;
     private Boolean canLogin = false;
-    private Boolean admin = false;
     private Boolean notifications = true;
     private Boolean managePerformances = false;
     private Boolean manageCasts = false;
     private Boolean managePieces = false;
     private Boolean manageRoles = false;
     private Boolean manageRules = false;
+    private String emergencyContactName;
+    private String emergencyContactNumber;
+    private String comments;
+    private Boolean isActive = true;
 
     public Builder setFirstName(String name) {
       if(name != null) {
@@ -262,6 +308,13 @@ public class User {
       return this;
     }
   
+    public Builder setPhoneNumber(String phoneNumber) {
+      if(phoneNumber != null) {
+        this.phoneNumber = phoneNumber;
+      }
+      return this;
+    }
+
     public Builder setDateJoined(Calendar dateJoined) {
       if(dateJoined != null) {
         this.dateJoined = dateJoined;
@@ -269,37 +322,30 @@ public class User {
       return this;
     }
   
-    public Builder setEmergencyContactName(String emergencyContactName) {
-      if(emergencyContactName != null) {
-        this.emergencyContactName = emergencyContactName;
+    public Builder setIsAdmin(Boolean isAdmin) {
+      if(isAdmin != null) {
+        this.isAdmin = isAdmin;
       }
       return this;
     }
   
-    public Builder setEmergencyContactNumber(String emergencyContactNumber) {
-      if(emergencyContactNumber != null) {
-        this.emergencyContactNumber = emergencyContactNumber;
+    public Builder setIsCoreographer(Boolean isCoreographer) {
+      if(isCoreographer != null) {
+        this.isCoreographer = isCoreographer;
       }
       return this;
     }
   
-    public Builder setComments(String comments) {
-      if(comments != null) {
-        this.comments = comments;
-      }
-      return this;
-    }
-
-    public Builder setRole(String role) {
-      if(role != null) {
-        this.role = role;
+    public Builder setIsDancer(Boolean isDancer) {
+      if(isDancer != null) {
+        this.isDancer = isDancer;
       }
       return this;
     }
   
-    public Builder setIsActive(Boolean isActive) {
-      if(isActive != null) {
-        this.isActive = isActive;
+    public Builder setIsOther(Boolean isOther) {
+      if(isOther != null) {
+        this.isOther = isOther;
       }
       return this;
     }
@@ -310,14 +356,7 @@ public class User {
       }
       return this;
     }
-  
-    public Builder setAdmin(Boolean admin) {
-      if(admin != null) {
-        this.admin = admin;
-      }
-      return this;
-    }
-  
+
     public Builder setRecievesNotifications(Boolean notifications) {
       if(notifications != null) {
         this.notifications = notifications;
@@ -359,6 +398,34 @@ public class User {
       }
       return this;
     }
+  
+    public Builder setEmergencyContactName(String emergencyContactName) {
+      if(emergencyContactName != null) {
+        this.emergencyContactName = emergencyContactName;
+      }
+      return this;
+    }
+  
+    public Builder setEmergencyContactNumber(String emergencyContactNumber) {
+      if(emergencyContactNumber != null) {
+        this.emergencyContactNumber = emergencyContactNumber;
+      }
+      return this;
+    }
+  
+    public Builder setComments(String comments) {
+      if(comments != null) {
+        this.comments = comments;
+      }
+      return this;
+    }
+
+    public Builder setIsActive(Boolean isActive) {
+      if(isActive != null) {
+        this.isActive = isActive;
+      }
+      return this;
+    }
 
     public User build() throws InvalidParameterException {
       if(firstName == null || lastName == null || email == null) {
@@ -369,21 +436,23 @@ public class User {
       user.firstName = this.firstName;
       user.lastName = this.lastName;
       user.email = this.email;
+      user.phoneNumber = this.phoneNumber;
       user.dateJoined = this.dateJoined;
-      user.emergencyContactName = this.emergencyContactName;
-      user.emergencyContactNumber = this.emergencyContactNumber;
-      user.comments = this.comments;
-      user.role = this.role;
-      user.isActive = this.isActive;
+      user.isAdmin = this.isAdmin;
+      user.isCoreographer = this.isCoreographer;
+      user.isDancer = this.isDancer;
+      user.isOther = this.isOther;
       user.canLogin = this.canLogin;
-      user.admin = this.admin;
       user.notifications = this.notifications;
       user.managePerformances = this.managePerformances;
       user.manageCasts = this.manageCasts;
       user.managePieces = this.managePieces;
       user.manageRoles = this.manageRoles;
       user.manageRules = this.manageRules;
-
+      user.emergencyContactName = this.emergencyContactName;
+      user.emergencyContactNumber = this.emergencyContactNumber;
+      user.comments = this.comments;
+      user.isActive = this.isActive;
       return user;
     }
 
@@ -394,19 +463,21 @@ public class User {
       this.lastName = user.lastName;
       this.email = user.email;
       this.dateJoined = user.dateJoined;
-      this.emergencyContactName = user.emergencyContactName;
-      this.emergencyContactNumber = user.emergencyContactNumber;
-      this.comments = user.comments;
-      this.role = user.role;
-      this.isActive = user.isActive;
+      this.isAdmin = user.isAdmin;
+      this.isCoreographer = user.isCoreographer;
+      this.isDancer = user.isDancer;
+      this.isOther = user.isOther;
       this.canLogin = user.canLogin;
-      this.admin = user.admin;
       this.notifications = user.notifications;
       this.managePerformances = user.managePerformances;
       this.manageCasts = user.manageCasts;
       this.managePieces = user.managePieces;
       this.manageRoles = user.manageRoles;
       this.manageRules = user.manageRules;
+      this.emergencyContactName = user.emergencyContactName;
+      this.emergencyContactNumber = user.emergencyContactNumber;
+      this.comments = user.comments;
+      this.isActive = user.isActive;
     }
 
     public Builder() {

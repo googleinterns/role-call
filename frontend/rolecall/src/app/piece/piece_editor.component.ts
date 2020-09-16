@@ -8,8 +8,15 @@ import { isNullOrUndefined } from 'util';
 import { Piece, PieceApi, Position } from '../api/piece_api.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
+type DraggablePosition = {
+  index: number,
+  value: Position,
+  valueName: "New Position" | "Existing Position",
+  type: "adding" | "added" | "editing",
+}
+
 type WorkingPiece = Piece & {
-  addingPositions: { index: number, value: Position, type: "adding" | "added" }[],
+  addingPositions: DraggablePosition[],
   originalName: string
 }
 
@@ -20,12 +27,12 @@ type WorkingPiece = Piece & {
 })
 export class PieceEditor implements OnInit {
 
-  dragAndDropData: { type: "adding" | "added", index: number, value: Position }[] = [];
+  dragAndDropData: DraggablePosition[] = [];
   currentSelectedPiece: WorkingPiece;
   renderingPieces: WorkingPiece[];
   urlPointingUUID: string;
 
-  privilegeClasses: string[] = [];
+  //privilegeClasses: string[] = [];
 
   prevWorkingState: WorkingPiece;
   workingPiece: WorkingPiece;
@@ -73,10 +80,10 @@ export class PieceEditor implements OnInit {
         }
       }
     }
-    let workPieces = pieces.map(val => {
-      val['addingPositions'] = [];
-      val['originalName'] = String(val.name);
-      return val as WorkingPiece;
+    let workPieces = pieces.map((val: WorkingPiece) => {
+      val.addingPositions = [];
+      val.originalName = String(val.name);
+      return val;
     });
     this.renderingPieces = workPieces;
     if (isNullOrUndefined(this.urlPointingUUID)) {
@@ -176,6 +183,17 @@ export class PieceEditor implements OnInit {
     });
   }
 
+  deletePiece() {
+    this.prevWorkingState = undefined;
+    this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.currentSelectedPiece.uuid);
+    if (!this.creatingPiece) {
+      this.pieceAPI.deletePiece(this.currentSelectedPiece);
+    }
+    this.renderingPieces.length > 0 ? this.setCurrentPiece(this.renderingPieces[0]) : this.setCurrentPiece(undefined);
+    this.pieceSaved = true;
+    this.creatingPiece = false;
+  }
+
   addPosition() {
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
@@ -192,7 +210,9 @@ export class PieceEditor implements OnInit {
         notes: "",
         order: nextInd,
         size: 1
-      }, type: "adding"
+      },
+      valueName: "New Position",
+      type: "adding",
     });
     this.updateDragAndDropData();
   }
@@ -202,6 +222,7 @@ export class PieceEditor implements OnInit {
     this.pieceSaved = false;
     this.updateDragAndDropData();
   }
+
   deletePosition(index: number) {
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
@@ -209,11 +230,25 @@ export class PieceEditor implements OnInit {
       this.setCurrentPiece(this.workingPiece);
     }
     let position = this.dragAndDropData.find((val) => val.index == index);
-    if (position)
+    if (position) {
       this.currentSelectedPiece.deletePositions.push(position.value);
+    }
     this.dragAndDropData = this.dragAndDropData.filter((val, ind) => val.index != index);
     this.pieceSaved = false;
     this.updateDragAndDropData();
+  }
+  
+  editPosition(index: number) {
+    if (!this.workingPiece) {
+      this.prevWorkingState = this.currentSelectedPiece;
+      this.workingPiece = this.currentSelectedPiece;
+      this.setCurrentPiece(this.workingPiece);
+    }
+    let position = this.dragAndDropData.find((val) => val.index == index);
+    if (position) {
+      position.type = "editing";
+    }
+    this.pieceSaved = false;
   }
 
   onTitleInput(event) {
@@ -231,17 +266,6 @@ export class PieceEditor implements OnInit {
     this.pieceSaved = false;
   }
 
-  deletePiece() {
-    this.prevWorkingState = undefined;
-    this.renderingPieces = this.renderingPieces.filter(val => val.uuid != this.currentSelectedPiece.uuid);
-    if (!this.creatingPiece) {
-      this.pieceAPI.deletePiece(this.currentSelectedPiece);
-    }
-    this.renderingPieces.length > 0 ? this.setCurrentPiece(this.renderingPieces[0]) : this.setCurrentPiece(undefined);
-    this.pieceSaved = true;
-    this.creatingPiece = false;
-  }
-
   onInputChange(change: [string, any], data?: any) {
     let valueName = change[0];
     let value = change[1];
@@ -255,25 +279,34 @@ export class PieceEditor implements OnInit {
     }
   }
 
-  setWorkingPropertyByKey(key: string, val: string, data?: any) {
+  setWorkingPropertyByKey(key: string, name: string, data?: any) {
     if (key.startsWith("New Position")) {
-      let found = this.currentSelectedPiece.addingPositions.find(val => val.index == data.index);
-      if (found)
-        found.value.name = val;
+      const found = this.currentSelectedPiece.addingPositions.find(val => val.index == data.index);
+      if (found) {
+        found.value.name = name;
+      }
     }
-    if (key == "New Ballet Name") {
-      this.currentSelectedPiece.name = val;
+    else if (key.startsWith("Existing Position")) {
+      const found = this.currentSelectedPiece.positions.find(val => val.order == data.index);
+      if (found) {
+        found.name = name;
+      }
+    } else if (key == "New Ballet Name") {
+      this.currentSelectedPiece.name = name;
     }
   }
 
   updateDragAndDropData(writeThru?: boolean) {
-    if (!this.currentSelectedPiece)
+    if (!this.currentSelectedPiece) {
       return;
+    }
     if (this.pieceSaved) {
+      // after deletePiece()
       this.dragAndDropData = this.currentSelectedPiece.positions.map((val, ind) => {
         return {
           index: ind,
           value: val,
+          valueName: "Existing Position",
           type: "added"
         };
       });
@@ -283,18 +316,20 @@ export class PieceEditor implements OnInit {
     this.currentSelectedPiece.positions = [];
     this.currentSelectedPiece.addingPositions = [];
     for (let i = 0; i < this.dragAndDropData.length; i++) {
-      let data = this.dragAndDropData[i];
-      if (data.type == "added") {
-        let struct = {
+      const data = this.dragAndDropData[i];
+      if (data.type === "added" || data.type === "editing") {
+        let struct: DraggablePosition = {
           type: "added",
+          valueName: "Existing Position",
           index: i,
           value: { ...data.value, order: i }
         };
         newDDData.push(struct);
         this.currentSelectedPiece.positions.push(struct.value);
       } else {
-        let struct: { type: "adding" | "added", index: number, value: Position } = {
+        const struct: DraggablePosition = {
           type: "adding",
+          valueName: "New Position",
           index: i,
           value: { ...data.value, order: i }
         };

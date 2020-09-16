@@ -24,10 +24,6 @@
   margin: 1em;
   max-height: 86vh;
 }
-.position-container {
-  height: 100%;
-  width: 100%;
-}
 .piece-select-container {
   overflow-y: scroll;
   height: 100%;
@@ -54,16 +50,33 @@
 .selected-piece {
   background-color: $offoffWhite;
 }
-.add-button-width-container {
+.add-button-width-container-left {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  min-height: 10vh;
+  min-height: 8.5vh;
+  width: 96%;
+}
+// Space below the Positions
+.add-button-width-container-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  min-height: 8vh;
+  width: 99%;
+}
+.add-button-height-container-left {
+  //background: red;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 6vh;
 }
 .add-button-height-container {
+  //background: red;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
 }
 .add-button {
   background: $white;
@@ -73,8 +86,14 @@
   width: 6vh;
 }
 .add-button-icon {
-  font-size: 6vh;
-  vertical-align: middle;
+  font-size: 4vh;
+}
+.add-narrow-button {
+  background: $white;
+  border-radius: $borderRadius;
+  margin-right: 0em;
+  height: 6vh;
+  width: 4vh;
 }
 // Title styling
 .left-card-title {
@@ -161,12 +180,13 @@
   width: 100%;
 }
 
+// Saved Positions
 .position-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   height: min-content;
-  width: 100%;
+  width: 99%;
 }
 
 .positions-card {
@@ -195,6 +215,7 @@
   }
 }
 
+// Saved Position Name element
 .position-name-card {
   background: $offWhite;
   display: flex;
@@ -217,10 +238,12 @@
   width: 100%;
 }
 
+// Edited Positions
 .adding-position-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 99%;
 }
 
 // Panels styling

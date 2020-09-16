@@ -17,7 +17,7 @@ public class CustomUserDetail implements UserDetails {
 
   private CustomUserDetail(User user) {
     this.user = user;
-    this.authorities = Arrays.asList(user.getRoles()).stream().map(role ->
+    this.authorities = Arrays.asList(user.getPermissions()).stream().map(role ->
         new SimpleGrantedAuthority(role)).collect(Collectors.toList());
   }
 

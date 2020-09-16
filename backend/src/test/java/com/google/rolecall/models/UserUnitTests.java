@@ -41,18 +41,22 @@ public class UserUnitTests {
       .setLastName(lastName)
       .setEmail(email)
       .setDateJoined(dateJoined)
-      .setEmergencyContactName(emergencyContactName)
-      .setEmergencyContactNumber(emergencyContactNumber)
-      .setComments(comments)
-      .setIsActive(isActive)
+      .setIsAdmin(admin)
+      .setIsCoreographer(admin)
+      .setIsDancer(admin)
+      .setIsOther(admin)
       .setCanLogin(canLogin)
-      .setAdmin(admin)
       .setRecievesNotifications(notifications)
       .setManagePerformances(managePerformances)
       .setManageCasts(manageCasts)
       .setManagePieces(managePieces)
       .setManageRoles(manageRoles)
-      .setManageRules(manageRules);
+      .setManageRules(manageRules)
+      .setEmergencyContactName(emergencyContactName)
+      .setEmergencyContactNumber(emergencyContactNumber)
+      .setComments(comments)
+      .setIsActive(isActive)
+      ;
     try {
       user = builder.build();
     } catch(InvalidParameterException e) {

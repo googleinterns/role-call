@@ -12,7 +12,7 @@ type RawPosition = {
   name: string,
   notes: string,
   order: number,
-  size: number
+  size: number,
 }
 
 type RawPiece = {
@@ -21,12 +21,12 @@ type RawPiece = {
   notes: string,
   type: "SEGMENT" | "PIECE",
   length: number,
-  positions: RawPosition[]
+  positions: RawPosition[],
 }
 
 type RawAllPiecesResponse = {
   data: RawPiece[],
-  warnings: string[]
+  warnings: string[],
 }
 
 export type Position = {
@@ -35,7 +35,7 @@ export type Position = {
   name: string,
   notes: string,
   order: number,
-  size: number
+  size: number,
 };
 
 export type Piece = {
@@ -69,9 +69,17 @@ export type OnePieceResponse = {
 })
 export class PieceApi {
 
-
   /** Mock backend */
   mockBackend: MockPieceBackend = new MockPieceBackend();
+
+  /** All the loaded pieces mapped by UUID */
+  pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
+
+  /** The raw piece structures given by the backend */
+  rawPieces: RawPiece[] = [];
+
+  /** Emitter that is called whenever pieces are loaded */
+  pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
 
   constructor(private loggingService: LoggingService, private http: HttpClient,
     private respHandler: ResponseStatusHandlerService, private headerUtil: HeaderUtilityService) { }
@@ -86,7 +94,10 @@ export class PieceApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
+    })
+    .toPromise()
+    .catch((errorResp) => errorResp)
+    .then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
       this.rawPieces = val.data;
       return {
         data: {
@@ -95,7 +106,8 @@ export class PieceApi {
               uuid: String(section.id),
               name: section.name,
               type: section.type,
-              positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1).map(pos => { return { ...pos, uuid: String(pos.id) } }),
+              positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1)
+                  .map(pos => { return { ...pos, uuid: String(pos.id) } }),
               deletePositions: []
             }
           })
@@ -139,7 +151,10 @@ export class PieceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      })
+      .toPromise()
+      .catch((errorResp) => errorResp)
+      .then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       let header = await this.headerUtil.generateHeader();
@@ -151,7 +166,10 @@ export class PieceApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      })
+      .toPromise()
+      .catch((errorResp) => errorResp)
+      .then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -166,17 +184,11 @@ export class PieceApi {
       headers: header,
       observe: "response",
       withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+    })
+    .toPromise()
+    .catch((errorResp) => errorResp)
+    .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
-
-  /** All the loaded pieces mapped by UUID */
-  pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
-
-  /** The raw piece structures given by the backend */
-  rawPieces: RawPiece[] = [];
-
-  /** Emitter that is called whenever pieces are loaded */
-  pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
 
   /** Takes backend response, updates data structures for all pieces */
   private getAllPiecesResponse(): Promise<AllPiecesResponse> {

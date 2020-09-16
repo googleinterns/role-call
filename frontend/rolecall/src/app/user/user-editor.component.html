@@ -71,14 +71,14 @@
           </div>
         </div>
         <div class="priv-class-input">
-          <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)" valueName="Privilege Classes"
-            [setValues]="privilegeClassSet" [selectFrom]="privilegeClasses">
+          <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)" valueName="Roles"
+            [setValues]="rolesSet" [selectFrom]="getAllRoles()" [displayNameMapping]="rolesNamesMap">
           </app-multi-select-input>
         </div>
       </div>
       <div class="permissions-input">
         <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)" valueName="Permissions"
-          [setValues]="permissionsSet" [selectFrom]="getAllPerms()" [displayNameMapping]="permsNamesMap">
+          [setValues]="permissionsSet" [selectFrom]="getAllPermissions()" [displayNameMapping]="permissionsNamesMap">
         </app-multi-select-input>
       </div>
       <div class="button-container">
@@ -88,7 +88,7 @@
           </button>
         </div>
         <div class="button-wrapper">
-          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="userSaved"
+          <button mat-flat-button aria-label="Save User" class="save-button" [disabled]="disableSave"
             (click)="onSaveUser()">
             save
           </button>

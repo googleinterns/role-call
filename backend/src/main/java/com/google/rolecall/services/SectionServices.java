@@ -127,7 +127,6 @@ public class SectionServices {
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       List<Position> positions = section.getPositions();
       for(PositionInfo info: newSection.positions()) {
-        System.out.println(info);
         Position position;
         if(info.delete() != null && info.delete()) {
           if(info.id() == null) {

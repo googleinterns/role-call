@@ -32,6 +32,15 @@ public class Constants {
 
   public static class Roles {
     public static final String ADMIN = "ADMIN";
+    public static final String COREOGRAPHER = "COREOGRAPHER";
+    public static final String DANCER = "DANCER";
+    public static final String OTHER = "OTHER";
+    public static final String[] ROLES = new String[] {
+        ADMIN, COREOGRAPHER, DANCER, OTHER,
+    };
+  }
+
+  public static class Permissions {
     public static final String LOGIN = "LOGIN";
     public static final String NOTIFICATIONS = "NOTIFICATIONS";
     public static final String MANAGE_PERFORMANCES = "MANAGE_PERFORMANCES";
@@ -39,9 +48,9 @@ public class Constants {
     public static final String MANAGE_PIECES = "MANAGE_PIECES";
     public static final String MANAGE_ROLES = "MANAGE_ROLES";
     public static final String MANAGE_RULES = "MANAGE_RULES";
-    public static final String[] ROLES = new String[] {
-        ADMIN, LOGIN, NOTIFICATIONS, MANAGE_PERFORMANCES, MANAGE_CASTS, MANAGE_PIECES,
-        MANAGE_ROLES, MANAGE_RULES
+    public static final String[] PERMISSIONS = new String[] {
+        LOGIN, NOTIFICATIONS, MANAGE_PERFORMANCES, MANAGE_CASTS, MANAGE_PIECES,
+        MANAGE_ROLES, MANAGE_RULES,
     };
   }
 

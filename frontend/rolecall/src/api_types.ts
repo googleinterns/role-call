@@ -9,27 +9,31 @@ export enum PerformanceStatus {
  */
 export namespace APITypes {
   export type UserUUID = string;
-  export type PrivilegeClassUUID = string;
   export type PieceUUID = string;
   export type CastUUID = string;
   export type PerformanceUUID = string;
   export type UnavailabilityUUID = number;
   export type SuccessIndicator = {
-    successful: boolean,
-    error?: string
+    successful: boolean;
+    error?: string;
+  };
+  export type RoleSet = {
+    isAdmin: boolean;
+    isCoreographer: boolean;
+    isDancer: boolean;
+    isOther: boolean;
   };
   export type PermissionSet = {
-    canLogin: boolean,
-    isAdmin: boolean,
-    notifications: boolean,
-    managePerformances: boolean,
-    manageCasts: boolean,
-    managePieces: boolean,
-    manageRoles: boolean,
-    manageRules: boolean
+    canLogin: boolean;
+    notifications: boolean;
+    managePerformances: boolean;
+    manageCasts: boolean;
+    managePieces: boolean;
+    manageRoles: boolean;
+    manageRules: boolean;
   };
   export type Position = {
-    segment: PieceUUID,
-    position: string
+    segment: PieceUUID;
+    position: string;
   };
 }
