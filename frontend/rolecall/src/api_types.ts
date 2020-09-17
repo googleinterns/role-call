@@ -17,15 +17,15 @@ export namespace APITypes {
     successful: boolean;
     error?: string;
   };
-  export type RoleSet = {
+  export type Roles = {
     isAdmin: boolean;
     isCoreographer: boolean;
     isDancer: boolean;
     isOther: boolean;
   };
-  export type PermissionSet = {
+  export type Permissions = {
     canLogin: boolean;
-    notifications: boolean;
+    canReceiveNotifications: boolean;
     managePerformances: boolean;
     manageCasts: boolean;
     managePieces: boolean;

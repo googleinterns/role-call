@@ -32,8 +32,6 @@ export class PieceEditor implements OnInit {
   renderingPieces: WorkingPiece[];
   urlPointingUUID: string;
 
-  //privilegeClasses: string[] = [];
-
   prevWorkingState: WorkingPiece;
   workingPiece: WorkingPiece;
   pieceSaved: boolean = true;

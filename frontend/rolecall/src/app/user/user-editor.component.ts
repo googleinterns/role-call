@@ -21,7 +21,6 @@ export class UserEditor implements OnInit {
 
   currentSelectedUser: User;
   renderingUsers: User[];
-  su: User[]; // Sorted Users
   urlPointingUUID: string;
 
   prevWorkingState: User;
@@ -140,7 +139,7 @@ export class UserEditor implements OnInit {
       },
       has_permissions: {
         canLogin: true,
-        notifications: true,
+        canReceiveNotifications: true,
         managePerformances: false,
         manageCasts: false,
         managePieces: false,
@@ -239,7 +238,7 @@ export class UserEditor implements OnInit {
 
   permissionsNamesMap = {
     canLogin: "Can Login",
-    notifications: "Receives Notifications",
+    canReceiveNotifications: "Receives Notifications",
     managePerformances: "Manages Performances",
     manageCasts: "Manages Casts",
     managePieces: "Manages Pieces",

@@ -116,8 +116,7 @@ public class UserServices {
         .setEmergencyContactName(newUser.emergencyContactName())
         .setEmergencyContactNumber(newUser.emergencyContactNumber())
         .setComments(newUser.comments())
-        .setIsActive(newUser.isActive())
-        ;
+        .setIsActive(newUser.isActive());
     try {
       return userRepo.save(builder.build());
     } catch(InvalidParameterException e) { 

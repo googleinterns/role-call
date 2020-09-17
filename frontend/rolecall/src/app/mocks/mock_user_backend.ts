@@ -14,7 +14,7 @@ export class MockUserBackend {
       "uuid": "1",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -45,7 +45,7 @@ export class MockUserBackend {
       "uuid": "183",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -76,7 +76,7 @@ export class MockUserBackend {
       "uuid": "184",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -107,7 +107,7 @@ export class MockUserBackend {
       "uuid": "185",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -138,7 +138,7 @@ export class MockUserBackend {
       "uuid": "186",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -169,7 +169,7 @@ export class MockUserBackend {
       "uuid": "187",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -201,7 +201,7 @@ export class MockUserBackend {
       "uuid": "188",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -232,7 +232,7 @@ export class MockUserBackend {
       "uuid": "189",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -263,7 +263,7 @@ export class MockUserBackend {
       "uuid": "190",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -294,7 +294,7 @@ export class MockUserBackend {
       "uuid": "191",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -325,7 +325,7 @@ export class MockUserBackend {
       "uuid": "192",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -356,7 +356,7 @@ export class MockUserBackend {
       "uuid": "193",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -387,7 +387,7 @@ export class MockUserBackend {
       "uuid": "194",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -418,7 +418,7 @@ export class MockUserBackend {
       "uuid": "195",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -449,7 +449,7 @@ export class MockUserBackend {
       "uuid": "196",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -480,7 +480,7 @@ export class MockUserBackend {
       "uuid": "197",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -511,7 +511,7 @@ export class MockUserBackend {
       "uuid": "198",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -542,7 +542,7 @@ export class MockUserBackend {
       "uuid": "199",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -573,7 +573,7 @@ export class MockUserBackend {
       "uuid": "200",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -604,7 +604,7 @@ export class MockUserBackend {
       "uuid": "201",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -635,7 +635,7 @@ export class MockUserBackend {
       "uuid": "202",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -666,7 +666,7 @@ export class MockUserBackend {
       "uuid": "203",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -697,7 +697,7 @@ export class MockUserBackend {
       "uuid": "204",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -728,7 +728,7 @@ export class MockUserBackend {
       "uuid": "205",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -759,7 +759,7 @@ export class MockUserBackend {
       "uuid": "206",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -790,7 +790,7 @@ export class MockUserBackend {
       "uuid": "207",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -821,7 +821,7 @@ export class MockUserBackend {
       "uuid": "208",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -852,7 +852,7 @@ export class MockUserBackend {
       "uuid": "209",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -883,7 +883,7 @@ export class MockUserBackend {
       "uuid": "210",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -914,7 +914,7 @@ export class MockUserBackend {
       "uuid": "211",
       "has_permissions": {
         "canLogin": true,
-        "notifications": true,
+        "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
         "managePieces": false,
@@ -947,7 +947,7 @@ export class MockUserBackend {
   //     uuid: "USERUUID1",
   //     has_permissions: {
   //       isAdmin: true,
-  //       notifications: true,
+  //       canReceiveNotifications: true,
   //       canLogin: true,
   //       manageCasts: true,
   //       managePerformances: true,
@@ -985,7 +985,7 @@ export class MockUserBackend {
   //     uuid: "USERUUID2",
   //     has_permissions: {
   //       isAdmin: false,
-  //       notifications: true,
+  //       canReceiveNotifications: true,
   //       canLogin: true,
   //       manageCasts: true,
   //       managePerformances: false,

@@ -11,8 +11,8 @@ import { ResponseStatusHandlerService } from '../services/response-status-handle
 
 export type User = {
   uuid: APITypes.UserUUID;
-  has_roles: APITypes.RoleSet;
-  has_permissions: APITypes.PermissionSet;
+  has_roles: APITypes.Roles;
+  has_permissions: APITypes.Permissions;
   knows_positions: APITypes.Position[];
   first_name: string | undefined;
   last_name: string | undefined;
@@ -40,7 +40,7 @@ interface rawUser {
   isDancer: boolean;
   isOther: boolean;
   canLogin: boolean;
-  notifications: boolean;
+  canReceiveNotifications: boolean;
   managePerformances: boolean;
   manageCasts: boolean;
   managePieces: boolean;
@@ -120,7 +120,7 @@ export class UserApi {
               },
               has_permissions: {
                 canLogin: val.canLogin,
-                notifications: val.notifications,
+                canReceiveNotifications: val.canReceiveNotifications,
                 managePerformances: val.managePerformances,
                 manageCasts: val.manageCasts,
                 managePieces: val.managePieces,
@@ -177,7 +177,7 @@ export class UserApi {
         isOther: user.has_roles.isOther,
         // Permissions
         canLogin: user.has_permissions.canLogin,
-        notifications: user.has_permissions.notifications,
+        canReceiveNotifications: user.has_permissions.canReceiveNotifications,
         managePerformances: user.has_permissions.managePerformances,
         manageCasts: user.has_permissions.manageCasts,
         managePieces: user.has_permissions.managePieces,
@@ -210,7 +210,7 @@ export class UserApi {
         isOther: user.has_roles.isOther,
         // Permissions
         canLogin: user.has_permissions.canLogin,
-        notifications: user.has_permissions.notifications,
+        canReceiveNotifications: user.has_permissions.canReceiveNotifications,
         managePerformances: user.has_permissions.managePerformances,
         manageCasts: user.has_permissions.manageCasts,
         managePieces: user.has_permissions.managePieces,
