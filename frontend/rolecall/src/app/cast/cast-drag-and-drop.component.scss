@@ -45,18 +45,21 @@ $cellHeight: 4rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: $cellWidth;
+
   &ColHeader {
     color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
+
   &RowHeader {
     color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
+
   &BothHeader {
   }
 }
@@ -74,20 +77,10 @@ $cellHeight: 4rem;
   padding-top: 0.25em;
   position: relative;
   max-width: 90%;
+
   &:focus {
     border: none;
   }
-}
-
-.empty-cell {
-  border-color: $offoffWhite;
-  border-style: dashed;
-  // @styleIngore Left must come after style by CSS standards
-  border-left: none;
-  border-top: none;
-  border-width: 2px;
-  height: $cellHeight;
-  width: $cellWidth;
 }
 
 .position-pool {
@@ -109,6 +102,7 @@ $cellHeight: 4rem;
   margin-top: 2rem;
   width: 6vh;
 }
+
 .export-button-icon {
   font-size: 2.5rem;
   vertical-align: middle;
@@ -151,7 +145,6 @@ $cellHeight: 4rem;
 
 .save-delete-button-icon {
   color: $gray;
-  // color: rgba(0, 0, 0, 0);
   background: $AAOrange;
   background-clip: text;
   font-size: 3rem;
@@ -176,15 +169,19 @@ $cellHeight: 4rem;
 .cdk-drag-placeholder {
   opacity: 0.4;
 }
+
 .cdk-drag-animating {
   transition: transform 75ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 .cdk-drop-list-dragging :not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 .cdk-drop-list-receiving {
   transition: transform 100ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 .drop-group-container {
   display: flex;
   flex-direction: column;
