@@ -46,7 +46,7 @@
               [ngStyle]="i3 == boldedCast ? {'font-weight' : 'bold'} : {}">
               <img
                 class="user-image"
-                [src]="'https://i.pravatar.cc/150?u=' + person.first_name + '::::' + person.last_name + person.contact_info.email">
+                [src]="baseImageUrl + person.first_name + '_' + person.last_name + '.jpg' | lowercase">
               {{person.first_name + " " + person.last_name}}
             </div>
           </div>
@@ -69,7 +69,7 @@
         [cdkDragData]="user">
         <img
           class="user-image"
-          [src]="'https://i.pravatar.cc/150?u=' + user.first_name + '::::' + user.last_name + user.contact_info.email">
+          [src]="baseImageUrl + user.first_name + '_' + user.last_name + '.jpg' | lowercase">
         {{user.first_name + " " + user.last_name}}
       </div>
     </div>

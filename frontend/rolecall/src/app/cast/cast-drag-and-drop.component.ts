@@ -19,6 +19,9 @@ export class CastDragAndDrop implements OnInit {
   /** Output by which other components can listen to cast changes */
   @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
 
+  /** Base URL of images in cloud storage. */
+  baseImageUrl = 'https://storage.googleapis.com/absolute-water-286821.appspot.com/headshots/';
+
   /** The drag and drop data */
   data: User[][][];
   positionVals: Position[];
