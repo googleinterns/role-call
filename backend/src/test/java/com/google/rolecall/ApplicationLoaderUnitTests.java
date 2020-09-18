@@ -39,7 +39,7 @@ public class ApplicationLoaderUnitTests {
         .setFirstName("admin")
         .setLastName("admin")
         .setEmail("adminEmail")
-        .setAdmin(true);
+        .setIsAdmin(true);
     User user;
     try {
       user = builder.build();

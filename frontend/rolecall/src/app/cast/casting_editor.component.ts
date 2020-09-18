@@ -35,8 +35,6 @@ export class CastingEditor implements OnInit {
   renderingCasts: WorkingCast[];
   urlPointingUUID: string;
 
-  privilegeClasses: string[] = [];
-
   prevWorkingState: WorkingCast;
   workingCast: WorkingCast;
   castSaved: boolean = false;

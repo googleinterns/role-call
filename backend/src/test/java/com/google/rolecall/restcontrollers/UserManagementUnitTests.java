@@ -41,18 +41,21 @@ public class UserManagementUnitTests {
   private String lastName = "Hirsch";
   private String email = "goodEmail@gmail.com";
   private Calendar dateJoined = null;
-  private String emergencyContactName = "Mom";
-  private String emergencyContactNumber = "333-333-3333";
-  private String comments = "A good boi.";
-  private Boolean isActive = true;
+  private Boolean isAdmin = true;
+  private Boolean isCoreographer = true;
+  private Boolean isDancer = true;
+  private Boolean isOther = true;
   private Boolean canLogin = true;
-  private Boolean admin = true;
   private Boolean notifications = false;
   private Boolean managePerformances = true;
   private Boolean manageCasts = false;
   private Boolean managePieces = true;
   private Boolean manageRoles = false;
   private Boolean manageRules = true;
+  private String emergencyContactName = "Mom";
+  private String emergencyContactNumber = "333-333-3333";
+  private String comments = "A good boi.";
+  private Boolean isActive = true;
 
   @BeforeEach
   public void init() {
@@ -61,22 +64,26 @@ public class UserManagementUnitTests {
         mock(CastMemberRepository.class),null));
     controller = new UserManagement(userService);
     User.Builder builder = User.newBuilder()
-        .setFirstName(firstName)
-        .setLastName(lastName)
-        .setEmail(email)
-        .setDateJoined(dateJoined)
-        .setEmergencyContactName(emergencyContactName)
-        .setEmergencyContactNumber(emergencyContactNumber)
-        .setComments(comments)
-        .setIsActive(isActive)
-        .setCanLogin(canLogin)
-        .setAdmin(admin)
-        .setRecievesNotifications(notifications)
-        .setManagePerformances(managePerformances)
-        .setManageCasts(manageCasts)
-        .setManagePieces(managePieces)
-        .setManageRoles(manageRoles)
-        .setManageRules(manageRules);
+      .setFirstName(firstName)
+      .setLastName(lastName)
+      .setEmail(email)
+      .setDateJoined(dateJoined)
+      .setIsAdmin(isAdmin)
+      .setIsCoreographer(isAdmin)
+      .setIsDancer(isDancer)
+      .setIsOther(isOther)
+      .setCanLogin(canLogin)
+      .setRecievesNotifications(notifications)
+      .setManagePerformances(managePerformances)
+      .setManageCasts(manageCasts)
+      .setManagePieces(managePieces)
+      .setManageRoles(manageRoles)
+      .setManageRules(manageRules)
+      .setEmergencyContactName(emergencyContactName)
+      .setEmergencyContactNumber(emergencyContactNumber)
+      .setComments(comments)
+      .setIsActive(isActive)
+      ;
     try {
       user = builder.build();
     } catch(InvalidParameterException e) {

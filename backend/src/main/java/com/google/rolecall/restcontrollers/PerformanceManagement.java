@@ -66,7 +66,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
       return CompletableFuture.failedFuture(
-          insufficientPrivileges(Constants.Roles.MANAGE_PERFORMANCES));
+          insufficientPrivileges(Constants.Permissions.MANAGE_PERFORMANCES));
     }
 
     ServiceResult<Performance> result;
@@ -89,7 +89,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
       return CompletableFuture.failedFuture(
-          insufficientPrivileges(Constants.Roles.MANAGE_PERFORMANCES));
+          insufficientPrivileges(Constants.Permissions.MANAGE_PERFORMANCES));
     }
 
     ServiceResult<Performance> result;
@@ -112,7 +112,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
       return CompletableFuture.failedFuture(
-          insufficientPrivileges(Constants.Roles.MANAGE_PERFORMANCES));
+          insufficientPrivileges(Constants.Permissions.MANAGE_PERFORMANCES));
     }
 
     try {

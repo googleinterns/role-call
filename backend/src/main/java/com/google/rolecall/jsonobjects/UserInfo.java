@@ -28,37 +28,35 @@ public abstract class UserInfo {
   public abstract String email();
 
   @Nullable
+  @JsonProperty("phoneNumber")
+  public abstract String phoneNumber();
+
+  @Nullable
   @JsonProperty("dateJoined")
   @JsonFormat(pattern="MM-dd-yyyy")
   public abstract Calendar dateJoined();
 
+  // Roles
   @Nullable
-  @JsonProperty("emergencyContactName")
-  public abstract String emergencyContactName();
+  @JsonProperty("isAdmin")
+  public abstract Boolean isAdmin();
 
   @Nullable
-  @JsonProperty("emergencyContactNumber")
-  public abstract String emergencyContactNumber();
+  @JsonProperty("isCoreographer")
+  public abstract Boolean isCoreographer();
 
   @Nullable
-  @JsonProperty("comments")
-  public abstract String comments();
+  @JsonProperty("isDancer")
+  public abstract Boolean isDancer();
 
   @Nullable
-  @JsonProperty("role")
-  public abstract String role();
+  @JsonProperty("isOther")
+  public abstract Boolean isOther();
 
-  @Nullable
-  @JsonProperty("isActive")
-  public abstract Boolean isActive();
-
+  //Permissions
   @Nullable
   @JsonProperty("canLogin")
   public abstract Boolean canLogin();
-
-  @Nullable
-  @JsonProperty("admin")
-  public abstract Boolean admin();
 
   @Nullable
   @JsonProperty("notifications")
@@ -83,6 +81,22 @@ public abstract class UserInfo {
   @Nullable
   @JsonProperty("manageRules")
   public abstract Boolean manageRules();
+
+  @Nullable
+  @JsonProperty("emergencyContactName")
+  public abstract String emergencyContactName();
+
+  @Nullable
+  @JsonProperty("emergencyContactNumber")
+  public abstract String emergencyContactNumber();
+
+  @Nullable
+  @JsonProperty("comments")
+  public abstract String comments();
+
+  @Nullable
+  @JsonProperty("isActive")
+  public abstract Boolean isActive();
 
   /* Every UserInfo should be unique unless it's being comapred to itself */
   @Override
@@ -114,30 +128,29 @@ public abstract class UserInfo {
     @JsonProperty("email")
     public abstract Builder setEmail(String email);
 
+    @JsonProperty("phoneNumber")
+    public abstract Builder setPhoneNumber(String phoneNumber);
+
     @JsonProperty("dateJoined")
     @JsonFormat(pattern="MM-dd-yyyy")
     public abstract Builder setDateJoined(Calendar dateJoined);
 
-    @JsonProperty("emergencyContcatName")
-    public abstract Builder setEmergencyContactName(String emergencyContcatName);
+    // Roles
+    @JsonProperty("isAdmin")
+    public abstract Builder setIsAdmin(Boolean isAdmin);
 
-    @JsonProperty("emergencyContactName")
-    public abstract Builder setEmergencyContactNumber(String emergencyContactNumber);
+    @JsonProperty("isCoreographer")
+    public abstract Builder setIsCoreographer(Boolean isCoreographer);
 
-    @JsonProperty("comments")
-    public abstract Builder setComments(String comments);
+    @JsonProperty("isDancer")
+    public abstract Builder setIsDancer(Boolean isDancer);
 
-    @JsonProperty("role")
-    public abstract Builder setRole(String role);
+    @JsonProperty("isOther")
+    public abstract Builder setIsOther(Boolean isOther);
 
-    @JsonProperty("isActive")
-    public abstract Builder setIsActive(Boolean isActive);
-
+    // Permissions
     @JsonProperty("canLogin")
     public abstract Builder setCanLogin(Boolean canLogin);
-
-    @JsonProperty("admin")
-    public abstract Builder setAdmin(Boolean admin);
 
     @JsonProperty("notifications")
     public abstract Builder setNotifications(Boolean notifications);
@@ -156,6 +169,18 @@ public abstract class UserInfo {
     
     @JsonProperty("manageRules")
     public abstract Builder setManageRules(Boolean manageRules);
+
+    @JsonProperty("emergencyContcatName")
+    public abstract Builder setEmergencyContactName(String emergencyContcatName);
+
+    @JsonProperty("emergencyContactName")
+    public abstract Builder setEmergencyContactNumber(String emergencyContactNumber);
+
+    @JsonProperty("comments")
+    public abstract Builder setComments(String comments);
+
+    @JsonProperty("isActive")
+    public abstract Builder setIsActive(Boolean isActive);
 
     public abstract UserInfo build();
   }

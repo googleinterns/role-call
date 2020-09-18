@@ -14,15 +14,18 @@ public class DefaultUsers {
         .setFirstName("Admin")
         .setLastName("User")
         .setEmail("admin@rolecall.com")
-        .setIsActive(true)
+        .setIsAdmin(true)
+        .setIsCoreographer(true)
+        .setIsDancer(true)
+        .setIsOther(true)
         .setCanLogin(true)
-        .setAdmin(true)
         .setRecievesNotifications(false)
         .setManagePerformances(false)
         .setManageCasts(false)
         .setManagePieces(false)
         .setManageRoles(false)
         .setManageRules(false)
+        .setIsActive(true)
         .build();
     } catch(InvalidParameterException e) {
       throw new RuntimeException("This should never happen");

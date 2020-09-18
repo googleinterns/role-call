@@ -58,7 +58,7 @@ public class CastManagement extends AsyncRestEndpoint {
       @RequestBody CastInfo newCast) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManageCasts()) {
-      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_CASTS));
     }
     
     ServiceResult<Cast> result;
@@ -80,7 +80,7 @@ public class CastManagement extends AsyncRestEndpoint {
       @RequestBody CastInfo cast) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManageCasts()) {
-      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_CASTS));
     }
 
     ServiceResult<Cast> result;
@@ -102,7 +102,7 @@ public class CastManagement extends AsyncRestEndpoint {
       value=Constants.RequestParameters.CAST_ID, required=true) int id) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManageCasts()) {
-      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.MANAGE_CASTS));
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_CASTS));
     }
 
     try {

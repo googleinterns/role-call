@@ -10,67 +10,51 @@ import { LoggingService } from '../services/logging.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
 
 export type User = {
-  uuid: APITypes.UserUUID,
-  has_permissions: APITypes.PermissionSet,
-  has_privilege_classes?: APITypes.PrivilegeClassUUID[],
-  knows_positions: APITypes.Position[],
-  first_name: string,
-  last_name: string,
-  date_joined: number,
-  role?: string,
+  uuid: APITypes.UserUUID;
+  has_roles: APITypes.Roles;
+  has_permissions: APITypes.Permissions;
+  knows_positions: APITypes.Position[];
+  first_name: string | undefined;
+  last_name: string | undefined;
+  date_joined: number | undefined;
   contact_info: {
-    phone_number: string,
-    email: string,
+    phone_number: string | undefined;
+    email: string | undefined;
     emergency_contact: {
-      name: string,
-      phone_number: string,
-      email: string
+      name: string | undefined;
+      phone_number: string | undefined;
+      email: string | undefined;
     }
   }
 };
 
-type RawAllUsersResponse = {
-  data: {
-    id: number,
-    firstName: string,
-    lastName: string,
-    email: string,
-    dateJoined: string,
-    role?: string,
-    emergencyContactName: string,
-    emergencyContactNumber: string,
-    comments: string,
-    canLogin: boolean,
-    admin: boolean,
-    notifications: boolean,
-    managePerformances: boolean,
-    manageCasts: boolean,
-    managePieces: boolean,
-    manageRoles: boolean,
-    manageRules: boolean,
-    isActive: boolean
-  }[],
-  warnings: string[]
+interface rawUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  dateJoined: string;
+  isAdmin: boolean;
+  isCoreographer: boolean;
+  isDancer: boolean;
+  isOther: boolean;
+  canLogin: boolean;
+  canReceiveNotifications: boolean;
+  managePerformances: boolean;
+  manageCasts: boolean;
+  managePieces: boolean;
+  manageRoles: boolean;
+  manageRules: boolean;
+  emergencyContactName: string;
+  emergencyContactNumber: string;
+  comments: string;
+  isActive: boolean;
 }
 
-type PatchPostUserBody = {
-  firstName: string,
-  lastName: string,
-  email: string,
-  dateJoined?: string,
-  role?: string,
-  emergencyContactName?: string,
-  emergencyContactNumber?: string,
-  comments?: string,
-  canLogin?: boolean,
-  admin?: boolean,
-  notifications?: boolean,
-  managePerformances?: boolean,
-  manageCasts?: boolean,
-  managePieces?: boolean,
-  manageRoles?: boolean,
-  manageRules?: boolean,
-  isActive?: boolean
+type RawAllUsersResponse = {
+  data: rawUser[],
+  warnings: string[]
 }
 
 export type AllUsersResponse = {
@@ -100,6 +84,12 @@ export class UserApi {
   /** Mock backend */
   mockBackend: MockUserBackend = new MockUserBackend();
 
+  /** All the loaded users mapped by UUID */
+  users: Map<APITypes.UserUUID, User> = new Map<APITypes.UserUUID, User>();
+
+  /** Emitter that is called whenever users are loaded */
+  userEmitter: EventEmitter<User[]> = new EventEmitter();
+
   constructor(private loggingService: LoggingService, private http: HttpClient,
     private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
 
@@ -112,29 +102,37 @@ export class UserApi {
       headers: await this.headerUtil.generateHeader(),
       observe: "response",
       withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp)).then((val) => {
+    })
+    .toPromise()
+    .catch((errorResp) => errorResp)
+    .then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
+    .then((val) => {
       return {
         data: {
           users: val.data.map((val) => {
             return {
               uuid: String(val.id),
+              has_roles: {
+                isAdmin: val.isAdmin,
+                isCoreographer: val.isCoreographer,
+                isDancer: val.isDancer,
+                isOther: val.isOther,
+              },
               has_permissions: {
                 canLogin: val.canLogin,
-                isAdmin: val.admin,
-                notifications: val.notifications,
+                canReceiveNotifications: val.canReceiveNotifications,
                 managePerformances: val.managePerformances,
                 manageCasts: val.manageCasts,
                 managePieces: val.managePieces,
                 manageRoles: val.manageRoles,
                 manageRules: val.manageRules
               },
-              has_privilege_classes: [],
               knows_positions: [],
               first_name: val.firstName,
               last_name: val.lastName,
               date_joined: moment(val.dateJoined, 'MM-DD-YYYY').valueOf(),
               contact_info: {
-                phone_number: "N/A",
+                phone_number: val.phoneNumber,
                 email: val.email,
                 emergency_contact: {
                   name: val.emergencyContactName,
@@ -170,46 +168,66 @@ export class UserApi {
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.contact_info.email,
+        phoneNumber: user.contact_info.phone_number,
         dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
-        emergencyContactName: user.contact_info.emergency_contact.name,
-        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
+        // Roles
+        isAdmin: user.has_roles.isAdmin,
+        isCoreographer: user.has_roles.isCoreographer,
+        isDancer: user.has_roles.isDancer,
+        isOther: user.has_roles.isOther,
+        // Permissions
         canLogin: user.has_permissions.canLogin,
-        admin: user.has_permissions.isAdmin,
-        notifications: user.has_permissions.notifications,
+        canReceiveNotifications: user.has_permissions.canReceiveNotifications,
         managePerformances: user.has_permissions.managePerformances,
         manageCasts: user.has_permissions.manageCasts,
         managePieces: user.has_permissions.managePieces,
         manageRoles: user.has_permissions.manageRoles,
         manageRules: user.has_permissions.manageRules,
+        // Other
+        emergencyContactName: user.contact_info.emergency_contact.name,
+        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
         isActive: true
       }, {
         headers: await this.headerUtil.generateHeader(),
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      })
+      .toPromise()
+      .catch((errorResp) => errorResp)
+      .then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       return this.http.post(environment.backendURL + "api/user", {
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.contact_info.email,
+        phoneNumber: user.contact_info.phone_number,
         dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
-        emergencyContactName: user.contact_info.emergency_contact.name,
-        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
+        // Roles
+        isAdmin: user.has_roles.isAdmin,
+        isCoreographer: user.has_roles.isCoreographer,
+        isDancer: user.has_roles.isDancer,
+        isOther: user.has_roles.isOther,
+        // Permissions
         canLogin: user.has_permissions.canLogin,
-        admin: user.has_permissions.isAdmin,
-        notifications: user.has_permissions.notifications,
+        canReceiveNotifications: user.has_permissions.canReceiveNotifications,
         managePerformances: user.has_permissions.managePerformances,
         manageCasts: user.has_permissions.manageCasts,
         managePieces: user.has_permissions.managePieces,
         manageRoles: user.has_permissions.manageRoles,
         manageRules: user.has_permissions.manageRules,
+        // Other
+        emergencyContactName: user.contact_info.emergency_contact.name,
+        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
         isActive: true
       }, {
         observe: "response",
         headers: await this.headerUtil.generateHeader(),
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      })
+      .toPromise()
+      .catch((errorResp) => errorResp)
+      .then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -222,14 +240,11 @@ export class UserApi {
       observe: "response",
       headers: await this.headerUtil.generateHeader(),
       withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+    })
+    .toPromise()
+    .catch((errorResp) => errorResp)
+    .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
-
-  /** All the loaded users mapped by UUID */
-  users: Map<APITypes.UserUUID, User> = new Map<APITypes.UserUUID, User>();
-
-  /** Emitter that is called whenever users are loaded */
-  userEmitter: EventEmitter<User[]> = new EventEmitter();
 
   /** Takes backend response, updates data structures for all users */
   private getAllUsersResponse(): Promise<AllUsersResponse> {
@@ -275,9 +290,9 @@ export class UserApi {
     return this.getAllUsersResponse().then(val => {
       this.userEmitter.emit(Array.from(this.users.values()));
       return val;
-    }).then(val => val.data.users).catch(err => {
-      return [];
-    });
+    })
+    .then(val => val.data.users)
+    .catch(err => [] );
   }
 
   /** Gets a specific user from the backend by UUID and returns it */
@@ -285,7 +300,8 @@ export class UserApi {
     return this.getOneUserResponse(uuid).then(val => {
       this.userEmitter.emit(Array.from(this.users.values()));
       return val;
-    }).then(val => val.data.user);
+    })
+    .then(val => val.data.user);
   }
 
   /** Requests an update to the backend which may or may not be successful,
@@ -298,7 +314,8 @@ export class UserApi {
       return {
         successful: true
       }
-    }).catch(reason => {
+    })
+    .catch(reason => {
       return Promise.resolve({
         successful: false,
         error: reason
@@ -313,7 +330,8 @@ export class UserApi {
       return {
         successful: true
       }
-    }).catch(reason => {
+    })
+    .catch(reason => {
       return {
         successful: false,
         error: reason
