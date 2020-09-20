@@ -2,6 +2,7 @@
 @import "src/constants";
 
 $cellWidth: 14rem;
+$bothWidth: 12.5rem;
 $cellHeight: 4rem;
 
 .horizontal-list {
@@ -11,7 +12,7 @@ $cellHeight: 4rem;
 }
 
 .position-container {
-  margin-bottom: 3rem;
+  margin-bottom: 0;
   margin-left: 2rem;
 }
 
@@ -26,7 +27,7 @@ $cellHeight: 4rem;
 .table-container {
   outline-color: $offoffWhite;
   outline-width: 2px;
-  outline-style: dashed;
+  outline-style: solid;
   outline-offset: -1px;
   width: fit-content;
 }
@@ -41,24 +42,55 @@ $cellHeight: 4rem;
   margin: 0;
   overflow-x: hidden;
   overflow-y: hidden;
-  padding: 1em;
+  padding: 1.2em;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: $cellWidth;
   &ColHeader {
+    padding-top: 1.45rem;
     color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
   &RowHeader {
+    padding-top: 1.45rem;
+    padding-left: 2rem;
     color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
   &BothHeader {
+    padding-top: 1.4rem;
+    padding-left: 1rem;
+    color: $black;
+    font-size: 1.4em;
+    font-weight: bold;
+    vertical-align: middle;
+    width: $bothWidth;
   }
+}
+
+.dancer-count-buttons-container {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1.5rem;
+}
+.dancer-count-button {
+  background: $offWhite;
+  height: 2rem;
+  width: 1rem;
+  min-height: 5px!important;
+}
+
+.dancer-count-icon {
+  font-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+  line-height:1rem;
 }
 
 .name-input {
@@ -81,7 +113,7 @@ $cellHeight: 4rem;
 
 .empty-cell {
   border-color: $offoffWhite;
-  border-style: dashed;
+  border-style: solid;
   // @styleIngore Left must come after style by CSS standards
   border-left: none;
   border-top: none;
@@ -104,10 +136,10 @@ $cellHeight: 4rem;
 .export-button {
   background: $offWhite;
   border-radius: $borderRadius;
-  height: 6vh;
+  height: 4vh;
   margin-right: 2rem;
-  margin-top: 2rem;
-  width: 6vh;
+  margin-top: 1.5rem;
+  width: 4vh;
 }
 .export-button-icon {
   font-size: 2.5rem;
@@ -151,7 +183,6 @@ $cellHeight: 4rem;
 
 .save-delete-button-icon {
   color: $gray;
-  // color: rgba(0, 0, 0, 0);
   background: $AAOrange;
   background-clip: text;
   font-size: 3rem;
@@ -163,7 +194,7 @@ $cellHeight: 4rem;
 
 .user-image {
   border-radius: 50%;
-  height: 100%;
+  height: 2.2rem;
   margin-left: 0;
   margin-right: 0.6em;
 }

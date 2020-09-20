@@ -35,6 +35,9 @@ public class Position {
   private Integer order;
 
   @Basic
+  private Integer siblingId;
+
+  @Basic
   private Integer size;
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -59,6 +62,10 @@ public class Position {
 
   public int getOrder() {
     return order;
+  }
+
+  public Integer getSiblingId() {
+    return siblingId;
   }
 
   public Integer getSize() {
@@ -91,6 +98,7 @@ public class Position {
         .setName(getName())
         .setNotes(getNotes())
         .setOrder(getOrder())
+        .setSiblingId(getSiblingId())
         .setSize(getSize())
         .build();
   }
@@ -130,8 +138,16 @@ public class Position {
     private String name;
     private String notes;
     private Integer order;
+    private Integer siblingId;
     private Integer size;
     private Section section;
+
+    public Builder setId(Integer id) {
+      if(id != null) {
+        this.id = id;
+      }
+      return this;
+    }
 
     public Builder setName(String name) {
       if(name != null) {
@@ -154,6 +170,13 @@ public class Position {
       return this;
     }
 
+    public Builder setSiblingId(Integer siblingId) {
+      if(siblingId != null) {
+        this.siblingId = siblingId == 0 ? null : siblingId;
+      }
+      return this;
+    }
+
     public Builder setSize(Integer size) {
       if(size != null) {
         this.size = size;
@@ -169,6 +192,7 @@ public class Position {
       position.name = this.name;
       position.notes = this.notes;
       position.order = this.order;
+      position.siblingId = this.siblingId;
       position.size = this.size;
       position.section = this.section;
 
@@ -181,6 +205,7 @@ public class Position {
       this.name = position.name;
       this.notes = position.notes;
       this.order = position.order;
+      this.siblingId = position.siblingId;
       this.size = position.size;
       this.section = position.section;
     }
