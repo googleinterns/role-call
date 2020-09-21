@@ -132,8 +132,9 @@ public class SectionServices {
       // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
       int i = 0;
       for(Position pos: savedSection.getPositions()) {
+
         Section subSection = Section.newBuilder()
-            .setId(ixArray[i])
+            .setIdUnsafe(ixArray[i])
             .setName(pos.getName())
             .setNotes("")
             .setLength(0)
@@ -293,7 +294,7 @@ public class SectionServices {
       for(Position pos: savedSection.getPositions()) {
         if(ixArray[i] > -1) {
           Section subSection = Section.newBuilder()
-              .setId(ixArray[i])
+              .setIdUnsafe(ixArray[i])
               .setName(pos.getName())
               .setNotes("")
               .setLength(0)
@@ -352,7 +353,7 @@ public class SectionServices {
         try {
           Position sibling = queryPosition.get();
           Position updatedSibling = sibling.toBuilder()
-              .setId(positionId)
+              .setIdUnsafe(positionId)
               .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
               .setNotes(sibling.getNotes())
               .setOrder(sibling.getOrder())
@@ -381,7 +382,7 @@ public class SectionServices {
         try {
           Section sibling = querySection.get();
           Section updatedSibling = sibling.toBuilder()
-              .setId(sectionId)
+              .setIdUnsafe(sectionId)
               .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
               .setNotes(sibling.getNotes())
               .setLength(sibling.getLength().get())

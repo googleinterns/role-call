@@ -193,11 +193,10 @@ public class Section {
     private Integer siblingId;
     private Type type;
 
-    public Builder setId(Integer id) {
+    public Builder setIdUnsafe(Integer id) {
       if(id != null) {
         this.id = id;
       }
-
       return this;
     }
 
@@ -205,7 +204,6 @@ public class Section {
       if(name != null) {
         this.name = name;
       }
-
       return this;
     }
 
@@ -213,7 +211,6 @@ public class Section {
       if(notes != null) {
         this.notes = notes;
       }
-
       return this;
     }
 
@@ -221,7 +218,6 @@ public class Section {
       if(length != null) {
         this.length = length;
       }
-
       return this;
     }
 
@@ -236,7 +232,6 @@ public class Section {
       if(type != null) {
         this.type = type;
       }
-
       return this;
     }
 

@@ -142,7 +142,7 @@ public class Position {
     private Integer size;
     private Section section;
 
-    public Builder setId(Integer id) {
+    public Builder setIdUnsafe(Integer id) {
       if(id != null) {
         this.id = id;
       }
