@@ -85,7 +85,7 @@ public class SectionServices {
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
-        .setSiblingId(newSection.length())
+        .setSiblingId(newSection.siblingId())
         .setType(newSection.type())
         .build();
 
@@ -103,7 +103,7 @@ public class SectionServices {
               .setName(info.name())
               .setNotes("")
               .setLength(0)
-              .setSiblingId(null)
+              .setSiblingId(0)
               .setType(Section.Type.PIECE)
               .build();
           savedSubSection = sectionRepo.save(subSection);
@@ -168,8 +168,6 @@ public class SectionServices {
       InvalidParameterException {
     Boolean isParentRevelation = newSection.type() == Section.Type.REVELATION;
 
-    System.out.printf("UPDATING %s\n", newSection.name());
-
     // Make sure that sibling Ballet and Position / Ballet items are synchronized
 
     // Check for sibling of Ballet section
@@ -190,17 +188,13 @@ public class SectionServices {
       if(newSection.positions() != null && !newSection.positions().isEmpty()) {
         int i = 0;
         for(PositionInfo info: newSection.positions()) {
-          System.out.printf("LOOPING i=%d\n", i);
-          System.out.printf("SECTION=%s\n", newSection.name());
           if(info.delete() != null && info.delete()) {
-            System.out.printf("Deleting %s\n", info.name());
             // Deleting position items
             Integer siblingId = info.siblingId();
             if(siblingId != null) {
               Integer positionSiblingId = info.siblingId();
               if(positionSiblingId != null) {
                 // Erase reference in sibling
-                System.out.printf("Deleting %d\n", positionSiblingId);
                 updateSiblingSection(positionSiblingId, "", 0);
               }  
             }
@@ -234,7 +228,6 @@ public class SectionServices {
       List<Position> positions = section.getPositions();
       int i = 0;
       for(PositionInfo info: newSection.positions()) {
-        System.out.printf("LAST LOOP %d\n", i);
         Position position;
         Section savedSubSection = null;
         if(info.delete() != null && info.delete()) {
@@ -258,7 +251,6 @@ public class SectionServices {
         } else {
           ixArray[i] = -1;
           if(isParentRevelation) {
-            System.out.printf("BEFORE WRITING\n");
             // New Ballet-Child
             // Create sibling Ballets to Revelation's internal Ballet/Position structures
             // The ids will be inserted into Revelation's internal Ballet/Position structures
@@ -266,7 +258,7 @@ public class SectionServices {
                 .setName(info.name())
                 .setNotes("")
                 .setLength(0)
-                .setSiblingId(null)
+                .setSiblingId(0)
                 .setType(Section.Type.PIECE)
                 .build();
             savedSubSection = sectionRepo.save(subSection);
@@ -368,10 +360,6 @@ public class SectionServices {
               .setSize(sibling.getSiblingId())
               .build();
           positionRepo.save(updatedSibling);
-          System.out.printf("Saved Sibling Position %s at id %d SiblingId=%d\n",
-              newName == null || newName.length() == 0 ? sibling.getName() : newName,
-              positionId,
-              siblingId == -1 ? sibling.getSiblingId() : siblingId);
         } catch (InvalidParameterException e) {
           return SiblingError.OTHER_ERROR;
         }
@@ -387,8 +375,6 @@ public class SectionServices {
     if(sectionId != null) {
       Optional<Section> querySection = sectionRepo.findById(sectionId);
 
-      //System.out.printf("Section Update id=%d name=%s siblingIs=%d\n", sectionId, newName, siblingId);
-
       if(querySection.isEmpty()) {
         return SiblingError.SIBLING_MISSING;
       } else {
@@ -403,10 +389,6 @@ public class SectionServices {
               .setType(sibling.getType())
               .build();
           sectionRepo.save(updatedSibling);
-          System.out.printf("Saved Sibling Ballet %s at id %d SiblingId=%d\n",
-              newName == null || newName.length() == 0 ? sibling.getName() : newName,
-              sectionId,
-              siblingId == -1 ? sibling.getSiblingId() : siblingId);
         } catch (InvalidParameterException e) {
           return SiblingError.OTHER_ERROR;
         }
