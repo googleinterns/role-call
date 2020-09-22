@@ -53,9 +53,8 @@ export class PieceEditor implements OnInit {
   currentType = 0;
 
   segmentTypes = ["SEGMENT", "PIECE", "REVELATION"];
-  selectedSegmentType: "SEGMENT" | "PIECE" | "REVELATION";
+  selectedSegmentType: PieceType;
   segmentPrettyNames = ["", "Segment", "Ballet", "Revelation"]
-  //selectedSegmentType: "SEGMENT" | "PIECE" | "REVELATION";
 
 
   constructor(private route: ActivatedRoute, private pieceAPI: PieceApi,

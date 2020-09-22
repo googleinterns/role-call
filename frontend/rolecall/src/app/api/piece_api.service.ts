@@ -21,7 +21,7 @@ type RawPiece = {
   name: string,
   notes: string,
   siblingId: number,
-  type: "SEGMENT" | "PIECE" | "REVELATION",
+  type: PieceType,
   length: number,
   positions: RawPosition[],
 }
