@@ -35,18 +35,27 @@ type AllRawCastsResponse = {
   warnings: string[]
 }
 
+export type CastMember = {
+  uuid: string;
+  position_number: number;
+}
+
+export type CastSubCast = {
+  position_uuid?: string;
+  group_index: number;
+  members: CastMember[];
+}
+
+export type CastPosition = {
+  position_uuid: string;
+  groups: CastSubCast[];
+}
+
 export type Cast = {
   uuid: string;
   name: string;
   segment: string;
-  filled_positions: {
-    position_uuid: string,
-    groups: {
-      position_uuid?: string,
-      group_index: number,
-      members: { uuid: string, position_number: number }[]
-    }[]
-  }[];
+  filled_positions: CastPosition[];
 }
 
 export type AllCastsResponse = {
@@ -104,7 +113,10 @@ export class CastApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((val) => {
+      })
+      .toPromise()
+      .catch((errorResp) => errorResp)
+      .then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((val) => {
         this.rawCasts = val.data;
         let allPositions: Position[] = [];
         Array.from(this.pieceAPI.pieces.values()).forEach(piece => {

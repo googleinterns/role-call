@@ -26,6 +26,10 @@ public abstract class PositionInfo {
   public abstract Integer order();
 
   @Nullable
+  @JsonProperty("siblingId")
+  public abstract Integer siblingId();
+
+  @Nullable
   @JsonProperty("size")
   public abstract Integer size();
 
@@ -61,6 +65,9 @@ public abstract class PositionInfo {
 
     @JsonProperty("order")
     public abstract Builder setOrder(Integer order);
+
+    @JsonProperty("siblingId")
+    public abstract Builder setSiblingId(Integer siblingId);
 
     @JsonProperty("size")
     public abstract Builder setSize(Integer size);

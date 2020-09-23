@@ -28,6 +28,10 @@ public abstract class SectionInfo {
   public abstract Integer length();
 
   @Nullable
+  @JsonProperty("siblingId")
+  public abstract Integer siblingId();
+
+  @Nullable
   @JsonProperty("type")
   public abstract Type type();
 
@@ -64,6 +68,9 @@ public abstract class SectionInfo {
 
     @JsonProperty("length")
     public abstract Builder setLength(Integer length);
+
+    @JsonProperty("siblingId")
+    public abstract Builder setSiblingId(Integer siblingId);
 
     @JsonProperty("type")
     public abstract Builder setType(Type type);

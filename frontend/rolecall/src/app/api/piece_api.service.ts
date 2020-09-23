@@ -12,6 +12,7 @@ type RawPosition = {
   name: string,
   notes: string,
   order: number,
+  siblingId: number,
   size: number,
 }
 
@@ -19,7 +20,8 @@ type RawPiece = {
   id: number,
   name: string,
   notes: string,
-  type: "SEGMENT" | "PIECE",
+  siblingId: number,
+  type: PieceType,
   length: number,
   positions: RawPosition[],
 }
@@ -35,13 +37,17 @@ export type Position = {
   name: string,
   notes: string,
   order: number,
+  siblingId: number,
   size: number,
 };
+
+export type PieceType = "SEGMENT" | "PIECE" | "REVELATION";
 
 export type Piece = {
   uuid: string;
   name: string;
-  type: "SEGMENT" | "PIECE";
+  siblingId: number,
+  type: PieceType;
   positions: Position[];
   deletePositions: Position[];
 }
@@ -105,6 +111,7 @@ export class PieceApi {
             return {
               uuid: String(section.id),
               name: section.name,
+              siblingId: section.siblingId,
               type: section.type,
               positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1)
                   .map(pos => { return { ...pos, uuid: String(pos.id) } }),
@@ -135,6 +142,7 @@ export class PieceApi {
       return this.http.patch(environment.backendURL + 'api/section', {
         name: piece.name,
         id: Number(piece.uuid),
+        siblingId: piece.siblingId,
         type: piece.type ? piece.type : "PIECE",
         positions: piece.positions.map((val, ind) => {
           return {
@@ -160,6 +168,7 @@ export class PieceApi {
       let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + 'api/section', {
         name: piece.name,
+        siblingId: piece.siblingId,
         type: piece.type ? piece.type : "PIECE",
         positions: piece.positions
       }, {
@@ -279,6 +288,4 @@ export class PieceApi {
       }
     });
   }
-
-
 }

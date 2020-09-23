@@ -7,11 +7,13 @@ import com.google.rolecall.models.Section;
 import com.google.rolecall.repos.CastRepository;
 import com.google.rolecall.repos.PerformanceCastMemberRepository;
 import com.google.rolecall.repos.PerformanceSectionRepository;
+import com.google.rolecall.repos.PositionRepository;
 import com.google.rolecall.repos.SectionRepository;
 import com.google.rolecall.repos.SubCastRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class)
 public class SectionServices {
 
+  private enum SiblingError {
+    OK,
+    SIBLING_MISSING,
+    OTHER_ERROR
+  }
+
   private final SectionRepository sectionRepo;
+  private final PositionRepository positionRepo;
   private final CastRepository castRepo;
   private final SubCastRepository subCastRepo;
   private final PerformanceSectionRepository performanceSectionRepo;
@@ -38,7 +47,6 @@ public class SectionServices {
   public List<Section> getAllSections() {
     List<Section> allSections = new ArrayList<>();
     sectionRepo.findAll().forEach(allSections::add);
-
     return allSections;
   }
 
@@ -72,22 +80,44 @@ public class SectionServices {
    *     or Positions have overlapping orders.
    */
   public Section createSection(SectionInfo newSection) throws InvalidParameterException {
+    Boolean isParentRevelation = newSection.type() == Section.Type.REVELATION;
     Section section = Section.newBuilder()
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
+        .setSiblingId(newSection.siblingId())
         .setType(newSection.type())
         .build();
 
+    Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       Set<Integer> orders = new HashSet<>();
-      for(PositionInfo info: newSection.positions()) {
+      for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
+        PositionInfo info = newSection.positions().get(loopCounter);
+        Section savedSubSection = null;
+
+        if(isParentRevelation) {
+          // Create sibling Ballets to Revelation's internal Ballet/Position structures
+          // The ids will be inserted into Revelation's internal Ballet/Position structures
+          Section subSection = Section.newBuilder()
+              .setName(info.name())
+              .setNotes("")
+              .setLength(0)
+              .setSiblingId(0)
+              .setType(Section.Type.PIECE)
+              .build();
+          savedSubSection = sectionRepo.save(subSection);
+          siblingIndexArray[loopCounter] = savedSubSection.getId();
+        }
+        
         Position position = Position.newBuilder()
             .setName(info.name())
             .setNotes(info.notes())
             .setOrder(info.order())
-            .setSize(info.size())
+            .setSiblingId(savedSubSection == null ? null : savedSubSection.getId())
+            .setSize(isParentRevelation ? -1 : info.size())
             .build();
+            
         if(orders.contains(position.getOrder())) {
           throw new InvalidParameterException("Order of Positions must not be overlapping");
         }
@@ -95,8 +125,9 @@ public class SectionServices {
         section.addPosition(position);
       }
     }
-
-    return sectionRepo.save(section);
+    Section savedSection = sectionRepo.save(section);
+    updateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
+    return savedSection;
   }
 
   /** 
@@ -117,17 +148,69 @@ public class SectionServices {
    */
   public Section editSection(SectionInfo newSection) throws EntityNotFoundException,
       InvalidParameterException {
+    Boolean isParentRevelation = newSection.type() == Section.Type.REVELATION;
+
+    // Make sure that sibling Ballet and Position / Ballet items are synchronized
+
+    // Check for sibling of Ballet section
+    Integer sectionSiblingId = newSection.siblingId();
+    if(sectionSiblingId != null) { 
+      SiblingError errCd = updateSiblingPosition(sectionSiblingId, newSection.name(), -1);
+      if (errCd != SiblingError.OK) {
+        sectionSiblingId = null;
+      }
+    }
+    
+    // Check for sibling of Ballet children of Revelation section
+    int[] badIdArray = new int[newSection.positions().size()];
+    Arrays.fill(badIdArray, 0);
+
+    if(isParentRevelation) {
+      // Check for sibling of Ballet children of Revelation section
+      if(newSection.positions() != null && !newSection.positions().isEmpty()) {
+        for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
+          PositionInfo info = newSection.positions().get(loopCounter);
+          if(info.delete() != null && info.delete()) {
+            // Deleting position items
+            Integer siblingId = info.siblingId();
+            if(siblingId != null) {
+              Integer positionSiblingId = info.siblingId();
+              if(positionSiblingId != null) {
+                // Erase reference in sibling
+                updateSiblingSection(positionSiblingId, "", 0);
+              }  
+            }
+            continue;
+          } else if(info.id() != null) {
+            // Saving existing position items
+            Integer positionSiblingId = info.siblingId();
+            if(positionSiblingId != null) { 
+              SiblingError errCd = updateSiblingSection(positionSiblingId, info.name(), -1);
+              if (errCd != SiblingError.OK) {
+                badIdArray[loopCounter] = 1;
+              }
+            }
+          }
+        }
+      }
+    }
+    // Done synchronizing siblings
+
+    Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     Section section = getSection(newSection.id()).toBuilder()
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
+        .setSiblingId(sectionSiblingId)
         .setType(newSection.type())
         .build();
-    
+
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       List<Position> positions = section.getPositions();
-      for(PositionInfo info: newSection.positions()) {
+      for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
+        PositionInfo info = newSection.positions().get(loopCounter);
         Position position;
+        Section savedSubSection = null;
         if(info.delete() != null && info.delete()) {
           if(info.id() == null) {
             throw new InvalidParameterException("Cannot delete Position before it is created.");
@@ -141,17 +224,36 @@ public class SectionServices {
           }
 
           section.removePosition(positionToDelete);
+          siblingIndexArray[loopCounter] = -1;
           continue;
         } else if(info.id() != null) {
           position = section.getPositionById(info.id());
+          siblingIndexArray[loopCounter] = -1;
         } else {
+          siblingIndexArray[loopCounter] = -1;
+          if(isParentRevelation) {
+            // New Ballet-Child
+            // Create sibling Ballets to Revelation's internal Ballet/Position structures
+            // The ids will be inserted into Revelation's internal Ballet/Position structures
+            Section subSection = Section.newBuilder()
+                .setName(info.name())
+                .setNotes("")
+                .setLength(0)
+                .setSiblingId(0)
+                .setType(Section.Type.PIECE)
+                .build();
+            savedSubSection = sectionRepo.save(subSection);
+            siblingIndexArray[loopCounter] = savedSubSection.getId();
+          }
           position = new Position();
         }
         position = position.toBuilder()
             .setName(info.name())
             .setNotes(info.notes())
             .setOrder(info.order())
-            .setSize(info.size())
+            .setSiblingId(badIdArray[loopCounter] > 0 ? null : siblingIndexArray[loopCounter] == - 1
+                ? info.siblingId() : siblingIndexArray[loopCounter])
+            .setSize(isParentRevelation ? -1 : info.size())
             .build();
         section.addPosition(position);
       }
@@ -164,8 +266,9 @@ public class SectionServices {
         orders.add(position.getOrder());
       }
     }
-
-    return sectionRepo.save(section);
+    Section savedSection = sectionRepo.save(section);
+    updateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
+    return savedSection;
   }
 
   /** 
@@ -178,19 +281,112 @@ public class SectionServices {
   public void deleteSection(int id) throws EntityNotFoundException, InvalidParameterException {
     Section section = getSection(id);
 
+    Integer siblingId = section.getSiblingId();
+    if(siblingId != null) {
+      Optional<Position> test = positionRepo.findById(siblingId);
+      if(test.isEmpty()) {
+        // Revelation's internal Ballet/Position structure has already been deleted
+      } else {
+        // Revelation's internal Ballet/Position structure still exists
+        throw new InvalidParameterException(
+          "Cannot delete Ballet that is part of a Revelation");
+      }
+    }
+
     if(performanceSectionRepo.findFirstBySection(section).isPresent() || 
         castRepo.findFirstBySection(section).isPresent()) {
       throw new InvalidParameterException(
-          "Cannot delete Section if it has a Cast or is part of a Performance");
+          "Cannot delete Ballet if it has a Cast or is part of a Performance");
     }
 
     sectionRepo.deleteById(id);
   }
 
-  public SectionServices(SectionRepository sectionRepo, CastRepository castRepo,
-      SubCastRepository subCastRepo, PerformanceSectionRepository performanceSectionRepo,
+  // Utility functions
+
+  private void updateRevelationChildren(Section section, Integer[] siblingIndexArray,
+      boolean isParentRevelation) throws InvalidParameterException {
+    if(isParentRevelation) {
+      // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
+      for(int loopCounter = 0; loopCounter < section.getPositions().size(); loopCounter++) {
+        Position pos = section.getPositions().get(loopCounter);
+  
+        Section subSection = Section.newBuilder()
+            .setId(siblingIndexArray[loopCounter])
+            .setName(pos.getName())
+            .setNotes("")
+            .setLength(0)
+            .setSiblingId(pos.getId())
+            .setType(Section.Type.PIECE)
+            .build();
+        sectionRepo.save(subSection);
+      }
+    }
+  }
+
+  private SiblingError updateSiblingPosition(Integer positionId,
+      String newName,     // null or "": keep existing name
+      Integer siblingId   // -1: keep existing. 0: remove reference
+  ) {
+    if(positionId != null) {
+      Optional<Position> queryPosition = positionRepo.findById(positionId);
+
+      if(queryPosition.isEmpty()) {
+        return SiblingError.SIBLING_MISSING;
+      } else {
+        try {
+          Position sibling = queryPosition.get();
+          Position updatedSibling = sibling.toBuilder()
+              .setId(positionId)
+              .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
+              .setNotes(sibling.getNotes())
+              .setOrder(sibling.getOrder())
+              .setSiblingId(siblingId == -1 ? sibling.getSiblingId() : siblingId)
+              .setSize(sibling.getSiblingId())
+              .build();
+          positionRepo.save(updatedSibling);
+        } catch (InvalidParameterException e) {
+          return SiblingError.OTHER_ERROR;
+        }
+      }
+    }
+    return SiblingError.OK;
+  }
+
+  private SiblingError updateSiblingSection(Integer sectionId,
+      String newName,     // null or "": keep existing name
+      Integer siblingId   // -1: keep existing. 0: remove reference
+  ) {
+    if(sectionId != null) {
+      Optional<Section> querySection = sectionRepo.findById(sectionId);
+
+      if(querySection.isEmpty()) {
+        return SiblingError.SIBLING_MISSING;
+      } else {
+        try {
+          Section sibling = querySection.get();
+          Section updatedSibling = sibling.toBuilder()
+              .setId(sectionId)
+              .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
+              .setNotes(sibling.getNotes())
+              .setLength(sibling.getLength().get())
+              .setSiblingId(siblingId == -1 ? sibling.getSiblingId() : siblingId)
+              .setType(sibling.getType())
+              .build();
+          sectionRepo.save(updatedSibling);
+        } catch (InvalidParameterException e) {
+          return SiblingError.OTHER_ERROR;
+        }
+      }
+    }
+    return SiblingError.OK;
+  }
+
+  public SectionServices(SectionRepository sectionRepo, PositionRepository positionRepo,
+      CastRepository castRepo, SubCastRepository subCastRepo, PerformanceSectionRepository performanceSectionRepo,
       PerformanceCastMemberRepository performanceCastMemberRepo) {
     this.sectionRepo = sectionRepo;
+    this.positionRepo = positionRepo;
     this.castRepo = castRepo;
     this.subCastRepo = subCastRepo;
     this.performanceSectionRepo = performanceSectionRepo;

@@ -28,7 +28,8 @@ public class Section {
 
   public enum Type {
     PIECE,
-    SEGMENT
+    SEGMENT,
+    REVELATION,
   }
 
   @Id
@@ -43,6 +44,9 @@ public class Section {
 
   @Basic
   private Integer length;
+
+  @Basic
+  private Integer siblingId;
 
   @Enumerated(EnumType.ORDINAL)
   private Type type;
@@ -75,6 +79,10 @@ public class Section {
     return length == null ? Optional.empty() : Optional.of(length);
   }
 
+  public Integer getSiblingId() {
+    return siblingId;
+  }
+
   public Type getType() {
     return type;
   }
@@ -96,6 +104,7 @@ public class Section {
         .setName(name)
         .setNotes(getNotes())
         .setLength(length)
+        .setSiblingId(siblingId)
         .setType(type)
         .setPositions(positionInfos)
         .build();
@@ -181,13 +190,21 @@ public class Section {
     private String name;
     private String notes;
     private Integer length;
+    private Integer siblingId;
     private Type type;
+
+    // Violates pattern for auto generated index. Use with caution.
+    public Builder setId(Integer id) {
+      if(id != null) {
+        this.id = id;
+      }
+      return this;
+    }
 
     public Builder setName(String name) {
       if(name != null) {
         this.name = name;
       }
-
       return this;
     }
 
@@ -195,7 +212,6 @@ public class Section {
       if(notes != null) {
         this.notes = notes;
       }
-
       return this;
     }
 
@@ -203,7 +219,13 @@ public class Section {
       if(length != null) {
         this.length = length;
       }
+      return this;
+    }
 
+    public Builder setSiblingId(Integer siblingId) {
+      if(siblingId != null) {
+        this.siblingId = siblingId == 0 ? null : siblingId;
+      }
       return this;
     }
 
@@ -211,7 +233,6 @@ public class Section {
       if(type != null) {
         this.type = type;
       }
-
       return this;
     }
 
@@ -224,6 +245,7 @@ public class Section {
       section.name = this.name;
       section.notes = this.notes;
       section.length = this.length;
+      section.siblingId = this.siblingId;
       section.type = this.type;
 
       return section;
@@ -235,6 +257,7 @@ public class Section {
       this.name = section.name;
       this.notes = section.notes;
       this.length = section.length;
+      this.siblingId = section.siblingId;
       this.type = section.type;
     }
 

@@ -8,18 +8,30 @@
       <div class="piece-select-container">
         <div *ngFor="let piece of renderingPieces" class="app-card piece-select"
           [ngClass]="piece.uuid == currentSelectedPiece.uuid ? 'selected-piece' : ''" (click)="setCurrentPiece(piece)">
-          <h2 class="piece-name">
-            {{ piece.name }}
-          </h2>
+            <div *ngIf="piece.type === 'REVELATION'; else otherSegments">
+              <h2 class="piece-name piece-underline">
+                {{ piece.name }}
+              </h2>
+            </div>
+            <ng-template #otherSegments>
+              <h2 class="piece-name" [ngStyle]="{'font-style':piece.siblingId > 0 ? 'italic' : 'normal' }">
+                {{ piece.name }}
+              </h2>
+            </ng-template>
         </div>
       </div>
       <div class="add-button-width-container-left">
         <div class="add-button-height-container-left">
-          <button mat-icon-button aria-label="Add Piece Button" class="add-button" (click)="addPiece()">
+          <button mat-icon-button aria-label="Add Piece Button" class="add-button" [matMenuTriggerFor]="addMenu">
             <mat-icon [inline]="true" class="add-button-icon">
               add
             </mat-icon>
           </button>
+          <mat-menu #addMenu="matMenu">
+            <button mat-menu-item class="create-segment-menu-item" (click)="addPiece(1)">Create Segment</button>
+            <button mat-menu-item class="create-segment-menu-item" (click)="addPiece(2)">Create Ballet</button>
+            <button mat-menu-item class="create-segment-menu-item" (click)="addPiece(3)">Create Revelation</button>
+          </mat-menu>
         </div>
       </div>
     </div>
@@ -28,58 +40,63 @@
   <div class="right-panel">
     <div *ngIf="renderingPieces && renderingPieces.length > 0" class="app-card card-margins right-card">
       <div *ngIf="currentSelectedPiece">
-        <div class="right-title-edit">
-          <input type="text" class="name-input right-card-title app-card" (input)="onTitleInput($event)"
-            [size]="(((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length'] < 15)
-                ? 15 : ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length']"
-            [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)" />
+        <div>
+          <div class="right-title-edit">
+            <input type="text" class="name-input right-card-title app-card" (input)="onTitleInput($event)"
+              [size]="(((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length'] < 15)
+                  ? 15 : ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length']"
+              [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)" />
+          </div>
+          <div class="right-top-comment">
+            <h2>{{ segmentPrettyNames[currentType] }}</h2>
+          </div>
         </div>
-        <mat-form-field appearance="fill" class="type-dropdown">
-          <mat-label>Segment Type</mat-label>
-          <mat-select [(value)]="selectedSegmentType" (selectionChange)="onSelectSegmentType($event)">
-            <mat-option *ngFor="let type of segmentTypes; let i = index" [value]="type">
-              {{ segmentPrettyNames[i] }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
 
-      <div *ngIf="currentSelectedPiece && currentSelectedPiece.type == 'PIECE'" class="app-card positions-card">
+      <div *ngIf="currentSelectedPiece && (currentSelectedPiece.type == 'PIECE' || currentSelectedPiece.type == 'REVELATION')" class="app-card positions-card">
         <div cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="drop($event)" id="position-pool">
           <div *ngIf="currentSelectedPiece">
             <div *ngFor="let data of dragAndDropData; let i = index">
-              <div *ngIf="data.type == 'added'; else addingPosition">
+              <div *ngIf="data.type == 'added'; else addingAndEditingPosition">
                 <div cdkDrag class="position-container">
                   <div class="app-card position-name-card">
-                    <h2 class="position-name">{{ data.value.name }}</h2>
+                    <h2 class="position-name" [ngStyle]="{'font-style':data.value.siblingId > 0 ? 'italic' : 'normal' }">
+                      {{ data.nameDisplay }}
+                    </h2>
+                    <h2 class="position-size">{{ data.sizeDisplay }}</h2>
                   </div>
                   <div class="add-button-height-container">
-                    <button mat-icon-button aria-label="Edit Position Button" class="add-narrow-button"
+                    <button mat-icon-button aria-label="Edit Position Button" class="narrow-button"
                       (click)="editPosition(data.index)">
-                      <mat-icon [inline]="true" class="add-button-icon">
+                      <mat-icon [inline]="true" class="narrow-button-icon">
                         create
                       </mat-icon>
                     </button>
-                    <button mat-icon-button aria-label="Delete Position Button" class="add-narrow-button"
+                    <button mat-icon-button aria-label="Delete Position Button" class="narrow-button"
                       (click)="deletePosition(data.index)">
-                      <mat-icon [inline]="true" class="add-button-icon">
+                      <mat-icon [inline]="true" class="narrow-button-icon">
                         delete
                       </mat-icon>
                     </button>
-                </div>
+                  </div>
                 </div>
               </div>
-              <ng-template #addingPosition>
+              <ng-template #addingAndEditingPosition>
                 <div cdkDrag class="adding-position-container">
-                  <div class="adding-position-input-container">
+                  <div class="adding-position-name-container" [ngStyle]="{'width':currentSelectedPiece.type === 'PIECE' ? '70%' : '100%' }">
                     <app-text-input (valueChange)="onInputChange($event, data)" [bgColor]="offWhite"
                       [valueName]="data.valueName" [initValue]="data.value.name">
                     </app-text-input>
                   </div>
+                  <div *ngIf="currentSelectedPiece.type === 'PIECE'" class="adding-position-size-container">
+                    <app-text-input (valueChange)="onInputChange($event, data)" [bgColor]="offWhite"
+                      [valueName]="sizeValueName" [initValue]="data.value.size">
+                    </app-text-input>
+                  </div>
                   <div class="add-button-height-container">
-                    <button mat-icon-button aria-label="Delete Position Button" class="add-narrow-button"
+                    <button mat-icon-button aria-label="Delete Position Button" class="narrow-button"
                       (click)="deleteAddingPosition(data.index)">
-                      <mat-icon [inline]="true" class="add-button-icon">
+                      <mat-icon [inline]="true" class="narrow-button-icon">
                         delete
                       </mat-icon>
                     </button>
@@ -91,8 +108,8 @@
         </div>
         <div class="add-button-width-container-right">
           <div class="add-button-height-container">
-            <button mat-icon-button aria-label="Add Position Button" class="add-narrow-button" (click)="addPosition()">
-              <mat-icon [inline]="true" class="add-button-icon">
+            <button mat-icon-button aria-label="Add Position Button" class="narrow-button" (click)="addPosition()">
+              <mat-icon [inline]="true" class="narrow-button-icon">
                 add
               </mat-icon>
             </button>

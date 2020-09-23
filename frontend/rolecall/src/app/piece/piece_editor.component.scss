@@ -47,6 +47,9 @@
   overflow-x: hidden;
   white-space: nowrap;
 }
+.piece-underline {
+  text-decoration: underline;
+}
 .selected-piece {
   background-color: $offoffWhite;
 }
@@ -54,7 +57,7 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  min-height: 8.5vh;
+  min-height: 7.5vh;
   width: 96%;
 }
 // Space below the Positions
@@ -69,7 +72,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  max-width: 6vh;
+  max-width: 5vh;
 }
 .add-button-height-container {
   display: flex;
@@ -79,19 +82,22 @@
 .add-button {
   background: $white;
   border-radius: $borderRadius;
-  height: 6vh;
+  height: 5vh;
   margin-right: 1em;
-  width: 6vh;
+  width: 5vh;
 }
 .add-button-icon {
   font-size: 4vh;
 }
-.add-narrow-button {
+.narrow-button {
   background: $white;
   border-radius: $borderRadius;
   margin-right: 0em;
   height: 6vh;
   width: 4vh;
+}
+.narrow-button-icon {
+  font-size: 4vh;
 }
 // Title styling
 .left-card-title {
@@ -171,12 +177,13 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  margin-left: -1.05rem;
+}
+.right-top-comment {
+  margin-top: 0rem;
+  margin-left: 2rem;
 }
 
-.edit-title-container {
-  margin: 1em;
-  width: 100%;
-}
 
 // Saved Positions
 .position-container {
@@ -203,7 +210,25 @@
   font-weight: bold;
   margin-left: 2rem;
   margin-top: 1em;
-  max-width: 92.5%;
+  max-width: 50%;
+  padding-bottom: 0.25em;
+  padding-left: 0.5em;
+  padding-top: 0.25em;
+  position: relative;
+  &:focus {
+    border: none;
+  }
+}
+
+.size-input {
+  background: none;
+  border: none;
+  color: black;
+  font-size: xx-large;
+  font-weight: bold;
+  margin-left: 2rem;
+  margin-top: 1em;
+  max-width: 20%;
   padding-bottom: 0.25em;
   padding-left: 0.5em;
   padding-top: 0.25em;
@@ -217,7 +242,7 @@
 .position-name-card {
   background: $offWhite;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-around;
   margin: 1em;
   width: 100%;
@@ -225,15 +250,30 @@
 
 .position-name {
   margin-bottom: auto;
+  margin-left: 0em;
+  padding-left: 0;
+  margin-top: auto;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  width: 60%;
+}
+
+.position-size {
+  margin-bottom: auto;
   margin-left: 1em;
   margin-top: auto;
   padding-bottom: 0.5em;
   padding-top: 0.5em;
+  width: 20%;
 }
 
-.adding-position-input-container {
+.adding-position-name-container {
   margin: 1em;
-  width: 100%;
+  width: 70%;
+}
+.adding-position-size-container {
+  margin: 1em;
+  width: 25%;
 }
 
 // Edited Positions
@@ -250,6 +290,7 @@
 }
 
 .right-panel {
+  // background: red;
   width: 75%;
 }
 .cdk-drag-animating {
@@ -260,4 +301,8 @@
 }
 #position-pool.cdk-drop-list-dragging .position-container:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.create-segment-menu-item {
+  font-size: 1.3rem;
 }
