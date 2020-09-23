@@ -164,7 +164,7 @@ export class CastDragAndDrop implements OnInit {
         for (let subCastIx = 0; subCastIx < subCasts.length; subCastIx++) {
           for (let dancerIx = 0; dancerIx < uiPos.castSize; dancerIx++) {
             const dancer = uiPos.castRows[dancerIx].subCastDancers[subCastIx];
-            if (dancer !== undefined) {
+            if (dancer) {
               subCasts[subCastIx].members.push({
                 uuid: dancer.uuid,
                 position_number: dancerIx,
@@ -185,16 +185,13 @@ export class CastDragAndDrop implements OnInit {
     if (!this.castSelected) {
       return;
     }
+    this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
-      //this.data = [[]];
-      this.castPositions = [];
       this.castSelected = false;
       this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
       return;
     }
-
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
-    this.castPositions = [];
     const positions = this.pieceAPI.pieces.get(this.cast.segment).positions;
     for (let positionIx = 0; positionIx < positions.length; positionIx++) {
       const position = positions[positionIx];
@@ -211,12 +208,12 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions = this.castPositions.sort((a, b) => a.pos.order < b.pos.order ? -1 : 1 );
     // Sort positions inside cast
     this.cast.filled_positions = this.cast.filled_positions
-    .filter(val => this.castPositions.find(castPos => castPos.pos.uuid == val.position_uuid))
-    .sort((a, b) => {
-      const castPositionOrderA = this.castPositions.find(castPos => castPos.pos.uuid == a.position_uuid).pos.order;
-      const castPositionOrderB = this.castPositions.find(castPos => castPos.pos.uuid == b.position_uuid).pos.order;
-      return castPositionOrderA < castPositionOrderB ? -1 : 1
-    });
+      .filter(val => this.castPositions.find(castPos => castPos.pos.uuid == val.position_uuid))
+      .sort((a, b) => {
+        const castPositionOrderA = this.castPositions.find(castPos => castPos.pos.uuid == a.position_uuid).pos.order;
+        const castPositionOrderB = this.castPositions.find(castPos => castPos.pos.uuid == b.position_uuid).pos.order;
+        return castPositionOrderA < castPositionOrderB ? -1 : 1
+      });
 
     for (let posIx = 0; posIx < this.cast.filled_positions.length; posIx++) {
       const filledPos = this.cast.filled_positions[posIx];

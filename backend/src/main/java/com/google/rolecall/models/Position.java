@@ -142,7 +142,8 @@ public class Position {
     private Integer size;
     private Section section;
 
-    public Builder setIdUnsafe(Integer id) {
+    // Violates pattern for auto generated index. Use with caution.
+    public Builder setId(Integer id) {
       if(id != null) {
         this.id = id;
       }

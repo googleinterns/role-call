@@ -89,10 +89,10 @@ public class SectionServices {
         .setType(newSection.type())
         .build();
 
-    Integer[] ixArray = new Integer[newSection.positions().size()];
+    Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       Set<Integer> orders = new HashSet<>();
-      int i = 0;
+      int loopCounter = 0;
       for(PositionInfo info: newSection.positions()) {
         Section savedSubSection = null;
 
@@ -107,8 +107,7 @@ public class SectionServices {
               .setType(Section.Type.PIECE)
               .build();
           savedSubSection = sectionRepo.save(subSection);
-          ixArray[i] = savedSubSection.getId();
-          i += 1;
+          siblingIndexArray[loopCounter] = savedSubSection.getId();
         }
         
         Position position = Position.newBuilder()
@@ -124,28 +123,11 @@ public class SectionServices {
         }
         orders.add(position.getOrder());
         section.addPosition(position);
+        loopCounter += 1;
       }
     }
     Section savedSection = sectionRepo.save(section);
-
-    if(isParentRevelation) {
-      // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
-      int i = 0;
-      for(Position pos: savedSection.getPositions()) {
-
-        Section subSection = Section.newBuilder()
-            .setIdUnsafe(ixArray[i])
-            .setName(pos.getName())
-            .setNotes("")
-            .setLength(0)
-            .setSiblingId(pos.getId())
-            .setType(Section.Type.PIECE)
-            .build();
-        i += 1;
-        sectionRepo.save(subSection);
-      }
-    }
-
+    UpdateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
     return savedSection;
   }
 
@@ -216,7 +198,7 @@ public class SectionServices {
     }
     // Done synchronizing siblings
 
-    Integer[] ixArray = new Integer[newSection.positions().size()];
+    Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     Section section = getSection(newSection.id()).toBuilder()
         .setName(newSection.name())
         .setNotes(newSection.notes())
@@ -227,7 +209,7 @@ public class SectionServices {
 
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       List<Position> positions = section.getPositions();
-      int i = 0;
+      int loopCounter = 0;
       for(PositionInfo info: newSection.positions()) {
         Position position;
         Section savedSubSection = null;
@@ -244,13 +226,13 @@ public class SectionServices {
           }
 
           section.removePosition(positionToDelete);
-          ixArray[i] = -1;
+          siblingIndexArray[loopCounter] = -1;
           continue;
         } else if(info.id() != null) {
           position = section.getPositionById(info.id());
-          ixArray[i] = -1;
+          siblingIndexArray[loopCounter] = -1;
         } else {
-          ixArray[i] = -1;
+          siblingIndexArray[loopCounter] = -1;
           if(isParentRevelation) {
             // New Ballet-Child
             // Create sibling Ballets to Revelation's internal Ballet/Position structures
@@ -263,7 +245,7 @@ public class SectionServices {
                 .setType(Section.Type.PIECE)
                 .build();
             savedSubSection = sectionRepo.save(subSection);
-            ixArray[i] = savedSubSection.getId();
+            siblingIndexArray[loopCounter] = savedSubSection.getId();
           }
           position = new Position();
         }
@@ -271,11 +253,12 @@ public class SectionServices {
             .setName(info.name())
             .setNotes(info.notes())
             .setOrder(info.order())
-            .setSiblingId(badIdArray[i] > 0 ? null : ixArray[i] == - 1 ? info.siblingId() : ixArray[i])
+            .setSiblingId(badIdArray[loopCounter] > 0 ? null : siblingIndexArray[loopCounter] == - 1
+                ? info.siblingId() : siblingIndexArray[loopCounter])
             .setSize(isParentRevelation ? -1 : info.size())
             .build();
         section.addPosition(position);
-        i += 1;
+        loopCounter += 1;
       }
 
       Set<Integer> orders = new HashSet<>();
@@ -286,26 +269,8 @@ public class SectionServices {
         orders.add(position.getOrder());
       }
     }
-
     Section savedSection = sectionRepo.save(section);
-
-    if(isParentRevelation) {
-      int i = 0;
-      for(Position pos: savedSection.getPositions()) {
-        if(ixArray[i] > -1) {
-          Section subSection = Section.newBuilder()
-              .setIdUnsafe(ixArray[i])
-              .setName(pos.getName())
-              .setNotes("")
-              .setLength(0)
-              .setSiblingId(pos.getId())
-              .setType(Section.Type.PIECE)
-              .build();
-          sectionRepo.save(subSection);
-        }
-        i += 1;
-      }
-    }
+    UpdateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
     return savedSection;
   }
 
@@ -340,6 +305,29 @@ public class SectionServices {
     sectionRepo.deleteById(id);
   }
 
+  // Utility functions
+
+  private void UpdateRevelationChildren(Section section, Integer[] siblingIndexArray,
+      boolean isParentRevelation) throws InvalidParameterException {
+    if(isParentRevelation) {
+      // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
+      int loopCounter = 0;
+      for(Position pos: section.getPositions()) {
+  
+        Section subSection = Section.newBuilder()
+            .setId(siblingIndexArray[loopCounter])
+            .setName(pos.getName())
+            .setNotes("")
+            .setLength(0)
+            .setSiblingId(pos.getId())
+            .setType(Section.Type.PIECE)
+            .build();
+        sectionRepo.save(subSection);
+        loopCounter += 1;
+      }
+    }
+  }
+
   private SiblingError updateSiblingPosition(Integer positionId,
       String newName,     // null or "": keep existing name
       Integer siblingId   // -1: keep existing. 0: remove reference
@@ -353,7 +341,7 @@ public class SectionServices {
         try {
           Position sibling = queryPosition.get();
           Position updatedSibling = sibling.toBuilder()
-              .setIdUnsafe(positionId)
+              .setId(positionId)
               .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
               .setNotes(sibling.getNotes())
               .setOrder(sibling.getOrder())
@@ -382,7 +370,7 @@ public class SectionServices {
         try {
           Section sibling = querySection.get();
           Section updatedSibling = sibling.toBuilder()
-              .setIdUnsafe(sectionId)
+              .setId(sectionId)
               .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
               .setNotes(sibling.getNotes())
               .setLength(sibling.getLength().get())
