@@ -1,6 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CastDragAndDrop } from './cast-drag-and-drop.component';
-
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {CastDragAndDrop} from './cast-drag-and-drop.component';
 
 describe('CastDragAndDropComponent', () => {
   let component: CastDragAndDrop;
@@ -8,8 +7,8 @@ describe('CastDragAndDropComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CastDragAndDrop]
-    })
+        declarations: [CastDragAndDrop]
+      })
       .compileComponents();
   }));
 

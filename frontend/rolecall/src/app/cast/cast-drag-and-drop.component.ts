@@ -33,6 +33,8 @@ type UICastPosition = {
   styleUrls: ['./cast-drag-and-drop.component.scss']
 })
 export class CastDragAndDrop implements OnInit {
+  /** Base URL of images in cloud storage. */
+  baseImageUrl = 'https://storage.googleapis.com/absolute-water-286821.appspot.com/headshots/';
 
   /** The current cast we're editing, as well as the UUID of it */
   selectedCastUUID: APITypes.CastUUID;

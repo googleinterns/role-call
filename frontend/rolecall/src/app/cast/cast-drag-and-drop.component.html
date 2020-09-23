@@ -69,8 +69,9 @@
                 [cdkDragData]="dancer"
                 [ngStyle]="i3 == boldedCast ? {'font-weight' : 'bold'} : {}">
               <div *ngIf="dancer!==undefined">
-                <img class="user-image"
-                    [src]="'https://i.pravatar.cc/150?u=' + dancer.firstName + '::::' + dancer.lastName + dancer.email">
+                <img
+                    class="user-image"
+                    [src]="baseImageUrl + dancer.firstName + '_' + dancer.lastName + '.jpg' | lowercase">
                 {{dancer.firstName + " " + dancer.lastName}}
               </div>
             </div>
@@ -90,8 +91,9 @@
           class="cell user-cell"
           cdkDrag
           [cdkDragData]="user">
-        <img class="user-image"
-            [src]="'https://i.pravatar.cc/150?u=' + user.first_name + '::::' + user.last_name + user.contact_info.email">
+        <img
+            class="user-image"
+            [src]="baseImageUrl + user.first_name + '_' + user.last_name + '.jpg' | lowercase">
         {{user.first_name + " " + user.last_name}}
       </div>
     </div>
