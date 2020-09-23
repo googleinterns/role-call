@@ -53,12 +53,11 @@
                 {{ header }}
             </div>
           </div>
-          <div class="horizontal-list"
+          <div *ngFor="let row of position.castRows; let i2 = index"
               cdkDropList
               cdkDropListOrientation="horizontal"
               class="horizontal-list"
               [cdkDropListData]="row"
-              *ngFor="let row of position.castRows; let i2 = index"
               (cdkDropListDropped)="drop($event)"
               [id]="i1 + ':' + i2">
             <div class="cell cellRowHeader">
