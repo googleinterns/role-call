@@ -92,8 +92,8 @@ public class SectionServices {
     Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       Set<Integer> orders = new HashSet<>();
-      int loopCounter = 0;
-      for(PositionInfo info: newSection.positions()) {
+      for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
+        PositionInfo info = newSection.positions().get(loopCounter);
         Section savedSubSection = null;
 
         if(isParentRevelation) {
@@ -123,11 +123,10 @@ public class SectionServices {
         }
         orders.add(position.getOrder());
         section.addPosition(position);
-        loopCounter += 1;
       }
     }
     Section savedSection = sectionRepo.save(section);
-    UpdateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
+    updateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
     return savedSection;
   }
 
@@ -169,8 +168,8 @@ public class SectionServices {
     if(isParentRevelation) {
       // Check for sibling of Ballet children of Revelation section
       if(newSection.positions() != null && !newSection.positions().isEmpty()) {
-        int i = 0;
-        for(PositionInfo info: newSection.positions()) {
+        for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
+          PositionInfo info = newSection.positions().get(loopCounter);
           if(info.delete() != null && info.delete()) {
             // Deleting position items
             Integer siblingId = info.siblingId();
@@ -188,11 +187,10 @@ public class SectionServices {
             if(positionSiblingId != null) { 
               SiblingError errCd = updateSiblingSection(positionSiblingId, info.name(), -1);
               if (errCd != SiblingError.OK) {
-                badIdArray[i] = 1;
+                badIdArray[loopCounter] = 1;
               }
             }
           }
-          i += 1;
         }
       }
     }
@@ -209,8 +207,8 @@ public class SectionServices {
 
     if(newSection.positions() != null && !newSection.positions().isEmpty()) {
       List<Position> positions = section.getPositions();
-      int loopCounter = 0;
-      for(PositionInfo info: newSection.positions()) {
+      for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
+        PositionInfo info = newSection.positions().get(loopCounter);
         Position position;
         Section savedSubSection = null;
         if(info.delete() != null && info.delete()) {
@@ -258,7 +256,6 @@ public class SectionServices {
             .setSize(isParentRevelation ? -1 : info.size())
             .build();
         section.addPosition(position);
-        loopCounter += 1;
       }
 
       Set<Integer> orders = new HashSet<>();
@@ -270,7 +267,7 @@ public class SectionServices {
       }
     }
     Section savedSection = sectionRepo.save(section);
-    UpdateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
+    updateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
     return savedSection;
   }
 
@@ -307,12 +304,12 @@ public class SectionServices {
 
   // Utility functions
 
-  private void UpdateRevelationChildren(Section section, Integer[] siblingIndexArray,
+  private void updateRevelationChildren(Section section, Integer[] siblingIndexArray,
       boolean isParentRevelation) throws InvalidParameterException {
     if(isParentRevelation) {
       // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
-      int loopCounter = 0;
-      for(Position pos: section.getPositions()) {
+      for(int loopCounter = 0; loopCounter < section.getPositions().size(); loopCounter++) {
+        Position pos = section.getPositions().get(loopCounter);
   
         Section subSection = Section.newBuilder()
             .setId(siblingIndexArray[loopCounter])
@@ -323,7 +320,6 @@ public class SectionServices {
             .setType(Section.Type.PIECE)
             .build();
         sectionRepo.save(subSection);
-        loopCounter += 1;
       }
     }
   }
