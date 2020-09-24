@@ -1,10 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+/* Add/import global styles in this file. */
 @import "src/constants";
 @import "~@angular/material/theming";
-// @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
-// @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
-// @import url('https://fonts.googleapis.com/css2?family=Hind&display=swap');
 
 // div styling to make a card
 .app-card {
@@ -12,6 +9,7 @@
   box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
   border-radius: $borderRadius;
 }
+
 .app-card:hover {
   box-shadow: 0 8px 16px 0 rgba($color: #000000, $alpha: 0.2);
 }
@@ -20,6 +18,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
 }
@@ -39,6 +38,6 @@ body {
 @import "~bootstrap/scss/bootstrap";
 
 $custom-typography: mat-typography-config(
-  $font-family: "Source Sans Pro, sans-serif",
+    $font-family: "Source Sans Pro, sans-serif",
 );
 @include mat-core($custom-typography);

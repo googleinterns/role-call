@@ -1,12 +1,10 @@
 export enum PerformanceStatus {
-  DRAFT = "DRAFT",
-  PUBLISHED = "PUBLISHED",
-  CANCELED = "CANCELED"
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  CANCELED = 'CANCELED'
 }
 
-/**
- * All the types neeeded for APIs
- */
+/** All the types needed for APIs. */
 export namespace APITypes {
   export type UserUUID = string;
   export type PieceUUID = string;

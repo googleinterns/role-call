@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { APITypes } from 'src/api_types';
-import { Colors } from 'src/constants';
+import { COLORS } from 'src/constants';
 import { isNullOrUndefined } from 'util';
 import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
@@ -41,7 +41,7 @@ export class CastingEditor implements OnInit {
 
   creatingCast: boolean = false;
 
-  offWhite: string = Colors.offWhite;
+  offWhite: string = COLORS.offWhite;
 
   allResourcesLoaded: boolean = false;
   castsLoaded = false;

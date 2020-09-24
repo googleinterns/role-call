@@ -1,8 +1,7 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component } from '@angular/core';
-import { constNavBarEntries } from 'src/constants';
-import { AppTypes } from 'src/types';
-
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Component} from '@angular/core';
+import {constNavBarEntries} from 'src/constants';
+import {NavBarChild} from 'src/types';
 
 /**
  * The side navigation panel component.
@@ -32,23 +31,22 @@ import { AppTypes } from 'src/types';
   ]
 })
 export class SideNav {
-
   /**
-   * The static side nav data from src/constants.ts to use 
-   * to build the navigation panels
+   * The static sidenav data from src/constants.ts to use
+   * to build the navigation panels.
    */
-  menuOptions: AppTypes.NavBarChild[] = constNavBarEntries;
-  /** Whether the nav side bar is open or not */
+  menuOptions: NavBarChild[] = constNavBarEntries;
+
+  /** Whether the nav side bar is open or not. */
   isNavOpen = false;
 
-  /** Opens the navigation sidebar */
+  /** Opens the navigation sidebar. */
   openNav(): void {
     this.isNavOpen = true;
   }
 
-  /** Closes the navigation sidebar */
+  /** Closes the navigation sidebar. */
   closeNav(): void {
     this.isNavOpen = false;
   }
-
 }
