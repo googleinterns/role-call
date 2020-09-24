@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { Colors } from 'src/constants';
+import { COLORS } from 'src/constants';
 import { isNullOrUndefined } from 'util';
 import { Piece, PieceType, PieceApi, Position } from '../api/piece_api.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
@@ -46,7 +46,7 @@ export class PieceEditor implements OnInit {
   creatingPiece: boolean = false;
   piecesLoaded: boolean = false;
 
-  offWhite: string = Colors.offWhite;
+  offWhite: string = COLORS.offWhite;
 
   lastSelectedPieceName: string;
 

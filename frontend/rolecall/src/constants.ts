@@ -1,20 +1,15 @@
-import { AppTypes } from 'src/types';
+import {NavBarChild} from 'src/types';
 
 /**
  * The nav bar data structures to build out the
- * navigation panels that link to other views
+ * navigation panels that link to other views.
  */
-export let constNavBarEntries: AppTypes.NavBarChild[] = [
+export let constNavBarEntries: NavBarChild[] = [
   {
     name: 'Dashboard',
     routerLinkUrl: '/dashboard',
     icon: 'dashboard'
   },
-  // {
-  //   name: 'Settings',
-  //   routerLinkUrl: 'settings/',
-  //   icon: 'settings'
-  // },
   {
     name: 'Users',
     routerLinkUrl: 'user/',
@@ -42,10 +37,10 @@ export let constNavBarEntries: AppTypes.NavBarChild[] = [
   }
 ];
 
-/** Color variables */
-export let Colors = {
+/** Color variables. */
+export const COLORS = {
   white: 'white',
   offWhite: '#f4f4f4',
   offoffWhite: '#d9d9d9',
   AAOrange: '#ffae00'
-}
+};
