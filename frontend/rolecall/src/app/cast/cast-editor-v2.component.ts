@@ -7,7 +7,7 @@ import { Cast, CastApi } from '../api/cast_api.service';
 import { Piece, PieceApi } from '../api/piece_api.service';
 import { CastDragAndDrop } from './cast-drag-and-drop.component';
 
-type PopupData = {
+type PieceMenuItem = {
   name: string;
   sortString: string;
   hasSibling: boolean;
@@ -27,7 +27,7 @@ export class CastEditorV2 implements OnInit {
   allCasts: Cast[] = [];
   filteredCasts: Cast[] = [];
   allPieces: Piece[] = [];
-  popupList: PopupData[] = [];
+  popupPieceList: PieceMenuItem[] = [];
   lastSelectedCastIndex: number;
   lastSelectedCast: Cast;
   dataLoaded = false;
@@ -52,22 +52,22 @@ export class CastEditorV2 implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
-  checkDataLoaded(): boolean {
+  private checkDataLoaded(): boolean {
     this.dataLoaded = this.piecesLoaded && this.castsLoaded;
     return this.dataLoaded;
   }
 
-  updateFilteredCasts() {
+  private updateFilteredCasts() {
     if (this.selectedPiece) {
       this.filteredCasts = this.allCasts.filter((val) => val.segment == this.selectedPiece.uuid);
     }
   }
 
-  onSelectPiece(pieceIx: number) {
+  selectPiece(pieceIx: number) {
     this.setPiece(this.allPieces[pieceIx]);
   }
 
-  setPiece(piece: Piece) {
+  private setPiece(piece: Piece) {
     if (this.selectedPiece && piece.uuid == this.selectedPiece.uuid) {
       return;
     }
@@ -82,7 +82,7 @@ export class CastEditorV2 implements OnInit {
     }
   }
 
-  checkForUrlCompliance() {
+  private checkForUrlCompliance() {
     if (this.selectedPiece) {
       this.updateFilteredCasts();
     }
@@ -102,9 +102,9 @@ export class CastEditorV2 implements OnInit {
     }
   }
 
-  buildPopupList() {
-    this.popupList = this.allPieces.map((piece, pieceIx) => {
-      const existingCasts = this.allCasts.filter((val) => val.segment == piece.uuid);
+  private buildPopupList() {
+    this.popupPieceList = this.allPieces.map((piece, pieceIx) => {
+      const existingCasts = this.allCasts.filter((cast) => cast.segment == piece.uuid);
       const prefix = existingCasts.length === 0 ? " " : "z";
       const name = existingCasts.length === 0 ? "*" + piece.name : piece.name;
       return {
@@ -114,21 +114,21 @@ export class CastEditorV2 implements OnInit {
         pieceIx: pieceIx,
       };
     });
-    this.popupList.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
+    this.popupPieceList.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
   }
 
-  onPieceLoad(pieces: Piece[]) {
+  private onPieceLoad(pieces: Piece[]) {
     this.allPieces = pieces.filter(val => val.type == "PIECE");
     this.buildPopupList();
     if (!this.selectedPiece && this.allPieces.length > 0) {
-      this.onSelectPiece(this.popupList[0].pieceIx);
+      this.selectPiece(this.popupPieceList[0].pieceIx);
     }
     this.checkForUrlCompliance();
     this.piecesLoaded = true;
     this.checkDataLoaded();
   }
 
-  onCastLoad(casts: Cast[]) {
+  private onCastLoad(casts: Cast[]) {
     if (this.castAPI.hasCast(this.urlUUID)) {
       this.dragAndDrop.selectCast(this.urlUUID);
       this.setCastURL();
@@ -171,7 +171,7 @@ export class CastEditorV2 implements OnInit {
     this.checkDataLoaded();
   }
 
-  setCastURL() {
+  private setCastURL() {
     if (this.location.path().startsWith("/cast") || this.location.path().startsWith("/cast/")) {
       this.location.replaceState("/cast/" + this.urlUUID);
     }

@@ -8,7 +8,7 @@
         <div ngbDropdownToggle
             class="app-card piece-select">
           <h1 class="left-card-title"
-              [ngStyle]="{'font-style': selectedPiece && selectedPiece.siblingId > 0 ? 'italic' : 'normal' }">
+              [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
             {{selectedPiece ? selectedPiece.name : " "}}
           </h1>
           <mat-icon class="dropdownArrow">
@@ -17,10 +17,10 @@
           <div ngbDropdownMenu
               class="piece-options"
               aria-labelledby="Piece Dropdown">
-            <button *ngFor="let piece of popupList"
+            <button *ngFor="let piece of popupPieceList"
                 ngbDropdownItem
-                (click)="onSelectPiece(piece.pieceIx)"
-                [ngStyle]="{'font-style': piece.hasSibling ? 'italic' : 'normal' }">
+               [class.std-italic-font]="piece.hasSibling"
+               (click)="selectPiece(piece.pieceIx)">
               {{piece.name}}
             </button>
           </div>
@@ -29,10 +29,10 @@
       <div class="cast-select-container">
         <div *ngFor="let cast of filteredCasts"
             class="app-card cast-select"
-            [ngClass]="cast.uuid == castDragAndDrop.selectedCastUUID ? 'selected-cast' : ''"
+            [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
             (click)="setCurrentCast(cast)">
           <h2 class="cast-name"
-              [ngStyle]="{'font-style': selectedPiece && selectedPiece.siblingId > 0 ? 'italic' : 'normal' }">
+              [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
             {{ cast.name }}
           </h2>
         </div>
