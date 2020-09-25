@@ -40,7 +40,7 @@ interface rawUser {
   isDancer: boolean;
   isOther: boolean;
   canLogin: boolean;
-  canReceiveNotifications: boolean;
+  notifications: boolean;
   managePerformances: boolean;
   manageCasts: boolean;
   managePieces: boolean;
@@ -120,7 +120,7 @@ export class UserApi {
               },
               has_permissions: {
                 canLogin: val.canLogin,
-                canReceiveNotifications: val.canReceiveNotifications,
+                canReceiveNotifications: val.notifications,
                 managePerformances: val.managePerformances,
                 manageCasts: val.manageCasts,
                 managePieces: val.managePieces,

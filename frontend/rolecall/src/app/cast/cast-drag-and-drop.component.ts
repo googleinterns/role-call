@@ -190,7 +190,8 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
       this.castSelected = false;
-      this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
+      // The below error means little. After any save the system loses tracf the uuid of the saved cast
+      // this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
@@ -223,7 +224,6 @@ export class CastDragAndDrop implements OnInit {
       let maxDancerIx = 0;
       for (let groupIx = 0; groupIx < filledPos.groups.length; groupIx++) {
         const group = filledPos.groups[groupIx];
-        const group_index = group.group_index;
         for (let memberIx = 0; memberIx < group.members.length; memberIx++) {
           const member = group.members[memberIx];
           if (member.position_number >= maxDancerIx) {
@@ -235,7 +235,7 @@ export class CastDragAndDrop implements OnInit {
             }
           }
           const dancer = this.userAPI.users.get(member.uuid);
-          uiPos.castRows[member.position_number].subCastDancers[group_index] = {
+          uiPos.castRows[member.position_number].subCastDancers[group.group_index] = {
             uuid: dancer.uuid,
             firstName: dancer.first_name,
             lastName: dancer.last_name,
