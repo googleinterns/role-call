@@ -75,8 +75,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   onPieceLoad(pieces: Piece[]) {
-    this.step2PickFrom = [];
-    this.step2PickFrom.push(...pieces.map(val => val));
+    this.step2AllSegments = [];
+    this.step2AllSegments.push(...pieces.map(val => val));
+    this.step2PickFrom = this.step2AllSegments.filter((segment: Piece) => !segment.siblingId);
     this.step2Data = [];
     this.initStep2Data();
     this.piecesLoaded = true;
@@ -309,28 +310,28 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       let val = value as InputEvent;
       this.state.step_1.title = val.target['value'];
     }
-    if (field == "city") {
+    else if (field == "city") {
       let val2 = value as InputEvent;
       this.state.step_1.city = val2.target['value'];
     }
-    if (field == "country") {
+    else if (field == "country") {
       let val2 = value as InputEvent;
       this.state.step_1.country = val2.target['value'];
     }
-    if (field == "state") {
+    else if (field == "state") {
       let val2 = value as InputEvent;
       this.state.step_1.state = val2.target['value'];
     }
-    if (field == "venue") {
+    else if (field == "venue") {
       let val2 = value as InputEvent;
       this.state.step_1.venue = val2.target['value'];
     }
-    if (field == "date") {
+    else if (field == "date") {
       let val3 = value as InputEvent;
       this.state.step_1.date = Date.parse(val3.target['value'])
       this.updateDateString();
     }
-    if (field == "description") {
+    else if (field == "description") {
       let val4 = value as InputEvent;
       this.state.step_1.description = val4.target['value'];
     }
@@ -347,6 +348,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // Step 2 -------------------------------------------------------
 
+  hasRevelation: boolean;
+  step2AllSegments: Piece[];
   step2Data: Piece[];
   step2PickFrom: Piece[];
 
@@ -356,22 +359,60 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   initStep2Data() {
-    this.step2Data = this.state.step_2.segments.map(val => this.step2PickFrom.find(x => x.uuid == val)).filter(val => val != undefined);
+    this.step2Data = this.state.step_2.segments
+      .map(segmentUUID => this.step2AllSegments
+        .find(segment => segment.uuid == segmentUUID)).filter(val => val != undefined);
   }
 
   updateStep2State() {
     this.state.step_2.segments = this.step2Data.map(val => val.uuid);
+    this.hasRevelation = !!this.step2Data.find(segment => segment.type === 'REVELATION');
   }
 
   step2Drop(event: CdkDragDrop<Piece[]>) {
-    if (event.container.id == "program-list" && event.previousContainer.id == "program-list") {
+    let draggedSegment;
+    if (event.container.id === 'program-list' && event.previousContainer.id === 'program-list') {
+      draggedSegment = event.previousContainer.data[event.previousIndex];
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-      this.step2Data = event.container.data;
     }
-    else if (event.previousContainer.id == "piece-list" && event.container.id == "program-list") {
-      let itemArr = [event.item.data];
-      copyArrayItem(itemArr, event.container.data, 0, event.currentIndex);
+    else if (event.previousContainer.id === 'piece-list' && event.container.id === 'program-list') {
+      draggedSegment = event.item.data;
+      copyArrayItem([draggedSegment], event.container.data, 0, event.currentIndex);
+    }
+    if (draggedSegment) {
+      const revelationDrag = draggedSegment.type === 'REVELATION';
       this.step2Data = event.container.data;
+      if (revelationDrag) {
+        if (event.previousContainer.id === 'program-list') {
+          // Drag inside program-list area. Remove child segments (they will be reinserted again later)
+          for (let segmentIx = 0; segmentIx < this.step2Data.length; segmentIx++) {
+            const segment = this.step2Data[segmentIx];
+            if (segment.uuid === draggedSegment.uuid) {
+              for (let positionIx = 0; positionIx < segment.positions.length; positionIx++) {
+                const position = segment.positions[positionIx];
+                if (position.siblingId) {
+                  this.step2Data = this.step2Data.filter(segment => Number(segment.uuid) !== position.siblingId);
+                }
+              }
+            }
+          }
+        }
+        for (let segmentIx = 0; segmentIx < this.step2Data.length; segmentIx++) {
+          const segment = this.step2Data[segmentIx];
+          if (segment.uuid === draggedSegment.uuid) {
+            let childArr: Piece[] = [];
+            for (let positionIx = 0; positionIx < segment.positions.length; positionIx++) {
+              const position = segment.positions[positionIx];
+              if (position.siblingId) {
+                const sibling = this.step2AllSegments.find(segment => Number(segment.uuid) === position.siblingId);
+                childArr.push(sibling);
+              }
+            }
+            this.step2Data.splice(segmentIx + 1, 0, ...childArr);
+            break;
+          }
+        }  
+      }
     }
     this.updateStep2State();
   }
@@ -412,13 +453,13 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  onSelectStep3Segment(segment: Piece, ind: number) {
+  onSelectStep3Segment(segment: Piece, segmentIx: number) {
     this.saveCastChanges();
     this.selectedSegment = segment;
-    this.selectedIndex = ind;
-    if (segment.type == "SEGMENT") {
-      if (this.intermissions.has(ind)) {
-        this.segmentLength = this.intermissions.get(ind);
+    this.selectedIndex = segmentIx;
+    if (segment.type === "SEGMENT" || segment.type === "REVELATION") {
+      if (this.intermissions.has(segmentIx)) {
+        this.segmentLength = this.intermissions.get(segmentIx);
       } else {
         this.segmentLength = 0;
       }
@@ -602,20 +643,20 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateStep2State();
     let newState: Performance = JSON.parse(JSON.stringify(this.state));
     newState.step_3.segments =
-      this.step2Data.map((segment, ind) => {
-        let segUUID = newState.uuid + "cast" + segment.uuid;
-        if (segment.type == "SEGMENT") {
+      this.step2Data.map((segment, segmentIx) => {
+        const segUUID = newState.uuid + "cast" + segment.uuid;
+        const info: [Cast, number, number] = this.segmentToCast.get(segUUID);
+        if (segment.type == "SEGMENT" || segment.type == "REVELATION" || !info) {
           return {
             id: this.segmentToPerfSectionID.has(segUUID) ? this.segmentToPerfSectionID.get(segUUID) : undefined,
             segment: segment.uuid,
             name: segment.name,
             type: segment.type,
             selected_group: undefined,
-            length: this.intermissions.get(ind) ? this.intermissions.get(ind) : 0,
+            length: this.intermissions.get(segmentIx) ? this.intermissions.get(segmentIx) : 0,
             custom_groups: []
           };
         }
-        let info: [Cast, number, number] = this.segmentToCast.get(segUUID);
         return {
           id: this.segmentToPerfSectionID.has(segUUID) ? this.segmentToPerfSectionID.get(segUUID) : undefined,
           segment: segment.uuid,
@@ -626,7 +667,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           custom_groups: info ? info[0].filled_positions.map(val => {
             let positionName = "";
             let positionOrder = 0;
-            this.step2PickFrom.forEach(val2 => {
+            this.step2AllSegments.forEach(val2 => {
               let foundPos = val2.positions.find(val3 => val3.uuid == val.position_uuid);
               if (foundPos) {
                 positionName = foundPos.name;
@@ -661,7 +702,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.resetPerformance();
     this.resetState();
   }
-
 
   // --------------------------------------------------------------
 
