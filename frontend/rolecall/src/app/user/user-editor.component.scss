@@ -24,11 +24,13 @@
   margin: 1em;
   max-height: 86vh;
 }
+
 .user-select-container {
   overflow-y: scroll;
   height: 100%;
   width: 100%;
 }
+
 .user-select {
   display: flex;
   flex-direction: column;
@@ -37,6 +39,7 @@
   margin-left: 1em;
   margin-right: 1em;
 }
+
 .user-name {
   margin-bottom: auto;
   margin-left: 1em;
@@ -47,21 +50,25 @@
   overflow-x: hidden;
   white-space: nowrap;
 }
+
 .selected-user {
   background-color: $offoffWhite;
 }
+
 .add-user-button-width-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   min-height: 10vh;
 }
+
 .add-user-button-height-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: 10vh;
 }
+
 .add-user-button {
   background: $white;
   border-radius: $borderRadius;
@@ -69,10 +76,12 @@
   margin-right: 1em;
   width: 6vh;
 }
+
 .add-user-button-icon {
   font-size: 6vh;
   vertical-align: middle;
 }
+
 // Title styling
 .left-card-title {
   margin: 1rem;
@@ -89,85 +98,100 @@
   margin: 1em;
   max-height: 86vh;
 }
+
 .name-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .email-date-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .phone-priv-class-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .email-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 50%;
 }
+
 .phone-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 50%;
 }
+
 .phone-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(100% - 2em);
 }
+
 .name-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(50% - 2em);
 }
+
 .email-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(100% - 2em);
 }
+
 .date-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(50% - 2em);
 }
+
 .priv-class-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(100% - 2em);
 }
+
 .permissions-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(100% - 2em);
 }
+
 .right-card-title {
   margin: 1em;
   font-weight: 800;
   font-size: xx-large;
 }
+
 .button-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   height: 100%;
 }
+
 .button-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
+
 .save-button {
   background: $AAOrange;
   color: white;
@@ -180,6 +204,7 @@
   padding-right: 1em;
   padding-top: 0.5em;
 }
+
 .delete-button {
   background: $white;
   color: black;
@@ -190,6 +215,7 @@
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 0.5em;
+
   &:hover {
     background: red;
     color: $white;

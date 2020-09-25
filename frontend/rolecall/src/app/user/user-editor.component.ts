@@ -1,13 +1,12 @@
-import { Location, KeyValue } from '@angular/common';
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { isNullOrUndefined } from 'util';
-import { User, UserApi } from '../api/user_api.service';
-
+import {Location} from '@angular/common';
+import {Component, EventEmitter, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {isNullOrUndefined} from 'util';
+import {User, UserApi} from '../api/user_api.service';
 
 /**
  * The view for the User Editor, allowing users to create other users
- * and view user information
+ * and view user information.
  */
 @Component({
   selector: 'app-user-editor',
@@ -34,14 +33,17 @@ export class UserEditor implements OnInit {
   lastSelectedUserEmail: string;
 
   constructor(private route: ActivatedRoute, private userAPI: UserApi,
-    private location: Location) { }
+              private location: Location) {
+  }
 
   ngOnInit(): void {
     let uuid = this.route.snapshot.params.uuid;
     if (!isNullOrUndefined(uuid)) {
       this.urlPointingUUID = uuid;
     }
-    this.userAPI.userEmitter.subscribe((val) => { this.onUserLoad(val) });
+    this.userAPI.userEmitter.subscribe((val) => {
+      this.onUserLoad(val)
+    });
     this.userAPI.getAllUsers();
   }
 
@@ -296,8 +298,7 @@ export class UserEditor implements OnInit {
       let date = Date.parse(val.value);
       val = date;
       this.disableSave = false;
-    }
-    else if (info.type == "permissions") {
+    } else if (info.type == "permissions") {
       let val2 = this.workingUser.has_permissions;
       for (let entry of Object.entries(val2)) {
         if (val.includes(entry[0])) {
@@ -329,8 +330,7 @@ export class UserEditor implements OnInit {
         }
       }
       val = val2;
-    }
-    else {
+    } else {
       this.disableSave = false;
     }
     objInQuestion[splits[splits.length - 1]] = val;
