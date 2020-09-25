@@ -6,9 +6,11 @@
         Users
       </h1>
       <div class="user-select-container">
-        <div *ngFor="let user of renderingUsers" class="app-card user-select"
-             [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''"
-             (click)="setCurrentUser(user, false, true)">
+        <div
+            *ngFor="let user of renderingUsers"
+            class="app-card user-select"
+            [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''"
+            (click)="setCurrentUser(user, false, true)">
           <h2 class="user-name">
             {{ (user.first_name ? user.first_name : " ") + " " + (user.last_name ? user.last_name
               : " ") }}
@@ -17,8 +19,11 @@
       </div>
       <div class="add-user-button-width-container">
         <div class="add-user-button-height-container">
-          <button mat-icon-button aria-label="Add User Button" class="add-user-button"
-                  (click)="addUser()">
+          <button
+              class="add-user-button"
+              mat-icon-button
+              aria-label="Add User Button"
+              (click)="addUser()">
             <mat-icon [inline]="true" class="add-user-button-icon">
               add
             </mat-icon>
@@ -37,68 +42,85 @@
       </h1>
       <div class="name-container">
         <div class="name-input">
-          <app-text-input (valueChange)="onInputChange($event)"
-                          [initValue]="(currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined"
-                          valueName="First Name">
+          <app-text-input
+              valueName="First Name"
+              (valueChange)="onInputChange($event)"
+              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined">
           </app-text-input>
         </div>
         <div class="name-input">
-          <app-text-input (valueChange)="onInputChange($event)"
-                          [initValue]="(currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined"
-                          valueName="Last Name">
+          <app-text-input
+              valueName="Last Name"
+              (valueChange)="onInputChange($event)"
+              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined">
           </app-text-input>
         </div>
       </div>
       <div class="email-date-container">
         <div class="email-container">
           <div class="email-input">
-            <app-text-input (valueChange)="onInputChange($event)" [isDisabled]="!creatingUser"
-                            [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['email'] | emptyStringIfUndefined"
-                            valueName="Email">
+            <app-text-input
+                valueName="Email"
+                [isDisabled]="!creatingUser"
+                [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['email'] | emptyStringIfUndefined"
+                (valueChange)="onInputChange($event)">
             </app-text-input>
           </div>
         </div>
         <div class="date-input">
-          <app-date-input #birthdateIn (valueChange)="onInputChange($event)" valueName="Date Joined"
-                          [initValue]="currentSelectedUser ? currentSelectedUser.date_joined : getCurrentDate()">
+          <app-date-input
+              valueName="Date Joined"
+              [initValue]="currentSelectedUser ? currentSelectedUser.date_joined : getCurrentDate()"
+              (valueChange)="onInputChange($event)">
           </app-date-input>
         </div>
       </div>
       <div class="phone-priv-class-container">
         <div class="phone-container">
           <div class="phone-input">
-            <app-text-input (valueChange)="onInputChange($event)"
-                            [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['phone_number'] | emptyStringIfUndefined"
-                            valueName="Phone">
+            <app-text-input
+                valueName="Phone"
+                [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['phone_number'] | emptyStringIfUndefined"
+                (valueChange)="onInputChange($event)">
             </app-text-input>
           </div>
         </div>
         <div class="priv-class-input">
-          <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)"
-                                  valueName="Roles"
-                                  [setValues]="rolesSet" [selectFrom]="getAllRoles()"
-                                  [displayNameMapping]="rolesNamesMap">
+          <app-multi-select-input
+              valueName="Roles"
+              [setValues]="rolesSet"
+              [selectFrom]="getAllRoles()"
+              [displayNameMapping]="rolesNamesMap"
+              (valueChange)="onInputChange($event)">
           </app-multi-select-input>
         </div>
       </div>
       <div class="permissions-input">
-        <app-multi-select-input #permissionsIn (valueChange)="onInputChange($event)"
-                                valueName="Permissions"
-                                [setValues]="permissionsSet" [selectFrom]="getAllPermissions()"
-                                [displayNameMapping]="permissionsNamesMap">
+        <app-multi-select-input
+            valueName="Permissions"
+            [setValues]="permissionsSet"
+            [selectFrom]="getAllPermissions()"
+            [displayNameMapping]="permissionsNamesMap"
+            (valueChange)="onInputChange($event)">
         </app-multi-select-input>
       </div>
       <div class="button-container">
         <div class="button-wrapper">
-          <button mat-flat-button aria-label="Delete User" class="delete-button"
-                  (click)="deleteUser()">
+          <button
+              class="delete-button"
+              mat-flat-button
+              aria-label="Delete User"
+              (click)="deleteUser()">
             delete
           </button>
         </div>
         <div class="button-wrapper">
-          <button mat-flat-button aria-label="Save User" class="save-button"
-                  [disabled]="disableSave"
-                  (click)="onSaveUser()">
+          <button
+              class="save-button"
+              mat-flat-button
+              aria-label="Save User"
+              [disabled]="disableSave"
+              (click)="onSaveUser()">
             save
           </button>
         </div>

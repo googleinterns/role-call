@@ -15,7 +15,7 @@
   margin: 2vh;
 }
 
-// Left card arrangment and styling
+// Left card arrangement and styling
 .left-card {
   background: $offWhite;
   display: flex;
@@ -41,10 +41,7 @@
 }
 
 .user-name {
-  margin-bottom: auto;
-  margin-left: 1em;
-  margin-right: 1em;
-  margin-top: auto;
+  margin: auto 1em;
   padding-bottom: 1em;
   padding-top: 1em;
   overflow-x: hidden;
@@ -89,7 +86,7 @@
   font-size: xx-large;
 }
 
-// Right card arrangment and styling
+// Right card arrangement and styling
 .right-card {
   background: $offWhite;
   display: flex;
@@ -199,10 +196,7 @@
   font-weight: bold;
   margin-right: 0.6em;
   margin-bottom: 0.6em;
-  padding-bottom: 0.5em;
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
+  padding: 0.5em 1em;
 }
 
 .delete-button {
@@ -211,10 +205,7 @@
   font-size: x-large;
   margin-left: 0.6em;
   margin-bottom: 0.6em;
-  padding-bottom: 0.5em;
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
+  padding: 0.5em 1em;
 
   &:hover {
     background: red;
@@ -224,14 +215,11 @@
 }
 
 // Panels styling
+
 .left-panel {
-  // background: green;
-  // height: 100%;
   width: 25%;
 }
 
 .right-panel {
-  // background: red;
-  // height: 100%;
   width: 75%;
 }

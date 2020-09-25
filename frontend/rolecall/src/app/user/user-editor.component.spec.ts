@@ -1,40 +1,30 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
 import {EmptyStringIfUndefinedPipe} from '../common_components/empty_string_if_undefined.pipe';
 import {UserEditor} from './user-editor.component';
 
-let activatedRouteStub = {
-  snapshot: {
-    params: {
-      uuid: "testUUID"
-    }
-  }
-}
+const activatedRouteStub = {
+  snapshot: {params: {uuid: 'testUUID'}}
+};
 
 describe('UserEditorComponent', () => {
-  let component: UserEditor;
-  let fixture: ComponentFixture<UserEditor>;
+  let userEditor: UserEditor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
           declarations: [UserEditor, EmptyStringIfUndefinedPipe],
-          providers: [
-            {
-              provide: ActivatedRoute,
-              useValue: activatedRouteStub
-            }
-          ]
+          providers: [{provide: ActivatedRoute, useValue: activatedRouteStub}]
         })
         .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserEditor);
-    component = fixture.componentInstance;
+    const fixture = TestBed.createComponent(UserEditor);
+    userEditor = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(userEditor).toBeTruthy();
   });
 });
