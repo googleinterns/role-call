@@ -1,7 +1,6 @@
 import {Location} from '@angular/common';
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {isNullOrUndefined} from 'util';
 import {User, UserApi} from '../api/user_api.service';
 
 /**
@@ -21,8 +20,8 @@ export class UserEditor implements OnInit {
   renderingUsers: User[];
   urlPointingUUID: string;
 
-  prevWorkingState: User;
-  workingUser: User;
+  prevWorkingState: User | undefined;
+  workingUser: User | undefined;
   disableSave = true;
   creatingUser = false;
 
@@ -86,12 +85,12 @@ export class UserEditor implements OnInit {
   }
 
   ngOnInit(): void {
-    const uuid = this.route.snapshot.params.uuid;
-    if (!isNullOrUndefined(uuid)) {
+    const uuid: string = this.route.snapshot.params.uuid;
+    if (uuid) {
       this.urlPointingUUID = uuid;
     }
-    this.userAPI.userEmitter.subscribe((val) => {
-      this.onUserLoad(val);
+    this.userAPI.userEmitter.subscribe((user) => {
+      this.onUserLoad(user);
     });
     this.userAPI.getAllUsers();
   }
@@ -101,6 +100,7 @@ export class UserEditor implements OnInit {
       this.renderingUsers = [];
       return;
     }
+
     if (this.renderingUsers) {
       const prevUserUUIDS = new Set(this.renderingUsers.map(user => user.uuid));
       const newUsers = [];
@@ -109,6 +109,7 @@ export class UserEditor implements OnInit {
           newUsers.push(user);
         }
       }
+
       if (newUsers.length > 0) {
         for (const newUser of newUsers) {
           if (newUser.contact_info.email === this.lastSelectedUserEmail) {
@@ -117,6 +118,7 @@ export class UserEditor implements OnInit {
         }
       }
     }
+
     this.renderingUsers = users;
     this.usersLoaded = true;
     this.dataLoaded = this.usersLoaded;
@@ -126,12 +128,12 @@ export class UserEditor implements OnInit {
   }
 
   onDataLoaded() {
-    if (isNullOrUndefined(this.urlPointingUUID)) {
+    if (!this.urlPointingUUID) {
       this.setCurrentUser(this.renderingUsers[0]);
     } else {
       const foundUser = this.renderingUsers.find(
-          (val) => val.uuid === this.urlPointingUUID);
-      if (isNullOrUndefined(foundUser)) {
+          (user) => user.uuid === this.urlPointingUUID);
+      if (!foundUser) {
         this.setCurrentUser(this.renderingUsers[0], false, true);
       } else {
         this.setCurrentUser(foundUser, false, true);
@@ -140,21 +142,23 @@ export class UserEditor implements OnInit {
   }
 
   setCurrentUser(
-      user: User,
+      user: User | undefined,
       fromInputChange?: boolean,
       shouldSetLastUser?: boolean) {
     if (shouldSetLastUser) {
       this.lastSelectedUserEmail = user.contact_info.email;
     }
+
     if (user && this.currentSelectedUser && user.uuid
         !== this.currentSelectedUser.uuid) {
       this.creatingUser = false;
       this.disableSave = true;
     }
+
     if (this.workingUser && user.uuid !== this.workingUser.uuid) {
       this.renderingUsers = this.renderingUsers.filter(
-          val => val.uuid !== this.workingUser.uuid && this.userAPI.isValidUser(
-              val));
+          (renderingUser) => renderingUser.uuid !== this.workingUser.uuid
+                             && this.userAPI.isValidUser(renderingUser));
       if (this.prevWorkingState) {
         this.currentSelectedUser = this.prevWorkingState;
         this.renderingUsers.push(this.currentSelectedUser);
@@ -162,8 +166,9 @@ export class UserEditor implements OnInit {
       this.prevWorkingState = undefined;
       this.workingUser = undefined;
     }
+
     this.currentSelectedUser = user;
-    if ((isNullOrUndefined(fromInputChange) || !fromInputChange)) {
+    if (!fromInputChange) {
       if (!this.currentSelectedUser) {
         this.rolesSet.emit([]);
         this.permissionsSet.emit([]);
@@ -173,6 +178,7 @@ export class UserEditor implements OnInit {
             this.getSelectedPermissions(this.currentSelectedUser));
       }
     }
+
     if (this.location.path().startsWith('/user') || this.location.path()
         .startsWith('/user/')) {
       this.location.replaceState('/user/' + user.uuid);
@@ -228,10 +234,12 @@ export class UserEditor implements OnInit {
   deleteUser() {
     this.prevWorkingState = undefined;
     this.renderingUsers = this.renderingUsers.filter(
-        val => val.uuid !== this.currentSelectedUser.uuid);
+        user => user.uuid !== this.currentSelectedUser.uuid);
+
     if (!this.creatingUser) {
       this.userAPI.deleteUser(this.currentSelectedUser);
     }
+
     this.renderingUsers.length > 0 ?
         this.setCurrentUser(this.renderingUsers[0]) :
         this.setCurrentUser(undefined);
@@ -239,8 +247,9 @@ export class UserEditor implements OnInit {
 
   onSaveUser() {
     this.lastSelectedUserEmail = this.workingUser.contact_info.email;
-    this.userAPI.setUser(this.workingUser).then(async val => {
-      if (val.successful) {
+
+    this.userAPI.setUser(this.workingUser).then(async result => {
+      if (result.successful) {
         this.creatingUser = false;
         this.disableSave = true;
         const prevUUID = this.workingUser.uuid;
@@ -248,7 +257,8 @@ export class UserEditor implements OnInit {
         this.workingUser = undefined;
         await this.userAPI.getAllUsers();
         const foundSame = this.renderingUsers.find(
-            val => val.uuid === prevUUID);
+            user => user.uuid === prevUUID);
+
         if (foundSame && this.location.path().startsWith('user')) {
           this.setCurrentUser(foundSame);
         }
@@ -261,40 +271,44 @@ export class UserEditor implements OnInit {
   }
 
   getAllRoles() {
-    return Object.entries(this.rolesNamesMap).map((val) => val[0]);
+    return Object.entries(this.rolesNamesMap).map((role) => role[0]);
   }
 
   getSelectedRoles(user: User) {
     if (!user) {
       return [];
     }
-    return Object.entries(user.has_roles).filter((val) => {
-      return val[1];
-    }).map((val) => val[0]);
+
+    return Object.entries(user.has_roles)
+        .filter((role) => role[1])
+        .map((role) => role[0]);
   }
 
   getAllPermissions() {
-    return Object.entries(this.permissionsNamesMap).map((val) => val[0]);
+    return Object.entries(this.permissionsNamesMap)
+        .map((permission) => permission[0]);
   }
 
   getSelectedPermissions(user: User) {
     if (!user) {
       return [];
     }
-    return Object.entries(user.has_permissions).filter((val) => {
-      return val[1];
-    }).map((val) => val[0]);
+    return Object.entries(user.has_permissions)
+        .filter((permission) => permission[1])
+        .map((permission) => permission[0]);
   }
 
   onInputChange(change: [string, any]) {
     const valueName = change[0];
     const value = change[1];
+
     if (!this.workingUser) {
       this.prevWorkingState =
           JSON.parse(JSON.stringify(this.currentSelectedUser));
       this.workingUser = JSON.parse(JSON.stringify(this.currentSelectedUser));
       this.setCurrentUser(this.workingUser, true);
     }
+
     if (this.workingUser) {
       this.setWorkingPropertyByKey(valueName, value);
     }
@@ -312,37 +326,37 @@ export class UserEditor implements OnInit {
       val = date;
       this.disableSave = false;
     } else if (info.type === 'permissions') {
-      const val2 = this.workingUser.has_permissions;
-      for (const entry of Object.entries(val2)) {
+      const permissions = this.workingUser.has_permissions;
+      for (const entry of Object.entries(permissions)) {
         if (val.includes(entry[0])) {
-          if (!val2[entry[0]]) {
+          if (!permissions[entry[0]]) {
             this.disableSave = false;
           }
-          val2[entry[0]] = true;
+          permissions[entry[0]] = true;
         } else {
-          if (val2[entry[0]]) {
+          if (permissions[entry[0]]) {
             this.disableSave = false;
           }
-          val2[entry[0]] = false;
+          permissions[entry[0]] = false;
         }
       }
-      val = val2;
+      val = permissions;
     } else if (info.type === 'roles') {
-      const val2 = this.workingUser.has_roles;
-      for (const entry of Object.entries(val2)) {
+      const roles = this.workingUser.has_roles;
+      for (const entry of Object.entries(roles)) {
         if (val.includes(entry[0])) {
-          if (!val2[entry[0]]) {
+          if (!roles[entry[0]]) {
             this.disableSave = false;
           }
-          val2[entry[0]] = true;
+          roles[entry[0]] = true;
         } else {
-          if (val2[entry[0]]) {
+          if (roles[entry[0]]) {
             this.disableSave = false;
           }
-          val2[entry[0]] = false;
+          roles[entry[0]] = false;
         }
       }
-      val = val2;
+      val = roles;
     } else {
       this.disableSave = false;
     }
