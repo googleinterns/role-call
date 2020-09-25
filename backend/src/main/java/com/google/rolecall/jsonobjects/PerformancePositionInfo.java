@@ -16,6 +16,10 @@ public abstract class PerformancePositionInfo {
   public abstract Integer positionId();
 
   @Nullable
+  @JsonProperty("positionOrder")
+  public abstract Integer positionOrder();
+
+  @Nullable
   @JsonProperty("casts")
   public abstract List<PerformanceCastInfo> performanceCasts();
 
@@ -39,6 +43,9 @@ public abstract class PerformancePositionInfo {
   public abstract static class Builder { 
     @JsonProperty("positionId")
     public abstract Builder setPositionId(Integer positionId);
+
+    @JsonProperty("positionOrder")
+    public abstract Builder setPositionOrder(Integer positionOrder);
 
     @JsonProperty("casts")
     public abstract Builder setPerformanceCasts(List<PerformanceCastInfo> performanceCasts);

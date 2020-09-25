@@ -202,7 +202,7 @@ public class PerformanceServices {
     User user = userService.getUser(memberInfo.userId());
 
     PerformanceCastMember member = PerformanceCastMember.newBuilder()
-        .setOrder(position.getOrder())
+        .setOrder(memberInfo.order())
         .setCastNumber(castNumber)
         .build();
     
@@ -359,11 +359,6 @@ public class PerformanceServices {
         } else {
           orders = new HashSet<>();
           positionOrders.put(castNumber, orders);
-        }
-
-        if(orders.contains(member.getOrder())) {
-          throw new InvalidParameterException(
-            "Each Cast Member must have an order unique to cast number and Position");
         }
         orders.add(member.getOrder());
 

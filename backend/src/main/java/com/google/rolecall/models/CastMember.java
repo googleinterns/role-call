@@ -45,7 +45,13 @@ public class CastMember {
   }
 
   public CastMemberInfo toCastMemberInfo() {
-    return CastMemberInfo.create(id, user.getId(), cast.getId(), order, null);
+    return CastMemberInfo.newBuilder()
+    .setId(id)
+    .setUserId(user.getId())
+    .setSubCastId(cast.getId())
+    .setOrder(order)
+    .setDelete(null)
+    .build();
   }
 
   public void setOrder(Integer order) {
