@@ -11,7 +11,7 @@ type PieceMenuItem = {
   name: string;
   sortString: string;
   hasSibling: boolean;
-  pieceIx: number;
+  pieceIndex: number;
 };
 
 @Component({
@@ -63,8 +63,8 @@ export class CastEditorV2 implements OnInit {
     }
   }
 
-  selectPiece(pieceIx: number) {
-    this.setPiece(this.allPieces[pieceIx]);
+  selectPiece(pieceIndex: number) {
+    this.setPiece(this.allPieces[pieceIndex]);
   }
 
   private setPiece(piece: Piece) {
@@ -103,7 +103,7 @@ export class CastEditorV2 implements OnInit {
   }
 
   private buildPopupList() {
-    this.popupPieceList = this.allPieces.map((piece, pieceIx) => {
+    this.popupPieceList = this.allPieces.map((piece, pieceIndex) => {
       const existingCasts = this.allCasts.filter((cast) => cast.segment == piece.uuid);
       const prefix = existingCasts.length === 0 ? " " : "z";
       const name = existingCasts.length === 0 ? "*" + piece.name : piece.name;
@@ -111,7 +111,7 @@ export class CastEditorV2 implements OnInit {
         name: name,
         sortString: prefix + piece.name,
         hasSibling: piece.siblingId > 0,
-        pieceIx: pieceIx,
+        pieceIndex: pieceIndex,
       };
     });
     this.popupPieceList.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
@@ -121,7 +121,7 @@ export class CastEditorV2 implements OnInit {
     this.allPieces = pieces.filter(val => val.type == "PIECE");
     this.buildPopupList();
     if (!this.selectedPiece && this.allPieces.length > 0) {
-      this.selectPiece(this.popupPieceList[0].pieceIx);
+      this.selectPiece(this.popupPieceList[0].pieceIndex);
     }
     this.checkForUrlCompliance();
     this.piecesLoaded = true;

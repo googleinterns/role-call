@@ -190,8 +190,7 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
       this.castSelected = false;
-      // The below error means little. After any save the system loses tracf the uuid of the saved cast
-      // this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
+      // TODO: After any save the system loses track the uuid of the saved cast. It would be nice to fix [YHE].
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);

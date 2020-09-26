@@ -16,11 +16,11 @@
           </mat-icon>
           <div ngbDropdownMenu
               class="piece-options"
-              aria-labelledby="Piece Dropdown">
+              aria-label="Piece Dropdown">
             <button *ngFor="let piece of popupPieceList"
                 ngbDropdownItem
                [class.std-italic-font]="piece.hasSibling"
-               (click)="selectPiece(piece.pieceIx)">
+               (click)="selectPiece(piece.pieceIndex)">
               {{piece.name}}
             </button>
           </div>
