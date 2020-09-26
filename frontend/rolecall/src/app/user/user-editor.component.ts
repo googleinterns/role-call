@@ -95,7 +95,7 @@ export class UserEditor implements OnInit {
     this.userAPI.getAllUsers();
   }
 
-  onUserLoad(users: User[]) {
+  private onUserLoad(users: User[]) {
     if (users.length === 0) {
       this.renderingUsers = [];
       return;
@@ -127,24 +127,33 @@ export class UserEditor implements OnInit {
     }
   }
 
-  onDataLoaded() {
+  private onDataLoaded() {
     if (!this.urlPointingUUID) {
-      this.setCurrentUser(this.renderingUsers[0]);
+      this.setCurrentUser({user: this.renderingUsers[0]});
     } else {
       const foundUser = this.renderingUsers.find(
           (user) => user.uuid === this.urlPointingUUID);
       if (!foundUser) {
-        this.setCurrentUser(this.renderingUsers[0], false, true);
+        this.setCurrentUser({
+          user: this.renderingUsers[0],
+          fromInputChange: false,
+          shouldSetLastUser: true
+        });
       } else {
-        this.setCurrentUser(foundUser, false, true);
+        this.setCurrentUser({
+          user: foundUser,
+          fromInputChange: false,
+          shouldSetLastUser: true
+        });
       }
     }
   }
 
-  setCurrentUser(
-      user: User | undefined,
-      fromInputChange?: boolean,
-      shouldSetLastUser?: boolean) {
+  setCurrentUser({user, fromInputChange, shouldSetLastUser}: {
+    user: User | undefined,
+    fromInputChange?: boolean,
+    shouldSetLastUser?: boolean,
+  }) {
     if (shouldSetLastUser) {
       this.lastSelectedUserEmail = user.contact_info.email;
     }
@@ -228,7 +237,7 @@ export class UserEditor implements OnInit {
     this.currentSelectedUser = newUser;
     this.renderingUsers.push(newUser);
     this.workingUser = newUser;
-    this.setCurrentUser(this.workingUser);
+    this.setCurrentUser({user: this.workingUser});
   }
 
   deleteUser() {
@@ -241,11 +250,11 @@ export class UserEditor implements OnInit {
     }
 
     this.renderingUsers.length > 0 ?
-        this.setCurrentUser(this.renderingUsers[0]) :
-        this.setCurrentUser(undefined);
+        this.setCurrentUser({user: this.renderingUsers[0]}) :
+        this.setCurrentUser({user: undefined});
   }
 
-  onSaveUser() {
+  saveUser() {
     this.lastSelectedUserEmail = this.workingUser.contact_info.email;
 
     this.userAPI.setUser(this.workingUser).then(async result => {
@@ -260,42 +269,41 @@ export class UserEditor implements OnInit {
             user => user.uuid === prevUUID);
 
         if (foundSame && this.location.path().startsWith('user')) {
-          this.setCurrentUser(foundSame);
+          this.setCurrentUser({user: foundSame});
         }
       }
     });
   }
 
-  getCurrentDate() {
+  getCurrentDate(): number {
     return this.currentDate;
   }
 
-  getAllRoles() {
-    return Object.entries(this.rolesNamesMap).map((role) => role[0]);
+  getAllRoles(): string[] {
+    return Object.keys(this.rolesNamesMap);
   }
 
-  getSelectedRoles(user: User) {
+  private getSelectedRoles(user: User): string[] {
     if (!user) {
       return [];
     }
 
     return Object.entries(user.has_roles)
-        .filter((role) => role[1])
-        .map((role) => role[0]);
+        .filter(([, selected]) => selected)
+        .map(([role]) => role);
   }
 
-  getAllPermissions() {
-    return Object.entries(this.permissionsNamesMap)
-        .map((permission) => permission[0]);
+  getAllPermissions(): string[] {
+    return Object.keys(this.permissionsNamesMap);
   }
 
-  getSelectedPermissions(user: User) {
+  getSelectedPermissions(user: User): string[] {
     if (!user) {
       return [];
     }
     return Object.entries(user.has_permissions)
-        .filter((permission) => permission[1])
-        .map((permission) => permission[0]);
+        .filter(([, selected]) => selected)
+        .map(([permission]) => permission);
   }
 
   onInputChange(change: [string, any]) {
@@ -306,7 +314,7 @@ export class UserEditor implements OnInit {
       this.prevWorkingState =
           JSON.parse(JSON.stringify(this.currentSelectedUser));
       this.workingUser = JSON.parse(JSON.stringify(this.currentSelectedUser));
-      this.setCurrentUser(this.workingUser, true);
+      this.setCurrentUser({user: this.workingUser, fromInputChange: true});
     }
 
     if (this.workingUser) {
@@ -314,7 +322,7 @@ export class UserEditor implements OnInit {
     }
   }
 
-  setWorkingPropertyByKey(key: string, val: any) {
+  private setWorkingPropertyByKey(key: string, val: any) {
     const info = this.nameToPropertyMap[key];
     const splits = info.key.split('.');
     let objInQuestion = this.workingUser;
@@ -327,33 +335,33 @@ export class UserEditor implements OnInit {
       this.disableSave = false;
     } else if (info.type === 'permissions') {
       const permissions = this.workingUser.has_permissions;
-      for (const entry of Object.entries(permissions)) {
-        if (val.includes(entry[0])) {
-          if (!permissions[entry[0]]) {
+      for (const permission of Object.keys(permissions)) {
+        if (val.includes(permission)) {
+          if (!permissions[permission]) {
             this.disableSave = false;
           }
-          permissions[entry[0]] = true;
+          permissions[permission] = true;
         } else {
-          if (permissions[entry[0]]) {
+          if (permissions[permission]) {
             this.disableSave = false;
           }
-          permissions[entry[0]] = false;
+          permissions[permission] = false;
         }
       }
       val = permissions;
     } else if (info.type === 'roles') {
       const roles = this.workingUser.has_roles;
-      for (const entry of Object.entries(roles)) {
-        if (val.includes(entry[0])) {
-          if (!roles[entry[0]]) {
+      for (const role of Object.keys(roles)) {
+        if (val.includes(role)) {
+          if (!roles[role]) {
             this.disableSave = false;
           }
-          roles[entry[0]] = true;
+          roles[role] = true;
         } else {
-          if (roles[entry[0]]) {
+          if (roles[role]) {
             this.disableSave = false;
           }
-          roles[entry[0]] = false;
+          roles[role] = false;
         }
       }
       val = roles;
