@@ -18,19 +18,19 @@ export class UserEditor implements OnInit {
 
   currentSelectedUser: User;
   renderingUsers: User[];
-  urlPointingUUID: string;
+  private urlPointingUUID: string;
 
-  prevWorkingState: User | undefined;
-  workingUser: User | undefined;
+  private prevWorkingState: User | undefined;
+  private workingUser: User | undefined;
   disableSave = true;
   creatingUser = false;
 
   usersLoaded = false;
-  dataLoaded = false;
+  private dataLoaded = false;
 
-  lastSelectedUserEmail: string;
+  private lastSelectedUserEmail: string;
 
-  nameToPropertyMap = {
+  private nameToPropertyMap = {
     'First Name': {
       key: 'first_name',
       type: 'string'
@@ -60,6 +60,7 @@ export class UserEditor implements OnInit {
       type: 'permissions'
     },
   };
+
   rolesNamesMap = {
     isAdmin: 'Is Admin',
     isCoreographer: 'Is Coreographer',
@@ -79,9 +80,9 @@ export class UserEditor implements OnInit {
   private currentDate = Date.now();
 
   constructor(
-      private route: ActivatedRoute,
-      private userAPI: UserApi,
-      private location: Location) {
+      private readonly route: ActivatedRoute,
+      private readonly userAPI: UserApi,
+      private readonly location: Location) {
   }
 
   ngOnInit(): void {
