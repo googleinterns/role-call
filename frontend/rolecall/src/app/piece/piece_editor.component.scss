@@ -1,5 +1,6 @@
 @import "src/colors";
 @import "src/constants";
+@import "src/styles";
 
 // Overall container for panels styling
 .panel-container {
@@ -24,11 +25,13 @@
   margin: 1em;
   max-height: 86vh;
 }
+
 .piece-select-container {
   overflow-y: scroll;
   height: 100%;
   width: 100%;
 }
+
 .piece-select {
   display: flex;
   flex-direction: column;
@@ -37,6 +40,7 @@
   margin-left: 1em;
   margin-right: 1em;
 }
+
 .piece-name {
   margin-bottom: auto;
   margin-left: 1em;
@@ -47,12 +51,15 @@
   overflow-x: hidden;
   white-space: nowrap;
 }
+
 .piece-underline {
   text-decoration: underline;
 }
+
 .selected-piece {
   background-color: $offoffWhite;
 }
+
 .add-button-width-container-left {
   display: flex;
   flex-direction: row;
@@ -60,6 +67,7 @@
   min-height: 7.5vh;
   width: 96%;
 }
+
 // Space below the Positions
 .add-button-width-container-right {
   display: flex;
@@ -68,17 +76,20 @@
   min-height: 8vh;
   width: 99%;
 }
+
 .add-button-height-container-left {
   display: flex;
   flex-direction: row;
   align-items: center;
   max-width: 5vh;
 }
+
 .add-button-height-container {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
+
 .add-button {
   background: $white;
   border-radius: $borderRadius;
@@ -86,9 +97,11 @@
   margin-right: 1em;
   width: 5vh;
 }
+
 .add-button-icon {
   font-size: 4vh;
 }
+
 .narrow-button {
   background: $white;
   border-radius: $borderRadius;
@@ -96,9 +109,11 @@
   height: 6vh;
   width: 4vh;
 }
+
 .narrow-button-icon {
   font-size: 4vh;
 }
+
 // Title styling
 .left-card-title {
   margin: 1rem;
@@ -115,20 +130,24 @@
   margin: 1em;
   max-height: 86vh;
 }
+
 .name-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .right-card-title {
   margin: 2rem;
   margin-bottom: 1rem;
   font-weight: 800;
   font-size: xx-large;
 }
+
 .type-dropdown {
   margin-left: 2rem;
 }
+
 .button-container {
   display: flex;
   flex-direction: row;
@@ -138,11 +157,13 @@
     height: 100%;
   }
 }
+
 .button-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
+
 .save-button {
   background: $AAOrange;
   color: white;
@@ -155,6 +176,7 @@
   padding-right: 1em;
   padding-top: 0.5em;
 }
+
 .delete-button {
   background: $white;
   color: black;
@@ -179,11 +201,11 @@
   width: 100%;
   margin-left: -1.05rem;
 }
+
 .right-top-comment {
   margin-top: 0rem;
   margin-left: 2rem;
 }
-
 
 // Saved Positions
 .position-container {
@@ -271,6 +293,7 @@
   margin: 1em;
   width: 70%;
 }
+
 .adding-position-size-container {
   margin: 1em;
   width: 25%;
@@ -293,12 +316,15 @@
   // background: red;
   width: 75%;
 }
+
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 .cdk-drag-placeholder {
   opacity: 0;
 }
+
 #position-pool.cdk-drop-list-dragging .position-container:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
