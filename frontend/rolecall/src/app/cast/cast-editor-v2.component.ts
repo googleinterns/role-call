@@ -82,7 +82,7 @@ export class CastEditorV2 implements OnInit {
     this.selectedPiece = piece;
     this.updateFilteredCasts();
     if (autoSelectFirst) {
-      this.setCurrentCast(this.filteredCasts[0]);
+      this.setCurrentCast({cast: this.filteredCasts[0]});
     }
   }
 
@@ -103,7 +103,7 @@ export class CastEditorV2 implements OnInit {
     if (this.selectedPiece && !this.filteredCasts.find(
           cast => cast.uuid === this.urlUUID)) {
       if (this.filteredCasts.length > 0) {
-        this.setCurrentCast(this.filteredCasts[0]);
+        this.setCurrentCast({cast: this.filteredCasts[0]});
       }
     }
   }
@@ -173,10 +173,10 @@ export class CastEditorV2 implements OnInit {
           this.selectedCast = casts[0];
         }
       }
-      this.setCurrentCast(this.selectedCast);
+      this.setCurrentCast({cast: this.selectedCast});
     } else {
       this.urlUUID = this.dragAndDrop.selectedCastUUID;
-      this.setCurrentCast(this.castAPI.castFromUUID(this.urlUUID));
+      this.setCurrentCast({cast: this.castAPI.castFromUUID(this.urlUUID)});
     }
     this.checkForUrlCompliance();
     this.castsLoaded = true;
@@ -194,7 +194,10 @@ export class CastEditorV2 implements OnInit {
     this.lastSelectedCast = cast;
   }
 
-  setCurrentCast(cast: Cast, index?: number) {
+  setCurrentCast({cast, index}: {
+    cast: Cast | undefined,
+    index?: number | undefined,
+  }) {
     if (!index && cast) {
       index = this.filteredCasts.findIndex((cast) => cast.uuid === cast.uuid);
     }
@@ -225,7 +228,7 @@ export class CastEditorV2 implements OnInit {
         };
       })
     };
-    await this.setCurrentCast(newCast);
+    await this.setCurrentCast({cast: newCast});
     await this.castAPI.setCast(newCast, true);
     await this.castAPI.getAllCasts();
   }
