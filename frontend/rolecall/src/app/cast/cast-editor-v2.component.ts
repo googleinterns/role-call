@@ -1,11 +1,10 @@
-import { Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { APITypes } from 'src/api_types';
-import { isNullOrUndefined } from 'util';
-import { Cast, CastApi } from '../api/cast_api.service';
-import { Piece, PieceApi } from '../api/piece_api.service';
-import { CastDragAndDrop } from './cast-drag-and-drop.component';
+import {Location} from '@angular/common';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {APITypes} from 'src/api_types';
+import {Cast, CastApi} from '../api/cast_api.service';
+import {Piece, PieceApi} from '../api/piece_api.service';
+import {CastDragAndDrop} from './cast-drag-and-drop.component';
 
 type PieceMenuItem = {
   name: string;
@@ -35,19 +34,23 @@ export class CastEditorV2 implements OnInit {
   castsLoaded = false;
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
-  constructor(private castAPI: CastApi, private pieceAPI: PieceApi, private route: ActivatedRoute, private location: Location) { }
+  constructor(
+      private castAPI: CastApi,
+      private pieceAPI: PieceApi,
+      private route: ActivatedRoute,
+      private location: Location) { }
 
   ngOnInit() {
-    let uuid = this.route.snapshot.params.uuid;
-    if (!isNullOrUndefined(uuid)) {
+    const uuid = this.route.snapshot.params.uuid;
+    if (uuid) {
       this.urlUUID = uuid;
     }
-    this.castAPI.castEmitter.subscribe((val) => {
-      this.onCastLoad(val);
+    this.castAPI.castEmitter.subscribe((cast) => {
+      this.onCastLoad(cast);
     });
     this.castAPI.getAllCasts();
-    this.pieceAPI.pieceEmitter.subscribe((val) => {
-      this.onPieceLoad(val);
+    this.pieceAPI.pieceEmitter.subscribe((piece) => {
+      this.onPieceLoad(piece);
     });
     this.pieceAPI.getAllPieces();
   }
@@ -59,7 +62,8 @@ export class CastEditorV2 implements OnInit {
 
   private updateFilteredCasts() {
     if (this.selectedPiece) {
-      this.filteredCasts = this.allCasts.filter((val) => val.segment == this.selectedPiece.uuid);
+      this.filteredCasts = this.allCasts.filter(
+          cast => cast.segment === this.selectedPiece.uuid);
     }
   }
 
@@ -68,11 +72,11 @@ export class CastEditorV2 implements OnInit {
   }
 
   private setPiece(piece: Piece) {
-    if (this.selectedPiece && piece.uuid == this.selectedPiece.uuid) {
+    if (this.selectedPiece && piece.uuid === this.selectedPiece.uuid) {
       return;
     }
     let autoSelectFirst = false;
-    if (this.selectedPiece && this.selectedPiece.uuid != piece.uuid) {
+    if (this.selectedPiece && this.selectedPiece.uuid !== piece.uuid) {
       autoSelectFirst = true;
     }
     this.selectedPiece = piece;
@@ -90,12 +94,14 @@ export class CastEditorV2 implements OnInit {
       if (!this.selectedCast) {
         return;
       }
-      let foundPiece = this.allPieces.find(val => val.uuid == this.selectedCast.segment);
+      const foundPiece = this.allPieces.find(
+          piece => piece.uuid === this.selectedCast.segment);
       if (foundPiece) {
         this.setPiece(foundPiece);
       }
     }
-    if (this.selectedPiece && !this.filteredCasts.find(val => val.uuid == this.urlUUID)) {
+    if (this.selectedPiece && !this.filteredCasts.find(
+          cast => cast.uuid === this.urlUUID)) {
       if (this.filteredCasts.length > 0) {
         this.setCurrentCast(this.filteredCasts[0]);
       }
@@ -104,21 +110,22 @@ export class CastEditorV2 implements OnInit {
 
   private buildPopupList() {
     this.popupPieceList = this.allPieces.map((piece, pieceIndex) => {
-      const existingCasts = this.allCasts.filter((cast) => cast.segment == piece.uuid);
-      const prefix = existingCasts.length === 0 ? " " : "z";
-      const name = existingCasts.length === 0 ? "*" + piece.name : piece.name;
+      const existingCasts = this.allCasts.filter(
+          cast => cast.segment === piece.uuid);
+      const prefix = existingCasts.length === 0 ? ' ' : 'z';
+      const name = existingCasts.length === 0 ? '*' + piece.name : piece.name;
       return {
-        name: name,
+        name,
         sortString: prefix + piece.name,
         hasSibling: piece.siblingId > 0,
-        pieceIndex: pieceIndex,
+        pieceIndex,
       };
     });
     this.popupPieceList.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
   }
 
   private onPieceLoad(pieces: Piece[]) {
-    this.allPieces = pieces.filter(val => val.type == "PIECE");
+    this.allPieces = pieces.filter(piece => piece.type === 'PIECE');
     this.buildPopupList();
     if (!this.selectedPiece && this.allPieces.length > 0) {
       this.selectPiece(this.popupPieceList[0].pieceIndex);
@@ -130,12 +137,12 @@ export class CastEditorV2 implements OnInit {
 
   private onCastLoad(casts: Cast[]) {
     if (this.castAPI.hasCast(this.urlUUID)) {
-      this.dragAndDrop.selectCast(this.urlUUID);
+      this.dragAndDrop.selectCast({uuid: this.urlUUID});
       this.setCastURL();
     }
     this.allCasts = casts;
     this.updateFilteredCasts();
-    if (casts.length == 0) {
+    if (casts.length === 0) {
       this.selectedCast = undefined;
       this.castsLoaded = true;
       this.checkDataLoaded();
@@ -143,20 +150,25 @@ export class CastEditorV2 implements OnInit {
     }
     if (!this.dragAndDrop.castSelected) {
       if (this.lastSelectedCast) {
-        let foundCast = casts.find(c => c.name == this.lastSelectedCast.name);
+        const foundCast = casts.find(
+            c => c.name === this.lastSelectedCast.name);
         if (foundCast) {
           this.lastSelectedCast = foundCast;
           this.selectedCast = foundCast;
         } else {
           if (this.filteredCasts.length > 0) {
-            this.selectedCast = this.filteredCasts[this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
+            this.selectedCast = this.filteredCasts[
+                this.lastSelectedCastIndex
+                ? this.lastSelectedCastIndex - 1
+                : 0];
           } else {
             this.selectedCast = casts[0];
           }
         }
       } else {
         if (this.filteredCasts.length > 0) {
-          this.selectedCast = this.filteredCasts[this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
+          this.selectedCast = this.filteredCasts[
+              this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
         } else {
           this.selectedCast = casts[0];
         }
@@ -172,8 +184,9 @@ export class CastEditorV2 implements OnInit {
   }
 
   private setCastURL() {
-    if (this.location.path().startsWith("/cast") || this.location.path().startsWith("/cast/")) {
-      this.location.replaceState("/cast/" + this.urlUUID);
+    if (this.location.path().startsWith('/cast') ||
+        this.location.path().startsWith('/cast/')) {
+      this.location.replaceState('/cast/' + this.urlUUID);
     }
   }
 
@@ -182,36 +195,34 @@ export class CastEditorV2 implements OnInit {
   }
 
   setCurrentCast(cast: Cast, index?: number) {
-    if (isNullOrUndefined(index) && cast) {
-      index = this.filteredCasts.findIndex((val) => val.uuid == cast.uuid);
+    if (!index && cast) {
+      index = this.filteredCasts.findIndex((cast) => cast.uuid === cast.uuid);
     }
-    if (isNullOrUndefined(index) || index == -1) {
+    if (!index || index === -1) {
       this.lastSelectedCastIndex = undefined;
     } else {
       this.lastSelectedCastIndex = index;
     }
     this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
     this.selectedCast = cast;
-    this.dragAndDrop.selectCast(cast ? cast.uuid : undefined);
-    this.urlUUID = cast ? cast.uuid : "";
+    this.dragAndDrop.selectCast({uuid: cast ? cast.uuid : undefined});
+    this.urlUUID = cast ? cast.uuid : '';
     this.setCastURL();
   }
 
   async addCast() {
-    let newCast: Cast = {
-      uuid: "cast:" + Date.now(),
-      name: "New Cast",
+    const newCast: Cast = {
+      uuid: 'cast:' + Date.now(),
+      name: 'New Cast',
       segment: this.selectedPiece.uuid,
-      filled_positions: this.selectedPiece.positions.map(val => {
+      filled_positions: this.selectedPiece.positions.map(pos => {
         return {
-          position_uuid: val.uuid,
-          groups: [
-            {
-              group_index: 0,
-              members: []
-            }
-          ]
-        }
+          position_uuid: pos.uuid,
+          groups: [{
+            group_index: 0,
+            members: []
+          }],
+        };
       })
     };
     await this.setCurrentCast(newCast);

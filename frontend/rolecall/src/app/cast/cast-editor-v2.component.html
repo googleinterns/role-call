@@ -5,29 +5,34 @@
     <div class="app-card card-margins left-card">
       <div ngbDropdown
           #pieceDropdown="ngbDropdown">
-        <div ngbDropdownToggle
+        <div
+            ngbDropdownToggle
             class="app-card piece-select">
-          <h1 class="left-card-title"
+          <h1
+              class="left-card-title"
               [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
             {{selectedPiece ? selectedPiece.name : " "}}
           </h1>
           <mat-icon class="dropdownArrow">
             arrow_drop_down
           </mat-icon>
-          <div ngbDropdownMenu
+          <div
+              ngbDropdownMenu
               class="piece-options"
               aria-label="Piece Dropdown">
-            <button *ngFor="let piece of popupPieceList"
+            <button
+                *ngFor="let piece of popupPieceList"
                 ngbDropdownItem
-               [class.std-italic-font]="piece.hasSibling"
-               (click)="selectPiece(piece.pieceIndex)">
+                [class.std-italic-font]="piece.hasSibling"
+                (click)="selectPiece(piece.pieceIndex)">
               {{piece.name}}
             </button>
           </div>
         </div>
       </div>
       <div class="cast-select-container">
-        <div *ngFor="let cast of filteredCasts"
+        <div
+            *ngFor="let cast of filteredCasts"
             class="app-card cast-select"
             [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
             (click)="setCurrentCast(cast)">
@@ -39,11 +44,14 @@
       </div>
       <div class="add-button-width-container">
         <div class="add-button-height-container">
-          <button mat-icon-button
+          <button
+              mat-icon-button
               class="add-button" 
               aria-label="Add Cast Button"
               (click)="addCast()">
-            <mat-icon [inline]="true" class="add-button-icon">
+            <mat-icon
+                [inline]="true"
+                class="add-button-icon">
               add
             </mat-icon>
           </button>

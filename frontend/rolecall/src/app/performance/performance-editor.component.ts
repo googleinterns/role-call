@@ -451,7 +451,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    this.castDnD ? this.castDnD.selectCast(castUUID, false) : '';
+    this.castDnD ? this.castDnD.selectCast({uuid: castUUID, saveDeleteEnabled: false}) : '';
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
