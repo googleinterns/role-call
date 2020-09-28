@@ -143,7 +143,7 @@ public class PerformanceSection {
   private List<PerformancePositionInfo> toAllPerformancePositionInfo(
       Hashtable<Integer, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions,
       Hashtable<Integer, Integer> positionOrders) {
-  List<PerformancePositionInfo> positionInfos = new ArrayList<>();
+    List<PerformancePositionInfo> positionInfos = new ArrayList<>();
 
     for(Integer positionId: positions.keySet()) {
       Hashtable<Integer, List<PerformanceCastMemberInfo>> casts = positions.get(positionId);
