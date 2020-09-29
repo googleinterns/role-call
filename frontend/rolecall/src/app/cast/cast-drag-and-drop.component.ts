@@ -374,8 +374,7 @@ export class CastDragAndDrop implements OnInit {
         dancerCount: oldPosition.dancerCount,
         castRows: [],
       };
-      for(let dancerIndex = 0; dancerIndex < oldPosition.castRows.length; dancerIndex++) {
-        const oldCastRow = oldPosition.castRows[dancerIndex];
+      for(const oldCastRow of oldPosition.castRows) {
         const transferCount = Math.min(this.castCount, oldCastCount)
         const castRow: UICastRow = {
           subCastDancers: new Array(this.castCount) as UICastDancer[],
