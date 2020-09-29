@@ -235,7 +235,7 @@
                   <h3 class="title">{{segment['name']}}</h3>
                 <div *ngFor="let pos of segment.custom_groups"
                     class="pos-container"
-                    [ngStyle]="{'margin-left': hasRevelation && step2Data[i].siblingId < 1 ? '10rem' : '7rem' }">
+                    [style.margin-left.rem]="hasRevelation && step2Data[i].siblingId === 0 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div *ngIf="group.group_index == segment.selected_group"
@@ -325,16 +325,12 @@
           <div class="child-container">
             <div *ngFor="let segment of step2Data; let i = index"
                 class="child app-card"
-                [ngClass]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i ? 'child-selected' : ''"
-                [ngStyle]="{'margin-left': segment.siblingId > 0 ? '2rem' : '0rem' }"
+                [class.child-selected]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i"
+                [style.margin-left.rem]="segment.siblingId > 0 ? 2 : 0"
                 (click)="onSelectStep3Segment(segment, i)">
               <h3 class="segment-title">{{ segment.name }}</h3>
             </div>
           </div>
-          <!-- 
-                [ngClass]="segment.siblingId > 0 ? 'piece-name-child' : ''"
-
-          -->
         </div>
       </div>
     </div>
@@ -343,7 +339,7 @@
           class="app-card right-card" >
         <div class="toolbar-drag-and-drop-container">
           <div class="cast-tool-container"
-            [ngClass]="selectedSegment.type == 'SEGMENT' ? 'cast-tool-container-solo' : ''">
+            [class.cast-tool-container-solo]="selectedSegment.type == 'SEGMENT'">
             <mat-form-field appearance="fill" class="tool"
               [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Dancing Cast</mat-label>
@@ -366,7 +362,7 @@
             </mat-form-field>
             <mat-form-field class="tool"
                 appearance="fill"
-                [ngClass]="selectedSegment.type == 'SEGMENT' ? 'tool-solo' : ''">
+                [class.tool-solo]="selectedSegment.type == 'SEGMENT'">
               <mat-label>Length (min)</mat-label>
               <input matInput
                   [value]="segmentLength"
@@ -403,11 +399,11 @@
             <div class="segment-list app-card">
               <div *ngFor="let segment of state.step_3.segments; let i = index"
                   class="segment-container"
-                  [ngStyle]="{'margin-left': step2Data[i].siblingId > 0 ? '4rem' : '1rem' }">
+                  [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1">
                   <h3 class="title">{{segment['name']}}</h3>
                 <div *ngFor="let pos of segment.custom_groups"
                     class="pos-container"
-                    [ngStyle]="{'margin-left': hasRevelation && step2Data[i].siblingId < 1 ? '10rem' : '7rem' }">
+                    [style.margin-left.rem]="hasRevelation && step2Data[i].siblingId < 1 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div *ngIf="group.group_index == segment.selected_group"

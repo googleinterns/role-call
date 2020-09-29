@@ -77,6 +77,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onPieceLoad(pieces: Piece[]) {
     this.step2AllSegments = [];
     this.step2AllSegments.push(...pieces.map(val => val));
+    // Make sure pick list only includes top level segments and excludes children of Revelations
     this.step2PickFrom = this.step2AllSegments.filter((segment: Piece) => !segment.siblingId);
     this.step2Data = [];
     this.initStep2Data();
@@ -380,41 +381,50 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       copyArrayItem([draggedSegment], event.container.data, 0, event.currentIndex);
     }
     if (draggedSegment) {
-      const revelationDrag = draggedSegment.type === 'REVELATION';
+      const isDraggingRevelation = draggedSegment.type === 'REVELATION';
       this.step2Data = event.container.data;
-      if (revelationDrag) {
+      if (isDraggingRevelation) {
         if (event.previousContainer.id === 'program-list') {
-          // Drag inside program-list area. Remove child segments (they will be reinserted again later)
-          for (let segmentIx = 0; segmentIx < this.step2Data.length; segmentIx++) {
-            const segment = this.step2Data[segmentIx];
-            if (segment.uuid === draggedSegment.uuid) {
-              for (let positionIx = 0; positionIx < segment.positions.length; positionIx++) {
-                const position = segment.positions[positionIx];
-                if (position.siblingId) {
-                  this.step2Data = this.step2Data.filter(segment => Number(segment.uuid) !== position.siblingId);
-                }
-              }
-            }
-          }
+          this.removeRevelationChildren(draggedSegment);
         }
-        for (let segmentIx = 0; segmentIx < this.step2Data.length; segmentIx++) {
-          const segment = this.step2Data[segmentIx];
-          if (segment.uuid === draggedSegment.uuid) {
-            let childArr: Piece[] = [];
-            for (let positionIx = 0; positionIx < segment.positions.length; positionIx++) {
-              const position = segment.positions[positionIx];
-              if (position.siblingId) {
-                const sibling = this.step2AllSegments.find(segment => Number(segment.uuid) === position.siblingId);
-                childArr.push(sibling);
-              }
-            }
-            this.step2Data.splice(segmentIx + 1, 0, ...childArr);
-            break;
-          }
-        }  
+        this.addRevelationChildren(draggedSegment);
       }
     }
     this.updateStep2State();
+  }
+
+  // Removes the Revelation children so every revelation drag just inserts its
+  // children right below it, regardless of where the dragging originated
+  private removeRevelationChildren(draggedSegment: Piece) {
+    for (const segment of this.step2Data) {
+      if (segment.uuid === draggedSegment.uuid) {
+        for (const position of segment.positions) {
+          if (position.siblingId) {
+            this.step2Data = this.step2Data.filter(segment => Number(
+                segment.uuid) !== position.siblingId);
+          }
+        }
+      }
+    }
+  }
+
+  // A Revelation has children that need to be placed right below the revelation
+  private addRevelationChildren(draggedSegment: Piece) {
+    for (let segmentIndex = 0; segmentIndex < this.step2Data.length; segmentIndex++) {
+      const segment = this.step2Data[segmentIndex];
+      if (segment.uuid === draggedSegment.uuid) {
+        let childArr: Piece[] = [];
+        for (const position of segment.positions) {
+          if (position.siblingId) {
+            const sibling = this.step2AllSegments.find(
+                segment => Number(segment.uuid) === position.siblingId);
+            childArr.push(sibling);
+          }
+        }
+        this.step2Data.splice(segmentIndex + 1, 0, ...childArr);
+        break;
+      }
+    }  
   }
 
   // --------------------------------------------------------------
