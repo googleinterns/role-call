@@ -54,7 +54,7 @@ export class PieceEditor implements OnInit {
 
   segmentTypes = ["SEGMENT", "PIECE", "REVELATION"];
   selectedSegmentType: PieceType;
-  segmentPrettyNames = ["", "Segment", "Ballet", "Uber Ballet"]
+  segmentPrettyNames = ["", "Segment", "Ballet", "Super Ballet"]
 
 
   constructor(private route: ActivatedRoute, private pieceAPI: PieceApi,
@@ -170,9 +170,9 @@ export class PieceEditor implements OnInit {
       originalName = "New Ballet";
       break;
     case 3:
-      name = "New Uber Ballet";
+      name = "New Super Ballet";
       type = "REVELATION";
-      originalName = "New Uber Ballet";
+      originalName = "New Super Ballet";
       break;
     }
     this.creatingPiece = true;

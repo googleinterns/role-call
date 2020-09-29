@@ -1,13 +1,12 @@
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {APITypes} from 'src/api_types';
-import {Cast, CastSubCast, CastApi } from '../api/cast_api.service';
+import { CAST_COUNT } from 'src/constants';
+import {Cast, CastGroup, CastApi } from '../api/cast_api.service';
 import {Piece, PieceApi, Position} from '../api/piece_api.service';
 import {User, UserApi} from '../api/user_api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 import {LoggingService} from '../services/logging.service';
-
-const CAST_COUNT = 3;
 
 type UICastDancer = {
   uuid: string;
@@ -163,9 +162,10 @@ export class CastDragAndDrop implements OnInit {
       uuid: this.selectedCastUUID,
       segment: this.cast.segment,
       name: this.cast.name,
+      castCount: CAST_COUNT,
       filled_positions: this.castPositions.map(
           (uiPos: UICastPosition, uiPosIndex: number) => {
-        let subCasts: CastSubCast[] = new Array(CAST_COUNT).fill([]);
+        let subCasts: CastGroup[] = new Array(CAST_COUNT).fill([]);
         subCasts = subCasts.map((subCast, subCastIndex) => {
           return {
             group_index: subCastIndex,
