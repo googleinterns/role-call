@@ -1,9 +1,10 @@
 <app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
 <div *ngIf="dataLoaded">
   <div *ngIf="performanceSelected; else selectPerformanceView">
-    <app-stepper #stepper [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
-      [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
-
+    <app-stepper #stepper
+        [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
+        [stepperOptions]="stepperOpts"
+        (stepChange)="onStepChange($event)"></app-stepper>
     <div>
       <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
         <ng-container *ngSwitchCase="0">
@@ -23,35 +24,56 @@
 
     <div class="button-overall-container">
       <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
-        <button mat-flat-button aria-label="Save Performance Draft" class="button" (click)="onSaveDraft()">
+        <button mat-flat-button
+            class="button"
+            aria-label="Save Performance Draft"
+            (click)="onSaveDraft()">
           save draft
         </button>
         <div>
-          <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
+          <button mat-flat-button
+              class="button"
+              aria-label="Previous Step"
+              (click)="onPrevClick()">
             previous
           </button>
-          <button mat-flat-button aria-label="Next Step" class="button" (click)="onNextClick()">
+          <button mat-flat-button
+              class="button"
+              aria-label="Next Step"
+              (click)="onNextClick()">
             next
           </button>
         </div>
       </ng-container>
       <ng-template #finalButtons>
         <ng-container *ngIf="(!submitted); else submittedButtons">
-          <button mat-flat-button aria-label="Save Performance Draft" class="button" (click)="onSaveDraft()">
+          <button mat-flat-button 
+              class="button"
+              aria-label="Save Performance Draft"
+              (click)="onSaveDraft()">
             save draft
           </button>
           <div>
-            <button mat-flat-button aria-label="Previous Step" class="button" (click)="onPrevClick()">
+            <button mat-flat-button
+                class="button"
+                aria-label="Previous Step"
+                (click)="onPrevClick()">
               previous
             </button>
-            <button mat-flat-button aria-label="Publish Performance" class="button" (click)="onSubmit()">
+            <button mat-flat-button
+                class="button"
+                aria-label="Publish Performance"
+                (click)="onSubmit()">
               publish
             </button>
           </div>
         </ng-container>
         <ng-template #submittedButtons>
           <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
-            <button mat-flat-button aria-label="New Performance" class="button" (click)="onResetFromStart()">
+            <button mat-flat-button
+                class="button"
+                aria-label="New Performance"
+                (click)="onResetFromStart()">
               new performance
             </button>
           </div>
@@ -190,24 +212,36 @@
               <h3 class="input-title location-title">Venue</h3>
             </div>
             <div class="location-card app-card">
-              <textarea type="text" class="location-input" rows="1" [value]="state.step_1.venue"
-                (input)="onStep1Input('venue', $event)"></textarea>
+              <textarea type="text"
+                  class="location-input"
+                  rows="1"
+                  [value]="state.step_1.venue"
+                  (input)="onStep1Input('venue', $event)"></textarea>
             </div>
           </div>
           <div class="description-container">
             <h3 class="input-title">Description</h3>
             <div class="description-card app-card">
-              <textarea type="text" class="description-input" rows="2" [value]="state.step_1.description"
-                (input)="onStep1Input('description', $event)"></textarea>
+              <textarea type="text"
+                  class="description-input"
+                  rows="2"
+                  [value]="state.step_1.description"
+                  (input)="onStep1Input('description', $event)"></textarea>
             </div>
             <div class="segment-list app-card">
-              <div class="segment-container" *ngFor="let segment of state.step_3.segments">
-                <h3 class="title">{{segment['name']}}</h3>
-                <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+              <div *ngFor="let segment of state.step_3.segments; let i = index"
+                  class="segment-container"
+                  [ngStyle]="{'margin-left': step2Data[i].siblingId > 0 ? '4rem' : '1rem' }">
+                  <h3 class="title">{{segment['name']}}</h3>
+                <div *ngFor="let pos of segment.custom_groups"
+                    class="pos-container"
+                    [style.margin-left.rem]="hasRevelation && step2Data[i].siblingId === 0 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
-                    <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
-                      <p class="names">{{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
+                    <div *ngIf="group.group_index == segment.selected_group"
+                        class="dancer-list">
+                      <p class="names">
+                        {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
                     </div>
                   </ng-container>
                 </div>
@@ -225,11 +259,15 @@
     <div class="left-card-container">
       <div class="left-card app-card">
         <div class="title-container">
-          <h2 class="title">Ballets</h2>
+          <h2 class="title">Program Segments</h2>
         </div>
-        <div cdkDropList id="piece-list" [cdkDropListData]="step2PickFrom">
+        <div cdkDropList
+            id="piece-list"
+            [cdkDropListData]="step2PickFrom">
           <div *ngFor="let data of step2PickFrom; let i = index">
-            <div cdkDrag class="piece-name-container" [cdkDragData]="data">
+            <div cdkDrag
+                class="piece-name-container"
+                [cdkDragData]="data">
               <div class="app-card piece-name-card">
                 <h2 class="piece-name">{{data.name}}</h2>
               </div>
@@ -242,16 +280,27 @@
       <div class="right-card app-card">
         <div class="content">
           <h2 class="program-title">Program Order</h2>
-          <div id="program-list" cdkDropList (cdkDropListDropped)="step2Drop($event)" [cdkDropListData]="step2Data">
+          <div id="program-list"
+              cdkDropList
+              (cdkDropListDropped)="step2Drop($event)"
+              [cdkDropListData]="step2Data">
             <div *ngFor="let data of step2Data; let i = index">
-              <div cdkDrag class="piece-container" [cdkDragData]="data">
-                <div class="app-card piece-name-card">
-                  <h2 class="piece-name-delete">{{data.name}}</h2>
+              <div cdkDrag
+                  class="piece-container"
+                  [cdkDragData]="data">
+                <div class="app-card piece-name-card"
+                    [ngStyle]="{'margin-left': data.siblingId > 0 ? '2rem' : '0rem' }"
+                    >
+                  <h2 class="piece-name-delete">
+                    {{data.name}}</h2>
                 </div>
                 <div class="delete-button-height-container">
-                  <button mat-icon-button aria-label="Delete Piece Button" class="delete-button"
+                  <button mat-icon-button
+                      class="delete-button"
+                      aria-label="Delete Piece Button" 
                     (click)="deletePiece(data, i)">
-                    <mat-icon [inline]="true" class="delete-button-icon">
+                    <mat-icon [inline]="true"
+                        class="delete-button-icon">
                       delete
                     </mat-icon>
                   </button>
@@ -274,9 +323,11 @@
         </div>
         <div class="children-container">
           <div class="child-container">
-            <div *ngFor="let segment of step2Data; let i = index" class="child app-card"
-              [ngClass]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i ? 'child-selected' : ''"
-              (click)="onSelectStep3Segment(segment, i)">
+            <div *ngFor="let segment of step2Data; let i = index"
+                class="child app-card"
+                [class.child-selected]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i"
+                [style.margin-left.rem]="segment.siblingId > 0 ? 2 : 0"
+                (click)="onSelectStep3Segment(segment, i)">
               <h3 class="segment-title">{{ segment.name }}</h3>
             </div>
           </div>
@@ -284,21 +335,24 @@
       </div>
     </div>
     <div class="right-card-container">
-      <div class="app-card right-card" *ngIf="selectedSegment != undefined">
+      <div *ngIf="selectedSegment != undefined"
+          class="app-card right-card" >
         <div class="toolbar-drag-and-drop-container">
           <div class="cast-tool-container"
-            [ngClass]="selectedSegment.type == 'SEGMENT' ? 'cast-tool-container-solo' : ''">
+            [class.cast-tool-container-solo]="selectedSegment.type == 'SEGMENT'">
             <mat-form-field appearance="fill" class="tool"
-              [ngStyle]="selectedSegment.type == 'SEGMENT' ? { 'display': 'none' } : { 'height': '100%' }">
+              [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Dancing Cast</mat-label>
               <mat-select [(value)]="this.primaryGroupNum" (selectionChange)="onChoosePrimaryCast($event)">
-                <mat-option *ngFor="let num of chooseFromGroupIndices" [value]="num">
+                <mat-option *ngFor="let num of chooseFromGroupIndices"
+                    [value]="num">
                   {{ num + 1 | numberToPlace }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="tool"
-              [ngStyle]="selectedSegment.type == 'SEGMENT' ? { 'display': 'none' } : { 'height': '100%' }">
+            <mat-form-field class="tool"
+                appearance="fill"
+                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Autofill Cast</mat-label>
               <mat-select>
                 <mat-option *ngFor="let cast of castsForSegment" [value]="cast" (click)="onAutofillCast(cast)">
@@ -306,15 +360,19 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="tool"
-              [ngClass]="selectedSegment.type == 'SEGMENT' ? 'tool-solo' : ''">
+            <mat-form-field class="tool"
+                appearance="fill"
+                [class.tool-solo]="selectedSegment.type == 'SEGMENT'">
               <mat-label>Length (min)</mat-label>
-              <input matInput [value]="segmentLength" (input)="onLengthChange($event)">
+              <input matInput
+                  [value]="segmentLength"
+                  (input)="onLengthChange($event)">
             </mat-form-field>
           </div>
           <div class="cast-drag-and-drop-container">
-            <app-cast-drag-and-drop #castDnD (castChangeEmitter)="onChangeCast($event)"
-              [ngStyle]="selectedSegment.type == 'SEGMENT' ? { 'display': 'none' } : { 'height': '100%' }">
+            <app-cast-drag-and-drop #castDnD
+                (castChangeEmitter)="onChangeCast($event)"
+                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
             </app-cast-drag-and-drop>
           </div>
         </div>
@@ -339,13 +397,19 @@
               </button>
             </div>
             <div class="segment-list app-card">
-              <div class="segment-container" *ngFor="let segment of state.step_3.segments">
-                <h3 class="title">{{segment['name']}}</h3>
-                <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+              <div *ngFor="let segment of state.step_3.segments; let i = index"
+                  class="segment-container"
+                  [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1">
+                  <h3 class="title">{{segment['name']}}</h3>
+                <div *ngFor="let pos of segment.custom_groups"
+                    class="pos-container"
+                    [style.margin-left.rem]="hasRevelation && step2Data[i].siblingId < 1 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
-                    <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
-                      <p class="names">{{group['memberNames'].join(", ")}}</p>
+                    <div *ngIf="group.group_index == segment.selected_group"
+                        class="dancer-list">
+                      <p class="names">
+                        {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
                     </div>
                   </ng-container>
                 </div>
@@ -362,12 +426,15 @@
             <h2 class="title">Performance Submitted!</h2>
             <h2 class="title">{{'Scheduled ' + state.step_1.title + ' for ' + date.toLocaleDateString()}}</h2>
             <div class="segment-list-submitted segment-list app-card">
-              <div class="segment-container" *ngFor="let segment of state.step_3.segments">
+              <div *ngFor="let segment of state.step_3.segments"
+                  class="segment-container">
                 <h3 class="title">{{segment['name']}}</h3>
-                <div class="pos-container" *ngFor="let pos of segment.custom_groups">
+                <div *ngFor="let pos of segment.custom_groups"
+                    class="pos-container">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
-                    <div class="dancer-list" *ngIf="group.group_index == segment.selected_group">
+                    <div *ngIf="group.group_index == segment.selected_group"
+                        class="dancer-list">
                       <p class="names">{{group['memberNames'].join(", ")}}</p>
                     </div>
                   </ng-container>
