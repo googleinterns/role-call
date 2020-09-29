@@ -66,6 +66,7 @@ export type RawPerformance = {
     "positions":
     {
       "positionId": number,
+      "positionOrder": number,
       "casts":
       {
         "castNumber": number,
@@ -143,14 +144,14 @@ export class PerformanceApi {
             segment: String(val.sectionId),
             length: 0,
             selected_group: val.primaryCast,
-            custom_groups: val.positions.map(pos => {
+            custom_groups: val.positions.map((position, positionIx) => {
               return {
-                position_uuid: String(pos.positionId),
-                position_order: pos.casts[0].members[0].order,
-                groups: pos.casts.map(c => {
+                position_uuid: String(position.positionId),
+                position_order: position.positionOrder,
+                groups: position.casts.map((sumCast, subCastIx) => {
                   return {
-                    group_index: c.castNumber,
-                    members: c.members.map(mem => {
+                    group_index: sumCast.castNumber,
+                    members: sumCast.members.map(mem => {
                       return {
                         uuid: String(mem.userId),
                         position_number: mem.order
@@ -158,7 +159,6 @@ export class PerformanceApi {
                     })
                   }
                 })
-
               }
             })
           }
@@ -184,23 +184,24 @@ export class PerformanceApi {
       state: perf.step_1.state,
       dateTime: perf.step_1.date,
       status: perf.status ? perf.status : PerformanceStatus.DRAFT,
-      performanceSections: perf.step_3.segments.map((seg, ind) => {
+      performanceSections: perf.step_3.segments.map((seg, segIx) => {
         return {
           id: seg.id ? Number(seg.id) : undefined,
-          sectionPosition: ind,
+          sectionPosition: segIx,
           primaryCast: seg.selected_group,
           sectionId: Number(seg.segment),
-          positions: seg.custom_groups.map(cg => {
+          positions: seg.custom_groups.map((customGroup, customGroupIx) => {
             return {
-              positionId: Number(cg.position_uuid),
-              casts: cg.groups.map(c => {
+              positionId: Number(customGroup.position_uuid),
+              positionOrder: customGroup.position_order,
+              casts: customGroup.groups.map((subCast, subCastIx) => {
                 return {
-                  castNumber: c.group_index,
-                  members: c.members.map(mem => {
+                  castNumber: subCast.group_index,
+                  members: subCast.members.map(mem => {
                     return {
                       order: mem.position_number,
                       userId: Number(mem.uuid),
-                      performing: c.group_index == seg.selected_group
+                      performing: subCast.group_index == seg.selected_group
                     }
                   })
                 }

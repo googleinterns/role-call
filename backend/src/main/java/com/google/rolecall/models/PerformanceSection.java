@@ -103,8 +103,10 @@ public class PerformanceSection {
     Hashtable<Integer, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions = 
         new Hashtable<>();
     
+    Hashtable<Integer, Integer> positionOrders = new Hashtable<>();
     for(PerformanceCastMember member: performanceCastMembers) {
       Integer positionId = member.getPosition().getId();
+      Integer positionOrder = member.getPosition().getOrder();
 
       Hashtable<Integer, List<PerformanceCastMemberInfo>> cast;
       if(positions.containsKey(positionId)) {
@@ -112,6 +114,7 @@ public class PerformanceSection {
       } else {
         cast = new Hashtable<>();
         positions.put(positionId, cast);
+        positionOrders.put(positionId, positionOrder);
       }
 
       int castNumber = member.getCastNumber();
@@ -126,7 +129,7 @@ public class PerformanceSection {
       members.add(member.toPerformanceCastMemberInfo());
     }
 
-    List<PerformancePositionInfo> positionInfos = toAllPerformancePositionInfo(positions);
+    List<PerformancePositionInfo> positionInfos = toAllPerformancePositionInfo(positions, positionOrders);
 
     return PerformanceSectionInfo.newBuilder()
         .setId(id)
@@ -138,7 +141,8 @@ public class PerformanceSection {
   }
 
   private List<PerformancePositionInfo> toAllPerformancePositionInfo(
-      Hashtable<Integer, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions) {
+      Hashtable<Integer, Hashtable<Integer, List<PerformanceCastMemberInfo>>> positions,
+      Hashtable<Integer, Integer> positionOrders) {
     List<PerformancePositionInfo> positionInfos = new ArrayList<>();
 
     for(Integer positionId: positions.keySet()) {
@@ -156,6 +160,7 @@ public class PerformanceSection {
       
       PerformancePositionInfo positionInfo = PerformancePositionInfo.newBuilder()
           .setPositionId(positionId)
+          .setPositionOrder(positionOrders.get(positionId))
           .setPerformanceCasts(castInfos)
           .build();
 

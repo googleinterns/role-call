@@ -3,9 +3,15 @@ package com.google.rolecall;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -61,6 +67,83 @@ public class ApplicationLoader implements ApplicationRunner {
     userRepo.save(admin);
     logger.log(Level.WARNING, String.format("Admin User Created: %s %s %s", 
         adminFirstName, adminLastName, adminEmail));
+    if(DataCreateError.OK != createTestData()) {
+      logger.log(Level.SEVERE, "Unable to Create Sample Data");
+    }
+  }
+
+  // TODO: Remove the sameple data creation once the customer is up and running.
+
+  // Create sample data
+  
+  private enum DataCreateError {
+    OK,
+    OtherError
+  }
+
+  private void createOneUser(String fName, String lName, String email, String dateJoined)
+      throws ParseException, InvalidParameterException {
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+    User user;
+
+      cal.setTime(sdf.parse(dateJoined));
+
+      user = User.newBuilder()
+          .setFirstName(fName)
+          .setLastName(lName)
+          .setEmail(email)
+          .setDateJoined(cal)
+          .setIsActive(true)
+          .setCanLogin(true)
+          .setIsDancer(true)
+          .build();
+      userRepo.save(user);
+  }
+
+  private DataCreateError createTestData() {
+    logger.log(Level.WARNING, "Creating test data.");    
+    try {
+      createOneUser("Robert", "Battle", "rb@gmail.com","1/1/2020");
+      createOneUser("Jeroboam", "Bozeman", "bb@gmail.com","1/1/2020");
+      createOneUser("Clifton", "Brown", "cb@gmail.com","1/1/2020");
+      createOneUser("Khalia", "Campbell", "kc@gmail.com","1/1/2020");
+      createOneUser("Patrick", "Coker", "pc@gmail.com","1/1/2020");
+      createOneUser("Sarah", "Daley", "sd@gmail.com","1/1/2020");
+      createOneUser("Ghrai", "Devore", "gde@gmail.com","1/1/2020");
+      createOneUser("Solomon", "Dumas", "sdu@gmail.com","1/1/2020");
+      createOneUser("Ronni", "Favors", "rf@gmail.com","1/1/2020");
+      createOneUser("Samantha", "Figgins", "sf@gmail.com","1/1/2020");
+
+      createOneUser("James", "Gilmer", "jg@gmail.com","1/1/2020");
+      createOneUser("Vernard", "Gilmore", "vg@gmail.com","1/1/2020");
+      createOneUser("Jacqueline", "Green", "jgr@gmail.com","1/1/2020");
+      createOneUser("Jacquelin", "Harris", "jh@gmail.com","1/1/2020");
+      createOneUser("Michael", "Jackson", "mj@gmail.com","1/1/2020");
+      createOneUser("Yazzmeen", "Laidler", "yl@gmail.com","1/1/2020");
+      createOneUser("Yannick", "Lebrun", "yle@gmail.com","1/1/2020");
+      createOneUser("Constance", "Lopez", "csl@gmail.com","1/1/2020");
+      createOneUser("Renaldo", "Maurice", "rm@gmail.com","1/1/2020");
+      createOneUser("Corrin", "Mitchell", "crm@gmail.com","1/1/2020");
+
+      createOneUser("Chalvar", "Monteiro", "cm@gmail.com","1/1/2020");
+      createOneUser("Belen", "Pereyra", "bp@gmail.com","1/1/2020");
+      createOneUser("Jessica", "Pinkett", "jap@gmail.com","1/1/2020");
+      createOneUser("Miranda", "Quinn", "mq@gmail.com","1/1/2020");
+      createOneUser("Jamar", "Roberts", "jr@gmail.com","1/1/2020");
+      createOneUser("Matthew", "Rushing", "mr@gmail.com","1/1/2020");
+      createOneUser("Kanji", "Segawa", "ks@gmail.com","1/1/2020");
+      createOneUser("Courtney", "Spears", "ccs@gmail.com","1/1/2020");
+      createOneUser("Jermaine", "Terry", "jt@gmail.com","1/1/2020");
+      createOneUser("Christopher", "Wilson", "cw@gmail.com","1/1/2020");
+
+      createOneUser("Brandon", "Woolridge", "bw@gmail.com","1/1/2020");
+    } catch(InvalidParameterException e) {
+      return DataCreateError.OtherError;
+    } catch(ParseException e) {
+      return DataCreateError.OtherError;
+    }
+    return DataCreateError.OK;
   }
 
   @Autowired

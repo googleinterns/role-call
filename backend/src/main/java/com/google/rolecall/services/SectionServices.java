@@ -309,17 +309,18 @@ public class SectionServices {
     if(isParentRevelation) {
       // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
       for(int loopCounter = 0; loopCounter < section.getPositions().size(); loopCounter++) {
-        Position pos = section.getPositions().get(loopCounter);
-  
-        Section subSection = Section.newBuilder()
-            .setId(siblingIndexArray[loopCounter])
-            .setName(pos.getName())
-            .setNotes("")
-            .setLength(0)
-            .setSiblingId(pos.getId())
-            .setType(Section.Type.PIECE)
-            .build();
-        sectionRepo.save(subSection);
+        if(siblingIndexArray[loopCounter] != -1) {
+          Position pos = section.getPositions().get(loopCounter);
+          Section subSection = Section.newBuilder()
+              .setId(siblingIndexArray[loopCounter])
+              .setName(pos.getName())
+              .setNotes("")
+              .setLength(0)
+              .setSiblingId(pos.getId())
+              .setType(Section.Type.PIECE)
+              .build();
+          sectionRepo.save(subSection);
+        }
       }
     }
   }
