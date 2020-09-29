@@ -67,8 +67,12 @@ public class ApplicationLoader implements ApplicationRunner {
     userRepo.save(admin);
     logger.log(Level.WARNING, String.format("Admin User Created: %s %s %s", 
         adminFirstName, adminLastName, adminEmail));
-    createTestData();
+    if(DataCreateError.OK != createTestData()) {
+      logger.log(Level.SEVERE, "Unable to Create Sample Data");
+    }
   }
+
+  // TODO: Remove the sameple data creation once the customer is up and running.
 
   // Create sample data
   
@@ -77,11 +81,12 @@ public class ApplicationLoader implements ApplicationRunner {
     OtherError
   }
 
-  private DataCreateError createOneUser(String fName, String lName, String email, String dateJoined) {
+  private void createOneUser(String fName, String lName, String email, String dateJoined)
+      throws ParseException, InvalidParameterException {
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
     User user;
-    try {
+
       cal.setTime(sdf.parse(dateJoined));
 
       user = User.newBuilder()
@@ -94,57 +99,49 @@ public class ApplicationLoader implements ApplicationRunner {
           .setIsDancer(true)
           .build();
       userRepo.save(user);
-    } catch(InvalidParameterException e) {
-      return DataCreateError.OtherError;
-    } catch(ParseException e) {
-      return DataCreateError.OtherError;
-    }
-    return DataCreateError.OK;
   }
 
   private DataCreateError createTestData() {
     logger.log(Level.WARNING, "Creating test data.");    
-    Boolean finished = false;
-    while (!finished) {
-      if(DataCreateError.OK != createOneUser("Robert", "Battle", "rb@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Jeroboam", "Bozeman", "bb@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Clifton", "Brown", "cb@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Khalia", "Campbell", "kc@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Patrick", "Coker", "pc@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Sarah", "Daley", "sd@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Ghrai", "Devore", "gde@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Solomon", "Dumas", "sdu@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Ronni", "Favors", "rf@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Samantha", "Figgins", "sf@gmail.com","1/1/2020")) break;
+    try {
+      createOneUser("Robert", "Battle", "rb@gmail.com","1/1/2020");
+      createOneUser("Jeroboam", "Bozeman", "bb@gmail.com","1/1/2020");
+      createOneUser("Clifton", "Brown", "cb@gmail.com","1/1/2020");
+      createOneUser("Khalia", "Campbell", "kc@gmail.com","1/1/2020");
+      createOneUser("Patrick", "Coker", "pc@gmail.com","1/1/2020");
+      createOneUser("Sarah", "Daley", "sd@gmail.com","1/1/2020");
+      createOneUser("Ghrai", "Devore", "gde@gmail.com","1/1/2020");
+      createOneUser("Solomon", "Dumas", "sdu@gmail.com","1/1/2020");
+      createOneUser("Ronni", "Favors", "rf@gmail.com","1/1/2020");
+      createOneUser("Samantha", "Figgins", "sf@gmail.com","1/1/2020");
 
-      if(DataCreateError.OK != createOneUser("James", "Gilmer", "jg@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Vernard", "Gilmore", "vg@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Jacqueline", "Green", "jgr@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Jacquelin", "Harris", "jh@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Michael", "Jackson", "mj@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Yazzmeen", "Laidler", "yl@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Yannick", "Lebrun", "yle@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Constance", "Lopez", "csl@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Renaldo", "Maurice", "rm@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Corrin", "Mitchell", "crm@gmail.com","1/1/2020")) break;
+      createOneUser("James", "Gilmer", "jg@gmail.com","1/1/2020");
+      createOneUser("Vernard", "Gilmore", "vg@gmail.com","1/1/2020");
+      createOneUser("Jacqueline", "Green", "jgr@gmail.com","1/1/2020");
+      createOneUser("Jacquelin", "Harris", "jh@gmail.com","1/1/2020");
+      createOneUser("Michael", "Jackson", "mj@gmail.com","1/1/2020");
+      createOneUser("Yazzmeen", "Laidler", "yl@gmail.com","1/1/2020");
+      createOneUser("Yannick", "Lebrun", "yle@gmail.com","1/1/2020");
+      createOneUser("Constance", "Lopez", "csl@gmail.com","1/1/2020");
+      createOneUser("Renaldo", "Maurice", "rm@gmail.com","1/1/2020");
+      createOneUser("Corrin", "Mitchell", "crm@gmail.com","1/1/2020");
 
-      if(DataCreateError.OK != createOneUser("Chalvar", "Monteiro", "cm@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Belen", "Pereyra", "bp@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Jessica", "Pinkett", "jap@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Miranda", "Quinn", "mq@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Jamar", "Roberts", "jr@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Matthew", "Rushing", "mr@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Kanji", "Segawa", "ks@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Courtney", "Spears", "ccs@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Jermaine", "Terry", "jt@gmail.com","1/1/2020")) break;
-      if(DataCreateError.OK != createOneUser("Christopher", "Wilson", "cw@gmail.com","1/1/2020")) break;
+      createOneUser("Chalvar", "Monteiro", "cm@gmail.com","1/1/2020");
+      createOneUser("Belen", "Pereyra", "bp@gmail.com","1/1/2020");
+      createOneUser("Jessica", "Pinkett", "jap@gmail.com","1/1/2020");
+      createOneUser("Miranda", "Quinn", "mq@gmail.com","1/1/2020");
+      createOneUser("Jamar", "Roberts", "jr@gmail.com","1/1/2020");
+      createOneUser("Matthew", "Rushing", "mr@gmail.com","1/1/2020");
+      createOneUser("Kanji", "Segawa", "ks@gmail.com","1/1/2020");
+      createOneUser("Courtney", "Spears", "ccs@gmail.com","1/1/2020");
+      createOneUser("Jermaine", "Terry", "jt@gmail.com","1/1/2020");
+      createOneUser("Christopher", "Wilson", "cw@gmail.com","1/1/2020");
 
-      if(DataCreateError.OK != createOneUser("Brandon", "Woolridge", "bw@gmail.com","1/1/2020")) break;
-      finished = true;
-    }
-    if(!finished) {
-      logger.log(Level.SEVERE, "Unable to Create Sample Data");
-      return DataCreateError.OtherError;   
+      createOneUser("Brandon", "Woolridge", "bw@gmail.com","1/1/2020");
+    } catch(InvalidParameterException e) {
+      return DataCreateError.OtherError;
+    } catch(ParseException e) {
+      return DataCreateError.OtherError;
     }
     return DataCreateError.OK;
   }
