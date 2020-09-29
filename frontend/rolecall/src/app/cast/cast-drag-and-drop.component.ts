@@ -1,13 +1,12 @@
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {APITypes} from 'src/api_types';
-import {Cast, CastSubCast, CastApi } from '../api/cast_api.service';
+import {Cast, CastGroup, CastApi } from '../api/cast_api.service';
 import {Piece, PieceApi, Position} from '../api/piece_api.service';
 import {User, UserApi} from '../api/user_api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 import {LoggingService} from '../services/logging.service';
-
-const CAST_COUNT = 3;
+import {CAST_COUNT} from 'src/constants';
 
 type UICastDancer = {
   uuid: string;
@@ -22,7 +21,7 @@ type UICastRow = {
 
 type UICastPosition = {
   pos: Position;
-  castSize: number;
+  dancerCount: number;
   castRows: UICastRow[];
 };
 
@@ -55,6 +54,9 @@ export class CastDragAndDrop implements OnInit {
   castPositions: UICastPosition[];
   subCastHeaders: string[];
 
+  defaulCastCount = CAST_COUNT;
+  castCount = CAST_COUNT;
+
   usersLoaded = false;
   castsLoaded = false;
   piecesLoaded = false;
@@ -68,13 +70,7 @@ export class CastDragAndDrop implements OnInit {
       private logging: LoggingService,
       private csvGenerator: CsvGenerator
   ) {
-    this.subCastHeaders = [];
-    this.subCastHeaders.push('1st Cast');
-    if (2 <= CAST_COUNT) { this.subCastHeaders.push('2nd Cast'); }
-    if (3 <= CAST_COUNT) { this.subCastHeaders.push('3rd Cast'); }
-    for (let i = 4; i <= CAST_COUNT; i++) {
-      this.subCastHeaders.push(`${i}th Cast`);
-    }
+    this.buildSubCastHeader();
   }
 
   ngOnInit(): void {
@@ -104,6 +100,16 @@ export class CastDragAndDrop implements OnInit {
     this.castChangeEmitter.emit(this.cast);
   }
 
+  private buildSubCastHeader() {
+    this.subCastHeaders = [];
+    this.subCastHeaders.push("1st Cast");
+    if (2 <= this.castCount) { this.subCastHeaders.push("2nd Cast"); }
+    if (3 <= this.castCount) { this.subCastHeaders.push("3rd Cast"); }
+    for (let i = 4; i <= this.castCount; i++) {
+      this.subCastHeaders.push(`${i}th Cast`);
+    }
+  }
+
   /** Checks that all the required data is loaded to begin
    * rendering.
    */
@@ -124,7 +130,7 @@ export class CastDragAndDrop implements OnInit {
   }
 
   /** Called when users are loaded from the User API. */
-  onUserLoad(users: User[]) {
+  private onUserLoad(users: User[]) {
     this.usersLoaded = true;
     this.allUsers = users.filter(user => user.has_roles.isDancer);
     this.allUsers = this.allUsers.sort(
@@ -145,11 +151,11 @@ export class CastDragAndDrop implements OnInit {
   /** Selects the current cast from the Cast API to copy and render
    * in the drag and drop.
    */
-  selectCast({uuid, saveDeleteEnabled}: {
+  selectCast({uuid, saveDeleteEnabled = true}: {
     uuid: APITypes.CastUUID;
     saveDeleteEnabled?: boolean;
   }) {
-    this.buttonsEnabled = saveDeleteEnabled ? true : !saveDeleteEnabled;
+    this.buttonsEnabled = saveDeleteEnabled;
     this.castSelected = true;
     this.selectedCastUUID = uuid;
     if (this.dataLoaded) {
@@ -162,10 +168,11 @@ export class CastDragAndDrop implements OnInit {
     const newCast: Cast = {
       uuid: this.selectedCastUUID,
       segment: this.cast.segment,
+      castCount: this.castCount,
       name: this.cast.name,
       filled_positions: this.castPositions.map(
           (uiPos: UICastPosition, uiPosIndex: number) => {
-        let subCasts: CastSubCast[] = new Array(CAST_COUNT).fill([]);
+        let subCasts: CastGroup[] = new Array(this.castCount).fill([]);
         subCasts = subCasts.map((subCast, subCastIndex) => {
           return {
             group_index: subCastIndex,
@@ -174,7 +181,7 @@ export class CastDragAndDrop implements OnInit {
         });
         for (let subCastIndex = 0; subCastIndex < subCasts.length;
             subCastIndex++) {
-          for (let dancerIndex = 0; dancerIndex < uiPos.castSize;
+          for (let dancerIndex = 0; dancerIndex < uiPos.dancerCount;
               dancerIndex++) {
             const dancer = uiPos.castRows[dancerIndex]
                 .subCastDancers[subCastIndex];
@@ -207,15 +214,17 @@ export class CastDragAndDrop implements OnInit {
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
+    this.castCount = this.cast.castCount;
+    this.buildSubCastHeader();
     const positions = this.pieceAPI.pieces.get(this.cast.segment).positions;
     for (const position of positions) {
       const castPosition: UICastPosition =
-          { pos: position, castSize: position.size, castRows: [] };
+          { pos: position, dancerCount: position.size, castRows: [] };
       this.castPositions.push(castPosition);
-      for (let dancerIndex = 0; dancerIndex < castPosition.castSize;
+      for (let dancerIndex = 0; dancerIndex < castPosition.dancerCount;
           dancerIndex++) {
         castPosition.castRows.push({
-          subCastDancers: new Array(CAST_COUNT),
+          subCastDancers: new Array(this.castCount),
         });
       }
     }
@@ -246,7 +255,7 @@ export class CastDragAndDrop implements OnInit {
             maxDancerIndex = member.position_number;
             if (maxDancerIndex >= uiPos.castRows.length) {
               uiPos.castRows.push({
-                subCastDancers: new Array(CAST_COUNT),
+                subCastDancers: new Array(this.castCount),
               });
             }
           }
@@ -260,7 +269,7 @@ export class CastDragAndDrop implements OnInit {
           };
         }
       }
-      uiPos.castSize = Math.max(maxDancerIndex + 1, uiPos.pos.size);
+      uiPos.dancerCount = Math.max(maxDancerIndex + 1, uiPos.pos.size);
     }
   }
 
@@ -290,7 +299,7 @@ export class CastDragAndDrop implements OnInit {
 
     if (prevContainerID === 'user-pool' && event.container.id) {
       // From user table to Cast table
-      if (toCastIndex < CAST_COUNT) {
+      if (toCastIndex < this.castCount) {
         // Dropped inside Cast table
         const fromUser = event.item.data as User;
         this.castPositions[toIndexs[0]].castRows[toIndexs[1]]
@@ -343,13 +352,49 @@ export class CastDragAndDrop implements OnInit {
 
   decrementDancerCount(positionIndex: number) {
     this.castPositions[positionIndex].castRows.pop();
-    this.castPositions[positionIndex].castSize -= 1;
+    this.castPositions[positionIndex].dancerCount -= 1;
   }
 
   incrementDancerCount(positionIndex: number) {
     this.castPositions[positionIndex].castRows.push({
-      subCastDancers: new Array(CAST_COUNT),
+      subCastDancers: new Array(this.castCount),
     });
-    this.castPositions[positionIndex].castSize += 1;
+    this.castPositions[positionIndex].dancerCount += 1;
+  }
+  
+  private changeCastCount(change: number) {
+    const oldCastCount = this.castCount;
+    this.castCount += change;
+    const oldCastPositions = this.castPositions;
+    this.castPositions = [];
+    for (let positionIndex = 0; positionIndex < oldCastPositions.length; positionIndex++) {
+      const oldPosition = oldCastPositions[positionIndex];
+      const newPosition: UICastPosition = {
+        pos: oldPosition.pos,
+        dancerCount: oldPosition.dancerCount,
+        castRows: [],
+      };
+      for(let dancerIndex = 0; dancerIndex < oldPosition.castRows.length; dancerIndex++) {
+        const oldCastRow = oldPosition.castRows[dancerIndex];
+        const transferCount = Math.min(this.castCount, oldCastCount)
+        const castRow: UICastRow = {
+          subCastDancers: new Array(this.castCount) as UICastDancer[],
+        };
+        for (let castIndex = 0; castIndex < transferCount; castIndex++) {
+          castRow.subCastDancers[castIndex] = oldCastRow.subCastDancers[castIndex];
+        }
+        newPosition.castRows.push(castRow);
+      }
+      this.castPositions.push(newPosition);
+    }
+    this.buildSubCastHeader();
+  }
+
+  decrementCastCount() {
+    this.changeCastCount(-1);
+  }
+
+  incrementCastCount() {
+    this.changeCastCount(1);
   }
 }

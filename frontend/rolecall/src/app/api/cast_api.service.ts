@@ -40,7 +40,7 @@ export type CastMember = {
   position_number: number;
 }
 
-export type CastSubCast = {
+export type CastGroup = {
   position_uuid?: string;
   group_index: number;
   members: CastMember[];
@@ -48,13 +48,14 @@ export type CastSubCast = {
 
 export type CastPosition = {
   position_uuid: string;
-  groups: CastSubCast[];
+  groups: CastGroup[];
 }
 
 export type Cast = {
   uuid: string;
   name: string;
   segment: string;
+  castCount: number;
   filled_positions: CastPosition[];
 }
 
@@ -116,26 +117,27 @@ export class CastApi {
       })
       .toPromise()
       .catch((errorResp) => errorResp)
-      .then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((val) => {
-        this.rawCasts = val.data;
+      .then((resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp)).then((result) => {
+        this.rawCasts = result.data;
         let allPositions: Position[] = [];
         Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
           allPositions.push(...piece.positions);
         });
         return {
           data: {
-            casts: val.data.map(rawCast => {
-              let groups: {
-                position_uuid: string,
-                group_index: number,
-                members: { uuid: string, position_number: number }[]
-              }[] = [];
+            casts: result.data.map(rawCast => {
+              let higestCastNumber = 0;
+              let groups: CastGroup[] = [];
               for (let rawSubCast of rawCast.subCasts) {
-                let foundGroup = groups.find(g => g.position_uuid == String(allPositions.find(pos => Number(pos.uuid) == rawSubCast.positionId).uuid));
+                let foundGroup = groups.find(g => g.position_uuid == String(allPositions.find(
+                    pos => Number(pos.uuid) == rawSubCast.positionId).uuid));
                 if (foundGroup) {
-                  let foundGroupIndex = groups.find(g => g.position_uuid == String(allPositions.find(pos => Number(pos.uuid) == rawSubCast.positionId).uuid) && g.group_index == rawSubCast.castNumber);
+                  let foundGroupIndex = groups.find(g => g.position_uuid == String(allPositions.find(
+                      pos => Number(pos.uuid) == rawSubCast.positionId).uuid) &&
+                          g.group_index == rawSubCast.castNumber);
                   if (foundGroupIndex) {
-                    foundGroupIndex.members = foundGroupIndex.members.concat(rawSubCast.members.map(rawMem => {
+                    foundGroupIndex.members = foundGroupIndex.members.concat(
+                        rawSubCast.members.map(rawMem => {
                       return {
                         uuid: String(rawMem.userId),
                         position_number: rawMem.order
@@ -143,7 +145,8 @@ export class CastApi {
                     }));
                   } else {
                     groups.push({
-                      position_uuid: String(allPositions.find(pos => Number(pos.uuid) == rawSubCast.positionId).uuid),
+                      position_uuid: String(allPositions.find(
+                          pos => Number(pos.uuid) == rawSubCast.positionId).uuid),
                       group_index: rawSubCast.castNumber,
                       members: rawSubCast.members.map(rawMem => {
                         return {
@@ -155,7 +158,8 @@ export class CastApi {
                   }
                 } else {
                   groups.push({
-                    position_uuid: String(allPositions.find(pos => Number(pos.uuid) == rawSubCast.positionId).uuid),
+                    position_uuid: String(allPositions.find(
+                        pos => Number(pos.uuid) == rawSubCast.positionId).uuid),
                     group_index: rawSubCast.castNumber,
                     members: rawSubCast.members.map(rawMem => {
                       return {
@@ -165,6 +169,9 @@ export class CastApi {
                     })
                   });
                 }
+                if (higestCastNumber < rawSubCast.castNumber) {
+                  higestCastNumber = rawSubCast.castNumber;
+                }
               }
               let uniquePositionIDs = new Set<number>();
               rawCast.subCasts.forEach(val => uniquePositionIDs.add(val.positionId));
@@ -172,16 +179,18 @@ export class CastApi {
                 uuid: String(rawCast.id),
                 name: rawCast.name,
                 segment: String(rawCast.sectionId),
+                castCount: higestCastNumber + 1,
                 filled_positions: Array.from(uniquePositionIDs.values()).map(positionID => {
                   return {
                     position_uuid: String(allPositions.find(pos => Number(pos.uuid) == positionID).uuid),
-                    groups: groups.filter(g => g.position_uuid == String(allPositions.find(pos => Number(pos.uuid) == positionID).uuid))
+                    groups: groups.filter(g => g.position_uuid == String(allPositions.find(
+                        pos => Number(pos.uuid) == positionID).uuid))
                   }
                 })
               }
             })
           },
-          warnings: val.warnings
+          warnings: result.warnings
         }
       });
   }

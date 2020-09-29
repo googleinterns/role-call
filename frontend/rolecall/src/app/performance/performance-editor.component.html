@@ -231,7 +231,7 @@
             <div class="segment-list app-card">
               <div *ngFor="let segment of state.step_3.segments; let i = index"
                   class="segment-container"
-                  [ngStyle]="{'margin-left': step2Data[i].siblingId > 0 ? '4rem' : '1rem' }">
+                  [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1">
                   <h3 class="title">{{segment['name']}}</h3>
                 <div *ngFor="let pos of segment.custom_groups"
                     class="pos-container"
@@ -289,8 +289,7 @@
                   class="piece-container"
                   [cdkDragData]="data">
                 <div class="app-card piece-name-card"
-                    [ngStyle]="{'margin-left': data.siblingId > 0 ? '2rem' : '0rem' }"
-                    >
+                    [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0">
                   <h2 class="piece-name-delete">
                     {{data.name}}</h2>
                 </div>

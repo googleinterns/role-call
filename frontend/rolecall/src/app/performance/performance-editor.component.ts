@@ -12,6 +12,7 @@ import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
 import { Stepper } from '../common_components/stepper.component';
 import { CsvGenerator } from '../services/csv-generator.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import { CAST_COUNT } from 'src/constants';
 
 @Component({
   selector: 'app-performance-editor',
@@ -484,6 +485,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         uuid: castUUID,
         name: "New Cast",
         segment: this.selectedSegment.uuid,
+        castCount: CAST_COUNT,
         filled_positions: this.selectedSegment.positions.map(val => {
           return {
             position_uuid: val.uuid,
@@ -569,6 +571,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
             uuid: castUUID,
             name: "Copied Cast",
             segment: seg.segment,
+            castCount: CAST_COUNT,
             filled_positions: seg.custom_groups
           }
           this.segmentToCast.set(castUUID, [cast, seg.selected_group, seg.length ? seg.length : 0]);
