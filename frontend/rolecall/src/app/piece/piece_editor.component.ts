@@ -8,19 +8,17 @@ import {Piece, PieceType, PieceApi, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 import {APITypes} from 'src/api_types';
 
+type ValueName = 
+  'New Position' |
+  'Existing Position' |
+  'New Ballet' |
+  'Existing Ballet';
 
 type DraggablePosition = {
   index: number;
   pos: Position;
-  valueName:
-      'New Position' |
-      'Existing Position' |
-      'New Ballet' |
-      'Existing Ballet';
-  type:
-      'adding' |
-      'added' |
-      'editing';
+  valueName: ValueName;
+  type: 'adding' | 'added' | 'editing';
   nameDisplay: string;
   sizeDisplay: string;
 };
@@ -347,15 +345,13 @@ export class PieceEditor implements OnInit {
     change: [string, any],
     data?: any,
   }) {
-    const valueName = change[0];
-    const value = change[1];
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
       this.setCurrentPiece(this.workingPiece);
     }
     if (this.workingPiece) {
-      this.setWorkingPropertyByKey({key: valueName, name: value, data});
+      this.setWorkingPropertyByKey({key: change[0], name: change[1], data});
     }
   }
 

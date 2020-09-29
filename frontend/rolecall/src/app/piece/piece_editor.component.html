@@ -9,7 +9,7 @@
         <div
             *ngFor="let piece of renderingPieces"
             class="app-card piece-select"
-            [class.selected-cast]="piece.uuid === currentSelectedPiece.uuid "
+            [class.selected-piece]="piece.uuid === currentSelectedPiece.uuid "
             (click)="setCurrentPiece(piece)">
             <div *ngIf="piece.type === 'REVELATION'; else otherSegments">
               <h2 class="piece-name piece-underline">
@@ -135,7 +135,7 @@
                     class="adding-position-container">
                   <div
                       class="adding-position-name-container"
-                      [ngStyle]="{'width':currentSelectedPiece.type === 'PIECE' ? '70%' : '100%' }">
+                      [style.width.%]="currentSelectedPiece.type === 'PIECE' ? 70 : 100">
                     <app-text-input
                         (valueChange)="onInputChange({change: $event, data: data})"
                         [bgColor]="offWhite"
@@ -143,7 +143,9 @@
                         [initValue]="data.pos.name">
                     </app-text-input>
                   </div>
-                  <div *ngIf="currentSelectedPiece.type === 'PIECE'" class="adding-position-size-container">
+                  <div
+                        *ngIf="currentSelectedPiece.type === 'PIECE'"
+                        class="adding-position-size-container">
                     <app-text-input
                         (valueChange)="onInputChange({change: $event, data: data})"
                         [bgColor]="offWhite"
