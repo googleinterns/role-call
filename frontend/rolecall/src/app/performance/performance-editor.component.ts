@@ -12,7 +12,7 @@ import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
 import { Stepper } from '../common_components/stepper.component';
 import { CsvGenerator } from '../services/csv-generator.service';
 import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
-import { CAST_COUNT } from 'src/constants';
+import {CAST_COUNT} from 'src/constants';
 
 @Component({
   selector: 'app-performance-editor',
