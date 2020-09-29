@@ -20,8 +20,16 @@ public abstract class UserInfo {
   public abstract String firstName();
 
   @Nullable
+  @JsonProperty("middleName")
+  public abstract String middleName();
+
+  @Nullable
   @JsonProperty("lastName")
   public abstract String lastName();
+
+  @Nullable
+  @JsonProperty("suffix")
+  public abstract String suffix();
 
   @Nullable
   @JsonProperty("email")
@@ -122,8 +130,14 @@ public abstract class UserInfo {
     @JsonProperty("firstName")
     public abstract Builder setFirstName(String firstName);
 
+    @JsonProperty("middleName")
+    public abstract Builder setMiddleName(String middleName);
+
     @JsonProperty("lastName")
     public abstract Builder setLastName(String lastName);
+
+    @JsonProperty("suffix")
+    public abstract Builder setSuffix(String suffix);
 
     @JsonProperty("email")
     public abstract Builder setEmail(String email);
