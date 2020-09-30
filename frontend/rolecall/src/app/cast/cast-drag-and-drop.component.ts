@@ -1,7 +1,7 @@
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {APITypes} from 'src/api_types';
-import { CAST_COUNT } from 'src/constants';
+import {CAST_COUNT} from 'src/constants';
 import {Cast, CastGroup, CastApi } from '../api/cast_api.service';
 import {Piece, PieceApi, Position} from '../api/piece_api.service';
 import {User, UserApi} from '../api/user_api.service';

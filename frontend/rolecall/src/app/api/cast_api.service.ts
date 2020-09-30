@@ -125,7 +125,7 @@ export class CastApi {
         return {
           data: {
             casts: result.data.map(rawCast => {
-              let higestCastNumber = 0;
+              let highestCastNumber = 0;
               let groups: CastGroup[] = [];
               for (let rawSubCast of rawCast.subCasts) {
                 let foundGroup = groups.find(g => g.position_uuid == String(allPositions.find(pos => Number(pos.uuid) == rawSubCast.positionId).uuid));
@@ -162,8 +162,8 @@ export class CastApi {
                     })
                   });
                 }
-                if (higestCastNumber < rawSubCast.castNumber) {
-                  higestCastNumber = rawSubCast.castNumber;
+                if (highestCastNumber < rawSubCast.castNumber) {
+                  highestCastNumber = rawSubCast.castNumber;
                 }
               }
               let uniquePositionIDs = new Set<number>();
@@ -172,7 +172,7 @@ export class CastApi {
                 uuid: String(rawCast.id),
                 name: rawCast.name,
                 segment: String(rawCast.sectionId),
-                castCount: higestCastNumber + 1,
+                castCount: highestCastNumber + 1,
                 filled_positions: Array.from(uniquePositionIDs.values()).map(positionID => {
                   return {
                     position_uuid: String(allPositions.find(pos => Number(pos.uuid) == positionID).uuid),

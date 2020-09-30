@@ -45,5 +45,5 @@ export const COLORS = {
   AAOrange: '#ffae00'
 };
 
-/** For Casting Screen. */
+/** # casts for the standard ballet. */
 export const CAST_COUNT = 3;
