@@ -28,6 +28,15 @@ type WorkingPiece = Piece & {
   originalName: string;
 };
 
+type RenderingItem = {
+  name: string;
+  sortString: string;
+  pieceIndex: number;
+  siblingId: number;
+  type: PieceType;
+  uuid: string
+};
+
 @Component({
   selector: 'app-piece-editor',
   templateUrl: './piece_editor.component.html',
@@ -36,7 +45,8 @@ type WorkingPiece = Piece & {
 export class PieceEditor implements OnInit {
   dragAndDropData: DraggablePosition[] = [];
   currentSelectedPiece: WorkingPiece;
-  renderingPieces: WorkingPiece[];
+  workingPieces: WorkingPiece[];
+  renderingItems: RenderingItem[];
   urlPointingUUID: string;
 
   sizeValueName = '# Dancers';
@@ -75,14 +85,31 @@ export class PieceEditor implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
+  private buildRenderingList() {
+    this.renderingItems = this.workingPieces.map((wpiece, wpieceIx) => {
+      const missingChidren = wpiece.type === 'SEGMENT' ? false : wpiece.positions.length === 0;
+      const prefix = missingChidren ? ' ' : 'z';
+      const name = missingChidren ? '*' + wpiece.name : wpiece.name;
+      return {
+        name: name,
+        sortString: prefix + wpiece.name,
+        pieceIndex: wpieceIx,
+        siblingId: wpiece.siblingId,
+        type: wpiece.type,
+        uuid: wpiece.uuid,
+      };
+    });
+    this.renderingItems.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
+  }
+
   onPieceLoad(pieces: Piece[]) {
     if (pieces.length === 0) {
-      this.renderingPieces = [];
+      this.workingPieces = [];
       this.piecesLoaded = true;
       return;
     }
-    if (this.renderingPieces) {
-      const prevPieceUUIDS = new Set(this.renderingPieces.map(
+    if (this.workingPieces) {
+      const prevPieceUUIDS = new Set(this.workingPieces.map(
           piece => piece.uuid));
       const newPieces: Piece[] = [];
       for (const piece of pieces) {
@@ -103,7 +130,7 @@ export class PieceEditor implements OnInit {
       val.originalName = String(val.name);
       return val;
     });
-    this.renderingPieces = workPieces;
+    this.workingPieces = workPieces;
     if (!this.urlPointingUUID) {
       this.setCurrentPiece(workPieces[0]);
     } else {
@@ -116,6 +143,11 @@ export class PieceEditor implements OnInit {
       }
     }
     this.piecesLoaded = true;
+    this.buildRenderingList();
+  }
+
+  setCurrentPieceFromIndex(pieceIndex: number) {
+    this.setCurrentPiece(this.workingPieces[pieceIndex]);
   }
 
   setCurrentPiece(piece: WorkingPiece) {
@@ -129,11 +161,11 @@ export class PieceEditor implements OnInit {
       this.currentSelectedPiece.addingPositions = [];
     }
     if ((this.workingPiece && piece && piece.uuid !== this.workingPiece.uuid)) {
-      this.renderingPieces = this.renderingPieces.filter(
+      this.workingPieces = this.workingPieces.filter(
           renderPiece => renderPiece.uuid !== this.workingPiece.uuid);
       if (this.prevWorkingState !== undefined) {
         this.currentSelectedPiece = this.prevWorkingState;
-        this.renderingPieces.push(this.currentSelectedPiece);
+        this.workingPieces.push(this.currentSelectedPiece);
       }
       this.prevWorkingState = undefined;
       this.workingPiece = undefined;
@@ -147,7 +179,7 @@ export class PieceEditor implements OnInit {
         this.location.replaceState('/segment/' + this.urlPointingUUID);
       }
     }
-    this.renderingPieces.sort((a, b) => a.name < b.name ? -1 : 1);
+    this.workingPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedPiece
         ? this.currentSelectedPiece.type : 'SEGMENT';
@@ -160,7 +192,7 @@ export class PieceEditor implements OnInit {
     return (createPosition ? '' : 'Ballet ') + name;
   }
 
-  calcSizeDisplay({createPosition, dancerCount}: {
+  private calcSizeDisplay({createPosition, dancerCount}: {
     createPosition: boolean,
     dancerCount: number,
   }) {
@@ -206,7 +238,7 @@ export class PieceEditor implements OnInit {
     };
     this.selectedSegmentType = type;
     this.currentSelectedPiece = newPiece;
-    this.renderingPieces.push(newPiece);
+    this.workingPieces.push(newPiece);
     this.workingPiece = newPiece;
     this.pieceSaved = false;
     this.dragAndDropData = [];
@@ -235,7 +267,7 @@ export class PieceEditor implements OnInit {
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
         await this.pieceAPI.getAllPieces();
-        const foundSame = this.renderingPieces.find(
+        const foundSame = this.workingPieces.find(
             piece => piece.uuid === prevUUID);
         if (foundSame && this.location.path().startsWith('/segment')) {
           this.setCurrentPiece(foundSame);
@@ -251,10 +283,10 @@ export class PieceEditor implements OnInit {
           await this.pieceAPI.deletePiece(this.currentSelectedPiece);
     }
     if (successIndicator.successful === true) {
-      this.renderingPieces = this.renderingPieces.filter(
+      this.workingPieces = this.workingPieces.filter(
           piece => piece.uuid !== this.currentSelectedPiece.uuid);
-      this.renderingPieces.length > 0
-          ? this.setCurrentPiece(this.renderingPieces[0])
+      this.workingPieces.length > 0
+          ? this.setCurrentPiece(this.workingPieces[0])
           : this.setCurrentPiece(undefined);
     }
     this.prevWorkingState = undefined;

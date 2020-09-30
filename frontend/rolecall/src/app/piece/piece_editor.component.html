@@ -7,20 +7,20 @@
       </h1>
       <div class="piece-select-container">
         <div
-            *ngFor="let piece of renderingPieces"
+            *ngFor="let item of renderingItems"
             class="app-card piece-select"
-            [class.selected-piece]="piece.uuid === currentSelectedPiece.uuid "
-            (click)="setCurrentPiece(piece)">
-            <div *ngIf="piece.type === 'REVELATION'; else otherSegments">
+            [class.selected-piece]="item.uuid === currentSelectedPiece.uuid "
+            (click)="setCurrentPieceFromIndex(item.pieceIndex)">
+            <div *ngIf="item.type === 'REVELATION'; else otherSegments">
               <h2 class="piece-name piece-underline">
-                {{ piece.name }}
+                {{ item.name }}
               </h2>
             </div>
             <ng-template #otherSegments>
               <h2
                   class="piece-name"
-                  [class.std-italic-font]="piece.siblingId > 0">
-                {{ piece.name }}
+                  [class.std-italic-font]="item.siblingId > 0">
+                {{ item.name }}
               </h2>
             </ng-template>
         </div>
@@ -53,7 +53,7 @@
                 mat-menu-item
                 class="create-segment-menu-item"
                 (click)="addPiece(3)">
-              Create Revelation</button>
+              Create Super Ballet</button>
           </mat-menu>
         </div>
       </div>
@@ -62,7 +62,7 @@
 
   <div class="right-panel">
     <div
-        *ngIf="renderingPieces && renderingPieces.length > 0"
+        *ngIf="renderingItems && renderingItems.length > 0"
         class="app-card card-margins right-card">
       <div *ngIf="currentSelectedPiece">
         <div>
