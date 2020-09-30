@@ -123,7 +123,7 @@ public class ApplicationLoader implements ApplicationRunner {
       createOneUser("Vernard", "", "Gilmore", "", "vg@gmail.com","1/1/2020");
       createOneUser("Jacqueline", "", "Green", "", "jgr@gmail.com","1/1/2020");
       createOneUser("Jacquelin", "", "Harris", "", "jh@gmail.com","1/1/2020");
-      createOneUser("Michael", "", "Jackson", " jr.", "mj@gmail.com","1/1/2020");
+      createOneUser("Michael", "", "Jackson", " Jr.", "mj@gmail.com","1/1/2020");
       createOneUser("Yazzmeen", "", "Laidler", "", "yl@gmail.com","1/1/2020");
       createOneUser("Yannick", "", "Lebrun", "", "yle@gmail.com","1/1/2020");
       createOneUser("Constance", "Stamatiou", "Lopez", "", "csl@gmail.com","1/1/2020");

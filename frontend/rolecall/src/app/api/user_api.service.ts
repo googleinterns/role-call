@@ -15,7 +15,9 @@ export type User = {
   has_permissions: APITypes.Permissions;
   knows_positions: APITypes.Position[];
   first_name: string | undefined;
+  middle_name: string | undefined;
   last_name: string | undefined;
+  suffix: string | undefined;
   date_joined: number | undefined;
   contact_info: {
     phone_number: string | undefined;
@@ -31,7 +33,9 @@ export type User = {
 interface rawUser {
   id: number;
   firstName: string;
+  middleName: string;
   lastName: string;
+  suffix: string;
   email: string;
   phoneNumber: string;
   dateJoined: string;
@@ -129,7 +133,9 @@ export class UserApi {
               },
               knows_positions: [],
               first_name: val.firstName,
+              middle_name: val.middleName,
               last_name: val.lastName,
+              suffix: val.suffix,
               date_joined: moment(val.dateJoined, 'MM-DD-YYYY').valueOf(),
               contact_info: {
                 phone_number: val.phoneNumber,
@@ -166,7 +172,9 @@ export class UserApi {
       return this.http.patch(environment.backendURL + "api/user", {
         id: Number(user.uuid),
         firstName: user.first_name,
+        middleName: user.middle_name,
         lastName: user.last_name,
+        suffix: user.suffix,
         email: user.contact_info.email,
         phoneNumber: user.contact_info.phone_number,
         dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
@@ -199,7 +207,9 @@ export class UserApi {
       // Do post
       return this.http.post(environment.backendURL + "api/user", {
         firstName: user.first_name,
+        middleName: user.middle_name,
         lastName: user.last_name,
+        suffix: user.suffix,
         email: user.contact_info.email,
         phoneNumber: user.contact_info.phone_number,
         dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),

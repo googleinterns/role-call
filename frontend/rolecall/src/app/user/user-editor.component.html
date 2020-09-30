@@ -12,8 +12,12 @@
             [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''"
             (click)="setCurrentUser({user : user, fromInputChange : false, shouldSetLastUser : true})">
           <h2 class="user-name">
-            {{ (user.first_name ? user.first_name : " ") + " " + (user.last_name ? user.last_name
-              : " ") }}
+            {{
+              (user.first_name ? user.first_name + " " : "") + 
+              (user.middle_name ? user.middle_name + " " : "") +
+              (user.last_name ? user.last_name : "") + 
+              (user.suffix ? user.suffix : "") 
+            }}
           </h2>
         </div>
       </div>
@@ -35,11 +39,16 @@
 
   <div class="right-panel">
     <div class="app-card card-margins right-card">
-      <h1 class="right-card-title">
-        {{ ((currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined)
-      + ' ' +
-      ((currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined)}}
-      </h1>
+      <div *ngIf="currentSelectedUser">
+        <h1 class="right-card-title">
+          {{
+            (currentSelectedUser.first_name ? currentSelectedUser.first_name + " " : "") + 
+            (currentSelectedUser.middle_name ? currentSelectedUser.middle_name + " " : "") +
+            (currentSelectedUser.last_name ? currentSelectedUser.last_name : "") + 
+            (currentSelectedUser.suffix ? currentSelectedUser.suffix : "") 
+          }}
+        </h1>
+      </div>
       <div class="name-container">
         <div class="name-input">
           <app-text-input
@@ -50,9 +59,23 @@
         </div>
         <div class="name-input">
           <app-text-input
+              valueName="Middle Name"
+              (valueChange)="onInputChange($event)"
+              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['middle_name'] | emptyStringIfUndefined">
+          </app-text-input>
+        </div>
+        <div class="name-input">
+          <app-text-input
               valueName="Last Name"
               (valueChange)="onInputChange($event)"
               [initValue]="(currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined">
+          </app-text-input>
+        </div>
+        <div class="suffix-input">
+          <app-text-input
+              valueName="Suffix"
+              (valueChange)="onInputChange($event)"
+              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['suffix'] | emptyStringIfUndefined">
           </app-text-input>
         </div>
       </div>

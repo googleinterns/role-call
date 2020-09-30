@@ -1,7 +1,7 @@
-import { HttpResponse } from '@angular/common/http';
-import { APITypes } from 'src/api_types';
-import { isNullOrUndefined } from 'util';
-import { AllUsersResponse, OneUserResponse, User } from "../api/user_api.service";
+import {HttpResponse} from '@angular/common/http';
+import {APITypes} from 'src/api_types';
+import {isNullOrUndefined} from 'util';
+import {AllUsersResponse, OneUserResponse, User} from "../api/user_api.service";
 
 /**
  * Mocks the user backend responses
@@ -29,7 +29,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": "System",
+      "middle_name": "",
       "last_name": "Admin",
+      "suffix": "",
       "date_joined": null,
       "contact_info": {
         "phone_number": "N/A",
@@ -60,7 +62,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Bozeman",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -91,7 +95,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Monteiro",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -122,7 +128,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Lebrun",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -153,7 +161,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Jackson",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -185,7 +195,9 @@ export class MockUserBackend {
 
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Maurice",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -216,7 +228,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Dumas",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -247,7 +261,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "DeVore-Strokes",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -278,7 +294,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Green",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -309,7 +327,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Paulos",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -340,7 +360,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Daley-Perdomo",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -371,7 +393,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Harris",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -402,7 +426,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Figgins",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -433,7 +459,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Quinn",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -464,7 +492,9 @@ export class MockUserBackend {
       },
      "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Wilson",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -495,7 +525,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Gilmore",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -526,7 +558,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Brown",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -557,7 +591,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Gilmer",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -589,6 +625,8 @@ export class MockUserBackend {
       "knows_positions": [],
       "first_name": " ",
       "last_name": "Coker",
+      "suffix": "",
+      "middle_name": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -619,7 +657,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Spears",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -650,7 +690,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Parker",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -681,7 +723,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Pereyra",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -712,7 +756,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Woolridge",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -743,7 +789,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Campbell",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -774,7 +822,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Terry",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -805,7 +855,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Mitchell",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -836,7 +888,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Segwa",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -867,7 +921,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Pinkett",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -898,7 +954,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Laidler",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -929,7 +987,9 @@ export class MockUserBackend {
       },
       "knows_positions": [],
       "first_name": " ",
+      "middle_name": "",
       "last_name": "Stamatiou",
+      "suffix": "",
       "date_joined": 1596168000000,
       "contact_info": {
         "phone_number": "N/A",
@@ -942,84 +1002,7 @@ export class MockUserBackend {
       }
     }
   ];
-  // [
-  //   {
-  //     uuid: "USERUUID1",
-  //     has_permissions: {
-  //       isAdmin: true,
-  //       canReceiveNotifications: true,
-  //       canLogin: true,
-  //       manageCasts: true,
-  //       managePerformances: true,
-  //       managePieces: true,
-  //       manageRoles: true,
-  //       manageRules: true
-  //     },
-  //     knows_positions: [
-  //       {
-  //         segment: "PIECE1UUID",
-  //         position: "Lead"
-  //       },
-  //       {
-  //         segment: "PIECE2UUID",
-  //         position: "Background"
-  //       }
-  //     ],
-  //     has_privilege_classes: [
-  //       "admin"
-  //     ],
-  //     first_name: "USER1First",
-  //     last_name: "USER1Last",
-  //     contact_info: {
-  //       phone_number: "1123456789",
-  //       email: "USER1@gmail.com",
-  //       emergency_contact: {
-  //         name: "USER1 Emergency Contact Name",
-  //         phone_number: "1198765432",
-  //         email: "USER1EMG@gmail.com"
-  //       }
-  //     },
-  //     date_joined: 1000000000
-  //   },
-  //   {
-  //     uuid: "USERUUID2",
-  //     has_permissions: {
-  //       isAdmin: false,
-  //       canReceiveNotifications: true,
-  //       canLogin: true,
-  //       manageCasts: true,
-  //       managePerformances: false,
-  //       managePieces: true,
-  //       manageRoles: false,
-  //       manageRules: false
-  //     },
-  //     knows_positions: [
-  //       {
-  //         segment: "PIECE1UUID",
-  //         position: "Background"
-  //       },
-  //       {
-  //         segment: "PIECE2UUID",
-  //         position: "Lead"
-  //       }
-  //     ],
-  //     has_privilege_classes: [
-  //       "choreographer"
-  //     ],
-  //     first_name: "USER2First",
-  //     last_name: "USER2Last",
-  //     contact_info: {
-  //       phone_number: "2123456789",
-  //       email: "USER2@gmail.com",
-  //       emergency_contact: {
-  //         name: "USER2 Emergency Contact Name",
-  //         phone_number: "2198765432",
-  //         email: "USER2EMG@gmail.com"
-  //       }
-  //     },
-  //     date_joined: 1000000000
-  //   }
-  // ];
+
 
   /** Mocks backend response */
   requestAllUsers(): Promise<AllUsersResponse> {

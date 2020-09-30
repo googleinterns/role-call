@@ -35,8 +35,16 @@ export class UserEditor implements OnInit {
       key: 'first_name',
       type: 'string'
     },
+    'Middle Name': {
+      key: 'middle_name',
+      type: 'string'
+    },
     'Last Name': {
       key: 'last_name',
+      type: 'string'
+    },
+    'Suffix': {
+      key: 'suffix',
       type: 'string'
     },
     Email: {
@@ -206,7 +214,9 @@ export class UserEditor implements OnInit {
     this.prevWorkingState = undefined;
     const newUser: User = {
       first_name: undefined,
+      middle_name: undefined,
       last_name: undefined,
+      suffix: undefined,
       has_roles: {
         isAdmin: false,
         isCoreographer: false,
