@@ -345,13 +345,14 @@ export class PieceEditor implements OnInit {
     change: [string, any],
     data?: any,
   }) {
+    const [valueName, value] = change;
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
       this.setCurrentPiece(this.workingPiece);
     }
     if (this.workingPiece) {
-      this.setWorkingPropertyByKey({key: change[0], name: change[1], data});
+      this.setWorkingPropertyByKey({key: valueName, name: value, data});
     }
   }
 
