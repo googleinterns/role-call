@@ -44,3 +44,6 @@ export const COLORS = {
   offoffWhite: '#d9d9d9',
   AAOrange: '#ffae00'
 };
+
+/** # casts for the standard ballet. */
+export const CAST_COUNT = 3;
