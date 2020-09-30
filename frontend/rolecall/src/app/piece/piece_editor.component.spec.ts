@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { PieceEditor } from './piece_editor.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {PieceEditor} from './piece_editor.component';
 
 
 describe('PieceEditorComponent', () => {
