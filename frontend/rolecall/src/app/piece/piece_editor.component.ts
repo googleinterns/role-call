@@ -243,6 +243,7 @@ export class PieceEditor implements OnInit {
     this.pieceSaved = false;
     this.dragAndDropData = [];
     this.setCurrentPiece(this.workingPiece);
+    this.buildRenderingList();
   }
 
   onSavePiece() {
