@@ -62,7 +62,9 @@ public class UserServices {
     
     User user = User.newBuilder()
         .setFirstName(newUser.firstName())
+        .setMiddleName(newUser.middleName())
         .setLastName(newUser.lastName())
+        .setSuffix(newUser.suffix())
         .setEmail(newUser.email())
         .setPhoneNumber(newUser.phoneNumber())
         .setDateJoined(newUser.dateJoined())
@@ -98,7 +100,9 @@ public class UserServices {
   public User editUser(UserInfo newUser) throws EntityNotFoundException, InvalidParameterException {
     User.Builder builder = this.getUser(newUser.id()).toBuilder()
         .setFirstName(newUser.firstName())
+        .setMiddleName(newUser.middleName())
         .setLastName(newUser.lastName())
+        .setSuffix(newUser.suffix())
         .setEmail(newUser.email())
         .setPhoneNumber(newUser.phoneNumber())
         .setDateJoined(newUser.dateJoined())

@@ -32,7 +32,13 @@ public class User {
   private String firstName;
 
   @Column(nullable = false)
+  private String middleName;
+
+  @Column(nullable = false)
   private String lastName;
+
+  @Column(nullable = false)
+  private String suffix;
 
   @NaturalId
   @Column(nullable = false, unique = true)
@@ -93,8 +99,16 @@ public class User {
     return firstName;
   }
 
+  public String getMiddleName() {
+    return middleName;
+  }
+
   public String getLastName() {
     return lastName;
+  }
+
+  public String getSuffix() {
+    return suffix;
   }
 
   public String getEmail() {
@@ -229,7 +243,9 @@ public class User {
     return UserInfo.newBuilder()
         .setId(id)
         .setFirstName(firstName)
+        .setMiddleName(middleName)
         .setLastName(lastName)
+        .setSuffix(suffix)
         .setEmail(email)
         .setPhoneNumber(phoneNumber)
         .setDateJoined(dateJoined)
@@ -267,7 +283,9 @@ public class User {
     private User user;
     private Integer id;
     private String firstName;
+    private String middleName;
     private String lastName;
+    private String suffix;
     private String email;
     private String phoneNumber;
     private Calendar dateJoined;
@@ -293,10 +311,24 @@ public class User {
       }
       return this;
     }
+
+    public Builder setMiddleName(String name) {
+      if(name != null) {
+        this.middleName = name;
+      }
+      return this;
+    }
   
     public Builder setLastName(String name) {
       if(name != null) {
         this.lastName = name;
+      }
+      return this;
+    }
+
+    public Builder setSuffix(String suffix) {
+      if(suffix != null) {
+        this.suffix = suffix;
       }
       return this;
     }
@@ -434,7 +466,9 @@ public class User {
       }
       user.id = this.id;
       user.firstName = this.firstName;
+      user.middleName = this.middleName;
       user.lastName = this.lastName;
+      user.suffix = this.suffix;
       user.email = this.email;
       user.phoneNumber = this.phoneNumber;
       user.dateJoined = this.dateJoined;
@@ -460,7 +494,9 @@ public class User {
       this.user = user;
       this.id = user.id;
       this.firstName = user.firstName;
+      this.middleName = user.middleName;
       this.lastName = user.lastName;
+      this.suffix = user.suffix;
       this.email = user.email;
       this.dateJoined = user.dateJoined;
       this.isAdmin = user.isAdmin;
