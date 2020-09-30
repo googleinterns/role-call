@@ -341,11 +341,10 @@ export class PieceEditor implements OnInit {
     this.pieceSaved = false;
   }
 
-  onInputChange({change, data}: {
+  onInputChange({change: [valueName, value], data}: {
     change: [string, any],
     data?: any,
   }) {
-    const [valueName, value] = change;
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
