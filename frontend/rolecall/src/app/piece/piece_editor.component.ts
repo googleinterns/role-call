@@ -45,7 +45,10 @@ type RenderingItem = {
 export class PieceEditor implements OnInit {
   dragAndDropData: DraggablePosition[] = [];
   currentSelectedPiece: WorkingPiece;
+
+  // All pieces or segments in the system ready to be edited
   workingPieces: WorkingPiece[];
+  // Datascructure that supports the display of the seegment list to the left
   renderingItems: RenderingItem[];
   urlPointingUUID: string;
 
@@ -86,17 +89,19 @@ export class PieceEditor implements OnInit {
   }
 
   private buildRenderingList() {
-    this.renderingItems = this.workingPieces.map((wpiece, wpieceIx) => {
-      const missingChidren = wpiece.type === 'SEGMENT' ? false : wpiece.positions.length === 0;
-      const prefix = missingChidren ? ' ' : 'z';
-      const name = missingChidren ? '*' + wpiece.name : wpiece.name;
+    this.renderingItems = this.workingPieces.map(
+        (workinPiece, workingPieceIndex) => {
+      const hasNoChidren = workinPiece.type === 'SEGMENT'
+          ? false : workinPiece.positions.length === 0;
+      const sortPrefix = hasNoChidren ? ' ' : 'z';
+      const name = hasNoChidren ? '*' + workinPiece.name : workinPiece.name;
       return {
-        name: name,
-        sortString: prefix + wpiece.name,
-        pieceIndex: wpieceIx,
-        siblingId: wpiece.siblingId,
-        type: wpiece.type,
-        uuid: wpiece.uuid,
+        name,
+        sortString: sortPrefix + workinPiece.name,
+        pieceIndex: workingPieceIndex,
+        siblingId: workinPiece.siblingId,
+        type: workinPiece.type,
+        uuid: workinPiece.uuid,
       };
     });
     this.renderingItems.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
