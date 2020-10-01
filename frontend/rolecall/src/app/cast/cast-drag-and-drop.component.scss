@@ -2,9 +2,12 @@
 @import "src/constants";
 @import "src/std";
 
+$cellHeight: 3.5rem;
 $cellWidth: 14rem;
-$bothWidth: 12.5rem;
-$cellHeight: 4rem;
+$bothTextWidth: 12.5rem;
+$bothFillerWidth: 1.5rem;
+$lastCellTextWidth: 11.8rem;
+$lastCellFillerWidth: 2.2rem;
 
 .horizontal-list {
   display: flex;
@@ -21,8 +24,8 @@ $cellHeight: 4rem;
   color: $gray;
   font-size: x-large;
   font-weight: bold;
-  margin-top: 1em;
-  margin-bottom: 0.5em;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .table-container {
@@ -43,19 +46,19 @@ $cellHeight: 4rem;
   margin: 0;
   overflow-x: hidden;
   overflow-y: hidden;
-  padding: 1.2em;
+  padding: .8rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: $cellWidth;
   &ColHeader {
-    padding-top: 1.45rem;
+    padding-top: 1.25rem;
     color: $gray;
     font-size: large;
     font-weight: bold;
     vertical-align: middle;
   }
   &RowHeader {
-    padding-top: 1.45rem;
+    padding-top: 1.25rem;
     padding-left: 2rem;
     color: $gray;
     font-size: large;
@@ -63,13 +66,13 @@ $cellHeight: 4rem;
     vertical-align: middle;
   }
   &BothHeader {
-    padding-top: 1.4rem;
+    padding: 0;
     padding-left: 1rem;
     color: $black;
-    font-size: 1.4em;
+    font-size: 1.4rem;
     font-weight: bold;
     vertical-align: middle;
-    width: $bothWidth;
+    width: $cellWidth;
   }
 }
 
@@ -102,10 +105,10 @@ $cellHeight: 4rem;
   font-size: xx-large;
   font-weight: bold;
   margin-left: 2rem;
-  margin-top: 1em;
-  padding-bottom: 0.25em;
-  padding-left: 0.5em;
-  padding-top: 0.25em;
+  margin-top: 1rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  padding-top: 0.25rem;
   position: relative;
   max-width: 90%;
   &:focus {
@@ -140,10 +143,9 @@ $cellHeight: 4rem;
   border-radius: $borderRadius;
   height: 4vh;
   margin-right: 2rem;
-  margin-top: 1.5rem;
+  margin-top: .8rem;
   width: 4vh;
 }
-
 .export-button-icon {
   font-size: 2.5rem;
   vertical-align: middle;
@@ -151,8 +153,8 @@ $cellHeight: 4rem;
 
 .user-pool {
   height: 25vh;
-  padding-left: 2rem;
-  padding-top: 2rem;
+  padding-left: 1.5rem;
+  padding-top: 1.5rem;
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
@@ -163,8 +165,8 @@ $cellHeight: 4rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 1rem;
+  margin-right: 1rem;
   outline-color: $offoffWhite;
   outline-width: 2px;
   outline-style: dashed;
@@ -199,7 +201,7 @@ $cellHeight: 4rem;
   border-radius: 50%;
   height: 2.2rem;
   margin-left: 0;
-  margin-right: 0.6em;
+  margin-right: 0.6rem;
   object-fit: cover;
   width: 2.2rem;
 }
@@ -208,6 +210,7 @@ $cellHeight: 4rem;
   min-width: $cellWidth;
   width: 16.6666%;
 }
+
 
 .cdk-drag-placeholder {
   opacity: 0.4;
