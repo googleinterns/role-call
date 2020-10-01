@@ -90,18 +90,18 @@ export class PieceEditor implements OnInit {
 
   private buildRenderingList() {
     this.renderingItems = this.workingPieces.map(
-        (workinPiece, workingPieceIndex) => {
-      const hasNoChidren = workinPiece.type === 'SEGMENT'
-          ? false : workinPiece.positions.length === 0;
+        (workingPiece, workingPieceIndex) => {
+      const hasNoChidren = workingPiece.type === 'SEGMENT'
+          ? false : workingPiece.positions.length === 0;
       const sortPrefix = hasNoChidren ? ' ' : 'z';
-      const name = hasNoChidren ? '*' + workinPiece.name : workinPiece.name;
+      const name = hasNoChidren ? '*' + workingPiece.name : workingPiece.name;
       return {
         name,
-        sortString: sortPrefix + workinPiece.name,
+        sortString: sortPrefix + workingPiece.name,
         pieceIndex: workingPieceIndex,
-        siblingId: workinPiece.siblingId,
-        type: workinPiece.type,
-        uuid: workinPiece.uuid,
+        siblingId: workingPiece.siblingId,
+        type: workingPiece.type,
+        uuid: workingPiece.uuid,
       };
     });
     this.renderingItems.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
