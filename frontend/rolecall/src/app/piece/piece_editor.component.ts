@@ -46,9 +46,9 @@ export class PieceEditor implements OnInit {
   dragAndDropData: DraggablePosition[] = [];
   currentSelectedPiece: WorkingPiece;
 
-  // All pieces or segments in the system ready to be edited
+  // All pieces or segments in the system ready to be edited.
   workingPieces: WorkingPiece[];
-  // Datascructure that supports the display of the seegment list to the left
+  // List of segments visible on the left side of the page.
   renderingItems: RenderingItem[];
   urlPointingUUID: string;
 
