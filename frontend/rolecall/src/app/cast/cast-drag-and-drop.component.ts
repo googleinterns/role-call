@@ -311,7 +311,7 @@ export class CastDragAndDrop implements OnInit {
       if (!result.successful) {
         alert(result.error);
       }
-      this.selectedCastUUID = CastApi.castUUIDFromRaw(
+      this.selectedCastUUID = CastApi.uuidFromRaw(
           this.castAPI.lastSavedCastId);
     });
   }
