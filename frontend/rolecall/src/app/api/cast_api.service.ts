@@ -176,7 +176,7 @@ export class CastApi {
               let uniquePositionIDs = new Set<number>();
               rawCast.subCasts.forEach(val => uniquePositionIDs.add(val.positionId));
               return {
-                uuid: this.castUUIDFromRaw(rawCast.id),
+                uuid: CastApi.castUUIDFromRaw(rawCast.id),
                 name: rawCast.name,
                 segment: String(rawCast.sectionId),
                 castCount: highestCastNumber + 1,
@@ -417,7 +417,7 @@ async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
     return undefined;
   }
 
-  castUUIDFromRaw(id: number) {
+  static castUUIDFromRaw(id: number) {
     return String(id);
   }
 }
