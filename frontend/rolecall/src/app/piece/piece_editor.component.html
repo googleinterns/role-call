@@ -11,7 +11,7 @@
             class="app-card piece-select"
             [class.selected-piece]="item.uuid === currentSelectedPiece.uuid "
             (click)="setCurrentPieceFromIndex(item.pieceIndex)">
-            <div *ngIf="item.type === 'REVELATION'; else otherSegments">
+            <div *ngIf="item.type === 'SUPER'; else otherSegments">
               <h2 class="piece-name piece-underline">
                 {{ item.name }}
               </h2>
@@ -82,7 +82,7 @@
       </div>
 
       <div
-          *ngIf="currentSelectedPiece && (currentSelectedPiece.type == 'PIECE' || currentSelectedPiece.type == 'REVELATION')"
+          *ngIf="currentSelectedPiece && (currentSelectedPiece.type == 'PIECE' || currentSelectedPiece.type == 'SUPER')"
           class="app-card positions-card">
         <div
             cdkDropList

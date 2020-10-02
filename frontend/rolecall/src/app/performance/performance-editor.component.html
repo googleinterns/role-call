@@ -235,7 +235,7 @@
                   <h3 class="title">{{segment['name']}}</h3>
                 <div *ngFor="let pos of segment.custom_groups"
                     class="pos-container"
-                    [style.margin-left.rem]="hasRevelation && step2Data[i].siblingId === 0 ? 10 : 7">
+                    [style.margin-left.rem]="hasSuper && step2Data[i].siblingId === 0 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div *ngIf="group.group_index == segment.selected_group"
@@ -341,7 +341,7 @@
           <div class="cast-tool-container"
             [class.cast-tool-container-solo]="selectedSegment.type == 'SEGMENT'">
             <mat-form-field appearance="fill" class="tool"
-              [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
+              [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Dancing Cast</mat-label>
               <mat-select [(value)]="this.primaryGroupNum" (selectionChange)="onChoosePrimaryCast($event)">
                 <mat-option *ngFor="let num of chooseFromGroupIndices"
@@ -352,7 +352,7 @@
             </mat-form-field>
             <mat-form-field class="tool"
                 appearance="fill"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
+                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Autofill Cast</mat-label>
               <mat-select>
                 <mat-option *ngFor="let cast of castsForSegment" [value]="cast" (click)="onAutofillCast(cast)">
@@ -372,7 +372,7 @@
           <div class="cast-drag-and-drop-container">
             <app-cast-drag-and-drop #castDnD
                 (castChangeEmitter)="onChangeCast($event)"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'REVELATION' ? { 'display': 'none' } : { 'height': '100%' }">
+                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
             </app-cast-drag-and-drop>
           </div>
         </div>
@@ -403,7 +403,7 @@
                   <h3 class="title">{{segment['name']}}</h3>
                 <div *ngFor="let pos of segment.custom_groups"
                     class="pos-container"
-                    [style.margin-left.rem]="hasRevelation && step2Data[i].siblingId < 1 ? 10 : 7">
+                    [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div *ngIf="group.group_index == segment.selected_group"

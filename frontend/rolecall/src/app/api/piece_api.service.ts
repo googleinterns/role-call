@@ -41,7 +41,7 @@ export type Position = {
   size: number,
 };
 
-export type PieceType = "SEGMENT" | "PIECE" | "REVELATION";
+export type PieceType = "SEGMENT" | "PIECE" | "SUPER";
 
 export type Piece = {
   uuid: string;

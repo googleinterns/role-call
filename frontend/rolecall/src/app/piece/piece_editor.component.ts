@@ -67,7 +67,7 @@ export class PieceEditor implements OnInit {
 
   currentType = 0;
 
-  segmentTypes = ['SEGMENT', 'PIECE', 'REVELATION'];
+  segmentTypes = ['SEGMENT', 'PIECE', 'SUPER'];
   selectedSegmentType: PieceType;
   segmentPrettyNames = ['', 'Segment', 'Ballet', 'Super Ballet'];
 
@@ -224,7 +224,7 @@ export class PieceEditor implements OnInit {
       break;
     case 3:
       name = 'New Super Ballet';
-      type = 'REVELATION';
+      type = 'SUPER';
       originalName = 'New Super Ballet';
       break;
     }
@@ -519,7 +519,7 @@ export class PieceEditor implements OnInit {
     let code = 0;
     if (type === 'PIECE') {
       code = 2;
-    } else if (type === 'REVELATION') {
+    } else if (type === 'SUPER') {
       code = 3;
     } else if (type === 'SEGMENT') {
       code = 1;
