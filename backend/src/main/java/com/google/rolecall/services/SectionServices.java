@@ -80,7 +80,7 @@ public class SectionServices {
    *     or Positions have overlapping orders.
    */
   public Section createSection(SectionInfo newSection) throws InvalidParameterException {
-    Boolean isParentRevelation = newSection.type() == Section.Type.REVELATION;
+    Boolean isParentSuper = newSection.type() == Section.Type.SUPER;
     Section section = Section.newBuilder()
         .setIsOpen(newSection.isOpen())
         .setName(newSection.name())
@@ -97,9 +97,9 @@ public class SectionServices {
         PositionInfo info = newSection.positions().get(loopCounter);
         Section savedSubSection = null;
 
-        if(isParentRevelation) {
-          // Create sibling Ballets to Revelation's internal Ballet/Position structures
-          // The ids will be inserted into Revelation's internal Ballet/Position structures
+        if(isParentSuper) {
+          // Create sibling Ballets to Super Ballet's internal Ballet/Position structures
+          // The ids will be inserted into Super Ballet's internal Ballet/Position structures
           Section subSection = Section.newBuilder()
               .setIsOpen(false)
               .setName(info.name())
@@ -117,7 +117,7 @@ public class SectionServices {
             .setNotes(info.notes())
             .setOrder(info.order())
             .setSiblingId(savedSubSection == null ? null : savedSubSection.getId())
-            .setSize(isParentRevelation ? -1 : info.size())
+            .setSize(isParentSuper ? -1 : info.size())
             .build();
             
         if(orders.contains(position.getOrder())) {
@@ -128,7 +128,7 @@ public class SectionServices {
       }
     }
     Section savedSection = sectionRepo.save(section);
-    updateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
+    updateSuperChildren(savedSection, siblingIndexArray, isParentSuper);
     return savedSection;
   }
 
@@ -150,7 +150,7 @@ public class SectionServices {
    */
   public Section editSection(SectionInfo newSection) throws EntityNotFoundException,
       InvalidParameterException {
-    Boolean isParentRevelation = newSection.type() == Section.Type.REVELATION;
+    Boolean isParentSuper = newSection.type() == Section.Type.SUPER;
 
     // Make sure that sibling Ballet and Position / Ballet items are synchronized
 
@@ -163,12 +163,12 @@ public class SectionServices {
       }
     }
     
-    // Check for sibling of Ballet children of Revelation section
+    // Check for sibling of Ballet children of Super Ballet section
     int[] badIdArray = new int[newSection.positions().size()];
     Arrays.fill(badIdArray, 0);
 
-    if(isParentRevelation) {
-      // Check for sibling of Ballet children of Revelation section
+    if(isParentSuper) {
+      // Check for sibling of Ballet children of Super Ballet section
       if(newSection.positions() != null && !newSection.positions().isEmpty()) {
         for(int loopCounter = 0; loopCounter < newSection.positions().size(); loopCounter++) {
           PositionInfo info = newSection.positions().get(loopCounter);
@@ -234,10 +234,10 @@ public class SectionServices {
           siblingIndexArray[loopCounter] = -1;
         } else {
           siblingIndexArray[loopCounter] = -1;
-          if(isParentRevelation) {
+          if(isParentSuper) {
             // New Ballet-Child
-            // Create sibling Ballets to Revelation's internal Ballet/Position structures
-            // The ids will be inserted into Revelation's internal Ballet/Position structures
+            // Create sibling Ballets to Super Ballet's internal Ballet/Position structures
+            // The ids will be inserted into Super Ballet's internal Ballet/Position structures
             Section subSection = Section.newBuilder()
                 .setIsOpen(false)
                 .setName(info.name())
@@ -257,7 +257,7 @@ public class SectionServices {
             .setOrder(info.order())
             .setSiblingId(badIdArray[loopCounter] > 0 ? null : siblingIndexArray[loopCounter] == - 1
                 ? info.siblingId() : siblingIndexArray[loopCounter])
-            .setSize(isParentRevelation ? -1 : info.size())
+            .setSize(isParentSuper ? -1 : info.size())
             .build();
         section.addPosition(position);
       }
@@ -271,7 +271,7 @@ public class SectionServices {
       }
     }
     Section savedSection = sectionRepo.save(section);
-    updateRevelationChildren(savedSection, siblingIndexArray, isParentRevelation);
+    updateSuperChildren(savedSection, siblingIndexArray, isParentSuper);
     return savedSection;
   }
 
@@ -289,11 +289,11 @@ public class SectionServices {
     if(siblingId != null) {
       Optional<Position> test = positionRepo.findById(siblingId);
       if(test.isEmpty()) {
-        // Revelation's internal Ballet/Position structure has already been deleted
+        // Super Ballet's internal Ballet/Position structure has already been deleted
       } else {
-        // Revelation's internal Ballet/Position structure still exists
+        // Super Ballet's internal Ballet/Position structure still exists
         throw new InvalidParameterException(
-          "Cannot delete Ballet that is part of a Revelation");
+          "Cannot delete Ballet that is part of a Super Ballet");
       }
     }
 
@@ -308,10 +308,10 @@ public class SectionServices {
 
   // Utility functions
 
-  private void updateRevelationChildren(Section section, Integer[] siblingIndexArray,
-      boolean isParentRevelation) throws InvalidParameterException {
-    if(isParentRevelation) {
-      // Update sibling Ballets with ids of Revelation's internal Ballet/Position structures
+  private void updateSuperChildren(Section section, Integer[] siblingIndexArray,
+      boolean isParentSuper) throws InvalidParameterException {
+    if(isParentSuper) {
+      // Update sibling Ballets with ids of Super Ballet's internal Ballet/Position structures
       for(int loopCounter = 0; loopCounter < section.getPositions().size(); loopCounter++) {
         if(siblingIndexArray[loopCounter] != -1) {
           Position pos = section.getPositions().get(loopCounter);
