@@ -691,7 +691,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
               groups: val.groups.map(g => {
                 return {
                   ...g,
-                  memberNames: g.members.map(mem => this.userAPI.users.get(mem.uuid)).map(usr => usr.first_name + " " + usr.last_name)
+                  memberNames: g.members.map(mem => this.userAPI.users.get(mem.uuid)).map(
+                      usr => usr.first_name + " " +
+                      (usr.middle_name.length > 0 ? usr.middle_name + " " : "") +
+                      usr.last_name + usr.suffix),
                 }
               })
             }
