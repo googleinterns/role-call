@@ -35,6 +35,11 @@ type AllRawCastsResponse = {
   warnings: string[]
 }
 
+type OneRawCastsResponse = {
+  data: RawCast,
+  warnings: string[]
+}
+
 export type CastMember = {
   uuid: string;
   position_number: number;
@@ -83,6 +88,8 @@ export type OneCastResponse = {
 })
 export class CastApi {
 
+  // The last saved id (every time a cast is saved it receives a new id)
+  lastSavedCastId: number;
 
   /** Mock backend */
   mockBackend: MockCastBackend = new MockCastBackend();
@@ -169,7 +176,7 @@ export class CastApi {
               let uniquePositionIDs = new Set<number>();
               rawCast.subCasts.forEach(val => uniquePositionIDs.add(val.positionId));
               return {
-                uuid: String(rawCast.id),
+                uuid: this.castUUIDFromRaw(rawCast.id),
                 name: rawCast.name,
                 segment: String(rawCast.sectionId),
                 castCount: highestCastNumber + 1,
@@ -192,95 +199,73 @@ export class CastApi {
     return this.mockBackend.requestOneCast(uuid);
   };
 
-  /** Hits backend with create/edit cast POST request */
-  async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
-    if (environment.mockBackend) {
-      return this.mockBackend.requestCastSet(cast);
-    }
-    // Check if we have record of the cast and patch if we do
-    if (this.hasCast(cast.uuid)) {
-      // Do patch
-      let header = await this.headerUtil.generateHeader();
-      return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, {
-        headers: header,
-        observe: "response",
-        withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp)).then(async na => {
-        let allSubCasts: RawSubCast[] = [];
-        let allPositions: Position[] = [];
-        Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
-          allPositions.push(...piece.positions);
-        });
-        for (let filledPos of cast.filled_positions) {
-          for (let group of filledPos.groups) {
-            allSubCasts.push({
-              id: undefined,
-              positionId: Number(allPositions.find(val2 => {
-                return val2.uuid == filledPos.position_uuid;
-              }).uuid),
-              castNumber: group.group_index,
-              members: group.members.map(mem => {
-                return {
-                  id: undefined,
-                  userId: Number(mem.uuid),
-                  order: mem.position_number
-                }
-              })
-            });
-          }
-        }
-        let rawCast: RawCast = {
-          id: undefined,
-          name: cast.name,
-          notes: "",
-          sectionId: Number(cast.segment),
-          subCasts: allSubCasts
-        }
-        return this.http.post(environment.backendURL + "api/cast", rawCast, {
-          headers: header,
-          observe: "response",
-          withCredentials: true
-        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
-      });
-    } else {
-      // Do post
-      let allSubCasts: RawSubCast[] = [];
-      let allPositions = [];
-      Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
-        allPositions.push(...piece.positions);
-      });
-      for (let filledPos of cast.filled_positions) {
-        for (let group of filledPos.groups) {
-          allSubCasts.push({
-            id: undefined,
-            positionId: Number(allPositions.find(val2 => {
-              return val2.uuid == filledPos.position_uuid;
-            }).uuid),
-            castNumber: group.group_index,
-            members: group.members.map(mem => {
-              return {
-                id: undefined,
-                userId: Number(mem.uuid),
-                order: mem.position_number
-              }
-            })
-          });
-        }
-      }
-      let rawCast: RawCast = {
-        id: undefined,
-        name: cast.name,
-        notes: "",
-        sectionId: Number(cast.segment),
-        subCasts: allSubCasts
-      }
-      let header = await this.headerUtil.generateHeader();
+/** Hits backend with create/edit cast POST request */
+async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
+  if (environment.mockBackend) {
+    return this.mockBackend.requestCastSet(cast);
+  }
+  // Check if we have record of the cast and patch if we do
+  if (this.hasCast(cast.uuid)) {
+    // Do patch
+    let header = await this.headerUtil.generateHeader();
+    return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, {
+      headers: header,
+      observe: "response",
+      withCredentials: true
+    }).toPromise().catch((errorResp) => errorResp).then(
+        resp => this.respHandler.checkResponse<any>(resp)).then(async na => {
+      const rawCast = this.PatchPostPrep(cast);
       return this.http.post(environment.backendURL + "api/cast", rawCast, {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then(
+          resp => this.respHandler.checkResponse<any>(resp));
+    });
+  } else {
+    // Do post
+    const rawCast = this.PatchPostPrep(cast);
+    let header = await this.headerUtil.generateHeader();
+    return this.http.post(environment.backendURL + "api/cast", rawCast, {
+      headers: header,
+      observe: "response",
+      withCredentials: true
+    }).toPromise().catch((errorResp) => errorResp).then(
+        resp => this.respHandler.checkResponse<any>(resp));
+  }
+}
+
+  private PatchPostPrep(cast: Cast): RawCast {
+    let allSubCasts: RawSubCast[] = [];
+    let allPositions: Position[] = [];
+    Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
+      allPositions.push(...piece.positions);
+    });
+    for (let filledPos of cast.filled_positions) {
+      for (let group of filledPos.groups) {
+        allSubCasts.push({
+          id: undefined,
+          positionId: Number(allPositions.find(
+              position =>position.uuid == filledPos.position_uuid).uuid),
+          castNumber: group.group_index,
+          members: group.members.map(mem => {
+            return {
+              id: undefined,
+              userId: Number(mem.uuid),
+              order: mem.position_number
+            }
+          }),
+        });
+      }
     }
+    let rawCast: RawCast = {
+      id: undefined,
+      name: cast.name,
+      notes: "",
+      sectionId: Number(cast.segment),
+      subCasts: allSubCasts,
+    }
+    return rawCast;
   }
 
   /** 
@@ -376,7 +361,9 @@ export class CastApi {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
     }
-    return this.setCastResponse(cast).then(val => {
+    return this.setCastResponse(cast).then(response => {
+      const rawCast = (response as unknown as OneRawCastsResponse).data;
+      this.lastSavedCastId = rawCast.id;
       this.getAllCasts();
       return {
         successful: true
@@ -430,4 +417,7 @@ export class CastApi {
     return undefined;
   }
 
+  castUUIDFromRaw(id: number) {
+    return String(id);
+  }
 }

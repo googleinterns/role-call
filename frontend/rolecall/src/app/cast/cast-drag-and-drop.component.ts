@@ -56,7 +56,6 @@ export class CastDragAndDrop implements OnInit {
 
   usersLoaded = false;
   castsLoaded = false;
-  piecesLoaded = false;
   dataLoaded = false;
   castSelected = false;
 
@@ -83,12 +82,8 @@ export class CastDragAndDrop implements OnInit {
     this.castAPI.castEmitter.subscribe((casts) => {
       this.onCastLoad(casts);
     });
-    this.pieceAPI.pieceEmitter.subscribe((pieces) => {
-      this.onPieceLoad(pieces);
-    });
     this.castAPI.getAllCasts();
     this.userAPI.getAllUsers();
-    this.pieceAPI.getAllPieces();
   }
 
   /** Setter to set the bolded cast number. */
@@ -107,19 +102,10 @@ export class CastDragAndDrop implements OnInit {
    * rendering.
    */
   private checkAllLoaded() {
-    if (this.usersLoaded && this.castsLoaded && this.piecesLoaded) {
+    if (this.usersLoaded && this.castsLoaded) {
       this.dataLoaded = true;
     }
     return this.dataLoaded;
-  }
-
-  /** Called when pieces are loaded from the Piece API. */
-  private onPieceLoad(pieces: Piece[]) {
-    this.piecesLoaded = true;
-    if (this.checkAllLoaded()) {
-      this.setupData();
-    }
-
   }
 
   /** Called when users are loaded from the User API. */
@@ -202,8 +188,7 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
       this.castSelected = false;
-      // TODO: After any save the system loses track the uuid of the saved cast.
-      // It would be nice to fix [YHE].
+      this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
@@ -326,6 +311,8 @@ export class CastDragAndDrop implements OnInit {
       if (!result.successful) {
         alert(result.error);
       }
+      this.selectedCastUUID = this.castAPI.castUUIDFromRaw(
+          this.castAPI.lastSavedCastId);
     });
   }
 
