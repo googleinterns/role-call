@@ -16,6 +16,10 @@ public abstract class SectionInfo {
   public abstract Integer id();
 
   @Nullable
+  @JsonProperty("isOpen")
+  public abstract Boolean isOpen();
+
+  @Nullable
   @JsonProperty("name")
   public abstract String name();
 
@@ -60,6 +64,9 @@ public abstract class SectionInfo {
     @JsonProperty("id")
     public abstract Builder setId(Integer id);
 
+    @JsonProperty("isOpen")
+    public abstract Builder setIsOpen(Boolean isOpen);
+    
     @JsonProperty("name")
     public abstract Builder setName(String name);
 

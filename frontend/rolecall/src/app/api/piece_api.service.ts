@@ -18,6 +18,7 @@ type RawPosition = {
 
 type RawPiece = {
   id: number,
+  isOpen: boolean;
   name: string,
   notes: string,
   siblingId: number,
@@ -45,6 +46,7 @@ export type PieceType = "SEGMENT" | "PIECE" | "REVELATION";
 
 export type Piece = {
   uuid: string;
+  isOpen: boolean;
   name: string;
   siblingId: number,
   type: PieceType;
@@ -110,6 +112,7 @@ export class PieceApi {
           pieces: val.data.map((section) => {
             return {
               uuid: String(section.id),
+              isOpen: section.isOpen,
               name: section.name,
               siblingId: section.siblingId,
               type: section.type,
@@ -140,6 +143,7 @@ export class PieceApi {
       // Do patch
       let header = await this.headerUtil.generateHeader();
       return this.http.patch(environment.backendURL + 'api/section', {
+        isOpen: piece.isOpen,
         name: piece.name,
         id: Number(piece.uuid),
         siblingId: piece.siblingId,
@@ -167,6 +171,7 @@ export class PieceApi {
       // Do post
       let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + 'api/section', {
+        isOpen: piece.isOpen,
         name: piece.name,
         siblingId: piece.siblingId,
         type: piece.type ? piece.type : "PIECE",

@@ -82,6 +82,7 @@ public class SectionServices {
   public Section createSection(SectionInfo newSection) throws InvalidParameterException {
     Boolean isParentRevelation = newSection.type() == Section.Type.REVELATION;
     Section section = Section.newBuilder()
+        .setIsOpen(newSection.isOpen())
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
@@ -100,6 +101,7 @@ public class SectionServices {
           // Create sibling Ballets to Revelation's internal Ballet/Position structures
           // The ids will be inserted into Revelation's internal Ballet/Position structures
           Section subSection = Section.newBuilder()
+              .setIsOpen(false)
               .setName(info.name())
               .setNotes("")
               .setLength(0)
@@ -198,6 +200,7 @@ public class SectionServices {
 
     Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     Section section = getSection(newSection.id()).toBuilder()
+        .setIsOpen(newSection.isOpen())
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
@@ -236,6 +239,7 @@ public class SectionServices {
             // Create sibling Ballets to Revelation's internal Ballet/Position structures
             // The ids will be inserted into Revelation's internal Ballet/Position structures
             Section subSection = Section.newBuilder()
+                .setIsOpen(false)
                 .setName(info.name())
                 .setNotes("")
                 .setLength(0)
@@ -313,6 +317,7 @@ public class SectionServices {
           Position pos = section.getPositions().get(loopCounter);
           Section subSection = Section.newBuilder()
               .setId(siblingIndexArray[loopCounter])
+              .setIsOpen(false)
               .setName(pos.getName())
               .setNotes("")
               .setLength(0)
@@ -368,6 +373,7 @@ public class SectionServices {
           Section sibling = querySection.get();
           Section updatedSibling = sibling.toBuilder()
               .setId(sectionId)
+              .setIsOpen(false)
               .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
               .setNotes(sibling.getNotes())
               .setLength(sibling.getLength().get())

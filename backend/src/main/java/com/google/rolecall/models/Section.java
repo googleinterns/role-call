@@ -36,6 +36,9 @@ public class Section {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
+  @Basic
+  private Boolean isOpen;
+
   @Column(nullable = false)
   private String name;
 
@@ -65,6 +68,10 @@ public class Section {
 
   public Integer getId() {
     return id;
+  }
+
+  public Boolean getIsOpen() {
+    return isOpen;
   }
 
   public String getName() {
@@ -101,6 +108,7 @@ public class Section {
     
     SectionInfo section = SectionInfo.newBuilder()
         .setId(id)
+        .setIsOpen(isOpen)
         .setName(name)
         .setNotes(getNotes())
         .setLength(length)
@@ -187,6 +195,7 @@ public class Section {
   public static class Builder {
     private Section section;
     private Integer id;
+    private Boolean isOpen;
     private String name;
     private String notes;
     private Integer length;
@@ -197,6 +206,13 @@ public class Section {
     public Builder setId(Integer id) {
       if(id != null) {
         this.id = id;
+      }
+      return this;
+    }
+
+    public Builder setIsOpen(Boolean isOpen) {
+      if(isOpen != null) {
+        this.isOpen = isOpen;
       }
       return this;
     }
@@ -240,20 +256,20 @@ public class Section {
       if(this.name == null || this.type == null) {
         throw new InvalidParameterException("Section requires a name and a type");
       }
-
       section.id = this.id;
+      section.isOpen = this.isOpen;
       section.name = this.name;
       section.notes = this.notes;
       section.length = this.length;
       section.siblingId = this.siblingId;
       section.type = this.type;
-
       return section;
     }
 
     public Builder(Section section) {
       this.section = section;
       this.id = section.id;
+      this.isOpen = section.isOpen;
       this.name = section.name;
       this.notes = section.notes;
       this.length = section.length;

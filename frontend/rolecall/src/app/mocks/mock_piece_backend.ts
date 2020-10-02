@@ -8,13 +8,13 @@ import { AllPiecesResponse, OnePieceResponse, Piece } from '../api/piece_api.ser
 export class MockPieceBackend {
 
   /** Mock piece database */
-  mockPieceDB: Piece[] = [{ "uuid": "212", "name": "Ode", "siblingId": null,"type": "SEGMENT", "positions":
+  mockPieceDB: Piece[] = [{ "uuid": "212", "isOpen": false, "name": "Ode", "siblingId": null,"type": "SEGMENT", "positions":
       [{ "id": 213, "name": "Dancer", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "213" }],
-      "deletePositions": [] }, { "uuid": "214", "name": "Divining", "siblingId": null, "type": "SEGMENT", "positions":
+      "deletePositions": [] }, { "uuid": "214", "isOpen": false, "name": "Divining", "siblingId": null, "type": "SEGMENT", "positions":
       [{ "id": 216, "name": "Resting and Moving On", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "216" },
       { "id": 215, "name": "Seeking, Resting, and Moving On", "notes": "", "order": 1, "siblingId": null, "size": null, "uuid": "215" },
       { "id": 217, "name": "Moving On", "notes": "", "order": 2, "siblingId": null, "size": null, "uuid": "217" }], "deletePositions": [] },
-      { "uuid": "220", "name": "Greenwood", "siblingId": null, "type": "SEGMENT", "positions":
+      { "uuid": "220", "isOpen": false, "name": "Greenwood", "siblingId": null, "type": "SEGMENT", "positions":
       [{ "id": 221, "name": "Witness", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "221" },
       { "id": 222, "name": "Sara Page", "notes": "", "order": 1, "siblingId": null, "size": null, "uuid": "222" },
       { "id": 223, "name": "Dick Rowland", "notes": "", "order": 2, "siblingId": null, "size": null, "uuid": "223" },
@@ -23,10 +23,12 @@ export class MockPieceBackend {
       { "id": 225, "name": "Mother", "notes": "", "order": 5, "siblingId": null, "size": null, "uuid": "225" },
       { "id": 224, "name": "Father", "notes": "", "order": 6, "siblingId": null, "size": null, "uuid": "224" },
       { "id": 228, "name": "White Psyche", "notes": "", "order": 7, "siblingId": null, "size": null, "uuid": "228" }], "deletePositions": [] },
-      { "uuid": "247", "name": "Fandango", "siblingId": null, "type": "SEGMENT", "positions":
+      { "uuid": "247", "isOpen": false, "name": "Fandango", "siblingId": null, "type": "SEGMENT", "positions":
       [{ "id": 248, "name": "Dancer - Fandango", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "248" }],
-      "deletePositions": [] }, { "uuid": "358", "siblingId": null, "type": "SEGMENT", "name": "Ella", "positions":
+      "deletePositions": [] },
+      { "uuid": "358", "isOpen": false, "siblingId": null, "type": "SEGMENT", "name": "Ella", "positions":
       [{ "id": 359, "name": "Dancer - Ella", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "359" }], "deletePositions": [] }];
+  
   shouldRejectSetRequest = false;
 
   /** Mocks backend response */

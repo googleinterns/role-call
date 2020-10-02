@@ -232,6 +232,7 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     const newPiece: WorkingPiece = {
       uuid: 'segment:' + Date.now(),
+      isOpen: type === 'REVELATION' ? true : false,
       name,
       siblingId: null,
       positions: [],
