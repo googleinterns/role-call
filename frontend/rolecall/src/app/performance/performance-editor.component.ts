@@ -78,7 +78,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onPieceLoad(pieces: Piece[]) {
     this.step2AllSegments = [];
     this.step2AllSegments.push(...pieces.map(val => val));
-    // Make sure pick list only includes top level segments and excludes children of Revelations
+    // Make sure pick list only includes top level segments and excludes children of Super Ballets
     this.step2PickFrom = this.step2AllSegments.filter((segment: Piece) => !segment.siblingId);
     this.step2Data = [];
     this.initStep2Data();
@@ -350,7 +350,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // Step 2 -------------------------------------------------------
 
-  hasRevelation: boolean;
+  hasSuper: boolean;
   step2AllSegments: Piece[];
   step2Data: Piece[];
   step2PickFrom: Piece[];
@@ -368,7 +368,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   updateStep2State() {
     this.state.step_2.segments = this.step2Data.map(val => val.uuid);
-    this.hasRevelation = !!this.step2Data.find(segment => segment.type === 'REVELATION');
+    this.hasSuper = !!this.step2Data.find(segment => segment.type === 'SUPER');
   }
 
   step2Drop(event: CdkDragDrop<Piece[]>) {
@@ -382,21 +382,21 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       copyArrayItem([draggedSegment], event.container.data, 0, event.currentIndex);
     }
     if (draggedSegment) {
-      const isDraggingRevelation = draggedSegment.type === 'REVELATION';
+      const isDraggingSuper = draggedSegment.type === 'SUPER';
       this.step2Data = event.container.data;
-      if (isDraggingRevelation) {
+      if (isDraggingSuper) {
         if (event.previousContainer.id === 'program-list') {
-          this.removeRevelationChildren(draggedSegment);
+          this.removeSuperChildren(draggedSegment);
         }
-        this.addRevelationChildren(draggedSegment);
+        this.addSuperChildren(draggedSegment);
       }
     }
     this.updateStep2State();
   }
 
-  // Removes the Revelation children so every revelation drag just inserts its
+  // Removes the Super Ballet children so every Super Ballet drag just inserts its
   // children right below it, regardless of where the dragging originated
-  private removeRevelationChildren(draggedSegment: Piece) {
+  private removeSuperChildren(draggedSegment: Piece) {
     for (const segment of this.step2Data) {
       if (segment.uuid === draggedSegment.uuid) {
         for (const position of segment.positions) {
@@ -409,8 +409,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  // A Revelation has children that need to be placed right below the revelation
-  private addRevelationChildren(draggedSegment: Piece) {
+  // A Super Ballet has children that need to be placed right below the Super Ballet
+  private addSuperChildren(draggedSegment: Piece) {
     for (let segmentIndex = 0; segmentIndex < this.step2Data.length; segmentIndex++) {
       const segment = this.step2Data[segmentIndex];
       if (segment.uuid === draggedSegment.uuid) {
@@ -468,7 +468,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.saveCastChanges();
     this.selectedSegment = segment;
     this.selectedIndex = segmentIx;
-    if (segment.type === "SEGMENT" || segment.type === "REVELATION") {
+    if (segment.type === "SEGMENT" || segment.type === "SUPER") {
       if (this.intermissions.has(segmentIx)) {
         this.segmentLength = this.intermissions.get(segmentIx);
       } else {
@@ -659,7 +659,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       this.step2Data.map((segment, segmentIx) => {
         const segUUID = newState.uuid + "cast" + segment.uuid;
         const info: [Cast, number, number] = this.segmentToCast.get(segUUID);
-        if (segment.type == "SEGMENT" || segment.type == "REVELATION" || !info) {
+        if (segment.type == "SEGMENT" || segment.type == "SUPER" || !info) {
           return {
             id: this.segmentToPerfSectionID.has(segUUID) ? this.segmentToPerfSectionID.get(segUUID) : undefined,
             segment: segment.uuid,

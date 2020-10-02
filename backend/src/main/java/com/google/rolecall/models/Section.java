@@ -29,7 +29,7 @@ public class Section {
   public enum Type {
     PIECE,
     SEGMENT,
-    REVELATION,
+    SUPER,
   }
 
   @Id
