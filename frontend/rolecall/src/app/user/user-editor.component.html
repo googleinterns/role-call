@@ -85,7 +85,7 @@
             <app-text-input
                 valueName="Email"
                 [isDisabled]="!creatingUser"
-                [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['email'] | emptyStringIfUndefined"
+                [initValue]="currentSelectedUser?.contact_info?.email || ''"
                 (valueChange)="onInputChange($event)">
             </app-text-input>
           </div>
@@ -93,7 +93,7 @@
         <div class="date-input">
           <app-date-input
               valueName="Date Joined"
-              [initValue]="currentSelectedUser ? currentSelectedUser.date_joined : getCurrentDate()"
+              [initValue]="currentSelectedUser?.date_joined || getCurrentDate()"
               (valueChange)="onInputChange($event)">
           </app-date-input>
         </div>
@@ -103,7 +103,7 @@
           <div class="phone-input">
             <app-text-input
                 valueName="Phone"
-                [initValue]="((currentSelectedUser | emptyStringIfUndefined)['contact_info'] | emptyStringIfUndefined)['phone_number'] | emptyStringIfUndefined"
+                [initValue]="currentSelectedUser?.contact_info?.phone_number || ''"
                 (valueChange)="onInputChange($event)">
             </app-text-input>
           </div>
