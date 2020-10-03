@@ -26,6 +26,7 @@ type DraggablePosition = {
 type WorkingPiece = Piece & {
   addingPositions: DraggablePosition[];
   originalName: string;
+  isOpen: boolean;
 };
 
 type RenderingItem = {

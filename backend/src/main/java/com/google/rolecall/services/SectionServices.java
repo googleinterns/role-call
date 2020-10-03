@@ -82,7 +82,6 @@ public class SectionServices {
   public Section createSection(SectionInfo newSection) throws InvalidParameterException {
     Boolean isParentSuper = newSection.type() == Section.Type.SUPER;
     Section section = Section.newBuilder()
-        .setIsOpen(newSection.isOpen())
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
@@ -101,7 +100,6 @@ public class SectionServices {
           // Create sibling Ballets to Super Ballet's internal Ballet/Position structures
           // The ids will be inserted into Super Ballet's internal Ballet/Position structures
           Section subSection = Section.newBuilder()
-              .setIsOpen(false)
               .setName(info.name())
               .setNotes("")
               .setLength(0)
@@ -128,7 +126,7 @@ public class SectionServices {
       }
     }
     Section savedSection = sectionRepo.save(section);
-    updateSuperChildren(savedSection, siblingIndexArray, isParentSuper);
+    updateSuperBalletChildren(savedSection, siblingIndexArray, isParentSuper);
     return savedSection;
   }
 
@@ -200,7 +198,6 @@ public class SectionServices {
 
     Integer[] siblingIndexArray = new Integer[newSection.positions().size()];
     Section section = getSection(newSection.id()).toBuilder()
-        .setIsOpen(newSection.isOpen())
         .setName(newSection.name())
         .setNotes(newSection.notes())
         .setLength(newSection.length())
@@ -239,7 +236,6 @@ public class SectionServices {
             // Create sibling Ballets to Super Ballet's internal Ballet/Position structures
             // The ids will be inserted into Super Ballet's internal Ballet/Position structures
             Section subSection = Section.newBuilder()
-                .setIsOpen(false)
                 .setName(info.name())
                 .setNotes("")
                 .setLength(0)
@@ -271,7 +267,7 @@ public class SectionServices {
       }
     }
     Section savedSection = sectionRepo.save(section);
-    updateSuperChildren(savedSection, siblingIndexArray, isParentSuper);
+    updateSuperBalletChildren(savedSection, siblingIndexArray, isParentSuper);
     return savedSection;
   }
 
@@ -308,7 +304,7 @@ public class SectionServices {
 
   // Utility functions
 
-  private void updateSuperChildren(Section section, Integer[] siblingIndexArray,
+  private void updateSuperBalletChildren(Section section, Integer[] siblingIndexArray,
       boolean isParentSuper) throws InvalidParameterException {
     if(isParentSuper) {
       // Update sibling Ballets with ids of Super Ballet's internal Ballet/Position structures
@@ -317,7 +313,6 @@ public class SectionServices {
           Position pos = section.getPositions().get(loopCounter);
           Section subSection = Section.newBuilder()
               .setId(siblingIndexArray[loopCounter])
-              .setIsOpen(false)
               .setName(pos.getName())
               .setNotes("")
               .setLength(0)
@@ -373,7 +368,6 @@ public class SectionServices {
           Section sibling = querySection.get();
           Section updatedSibling = sibling.toBuilder()
               .setId(sectionId)
-              .setIsOpen(false)
               .setName(newName == null || newName.length() == 0 ? sibling.getName() : newName)
               .setNotes(sibling.getNotes())
               .setLength(sibling.getLength().get())
