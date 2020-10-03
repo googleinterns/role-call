@@ -36,9 +36,6 @@ public class Section {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
-  @Basic
-  private Boolean isOpen;
-
   @Column(nullable = false)
   private String name;
 
@@ -68,10 +65,6 @@ public class Section {
 
   public Integer getId() {
     return id;
-  }
-
-  public Boolean getIsOpen() {
-    return isOpen;
   }
 
   public String getName() {
@@ -194,7 +187,6 @@ public class Section {
   public static class Builder {
     private Section section;
     private Integer id;
-    private Boolean isOpen;
     private String name;
     private String notes;
     private Integer length;
