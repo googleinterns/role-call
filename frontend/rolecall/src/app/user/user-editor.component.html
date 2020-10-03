@@ -54,28 +54,28 @@
           <app-text-input
               valueName="First Name"
               (valueChange)="onInputChange($event)"
-              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['first_name'] | emptyStringIfUndefined">
+              [initValue]="currentSelectedUser?.first_name || ''">
           </app-text-input>
         </div>
         <div class="name-input">
           <app-text-input
               valueName="Middle Name"
               (valueChange)="onInputChange($event)"
-              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['middle_name'] | emptyStringIfUndefined">
+              [initValue]="currentSelectedUser?.middle_name || ''">
           </app-text-input>
         </div>
         <div class="name-input">
           <app-text-input
               valueName="Last Name"
               (valueChange)="onInputChange($event)"
-              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['last_name'] | emptyStringIfUndefined">
+              [initValue]="currentSelectedUser?.last_name || ''">
           </app-text-input>
         </div>
         <div class="suffix-input">
           <app-text-input
               valueName="Suffix"
               (valueChange)="onInputChange($event)"
-              [initValue]="(currentSelectedUser | emptyStringIfUndefined)['suffix'] | emptyStringIfUndefined">
+              [initValue]="currentSelectedUser?.suffix || ''">
           </app-text-input>
         </div>
       </div>
