@@ -10,17 +10,31 @@
             *ngFor="let item of renderingItems"
             class="app-card piece-select"
             [class.selected-piece]="item.uuid === currentSelectedPiece.uuid "
+            [style.marginLeft.rem]="item.siblingId > 0 ? 3 : .9"
             (click)="setCurrentPieceFromIndex(item.pieceIndex)">
-            <div *ngIf="item.type === 'SUPER'; else otherSegments">
-              <h2 class="piece-name piece-underline">
-                {{ item.name }}
-              </h2>
-            </div>
+          <div
+              *ngIf="item.type === 'SUPER'; else otherSegments"
+              class="super-container">
+            <h2 class="piece-name super-name">
+              {{item.name}}
+            </h2>
+              <button
+                  mat-icon-button
+                  aria-label="Toggle Super Ballet"
+                  class="super-button"
+                  (click)="toggleOpen(item.pieceIndex)">
+                <mat-icon
+                    [inline]="true"
+                    class="add-button-icon">
+                  {{item.isOpen ? 'expand_less' : "expand_more"}}
+                </mat-icon>
+              </button>
+          </div>
             <ng-template #otherSegments>
               <h2
                   class="piece-name"
                   [class.std-italic-font]="item.siblingId > 0">
-                {{ item.name }}
+                {{item.name}}
               </h2>
             </ng-template>
         </div>

@@ -288,4 +288,8 @@ export class PieceApi {
       }
     });
   }
+
+  static uuidFromRaw(id: number) {
+    return String(id);
+  }
 }
