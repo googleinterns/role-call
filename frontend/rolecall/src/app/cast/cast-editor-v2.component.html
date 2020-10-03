@@ -35,7 +35,7 @@
             *ngFor="let cast of filteredCasts"
             class="app-card cast-select"
             [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
-            (click)="setCurrentCast(cast)">
+            (click)="setCurrentCast({cast: cast})">
           <h2 class="cast-name"
               [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
             {{ cast.name }}
