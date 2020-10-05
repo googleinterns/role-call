@@ -113,13 +113,13 @@ export class PieceEditor implements OnInit {
             this.buildRenderingItem(displayPiece, displayieceIndex));
   }
 
-  private buildRenderingItem(displayPiece: WorkingPiece, displayieceIndex: number) {
+  private buildRenderingItem(displayPiece: WorkingPiece, displayPieceIndex: number) {
     const hasNoChidren = displayPiece.type === 'SEGMENT'
         ? false : displayPiece.positions.length === 0;
     const name = hasNoChidren ? '*' + displayPiece.name : displayPiece.name;
     return {
       name,
-      pieceIndex: displayieceIndex,
+      pieceIndex: displayPieceIndex,
       siblingId: displayPiece.siblingId,
       type: displayPiece.type,
       isOpen: displayPiece.isOpen,
