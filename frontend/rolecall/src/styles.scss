@@ -1,7 +1,11 @@
 /* Add/import global styles in this file. */
-@import "src/constants";
 @import "~@angular/material/theming";
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
+@import "src/constants";
+@import "src/std";
+
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
 
 // div styling to make a card
 .app-card {
@@ -33,9 +37,6 @@ body {
   border: none;
   outline: none;
 }
-
-/* Importing Bootstrap SCSS file. */
-@import "~bootstrap/scss/bootstrap";
 
 $custom-typography: mat-typography-config(
     $font-family: "Source Sans Pro, sans-serif",
