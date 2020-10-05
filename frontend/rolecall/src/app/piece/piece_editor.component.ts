@@ -26,7 +26,7 @@ type DraggablePosition = {
 type WorkingPiece = Piece & {
   addingPositions: DraggablePosition[];
   originalName: string;
-  isOpen;
+  isOpen: boolean;
 };
 
 type RenderingItem = {
@@ -101,7 +101,7 @@ export class PieceEditor implements OnInit {
             (a, b) => a.order < b.order ? -1 : 1);
         let children: WorkingPiece[] = [];
         for (const position of this.displayedPieces[i].positions) {
-          const uuid = PieceApi.uuidFromRaw(position.siblingId);
+          const uuid = String(position.siblingId);
           const child = this.workingPieces.find(wp => wp.uuid === uuid);
           children.push(child);
         }
@@ -109,19 +109,22 @@ export class PieceEditor implements OnInit {
       }
     }
     this.renderingItems = this.displayedPieces.map(
-        (displayPiece, displayieceIndex) => {
-      const hasNoChidren = displayPiece.type === 'SEGMENT'
-          ? false : displayPiece.positions.length === 0;
-      const name = hasNoChidren ? '*' + displayPiece.name : displayPiece.name;
-      return {
-        name,
-        pieceIndex: displayieceIndex,
-        siblingId: displayPiece.siblingId,
-        type: displayPiece.type,
-        isOpen: displayPiece.isOpen,
-        uuid: displayPiece.uuid,
-      };
-    });
+        (displayPiece, displayieceIndex) =>
+            this.buildRenderingItem(displayPiece, displayieceIndex));
+  }
+
+  private buildRenderingItem(displayPiece: WorkingPiece, displayieceIndex: number) {
+    const hasNoChidren = displayPiece.type === 'SEGMENT'
+        ? false : displayPiece.positions.length === 0;
+    const name = hasNoChidren ? '*' + displayPiece.name : displayPiece.name;
+    return {
+      name,
+      pieceIndex: displayieceIndex,
+      siblingId: displayPiece.siblingId,
+      type: displayPiece.type,
+      isOpen: displayPiece.isOpen,
+      uuid: displayPiece.uuid,
+    };
   }
 
   onPieceLoad(pieces: Piece[]) {
@@ -550,7 +553,6 @@ export class PieceEditor implements OnInit {
     const superBallet = this.displayedPieces[index];
     if (superBallet.type == 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
-      this.pieceAPI.setPiece(superBallet);
     }
     this.buildRenderingList();
   }
