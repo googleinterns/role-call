@@ -109,8 +109,8 @@ export class PieceEditor implements OnInit {
       }
     }
     this.renderingItems = this.displayedPieces.map(
-        (displayPiece, displayieceIndex) =>
-            this.buildRenderingItem(displayPiece, displayieceIndex));
+        (displayPiece, displayPieceIndex) =>
+            this.buildRenderingItem(displayPiece, displayPieceIndex));
   }
 
   private buildRenderingItem(displayPiece: WorkingPiece, displayPieceIndex: number) {
