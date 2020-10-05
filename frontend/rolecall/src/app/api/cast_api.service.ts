@@ -64,6 +64,7 @@ export type Cast = {
   filled_positions: CastPosition[];
 }
 
+// Get all casts
 export type AllCastsResponse = {
   data: {
     casts: Cast[]
@@ -71,6 +72,7 @@ export type AllCastsResponse = {
   warnings: string[]
 };
 
+// Get one specific cast
 export type OneCastResponse = {
   data: {
     cast: Cast
@@ -176,7 +178,7 @@ export class CastApi {
               let uniquePositionIDs = new Set<number>();
               rawCast.subCasts.forEach(val => uniquePositionIDs.add(val.positionId));
               return {
-                uuid: CastApi.uuidFromRaw(rawCast.id),
+                uuid: String(rawCast.id),
                 name: rawCast.name,
                 segment: String(rawCast.sectionId),
                 castCount: highestCastNumber + 1,
@@ -213,8 +215,8 @@ async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
       observe: "response",
       withCredentials: true
     }).toPromise().catch((errorResp) => errorResp).then(
-        resp => this.respHandler.checkResponse<any>(resp)).then(async na => {
-      const rawCast = this.PatchPostPrep(cast);
+        resp => this.respHandler.checkResponse<any>(resp)).then(async notUsed => {
+      const rawCast = this.patchPostPrep(cast);
       return this.http.post(environment.backendURL + "api/cast", rawCast, {
         headers: header,
         observe: "response",
@@ -224,7 +226,7 @@ async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
     });
   } else {
     // Do post
-    const rawCast = this.PatchPostPrep(cast);
+    const rawCast = this.patchPostPrep(cast);
     let header = await this.headerUtil.generateHeader();
     return this.http.post(environment.backendURL + "api/cast", rawCast, {
       headers: header,
@@ -235,7 +237,7 @@ async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
   }
 }
 
-  private PatchPostPrep(cast: Cast): RawCast {
+  private patchPostPrep(cast: Cast): RawCast {
     let allSubCasts: RawSubCast[] = [];
     let allPositions: Position[] = [];
     Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
@@ -415,9 +417,5 @@ async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
       return this.workingCasts.get(castUUID);
     }
     return undefined;
-  }
-
-  static uuidFromRaw(id: number) {
-    return String(id);
   }
 }
