@@ -30,11 +30,13 @@ type RawCast = {
   subCasts: RawSubCast[]
 }
 
+// Get all casts
 type AllRawCastsResponse = {
   data: RawCast[],
   warnings: string[]
 }
 
+// Get one specific cast
 type OneRawCastsResponse = {
   data: RawCast,
   warnings: string[]
@@ -64,7 +66,6 @@ export type Cast = {
   filled_positions: CastPosition[];
 }
 
-// Get all casts
 export type AllCastsResponse = {
   data: {
     casts: Cast[]
@@ -72,7 +73,6 @@ export type AllCastsResponse = {
   warnings: string[]
 };
 
-// Get one specific cast
 export type OneCastResponse = {
   data: {
     cast: Cast
@@ -201,41 +201,41 @@ export class CastApi {
     return this.mockBackend.requestOneCast(uuid);
   };
 
-/** Hits backend with create/edit cast POST request */
-async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
-  if (environment.mockBackend) {
-    return this.mockBackend.requestCastSet(cast);
-  }
-  // Check if we have record of the cast and patch if we do
-  if (this.hasCast(cast.uuid)) {
-    // Do patch
-    let header = await this.headerUtil.generateHeader();
-    return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, {
-      headers: header,
-      observe: "response",
-      withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then(
-        resp => this.respHandler.checkResponse<any>(resp)).then(async notUsed => {
+  /** Hits backend with create/edit cast POST request */
+  async requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
+    if (environment.mockBackend) {
+      return this.mockBackend.requestCastSet(cast);
+    }
+    // Check if we have record of the cast and patch if we do
+    if (this.hasCast(cast.uuid)) {
+      // Do patch
+      let header = await this.headerUtil.generateHeader();
+      return this.http.delete(environment.backendURL + 'api/cast?castid=' + cast.uuid, {
+        headers: header,
+        observe: "response",
+        withCredentials: true
+      }).toPromise().catch((errorResp) => errorResp).then(
+          resp => this.respHandler.checkResponse<any>(resp)).then(async notUsed => {
+        const rawCast = this.patchPostPrep(cast);
+        return this.http.post(environment.backendURL + "api/cast", rawCast, {
+          headers: header,
+          observe: "response",
+          withCredentials: true
+        }).toPromise().catch((errorResp) => errorResp).then(
+            resp => this.respHandler.checkResponse<any>(resp));
+      });
+    } else {
+      // Do post
       const rawCast = this.patchPostPrep(cast);
+      let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + "api/cast", rawCast, {
         headers: header,
         observe: "response",
         withCredentials: true
       }).toPromise().catch((errorResp) => errorResp).then(
           resp => this.respHandler.checkResponse<any>(resp));
-    });
-  } else {
-    // Do post
-    const rawCast = this.patchPostPrep(cast);
-    let header = await this.headerUtil.generateHeader();
-    return this.http.post(environment.backendURL + "api/cast", rawCast, {
-      headers: header,
-      observe: "response",
-      withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then(
-        resp => this.respHandler.checkResponse<any>(resp));
+    }
   }
-}
 
   private patchPostPrep(cast: Cast): RawCast {
     let allSubCasts: RawSubCast[] = [];
