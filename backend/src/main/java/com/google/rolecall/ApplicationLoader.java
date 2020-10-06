@@ -136,7 +136,7 @@ public class ApplicationLoader implements ApplicationRunner {
       createOneUser("Renaldo", "", "Maurice", "", "rm@gmail.com","1/1/2020", false);
       createOneUser("Corrin", "Rachelle", "Mitchell", "", "crm@gmail.com","1/1/2020", false);
       createOneUser("Chalvar", "", "Monteiro", "", "cm@gmail.com","1/1/2020", false);
-      // BelÃ©n | Pereyra-Alem
+      // Belén | Pereyra-Alem
       createOneUser("Belen", "Indhira", "Pereyra", "", "bp@gmail.com","1/1/2020", false);
       createOneUser("Jessica", "Amber", "Pinkett", "", "jap@gmail.com","1/1/2020", false);
       createOneUser("Miranda", "", "Quinn", "", "mq@gmail.com","1/1/2020", false);
