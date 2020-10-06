@@ -30,8 +30,15 @@ type RawCast = {
   subCasts: RawSubCast[]
 }
 
+// Get all casts
 type AllRawCastsResponse = {
   data: RawCast[],
+  warnings: string[]
+}
+
+// Get one specific cast
+type OneRawCastsResponse = {
+  data: RawCast,
   warnings: string[]
 }
 
@@ -83,6 +90,8 @@ export type OneCastResponse = {
 })
 export class CastApi {
 
+  // The last saved id (every time a cast is saved it receives a new id)
+  lastSavedCastId: number;
 
   /** Mock backend */
   mockBackend: MockCastBackend = new MockCastBackend();
@@ -205,82 +214,60 @@ export class CastApi {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp)).then(async na => {
-        let allSubCasts: RawSubCast[] = [];
-        let allPositions: Position[] = [];
-        Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
-          allPositions.push(...piece.positions);
-        });
-        for (let filledPos of cast.filled_positions) {
-          for (let group of filledPos.groups) {
-            allSubCasts.push({
-              id: undefined,
-              positionId: Number(allPositions.find(val2 => {
-                return val2.uuid == filledPos.position_uuid;
-              }).uuid),
-              castNumber: group.group_index,
-              members: group.members.map(mem => {
-                return {
-                  id: undefined,
-                  userId: Number(mem.uuid),
-                  order: mem.position_number
-                }
-              })
-            });
-          }
-        }
-        let rawCast: RawCast = {
-          id: undefined,
-          name: cast.name,
-          notes: "",
-          sectionId: Number(cast.segment),
-          subCasts: allSubCasts
-        }
+      }).toPromise().catch((errorResp) => errorResp).then(
+          resp => this.respHandler.checkResponse<any>(resp)).then(async notUsed => {
+        const rawCast = this.patchPostPrep(cast);
         return this.http.post(environment.backendURL + "api/cast", rawCast, {
           headers: header,
           observe: "response",
           withCredentials: true
-        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+        }).toPromise().catch((errorResp) => errorResp).then(
+            resp => this.respHandler.checkResponse<any>(resp));
       });
     } else {
       // Do post
-      let allSubCasts: RawSubCast[] = [];
-      let allPositions = [];
-      Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
-        allPositions.push(...piece.positions);
-      });
-      for (let filledPos of cast.filled_positions) {
-        for (let group of filledPos.groups) {
-          allSubCasts.push({
-            id: undefined,
-            positionId: Number(allPositions.find(val2 => {
-              return val2.uuid == filledPos.position_uuid;
-            }).uuid),
-            castNumber: group.group_index,
-            members: group.members.map(mem => {
-              return {
-                id: undefined,
-                userId: Number(mem.uuid),
-                order: mem.position_number
-              }
-            })
-          });
-        }
-      }
-      let rawCast: RawCast = {
-        id: undefined,
-        name: cast.name,
-        notes: "",
-        sectionId: Number(cast.segment),
-        subCasts: allSubCasts
-      }
+      const rawCast = this.patchPostPrep(cast);
       let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + "api/cast", rawCast, {
         headers: header,
         observe: "response",
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      }).toPromise().catch((errorResp) => errorResp).then(
+          resp => this.respHandler.checkResponse<any>(resp));
     }
+  }
+
+  private patchPostPrep(cast: Cast): RawCast {
+    let allSubCasts: RawSubCast[] = [];
+    let allPositions: Position[] = [];
+    Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
+      allPositions.push(...piece.positions);
+    });
+    for (let filledPos of cast.filled_positions) {
+      for (let group of filledPos.groups) {
+        allSubCasts.push({
+          id: undefined,
+          positionId: Number(allPositions.find(
+              position =>position.uuid == filledPos.position_uuid).uuid),
+          castNumber: group.group_index,
+          members: group.members.map(mem => {
+            return {
+              id: undefined,
+              userId: Number(mem.uuid),
+              order: mem.position_number
+            }
+          }),
+        });
+      }
+    }
+    let rawCast: RawCast = {
+      id: undefined,
+      name: cast.name,
+      notes: "",
+      sectionId: Number(cast.segment),
+      subCasts: allSubCasts,
+    }
+    return rawCast;
   }
 
   /** 
@@ -376,7 +363,9 @@ export class CastApi {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
     }
-    return this.setCastResponse(cast).then(val => {
+    return this.setCastResponse(cast).then(response => {
+      const rawCast = (response as unknown as OneRawCastsResponse).data;
+      this.lastSavedCastId = rawCast.id;
       this.getAllCasts();
       return {
         successful: true
@@ -429,5 +418,4 @@ export class CastApi {
     }
     return undefined;
   }
-
 }
