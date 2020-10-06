@@ -1,6 +1,5 @@
 @import "src/colors";
 @import "src/constants";
-@import "src/std";
 
 // Overall container for panels styling
 .panel-container {
@@ -52,12 +51,24 @@
   white-space: nowrap;
 }
 
-.piece-underline {
+.selected-piece {
+  background-color: $offoffWhite;
+}
+
+.super-container {
+  display: flex;
+}
+
+.super-name {
+  width: 80%;
   text-decoration: underline;
 }
 
-.selected-piece {
-  background-color: $offoffWhite;
+.super-button {
+  margin-top: .6rem;
+  border-radius: $borderRadius;
+  height: 5vh;
+  width: 5vh; 
 }
 
 .add-button-width-container-left {
@@ -65,7 +76,7 @@
   flex-direction: row;
   justify-content: flex-end;
   min-height: 7.5vh;
-  width: 96%;
+  width: 96.5%;
 }
 
 // Space below the Positions

@@ -1,5 +1,6 @@
 // Standard Style Classes
 
+// Using !important, this global style should take precedence over other styles.
 .std-italic-font {
-  font-style: italic;
+  font-style: italic !important;
 }
