@@ -73,39 +73,37 @@
                 [class.adjust-last-cast-cell]="i2 === subCastHeaders.length - 1">
               <ng-container
                   *ngIf="i2 < subCastHeaders.length - 1; else lastCast">
-                {{ header }}
+                <p>{{ header }}</p>
               </ng-container>
               <ng-template #lastCast>
                 <div class="last-cast-cell">
                   <div class="last-cast-text">
-                    {{ header }}
+                <p>{{ header }}</p>
                   </div>
-                  <div class="button-h-wrapper">
-                    <div class="button-h-container">
-                      <button
-                          mat-icon-button
-                          aria-label="Decrement Dancer Count Button"
-                          class="count-button1"
-                          [disabled]="subCastHeaders.length < 2"
-                          (click)="decrementCastCount()">
-                        <mat-icon [inline]="true"
-                            class="count-icon1">
-                          remove_circle_outline
-                        </mat-icon>
-                      </button>
-                      <button
-                          mat-icon-button
-                          aria-label="Increment Dancer Count Button"
-                          class="count-button2"
-                          (click)="incrementCastCount()">
-                        <mat-icon
-                            [inline]="true"
-                            class="count-icon2">
-                          add_circle_outline
-                        </mat-icon>
-                      </button>
-                    </div>  
-                  </div>
+                  <div class="button-h-container">
+                    <button
+                        mat-icon-button
+                        aria-label="Decrement Dancer Count Button"
+                        class="count-button1"
+                        [disabled]="subCastHeaders.length < 2"
+                        (click)="decrementCastCount()">
+                      <mat-icon [inline]="true"
+                          class="count-icon1">
+                        remove_circle_outline
+                      </mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        aria-label="Increment Dancer Count Button"
+                        class="count-button2"
+                        (click)="incrementCastCount()">
+                      <mat-icon
+                          [inline]="true"
+                          class="count-icon2">
+                        add_circle_outline
+                      </mat-icon>
+                    </button>
+                  </div>  
                 </div>
               </ng-template> 
             </div>

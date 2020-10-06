@@ -365,9 +365,10 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions[positionIndex].dancerCount += 1;
   }
 
-  private changeCastCount(change: number) {
+/** Increments cast count by given amount, pass in negative value to decrement. */
+private incrementCastCountUtil(amount: number) {
     const oldCastCount = this.castCount;
-    this.castCount += change;
+    this.castCount += amount;
     const oldCastPositions = this.castPositions;
     this.castPositions = [];
     for (let positionIndex = 0; positionIndex < oldCastPositions.length; positionIndex++) {
@@ -381,7 +382,7 @@ export class CastDragAndDrop implements OnInit {
         const oldCastRow = oldPosition.castRows[dancerIndex];
         const transferCount = Math.min(this.castCount, oldCastCount)
         const castRow: UICastRow = {
-          subCastDancers: new Array(this.castCount) as UICastDancer[],
+          subCastDancers: Array.from<UICastDancer>({length: this.castCount}),
         };
         for (let castIndex = 0; castIndex < transferCount; castIndex++) {
           castRow.subCastDancers[castIndex] = oldCastRow.subCastDancers[castIndex];
@@ -394,10 +395,10 @@ export class CastDragAndDrop implements OnInit {
   }
 
   decrementCastCount() {
-    this.changeCastCount(-1);
+    this.incrementCastCountUtil(-1);
   }
 
   incrementCastCount() {
-    this.changeCastCount(1);
+    this.incrementCastCountUtil(1);
   }
 }
