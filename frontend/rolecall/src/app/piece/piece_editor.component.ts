@@ -253,6 +253,8 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     const newPiece: WorkingPiece = {
       uuid: 'segment:' + Date.now(),
+
+      // A Super Ballet should initially show its children
       isOpen: type === 'SUPER' ? true : false,
       name,
       siblingId: null,

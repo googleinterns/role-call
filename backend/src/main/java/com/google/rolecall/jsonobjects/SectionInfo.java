@@ -59,7 +59,7 @@ public abstract class SectionInfo {
   public abstract static class Builder { 
     @JsonProperty("id")
     public abstract Builder setId(Integer id);
-
+    
     @JsonProperty("name")
     public abstract Builder setName(String name);
 

@@ -25,8 +25,10 @@ export class MockPieceBackend {
       { "id": 228, "name": "White Psyche", "notes": "", "order": 7, "siblingId": null, "size": null, "uuid": "228" }], "deletePositions": [] },
       { "uuid": "247", "name": "Fandango", "siblingId": null, "type": "SEGMENT", "positions":
       [{ "id": 248, "name": "Dancer - Fandango", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "248" }],
-      "deletePositions": [] }, { "uuid": "358", "siblingId": null, "type": "SEGMENT", "name": "Ella", "positions":
+      "deletePositions": [] },
+      { "uuid": "358", "siblingId": null, "type": "SEGMENT", "name": "Ella", "positions":
       [{ "id": 359, "name": "Dancer - Ella", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "359" }], "deletePositions": [] }];
+  
   shouldRejectSetRequest = false;
 
   /** Mocks backend response */

@@ -240,14 +240,12 @@ public class Section {
       if(this.name == null || this.type == null) {
         throw new InvalidParameterException("Section requires a name and a type");
       }
-
       section.id = this.id;
       section.name = this.name;
       section.notes = this.notes;
       section.length = this.length;
       section.siblingId = this.siblingId;
       section.type = this.type;
-
       return section;
     }
 
