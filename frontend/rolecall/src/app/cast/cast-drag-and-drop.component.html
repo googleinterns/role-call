@@ -27,60 +27,104 @@
     <div
         *ngFor="let position of castPositions; let i1 = index"
         class="position-container">
-      <div *ngIf="i1 < castPositions.length">
         <div class="table-container">
           <div
               class="horizontal-list"
               id="col-headers">
             <div class="cell cellBothHeader">
-              {{ castPositions[i1].pos.name }}
-            </div>
-            <div class="dancer-count-buttons-container">
-              <button
-                  mat-icon-button
-                  aria-label="Decrement Dancer Count Button"
-                  class="dancer-count-button"
-                  [disabled]="position.castSize < 2"
-                  (click)="decrementDancerCount(i1)">
-                <mat-icon [inline]="true"
-                    class="dancer-count-icon">
-                  remove_circle_outline
-                </mat-icon>
-              </button>
-              <button
-                  mat-icon-button
-                  aria-label="Increment Dancer Count Button"
-                  class="dancer-count-button"
-                  (click)="incrementDancerCount(i1)">
-                <mat-icon [inline]="true"
-                    class="dancer-count-icon">
-                  add_circle_outline
-                </mat-icon>
-              </button>
+              <div class="double-header-cell">
+                <div class="double-header-text">
+                  {{ castPositions[i1].pos.name }}
+                </div>
+                <div class="double-header-buttons">
+                  <div class="button-v-wrapper">
+                    <div class="button-v-container">
+                      <button
+                          mat-icon-button
+                          aria-label="Decrement Dancer Count Button"
+                          class="count-button1"
+                          [disabled]="position.dancerCount < 2"
+                          (click)="decrementDancerCount(i1)">
+                        <mat-icon
+                            [inline]="true"
+                            class="count-icon1">
+                          remove_circle_outline
+                        </mat-icon>
+                      </button>
+                      <button
+                          mat-icon-button
+                          aria-label="Increment Dancer Count Button"
+                          class="count-button2"
+                          (click)="incrementDancerCount(i1)">
+                        <mat-icon
+                            [inline]="true"
+                            class="count-icon2">
+                          add_circle_outline
+                        </mat-icon>
+                      </button>
+                    </div>
+                  </div>  
+                </div>
+              </div>  
             </div>
             <div
-                *ngFor="let header of subCastHeaders"
-                class="cell cellColHeader">
-                {{ header }}
+                *ngFor="let header of subCastHeaders; let i2 = index"
+                class="cell cellColHeader"
+                [class.adjust-last-cast-cell]="i2 === subCastHeaders.length - 1">
+              <ng-container
+                  *ngIf="i2 < subCastHeaders.length - 1; else lastCast">
+                <p>{{ header }}</p>
+              </ng-container>
+              <ng-template #lastCast>
+                <div class="last-cast-cell">
+                  <div class="last-cast-text">
+                <p>{{ header }}</p>
+                  </div>
+                  <div class="button-h-container">
+                    <button
+                        mat-icon-button
+                        aria-label="Decrement Dancer Count Button"
+                        class="count-button1"
+                        [disabled]="subCastHeaders.length < 2"
+                        (click)="decrementCastCount()">
+                      <mat-icon [inline]="true"
+                          class="count-icon1">
+                        remove_circle_outline
+                      </mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        aria-label="Increment Dancer Count Button"
+                        class="count-button2"
+                        (click)="incrementCastCount()">
+                      <mat-icon
+                          [inline]="true"
+                          class="count-icon2">
+                        add_circle_outline
+                      </mat-icon>
+                    </button>
+                  </div>  
+                </div>
+              </ng-template> 
             </div>
           </div>
           <div
-              *ngFor="let row of position.castRows; let i2 = index"
+              *ngFor="let row of position.castRows; let i3 = index"
               cdkDropList
               cdkDropListOrientation="horizontal"
               class="horizontal-list"
               [cdkDropListData]="row"
               (cdkDropListDropped)="drop($event)"
-              [id]="i1 + ':' + i2">
+              [id]="i1 + ':' + i3">
             <div class="cell cellRowHeader">
-              {{ "Dancer" + (position.castSize > 1 ? " #" + (i2 + 1) : "") }}
+              {{ "Dancer" + (position.dancerCount > 1 ? " #" + (i3 + 1) : "") }}
             </div>
             <div
-                *ngFor="let dancer of position.castRows[i2].subCastDancers; let i3 = index"
+                *ngFor="let dancer of position.castRows[i3].subCastDancers; let i4 = index"
                 class="cell"
                 cdkDrag
                 [cdkDragData]="dancer"
-                [ngStyle]="i3 == boldedCast ? {'font-weight' : 'bold'} : {}">
+                [ngStyle]="i4 == boldedCast ? {'font-weight' : 'bold'} : {}">
               <div *ngIf="dancer!==undefined">
                 <img
                     class="user-image"
@@ -92,7 +136,6 @@
         </div>
       </div>
     </div>
-  </div>
   <div class="user-container">
     <div
         class="horizontal-list user-pool"
