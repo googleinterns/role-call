@@ -84,7 +84,7 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   private void createOneUser(String fName, String mName, String lName, String suffix,
-      String email, String dateJoined) throws ParseException, InvalidParameterException {
+      String email, String dateJoined, boolean isAdmin) throws ParseException, InvalidParameterException {
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
     User user;
@@ -98,9 +98,10 @@ public class ApplicationLoader implements ApplicationRunner {
           .setSuffix(suffix)
           .setEmail(email)
           .setDateJoined(cal)
+          .setIsAdmin(isAdmin)
           .setIsActive(true)
           .setCanLogin(true)
-          .setIsDancer(true)
+          .setIsDancer(!isAdmin)
           .build();
       userRepo.save(user);
   }
@@ -108,40 +109,43 @@ public class ApplicationLoader implements ApplicationRunner {
   private DataCreateError createTestData() {
     logger.log(Level.WARNING, "Creating test data.");    
     try {
-      createOneUser("Robert", "", "Battle", "", "rb@gmail.com","1/1/2020");
-      createOneUser("Jeroboam", "", "Bozeman", "", "bb@gmail.com","1/1/2020");
-      createOneUser("Clifton", "", "Brown", "", "cb@gmail.com","1/1/2020");
-      createOneUser("Khalia", "", "Campbell", "", "kc@gmail.com","1/1/2020");
-      createOneUser("Patrick", "", "Coker", "", "pc@gmail.com","1/1/2020");
-      createOneUser("Sarah", "", "Daley", "", "sd@gmail.com","1/1/2020");
-      createOneUser("Ghrai", "", "Devore", "", "gde@gmail.com","1/1/2020");
-      createOneUser("Solomon", "", "Dumas", "", "sdu@gmail.com","1/1/2020");
-      createOneUser("Ronni", "", "Favors", "", "rf@gmail.com","1/1/2020");
-      createOneUser("Samantha", "", "Figgins", "", "sf@gmail.com","1/1/2020");
+      createOneUser("Robert", "", "Battle", "", "rb@gmail.com","1/1/2020", true);
+      createOneUser("Clifton", "", "Brown", "", "cliffsedge98@gmail.com","1/1/2020", true);
+      createOneUser("Ronni", "", "Favors", "", "rdfavors@gmail.com","1/1/2020", true);
+      createOneUser("Matthew", "", "Rushing", "", " matthewtonyrushing@gmail.com","1/1/2020", true);
+      createOneUser("Kristin", "Colvin", "Young", "", "1975travelbug@gmail.com","1/1/2020", true);
 
-      createOneUser("James", "", "Gilmer", "", "jg@gmail.com","1/1/2020");
-      createOneUser("Vernard", "", "Gilmore", "", "vg@gmail.com","1/1/2020");
-      createOneUser("Jacqueline", "", "Green", "", "jgr@gmail.com","1/1/2020");
-      createOneUser("Jacquelin", "", "Harris", "", "jh@gmail.com","1/1/2020");
-      createOneUser("Michael", "", "Jackson", " Jr.", "mj@gmail.com","1/1/2020");
-      createOneUser("Yazzmeen", "", "Laidler", "", "yl@gmail.com","1/1/2020");
-      createOneUser("Yannick", "", "Lebrun", "", "yle@gmail.com","1/1/2020");
-      createOneUser("Constance", "Stamatiou", "Lopez", "", "csl@gmail.com","1/1/2020");
-      createOneUser("Renaldo", "", "Maurice", "", "rm@gmail.com","1/1/2020");
-      createOneUser("Corrin", "Rachelle", "Mitchell", "", "crm@gmail.com","1/1/2020");
-
-      createOneUser("Chalvar", "", "Monteiro", "", "cm@gmail.com","1/1/2020");
-      createOneUser("Belen", "", "Pereyra", "", "bp@gmail.com","1/1/2020");
-      createOneUser("Jessica", "Amber", "Pinkett", "", "jap@gmail.com","1/1/2020");
-      createOneUser("Miranda", "", "Quinn", "", "mq@gmail.com","1/1/2020");
-      createOneUser("Jamar", "", "Roberts", "", "jr@gmail.com","1/1/2020");
-      createOneUser("Matthew", "", "Rushing", "", "mr@gmail.com","1/1/2020");
-      createOneUser("Kanji", "", "Segawa", "", "ks@gmail.com","1/1/2020");
-      createOneUser("Courtney", "Celeste", "Spears", "", "ccs@gmail.com","1/1/2020");
-      createOneUser("Jermaine", "", "Terry", "", "jt@gmail.com","1/1/2020");
-      createOneUser("Christopher", "", "Wilson", "", "cw@gmail.com","1/1/2020");
-
-      createOneUser("Brandon", "", "Woolridge", "", "bw@gmail.com","1/1/2020");
+      createOneUser("Jeroboam", "", "Bozeman", "", "bb@gmail.com","1/1/2020", false);
+      createOneUser("Clifton", "", "Brown", "", "cb@gmail.com","1/1/2020", false);
+      createOneUser("Khalia", "", "Campbell", "", "kc@gmail.com","1/1/2020", false);
+      createOneUser("Patrick", "", "Coker", "", "pc@gmail.com","1/1/2020", false);
+      // Daley-Perdomo
+      createOneUser("Sarah", "", "Daley", "", "sd@gmail.com","1/1/2020", false);
+      // DeVore-Stokes
+      createOneUser("Ghrai", "", "DeVore", "", "gde@gmail.com","1/1/2020", false);
+      createOneUser("Solomon", "", "Dumas", "", "sdu@gmail.com","1/1/2020", false);
+      createOneUser("Samantha", "", "Figgins", "", "sf@gmail.com","1/1/2020", false);
+      createOneUser("James", "", "Gilmer", "", "jg@gmail.com","1/1/2020", false);
+      createOneUser("Vernard", "J.", "Gilmore", "", "vg@gmail.com","1/1/2020", false);
+      createOneUser("Jacqueline", "", "Green", "", "jgr@gmail.com","1/1/2020", false);
+      createOneUser("Jacquelin", "", "Harris", "", "jh@gmail.com","1/1/2020", false);
+      createOneUser("Michael", "", "Jackson", " Jr.", "mj@gmail.com","1/1/2020", false);
+      createOneUser("Yazzmeen", "", "Laidler", "", "yl@gmail.com","1/1/2020", false);
+      createOneUser("Yannick", "", "Lebrun", "", "yle@gmail.com","1/1/2020", false);
+      createOneUser("Constance", "Stamatiou", "Lopez", "", "csl@gmail.com","1/1/2020", false);
+      createOneUser("Renaldo", "", "Maurice", "", "rm@gmail.com","1/1/2020", false);
+      createOneUser("Corrin", "Rachelle", "Mitchell", "", "crm@gmail.com","1/1/2020", false);
+      createOneUser("Chalvar", "", "Monteiro", "", "cm@gmail.com","1/1/2020", false);
+      // BelÃ©n | Pereyra-Alem
+      createOneUser("Belen", "Indhira", "Pereyra", "", "bp@gmail.com","1/1/2020", false);
+      createOneUser("Jessica", "Amber", "Pinkett", "", "jap@gmail.com","1/1/2020", false);
+      createOneUser("Miranda", "", "Quinn", "", "mq@gmail.com","1/1/2020", false);
+      createOneUser("Jamar", "", "Roberts", "", "jr@gmail.com","1/1/2020", false);
+      createOneUser("Kanji", "", "Segawa", "", "ks@gmail.com","1/1/2020", false);
+      createOneUser("Courtney", "Celeste", "Spears", "", "ccs@gmail.com","1/1/2020", false);
+      createOneUser("Jermaine", "", "Terry", "", "jt@gmail.com","1/1/2020", false);
+      createOneUser("Christopher", "R.", "Wilson", "", "cw@gmail.com","1/1/2020", false);
+      createOneUser("Brandon", "", "Woolridge", "", "bw@gmail.com","1/1/2020", false);
     } catch(InvalidParameterException e) {
       return DataCreateError.OtherError;
     } catch(ParseException e) {
