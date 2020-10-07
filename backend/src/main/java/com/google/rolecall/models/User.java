@@ -31,13 +31,13 @@ public class User {
   @Column(nullable = false)
   private String firstName;
 
-  @Column(nullable = false)
+  @Basic
   private String middleName;
 
   @Column(nullable = false)
   private String lastName;
 
-  @Column(nullable = false)
+  @Basic
   private String suffix;
 
   @NaturalId
