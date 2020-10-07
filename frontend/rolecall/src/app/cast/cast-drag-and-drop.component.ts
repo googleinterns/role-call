@@ -137,11 +137,11 @@ export class CastDragAndDrop implements OnInit {
   /** Selects the current cast from the Cast API to copy and render
    * in the drag and drop.
    */
-  selectCast({uuid, saveDeleteEnabled}: {
+  selectCast({uuid, saveDeleteEnabled = true}: {
     uuid: APITypes.CastUUID;
     saveDeleteEnabled?: boolean;
   }) {
-    this.buttonsEnabled = saveDeleteEnabled ? true : !saveDeleteEnabled;
+    this.buttonsEnabled = saveDeleteEnabled;
     this.castSelected = true;
     this.selectedCastUUID = uuid;
     if (this.dataLoaded) {
@@ -351,8 +351,8 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions[positionIndex].dancerCount += 1;
   }
 
-/** Increments cast count by given amount, pass in negative value to decrement. */
-private incrementCastCountUtil(amount: number) {
+  /** Increments cast count by given amount, pass in negative value to decrement. */
+  private incrementCastCountUtil(amount: number) {
     const oldCastCount = this.castCount;
     this.castCount += amount;
     const oldCastPositions = this.castPositions;

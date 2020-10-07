@@ -197,7 +197,7 @@ export class PieceEditor implements OnInit {
     }
     this.currentSelectedPiece = piece;
     this.urlPointingUUID = piece ? piece.uuid : '';
-    this.currentType = this.getCurrentTypeCode(piece.type);
+    this.currentType = piece ? this.getCurrentTypeCode(piece.type) : 0;
     if (this.location.path().startsWith('/segment') ||
         this.location.path().startsWith('/piece/')) {
       if (piece) {
@@ -314,6 +314,7 @@ export class PieceEditor implements OnInit {
     if (successIndicator.successful === true) {
       this.workingPieces = this.workingPieces.filter(
           piece => piece.uuid !== this.currentSelectedPiece.uuid);
+      this.buildRenderingList();
       this.workingPieces.length > 0
           ? this.setCurrentPiece(this.workingPieces[0])
           : this.setCurrentPiece(undefined);
@@ -453,10 +454,10 @@ export class PieceEditor implements OnInit {
   }
 
   updateDragAndDropData(writeThru?: boolean) {
-    const createPosition = this.currentSelectedPiece.type === 'PIECE';
     if (!this.currentSelectedPiece) {
       return;
     }
+    const createPosition = this.currentSelectedPiece.type === 'PIECE';
     if (this.pieceSaved) {
       // after deletePiece()
       this.dragAndDropData = this.currentSelectedPiece.positions
