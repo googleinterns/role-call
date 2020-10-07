@@ -68,7 +68,7 @@ export class PieceEditor implements OnInit {
 
   lastSelectedPieceName: string;
 
-  currentTypeOffs = 0;
+  currentTypeOffset = 0;
 
   segmentTypes = ['SEGMENT', 'PIECE', 'SUPER'];
   selectedSegmentType: PieceType;
@@ -197,7 +197,7 @@ export class PieceEditor implements OnInit {
     }
     this.currentSelectedPiece = piece;
     this.urlPointingUUID = piece ? piece.uuid : '';
-    this.currentTypeOffs = piece ? this.getCurrentTypeCode(piece.type) : 0;
+    this.currentTypeOffset = piece ? this.getCurrentTypeCode(piece.type) : 0;
     if (this.location.path().startsWith('/segment') ||
         this.location.path().startsWith('/piece/')) {
       if (piece) {
@@ -231,7 +231,7 @@ export class PieceEditor implements OnInit {
     let name = 'TEST';
     let type: PieceType = 'PIECE';
     let originalName = 'TEST';
-    this.currentTypeOffs = pieceTpCd;
+    this.currentTypeOffset = pieceTpCd;
     switch (pieceTpCd) {
     case 1:
       name = 'New Break';
