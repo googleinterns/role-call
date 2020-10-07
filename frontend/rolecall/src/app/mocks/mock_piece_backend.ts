@@ -28,7 +28,7 @@ export class MockPieceBackend {
       "deletePositions": [] },
       { "uuid": "358", "siblingId": null, "type": "SEGMENT", "name": "Ella", "positions":
       [{ "id": 359, "name": "Dancer - Ella", "notes": "", "order": 0, "siblingId": null, "size": null, "uuid": "359" }], "deletePositions": [] }];
-  
+
   shouldRejectSetRequest = false;
 
   /** Mocks backend response */
