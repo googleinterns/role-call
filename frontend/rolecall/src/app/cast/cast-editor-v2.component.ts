@@ -25,7 +25,7 @@ export class CastEditorV2 implements OnInit {
   selectedPiece: Piece;
   urlUUID: APITypes.CastUUID;
   allCasts: Cast[] = [];
-  filteredCasts: Cast[] = [];
+  selectedPieceCasts: Cast[] = [];
   allPieces: Piece[] = [];
   popupPieceList: PieceMenuItem[] = [];
   lastSelectedCastIndex: number;
@@ -63,7 +63,7 @@ export class CastEditorV2 implements OnInit {
 
   private updateFilteredCasts() {
     if (this.selectedPiece) {
-      this.filteredCasts = this.allCasts.filter(
+      this.selectedPieceCasts = this.allCasts.filter(
           cast => cast.segment === this.selectedPiece.uuid);
     }
   }
@@ -83,7 +83,7 @@ export class CastEditorV2 implements OnInit {
     this.selectedPiece = piece;
     this.updateFilteredCasts();
     if (autoSelectFirst) {
-      this.setCurrentCast({cast: this.filteredCasts[0]});
+      this.setCurrentCast({cast: this.selectedPieceCasts[0]});
     }
   }
 
@@ -101,10 +101,10 @@ export class CastEditorV2 implements OnInit {
         this.setPiece(foundPiece);
       }
     }
-    if (this.selectedPiece && !this.filteredCasts.find(
+    if (this.selectedPiece && !this.selectedPieceCasts.find(
           cast => cast.uuid === this.urlUUID)) {
-      if (this.filteredCasts.length > 0) {
-        this.setCurrentCast({cast: this.filteredCasts[0]});
+      if (this.selectedPieceCasts.length > 0) {
+        this.setCurrentCast({cast: this.selectedPieceCasts[0]});
       }
     }
   }
@@ -157,8 +157,8 @@ export class CastEditorV2 implements OnInit {
           this.lastSelectedCast = foundCast;
           this.selectedCast = foundCast;
         } else {
-          if (this.filteredCasts.length > 0) {
-            this.selectedCast = this.filteredCasts[
+          if (this.selectedPieceCasts.length > 0) {
+            this.selectedCast = this.selectedPieceCasts[
                 this.lastSelectedCastIndex
                 ? this.lastSelectedCastIndex - 1
                 : 0];
@@ -167,8 +167,8 @@ export class CastEditorV2 implements OnInit {
           }
         }
       } else {
-        if (this.filteredCasts.length > 0) {
-          this.selectedCast = this.filteredCasts[
+        if (this.selectedPieceCasts.length > 0) {
+          this.selectedCast = this.selectedPieceCasts[
               this.lastSelectedCastIndex ? this.lastSelectedCastIndex - 1 : 0];
         } else {
           this.selectedCast = casts[0];
@@ -197,15 +197,16 @@ export class CastEditorV2 implements OnInit {
 
   setCurrentCast({cast, index}: {
     cast: Cast | undefined,
-    index?: number | undefined,
+    index?: number,
   }) {
-    if (!index && cast) {
-      index = this.filteredCasts.findIndex((cast) => cast.uuid === cast.uuid);
+    if (index === undefined && cast) {
+      index = this.selectedPieceCasts.findIndex(
+          findCast => cast.uuid === findCast.uuid);
     }
-    if (!index || index === -1) {
-      this.lastSelectedCastIndex = undefined;
-    } else {
+    if (index >= 0) {
       this.lastSelectedCastIndex = index;
+    } else {
+      this.lastSelectedCastIndex = undefined;
     }
     this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
     this.selectedCast = cast;
@@ -230,8 +231,9 @@ export class CastEditorV2 implements OnInit {
         };
       })
     };
-    await this.setCurrentCast({cast: newCast});
+    this.selectedPieceCasts.push(newCast);
     await this.castAPI.setCast(newCast, true);
+    this.setCurrentCast({cast: newCast});
     await this.castAPI.getAllCasts();
   }
 }

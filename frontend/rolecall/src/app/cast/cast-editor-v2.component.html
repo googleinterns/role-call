@@ -32,7 +32,7 @@
       </div>
       <div class="cast-select-container">
         <div
-            *ngFor="let cast of filteredCasts"
+            *ngFor="let cast of selectedPieceCasts"
             class="app-card cast-select"
             [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
             (click)="setCurrentCast({cast: cast})">
