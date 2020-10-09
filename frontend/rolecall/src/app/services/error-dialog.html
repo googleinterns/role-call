@@ -1,13 +1,27 @@
-<h1 mat-dialog-title class="title">Error</h1>
+<h1 class="title" mat-dialog-title>
+  Error
+</h1>
 <div mat-dialog-content>
   <br>
-  <p class="subheader" style="font-weight: normal;">{{ data.errorEvent.url }}</p>
+  <p class="subheader" style="font-weight: normal;">
+    {{data.errorEvent.url}}
+  </p>
   <br>
-  <p class="subheader">{{ "Status " + data.errorEvent.status + ": " + data.errorEvent.statusText }} </p>
-  <p class="content">{{ data.errorEvent.errorMessage }}</p>
+  <p class="subheader">
+    {{"Status " + data.errorEvent.status + ": " + data.errorEvent.statusText}}
+  </p>
+  <p class="content">
+    {{data.errorEvent.errorMessage}}
+  </p>
   <br>
   <br>
 </div>
-<div mat-dialog-actions class="button-bar">
-  <button mat-raised-button class="ok-button" (click)="onOkClick('OK')" cdkFocusInitial>OK</button>
+<div class="button-bar" mat-dialog-actions>
+  <button
+      class="ok-button"
+      mat-raised-button
+      cdkFocusInitial
+      (click)="onOkClick('OK')">
+    OK
+  </button>
 </div>
