@@ -1,13 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import {MatDialog} from '@angular/material/dialog';
 
-import { ResponseStatusHandlerService } from './response-status-handler.service';
+import {LoginApi} from '../api/login_api.service';
+
+import {ResponseStatusHandlerService} from './response-status-handler.service';
 
 describe('ResponseStatusHandlerService', () => {
   let service: ResponseStatusHandlerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ResponseStatusHandlerService);
+    const fakeLoginApi = {} as LoginApi;
+    const fakeMatDialog = {} as MatDialog;
+    service = new ResponseStatusHandlerService(fakeMatDialog, fakeLoginApi);
   });
 
   it('should be created', () => {
