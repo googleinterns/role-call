@@ -77,11 +77,11 @@ export class CastEditorV2 implements OnInit {
       return;
     }
     let autoSelectFirst = false;
-    if (this.selectedPiece && this.selectedPiece.uuid !== piece.uuid) {
-      autoSelectFirst = true;
-    }
     this.selectedPiece = piece;
     this.updateFilteredCasts();
+    if (this.selectedPiece && this.selectedPiece.uuid !== piece.uuid) {
+      autoSelectFirst = this.selectedPieceCasts.length > 0;
+    }
     if (autoSelectFirst) {
       this.setCurrentCast({cast: this.selectedPieceCasts[0]});
     }

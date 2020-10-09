@@ -152,6 +152,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.initStep3Data();
     this.initStep4();
     this.state.status = PerformanceStatus.DRAFT;
+    // Saving casts results in an immediate cast load.
+    // Clear a key parameter to prevent deadly embrace
+    this.castDnD.castSelected = false;
+
     this.performanceAPI.setPerformance(this.dataToPerformance());
     this.deleteWorkingCasts();
     this.resetState();
