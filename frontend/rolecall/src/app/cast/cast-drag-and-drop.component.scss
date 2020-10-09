@@ -1,5 +1,5 @@
 @import "../../styles/colors";
-@import "constants";
+@import "../../styles/constants";
 
 $cellHeight: 3.5rem;
 $cellWidth: 14rem;
@@ -49,6 +49,7 @@ $lastCellFillerWidth: 2.2rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: $cellWidth;
+
   &ColHeader {
     padding-top: 1.25rem;
     color: $gray;
@@ -56,6 +57,7 @@ $lastCellFillerWidth: 2.2rem;
     font-weight: bold;
     vertical-align: middle;
   }
+
   &RowHeader {
     padding-top: 1.25rem;
     padding-left: 2rem;
@@ -64,6 +66,7 @@ $lastCellFillerWidth: 2.2rem;
     font-weight: bold;
     vertical-align: middle;
   }
+
   &BothHeader {
     padding: 0;
     padding-left: 1rem;
@@ -88,6 +91,7 @@ $lastCellFillerWidth: 2.2rem;
   padding-top: 0.25rem;
   position: relative;
   max-width: 90%;
+
   &:focus {
     border: none;
   }
@@ -124,6 +128,7 @@ $lastCellFillerWidth: 2.2rem;
   margin-bottom: .7rem;
   width: 4vh;
 }
+
 .export-button-icon {
   font-size: 2.5rem;
   vertical-align: middle;
@@ -239,7 +244,7 @@ $lastCellFillerWidth: 2.2rem;
   }
 }
 
-  
+
 .button-v-wrapper {
   background: $offWhite;
   width: $bothFillerWidth;
@@ -254,7 +259,7 @@ $lastCellFillerWidth: 2.2rem;
   .mat-button-base {
     height: 1rem;
   }
- 
+
   .button-v-container {
     display: flex;
     flex-direction: column;
@@ -266,7 +271,7 @@ $lastCellFillerWidth: 2.2rem;
       width: 1rem;
 
       .count-icon1 {
-        margin-top : -.2rem;
+        margin-top: -.2rem;
       }
     }
 
@@ -274,7 +279,7 @@ $lastCellFillerWidth: 2.2rem;
       height: 1rem;
 
       .count-icon2 {
-        margin-top : -.2rem;
+        margin-top: -.2rem;
       }
     }
   }

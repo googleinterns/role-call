@@ -1,13 +1,13 @@
-import { TestBed } from '@angular/core/testing';
+import {LoginApi} from '../api/login_api.service';
 
-import { HeaderUtilityService } from './header-utility.service';
+import {HeaderUtilityService} from './header-utility.service';
 
 describe('HeaderUtilityService', () => {
   let service: HeaderUtilityService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(HeaderUtilityService);
+    const fakeLoginService = {} as LoginApi;
+    service = new HeaderUtilityService(fakeLoginService);
   });
 
   it('should be created', () => {
