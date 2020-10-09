@@ -195,7 +195,7 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
       this.castSelected = false;
-      this.logging.logError("Couldn't find cast: " + this.selectedCastUUID);
+      this.logging.logError("Missing cast: " + this.selectedCastUUID);
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
