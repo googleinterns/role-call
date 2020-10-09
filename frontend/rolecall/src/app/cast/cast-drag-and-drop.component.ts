@@ -141,11 +141,13 @@ export class CastDragAndDrop implements OnInit {
     uuid: APITypes.CastUUID;
     saveDeleteEnabled?: boolean;
   }) {
-    this.buttonsEnabled = saveDeleteEnabled;
-    this.castSelected = true;
-    this.selectedCastUUID = uuid;
-    if (this.dataLoaded) {
-      this.setupData();
+    if (uuid) {
+      this.buttonsEnabled = saveDeleteEnabled;
+      this.castSelected = true;
+      this.selectedCastUUID = uuid;
+      if (this.dataLoaded) {
+        this.setupData();
+      }
     }
   }
 
@@ -194,8 +196,8 @@ export class CastDragAndDrop implements OnInit {
     }
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
-      this.castSelected = false;
       this.logging.logError("Missing cast: " + this.selectedCastUUID);
+      this.castSelected = false;
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);

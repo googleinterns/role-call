@@ -152,10 +152,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.initStep3Data();
     this.initStep4();
     this.state.status = PerformanceStatus.DRAFT;
-    // Saving casts results in an immediate cast load.
-    // Clear a key parameter to prevent deadly embrace
-    this.castDnD.castSelected = false;
-
+    if (this.castDnD) {
+      // Saving casts results in an immediate cast load.
+      // Clear key parameters prevent deadly embrace.
+      this.castDnD.castSelected = false;
+      this.castDnD.selectedCastUUID = undefined;
+    }
     this.performanceAPI.setPerformance(this.dataToPerformance());
     this.deleteWorkingCasts();
     this.resetState();
@@ -700,9 +702,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
                   ...g,
                   memberNames: g.members.map(mem => this.userAPI.users.get(mem.uuid)).map(
                       usr => usr.first_name + " " +
-                      (usr.middle_name.length > 0 ? usr.middle_name + " " : "") +
-                      usr.last_name + usr.suffix),
-                }
+                      (usr.middle_name ? usr.middle_name + " " : "") +
+                      usr.last_name +
+                      (usr.suffix ? usr.suffix : ""),
+                  )}
               })
             }
           }) : []
