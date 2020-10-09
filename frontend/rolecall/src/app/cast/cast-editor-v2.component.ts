@@ -203,10 +203,10 @@ export class CastEditorV2 implements OnInit {
       index = this.selectedPieceCasts.findIndex(
           findCast => cast.uuid === findCast.uuid);
     }
-    if (index === undefined || index === -1) {
-      this.lastSelectedCastIndex = undefined;
-    } else {
+    if (index >= 0) {
       this.lastSelectedCastIndex = index;
+    } else {
+      this.lastSelectedCastIndex = undefined;
     }
     this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
     this.selectedCast = cast;
