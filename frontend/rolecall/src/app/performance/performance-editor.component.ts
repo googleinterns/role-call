@@ -154,7 +154,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.state.status = PerformanceStatus.DRAFT;
     // Saving casts results in an immediate cast load.
     // Clear a key parameter to prevent deadly embrace
-    this.castDnD.castSelected = false;
+    if (this.castDnD) {
+      this.castDnD.castSelected = false;
+    }
 
     this.performanceAPI.setPerformance(this.dataToPerformance());
     this.deleteWorkingCasts();
@@ -438,7 +440,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   selectedSegment: Piece;
   selectedIndex: number;
-  @ViewChild('castDnD') castDnD: CastDragAndDrop;
+  @ViewChild('castDnD') castDnD?: CastDragAndDrop;
   // segment uuid to cast, primary cast, and length
   segmentToCast: Map<string, [Cast, number, number]> = new Map();
   // segment uuid to performance section ID
