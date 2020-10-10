@@ -1,5 +1,5 @@
 @import "../../styles/colors";
-@import "constants";
+@import "../../styles/constants";
 
 // Overall container for panels styling
 .panel-container {
@@ -67,7 +67,7 @@
   margin-top: .6rem;
   border-radius: $borderRadius;
   height: 5vh;
-  width: 5vh; 
+  width: 5vh;
 }
 
 .add-button-width-container-left {
@@ -163,6 +163,7 @@
   flex-direction: row;
   justify-content: space-between;
   height: min-content;
+
   &-no-positions {
     height: 100%;
   }
@@ -197,6 +198,7 @@
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 0.5em;
+
   &:hover {
     background: red;
     color: $white;
@@ -247,6 +249,7 @@
   padding-left: 0.5em;
   padding-top: 0.25em;
   position: relative;
+
   &:focus {
     border: none;
   }
@@ -265,6 +268,7 @@
   padding-left: 0.5em;
   padding-top: 0.25em;
   position: relative;
+
   &:focus {
     border: none;
   }

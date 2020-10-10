@@ -1,13 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-
-import { RequestInterceptorService } from './request-interceptor.service';
+import {RequestInterceptorService} from './request-interceptor.service';
+import {LoginApi} from '../api/login_api.service';
 
 describe('RequestInterceptorService', () => {
   let service: RequestInterceptorService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(RequestInterceptorService);
+    const fakeLoginApi = {} as LoginApi;
+    service = new RequestInterceptorService(fakeLoginApi);
   });
 
   it('should be created', () => {
