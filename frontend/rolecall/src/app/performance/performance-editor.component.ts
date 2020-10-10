@@ -440,7 +440,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   selectedSegment: Piece;
   selectedIndex: number;
-  @ViewChild('castDnD') castDnD: CastDragAndDrop;
+  @ViewChild('castDnD') castDnD?: CastDragAndDrop;
   // segment uuid to cast, primary cast, and length
   segmentToCast: Map<string, [Cast, number, number]> = new Map();
   // segment uuid to performance section ID
