@@ -1,22 +1,38 @@
-import { async, TestBed } from '@angular/core/testing';
-import { MatIconModule } from '@angular/material/icon';
-import { RouterTestingModule } from '@angular/router/testing';
-import { App } from './app.component';
-import { SideNav } from './side_nav.component';
-import { SiteHeader } from './site_header.component';
+import {async, TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {Component} from '@angular/core';
+import {of} from 'rxjs';
+
+import {LoginApi} from '../api/login_api.service';
+import {DashboardApi} from '../api/dashboard_api.service';
+
+import {App} from './app.component';
+import {AppModule} from './app.module';
 
 describe('App', () => {
+  const fakeDashboardApi = {
+    dashPerformanceEmitter: of([]),
+    getAllDashboard() {
+    }
+  } as DashboardApi;
+  const fakeLoginApi = {loginPromise: Promise.resolve()} as LoginApi;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatIconModule
-      ],
       declarations: [
         App,
-        SideNav,
-        SiteHeader
+        FakePage,
       ],
+      imports: [
+        RouterTestingModule.withRoutes([
+          {path: `dashboard`, component: FakePage},
+        ]),
+        AppModule,
+      ],
+      providers: [
+        {provide: DashboardApi, useValue: fakeDashboardApi},
+        {provide: LoginApi, useValue: fakeLoginApi},
+      ]
     }).compileComponents();
   }));
 
@@ -34,3 +50,8 @@ describe('App', () => {
     expect(app.title).toEqual('rolecall');
   });
 });
+
+/** Empty component useful for testing route navigation. */
+@Component({template: ''})
+export class FakePage {
+}

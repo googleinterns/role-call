@@ -1,20 +1,31 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Dashboard } from './dashboard.component';
+import {async, TestBed} from '@angular/core/testing';
+import {of} from 'rxjs';
 
+import {DashboardApi} from '../api/dashboard_api.service';
+
+import {Dashboard} from './dashboard.component';
 
 describe('DashboardComponent', () => {
   let component: Dashboard;
-  let fixture: ComponentFixture<Dashboard>;
 
   beforeEach(async(() => {
+    const fakeDashboardApi = {
+      dashPerformanceEmitter: of([]),
+      getAllDashboard() {
+      }
+    } as DashboardApi;
+
     TestBed.configureTestingModule({
-      declarations: [Dashboard]
-    })
-      .compileComponents();
+          declarations: [Dashboard],
+          providers: [
+            {provide: DashboardApi, useValue: fakeDashboardApi},
+          ],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Dashboard);
+    const fixture = TestBed.createComponent(Dashboard);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
