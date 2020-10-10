@@ -156,7 +156,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     // Clear a key parameter to prevent deadly embrace
     if (this.castDnD) {
       this.castDnD.castSelected = false;
-  }
+    }
 
     this.performanceAPI.setPerformance(this.dataToPerformance());
     this.deleteWorkingCasts();
