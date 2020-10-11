@@ -176,9 +176,8 @@ $buttonRowHeight: 5rem;
   justify-content: space-evenly;
 
   .right-card-container {
-    height: calc(90vh - 5rem);
-    margin-left: 20vw;
-    width: 75vw;
+    height: calc(90vh - 5rem);    
+    width: 95vw;
 
     .right-card {
       background: $offWhite;

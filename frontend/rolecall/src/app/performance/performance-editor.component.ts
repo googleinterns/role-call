@@ -60,7 +60,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   ngOnDestroy() {
     this.deleteWorkingCasts();
   }
-
+  closeStepper() {
+    console.log("tte")
+  }
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformances = perfs.sort((a, b) => a.step_1.date - b.step_1.date);
     // this.onSelectRecentPerformance(perfs[0] ? perfs[0] : undefined);
@@ -719,7 +721,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.submitted = false;
   }
 
-  onResetFromStart() {
+  onResetFromStart(e) {
+    e.preventDefault();
     this.deleteWorkingCasts();
     this.stepper.navigate(0);
     this.resetPerformance();
