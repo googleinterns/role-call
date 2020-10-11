@@ -1,9 +1,10 @@
 <app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
 <div *ngIf="dataLoaded">
   <div *ngIf="performanceSelected; else selectPerformanceView">
-    <app-stepper #stepper [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}" 
-      [stepperOptions]="stepperOpts" (stepChange)="onStepChange($event)"></app-stepper>
-
+    <app-stepper #stepper
+      [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
+      [stepperOptions]="stepperOpts"
+      (stepChange)="onStepChange($event)"></app-stepper>
 
     <div>
       <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
@@ -70,7 +71,10 @@
         </ng-container>
         <ng-template #submittedButtons>
           <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
-            <button mat-flat-button aria-label="New Performance" class="button" (click)="onResetFromStart($event)">
+            <button mat-flat-button 
+              class="button" 
+              aria-label="New Performance"               
+              (click)="onResetFromStart($event)">
               new performance
             </button>
           </div>
