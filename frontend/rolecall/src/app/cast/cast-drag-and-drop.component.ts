@@ -97,9 +97,9 @@ export class CastDragAndDrop implements OnInit {
 
   private buildSubCastHeader() {
     this.subCastHeaders = [];
-    this.subCastHeaders.push("1st Cast");
-    if (2 <= this.castCount) { this.subCastHeaders.push("2nd Cast"); }
-    if (3 <= this.castCount) { this.subCastHeaders.push("3rd Cast"); }
+    this.subCastHeaders.push('1st Cast');
+    if (2 <= this.castCount) { this.subCastHeaders.push('2nd Cast'); }
+    if (3 <= this.castCount) { this.subCastHeaders.push('3rd Cast'); }
     for (let i = 4; i <= this.castCount; i++) {
       this.subCastHeaders.push(`${i}th Cast`);
     }
@@ -194,7 +194,7 @@ export class CastDragAndDrop implements OnInit {
     }
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
-      this.logging.logError("Missing cast: " + this.selectedCastUUID);
+      this.logging.logError('Missing cast: ' + this.selectedCastUUID);
       this.castSelected = false;
       return;
     }
@@ -351,27 +351,28 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions[positionIndex].dancerCount += 1;
   }
 
-  /** Increments cast count by given amount, pass in negative value to decrement. */
+  /** Increments cast count by given amount,
+   * pass in negative value to decrement.
+   */
   private incrementCastCountUtil(amount: number) {
     const oldCastCount = this.castCount;
     this.castCount += amount;
     const oldCastPositions = this.castPositions;
     this.castPositions = [];
-    for (let positionIndex = 0; positionIndex < oldCastPositions.length; positionIndex++) {
-      const oldPosition = oldCastPositions[positionIndex];
+    for (const oldPosition of oldCastPositions) {
       const newPosition: UICastPosition = {
         pos: oldPosition.pos,
         dancerCount: oldPosition.dancerCount,
         castRows: [],
       };
-      for(let dancerIndex = 0; dancerIndex < oldPosition.castRows.length; dancerIndex++) {
-        const oldCastRow = oldPosition.castRows[dancerIndex];
-        const transferCount = Math.min(this.castCount, oldCastCount)
+      for (const oldCastRow of oldPosition.castRows) {
+        const transferCount = Math.min(this.castCount, oldCastCount);
         const castRow: UICastRow = {
           subCastDancers: Array.from<UICastDancer>({length: this.castCount}),
         };
         for (let castIndex = 0; castIndex < transferCount; castIndex++) {
-          castRow.subCastDancers[castIndex] = oldCastRow.subCastDancers[castIndex];
+          castRow.subCastDancers[castIndex] =
+              oldCastRow.subCastDancers[castIndex];
         }
         newPosition.castRows.push(castRow);
       }
