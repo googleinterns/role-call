@@ -15,7 +15,7 @@ import { EmptyStringIfUndefinedPipe } from './empty_string_if_undefined.pipe';
 import { LoadingSpinnerComponent } from './loading-spinner.component';
 import { NumberToPlacePipe } from './number_to_place.pipe';
 import { Stepper } from './stepper.component';
-
+import { ClickOutsideModule } from 'ng-click-outside';
 @NgModule({
   declarations: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe, NumberToPlacePipe, Stepper, LoadingSpinnerComponent],
   imports: [
@@ -27,7 +27,8 @@ import { Stepper } from './stepper.component';
     MatSelectModule,
     FormsModule,
     MatAutocompleteModule,
-    MatIconModule
+    MatIconModule,
+    ClickOutsideModule
   ],
   exports: [EditableTextInput, EditableDateInput, EditableMultiSelectInput, EmptyStringIfUndefinedPipe, NumberToPlacePipe, Stepper, LoadingSpinnerComponent]
 })

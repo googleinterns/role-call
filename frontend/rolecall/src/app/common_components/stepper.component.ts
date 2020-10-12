@@ -70,10 +70,13 @@ export class Stepper implements OnInit, OnChanges {
     this.showOptions = this.stepperOptions && this.stepperOptions.length > 0;
   }
 
-  toggleStepper() {
+  toggleStepper(e) {
+    e.preventDefault();
     this.isStepperOpen = !this.isStepperOpen;
   }
-
+  closeStepper() {
+    this.isStepperOpen = false;
+  }
   navigate(index: number) {
     this.currentStepIndex = index;
     this.emitStep();

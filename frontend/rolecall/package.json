@@ -31,6 +31,7 @@
     "bootstrap": "^4.4.0",
     "file-saver": "^2.0.2",
     "moment": "^2.27.0",
+    "ng-click-outside": "^7.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
