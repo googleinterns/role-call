@@ -1,6 +1,17 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowUnreachableCode": false,
+    "strictBindCallApply": true,
+    //    "strictFunctionTypes": true,
+    //    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    //    "noUnusedLocals": true,
+    //    "strictPropertyInitialization": true,
+    //    "noUnusedParameters": true,
+    //    "noImplicitAny": true,
+    //    "noImplicitReturns": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
