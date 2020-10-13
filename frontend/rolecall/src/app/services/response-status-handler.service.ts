@@ -59,9 +59,10 @@ export class ResponseStatusHandlerService {
     }
   }
 
-  showError(errorEvent: ErrorEvent) {
+  showError(errorEvent: ErrorEvent): Promise<string> {
     if (this.pendingErrors.has(errorEvent.url)) {
-      return;
+      // TODO: What should we return here?
+      return Promise.resolve('');
     }
     let resFunc;
     let prom: Promise<string> = new Promise((res, rej) => {
