@@ -32,6 +32,13 @@ export class DashboardApi {
   /** Mock backend. */
   mockBackend: MockDashboardBackend = new MockDashboardBackend();
 
+  /** All the loaded dashboard performances mapped by UUID. */
+  dashPerformances: Map<number, DashPerformance> =
+      new Map<number, DashPerformance>();
+
+  /** Emitter that is called whenever dashboard performances are loaded. */
+  dashPerformanceEmitter: EventEmitter<DashPerformance[]> = new EventEmitter();
+
   constructor(
       private loggingService: LoggingService,
       private http: HttpClient,
@@ -57,12 +64,6 @@ export class DashboardApi {
           return val;
         });
   }
-
-  /** All the loaded dashboard performances mapped by UUID. */
-  dashPerformances: Map<number, DashPerformance> = new Map<number, DashPerformance>();
-
-  /** Emitter that is called whenever dashboard performances are loaded. */
-  dashPerformanceEmitter: EventEmitter<DashPerformance[]> = new EventEmitter();
 
   /**
    * Takes backend response, updates data structures for all dash performances.
