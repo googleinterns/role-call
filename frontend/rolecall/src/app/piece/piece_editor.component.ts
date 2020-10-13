@@ -8,7 +8,7 @@ import {Piece, PieceType, PieceApi, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 import {APITypes} from 'src/api_types';
 
-type ValueName = 
+type ValueName =
   'New Position' |
   'Existing Position' |
   'New Ballet' |
@@ -50,7 +50,7 @@ export class PieceEditor implements OnInit {
   // All pieces or segments in the system ready to be edited.
   workingPieces: WorkingPiece[];
   // Displayed items (some children of Super Ballets may be hidden)
-  displayedPieces:  WorkingPiece[];
+  displayedPieces: WorkingPiece[];
   // List of segments visible on the left side of the page.
   renderingItems: RenderingItem[];
   urlPointingUUID: string;
@@ -99,7 +99,7 @@ export class PieceEditor implements OnInit {
         // If Super Ballet is open, add children
         this.displayedPieces[i].positions.sort(
             (a, b) => a.order < b.order ? -1 : 1);
-        let children: WorkingPiece[] = [];
+        const children: WorkingPiece[] = [];
         for (const position of this.displayedPieces[i].positions) {
           const uuid = String(position.siblingId);
           const child = this.workingPieces.find(wp => wp.uuid === uuid);
@@ -113,7 +113,9 @@ export class PieceEditor implements OnInit {
             this.buildRenderingItem(displayPiece, displayPieceIndex));
   }
 
-  private buildRenderingItem(displayPiece: WorkingPiece, displayPieceIndex: number) {
+  private buildRenderingItem(
+      displayPiece: WorkingPiece,
+      displayPieceIndex: number) {
     const hasNoChidren = displayPiece.type === 'SEGMENT'
         ? false : displayPiece.positions.length === 0;
     const name = hasNoChidren ? '*' + displayPiece.name : displayPiece.name;
@@ -554,7 +556,7 @@ export class PieceEditor implements OnInit {
 
   toggleOpen(index: number) {
     const superBallet = this.displayedPieces[index];
-    if (superBallet.type == 'SUPER') {
+    if (superBallet.type === 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
     }
     this.buildRenderingList();
