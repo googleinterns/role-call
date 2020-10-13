@@ -22,16 +22,6 @@ import {CAST_COUNT} from 'src/constants';
 })
 export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
-  constructor(private performanceAPI: PerformanceApi,
-              private piecesAPI: PieceApi,
-              private castAPI: CastApi,
-              private respHandler: ResponseStatusHandlerService,
-              private userAPI: UserApi,
-              private changeDetectorRef: ChangeDetectorRef,
-              private activatedRoute: ActivatedRoute,
-              private location: Location,
-              private csvGenerator: CsvGenerator) { }
-
   @ViewChild('stepper') stepper: Stepper;
   stepperOpts = ['Performance Details', 'Pieces & Intermissions', 'Fill Casts', 'Finalize'];
 
@@ -94,6 +84,16 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   submitted = false;
 
   // --------------------------------------------------------------
+
+  constructor(private performanceAPI: PerformanceApi,
+              private piecesAPI: PieceApi,
+              private castAPI: CastApi,
+              private respHandler: ResponseStatusHandlerService,
+              private userAPI: UserApi,
+              private changeDetectorRef: ChangeDetectorRef,
+              private activatedRoute: ActivatedRoute,
+              private location: Location,
+              private csvGenerator: CsvGenerator) { }
 
   toDateString(num: number) {
     return new Date(num).toLocaleDateString('en-US');
@@ -363,23 +363,23 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.dateStr = isoSplits[0] + ':' + isoSplits[1];
   }
 
-  onStep1Input(field: string, value: any) {
-    const val = value as InputEvent;
+  onStep1Input(field: string, event: InputEvent) {
+    const targetValue = (event.target as any).value;
     if (field === 'title') {
-      this.state.step_1.title = (val.target as any).value;
+      this.state.step_1.title = targetValue;
     } else if (field === 'city') {
-      this.state.step_1.city = (val.target as any).value;
+      this.state.step_1.city = targetValue;
     } else if (field === 'country') {
-      this.state.step_1.country = (val.target as any).value;
+      this.state.step_1.country = targetValue;
     } else if (field === 'state') {
-      this.state.step_1.state = (val.target as any).value;
+      this.state.step_1.state = targetValue;
     } else if (field === 'venue') {
-      this.state.step_1.venue = (val.target as any).value;
+      this.state.step_1.venue = targetValue;
     } else if (field === 'date') {
-      this.state.step_1.date = Date.parse((val.target as any).value);
+      this.state.step_1.date = Date.parse(targetValue);
       this.updateDateString();
     } else if (field === 'description') {
-      this.state.step_1.description = (val.target as any).value;
+      this.state.step_1.description = targetValue;
     }
   }
 
@@ -497,11 +497,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       if (this.selectedSegment && this.selectedSegment.type === 'SEGMENT') {
         this.intermissions.set(this.selectedIndex, this.segmentLength);
       }
-      if (this.castDnD) {
-        this.castDnD.setBoldedCast(
-            this.segmentToCast.get(prevCastUUID)
+      this.castDnD?.setBoldedCast(this.segmentToCast.get(prevCastUUID)
             ? this.segmentToCast.get(prevCastUUID)[1] : undefined);
-      }
     }
   }
 
@@ -545,16 +542,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    if (this.castDnD) {
-      this.castDnD.selectCast({uuid: castUUID, saveDeleteEnabled: false});
-    }
+    this.castDnD?.selectCast({uuid: castUUID, saveDeleteEnabled: false});
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
     this.changeDetectorRef.detectChanges();
-    if (this.castDnD) {
-      this.castDnD.setBoldedCast(this.segmentToCast.get(castUUID)[1]);
-    }
+    this.castDnD?.setBoldedCast(this.segmentToCast.get(castUUID)[1]);
   }
 
   updateGroupIndices(cast: Cast) {
@@ -635,9 +628,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   onChoosePrimaryCast(event: MatSelectChange) {
     this.saveCastChanges();
-    if (this.castDnD) {
-      this.castDnD.setBoldedCast(event.value);
-    }
+    this.castDnD?.setBoldedCast(event.value);
   }
 
   onAutofillCast(cast: Cast) {
