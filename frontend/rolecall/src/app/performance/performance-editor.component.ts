@@ -34,6 +34,57 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   castsLoaded = false;
   dataLoaded = false;
 
+  // Step 0 -------------------------------------------------------
+
+  performanceSelected = false;
+  isEditing = false;
+
+  draftPerfs;
+  publishedPerfs;
+
+  lastStepperIndex = 0;
+
+  // Step 1 -------------------------------------------------------
+
+  allPerformances: Performance[] = [];
+  selectedPerformance: Performance;
+  dateStr: string;
+  date: Date;
+
+  // Step 2 -------------------------------------------------------
+
+  hasSuper: boolean;
+  step2AllSegments: Piece[];
+  step2Data: Piece[];
+  step2PickFrom: Piece[];
+
+  // Step 3 -------------------------------------------------------
+
+  selectedSegment: Piece;
+  selectedIndex: number;
+  @ViewChild('castDnD') castDnD?: CastDragAndDrop;
+  // segment uuid to cast, primary cast, and length
+  segmentToCast: Map<string, [Cast, number, number]> = new Map();
+  // segment uuid to performance section ID
+  segmentToPerfSectionID: Map<string, string> = new Map();
+  // segement index to length
+  intermissions: Map<number, number> = new Map();
+  chooseFromGroupIndices: number[] = [];
+  primaryGroupNum = 0;
+  allCasts: Cast[] = [];
+
+  segmentLength = 0;
+  initCastsLoaded = false;
+  castsForSegment: Cast[] = [];
+
+  // Step 4 -------------------------------------------------------
+
+  submitted = false;
+
+  shouldSelectFirstSegment = false;
+
+  // --------------------------------------------------------------
+
   toDateString(number) {
     return new Date(number).toLocaleDateString('en-US');
   }
@@ -199,8 +250,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateBasedOnStep();
   }
 
-  lastStepperIndex: number = 0;
-
   updateBasedOnStep() {
     if (this.stepper.currentStepIndex == 1) {
       this.initStep2Data();
@@ -218,12 +267,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // --------------------------------------------------------------
 
   // Step 0 -------------------------------------------------------
-
-  performanceSelected = false;
-  isEditing = false;
-
-  draftPerfs;
-  publishedPerfs;
 
   onEditPerformance() {
     if (!this.selectedPerformance) {
@@ -297,11 +340,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // Step 1 -------------------------------------------------------
 
-  allPerformances: Performance[] = [];
-  selectedPerformance: Performance;
-  dateStr: string;
-  date: Date;
-
   onSelectRecentPerformance(perf: Performance) {
     this.selectedPerformance = perf;
     this.updateDateString();
@@ -357,11 +395,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // --------------------------------------------------------------
 
   // Step 2 -------------------------------------------------------
-
-  hasSuper: boolean;
-  step2AllSegments: Piece[];
-  step2Data: Piece[];
-  step2PickFrom: Piece[];
 
   deletePiece(piece: Piece, index: number) {
     this.step2Data = this.step2Data.filter((val, ind) => val.uuid != piece.uuid || ind != index);
@@ -439,19 +472,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // --------------------------------------------------------------
 
   // Step 3 -------------------------------------------------------
-
-  selectedSegment: Piece;
-  selectedIndex: number;
-  @ViewChild('castDnD') castDnD?: CastDragAndDrop;
-  // segment uuid to cast, primary cast, and length
-  segmentToCast: Map<string, [Cast, number, number]> = new Map();
-  // segment uuid to performance section ID
-  segmentToPerfSectionID: Map<string, string> = new Map();
-  // segement index to length
-  intermissions: Map<number, number> = new Map();
-  chooseFromGroupIndices: number[] = [];
-  primaryGroupNum = 0;
-  allCasts: Cast[] = [];
 
   saveCastChanges() {
     if (this.selectedSegment) {
@@ -541,16 +561,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.saveCastChanges();
   }
 
-  shouldSelectFirstSegment = false;
-
   ngAfterViewChecked() {
     if (this.selectedSegment && this.shouldSelectFirstSegment) {
       this.onSelectStep3Segment(this.selectedSegment, 0);
       this.shouldSelectFirstSegment = false;
     }
   }
-
-  initCastsLoaded = false;
 
   initStep3Data() {
     this.selectedSegment = this.step2Data[0];
@@ -600,8 +616,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.castDnD ? this.castDnD.setBoldedCast(event.value) : '';
   }
 
-  castsForSegment: Cast[] = [];
-
   onAutofillCast(cast: Cast) {
     let newCast: Cast = JSON.parse(JSON.stringify(cast));
     newCast.uuid = this.state.uuid + "cast" + this.selectedSegment.uuid;
@@ -610,8 +624,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.castAPI.getAllCasts();
     this.updateGroupIndices(newCast);
   }
-
-  segmentLength = 0;
 
   onLengthChange(event: any) {
     let length = event.target.value;
@@ -628,8 +640,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // --------------------------------------------------------------
 
   // Step 4 -------------------------------------------------------
-
-  submitted = false;
 
   async onSubmit() {
     let finishedPerf = this.dataToPerformance();
