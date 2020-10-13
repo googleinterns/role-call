@@ -152,12 +152,15 @@ export class PieceEditor implements OnInit {
         }
       }
     }
-    const workPieces = pieces.map((val: WorkingPiece) => {
-      val.addingPositions = [];
-      val.originalName = String(val.name);
-      return val;
-    });
+
+    const workPieces = pieces.map(piece => ({
+      ...piece,
+      addingPositions: [],
+      originalName: String(piece.name),
+      isOpen: false,
+    }));
     this.workingPieces = workPieces;
+
     if (!this.urlPointingUUID) {
       this.setCurrentPiece(workPieces[0]);
     } else {

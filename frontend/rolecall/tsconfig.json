@@ -3,7 +3,7 @@
   "compilerOptions": {
     "allowUnreachableCode": false,
     "strictBindCallApply": true,
-    //    "strictFunctionTypes": true,
+    "strictFunctionTypes": true,
     //    "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitThis": true,
