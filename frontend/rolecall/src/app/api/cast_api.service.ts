@@ -3,10 +3,12 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {APITypes} from 'src/api_types';
 import {environment} from 'src/environments/environment';
 import {isNullOrUndefined} from 'util';
+
 import {MockCastBackend} from '../mocks/mock_cast_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+
 import {PieceApi, Position} from './piece_api.service';
 
 type RawCastMember = {
@@ -82,7 +84,7 @@ export type OneCastResponse = {
 
 /**
  * A service responsible for interfacing with the Cast APIs,
- * and maintaing all cast objects in the system, including those
+ * and maintaining all cast objects in the system, including those
  * acting as intermediaries for a performance's custom casts.
  */
 @Injectable({providedIn: 'root'})
@@ -94,7 +96,8 @@ export class CastApi {
   /** Mock backend. */
   mockBackend: MockCastBackend = new MockCastBackend();
 
-  /** The casts which are not on the backend but are currently needed by
+  /**
+   * The casts which are not on the backend but are currently needed by
    * multiple components (namely the performance editor and cast drag and
    * drop).
    * This should not include the cast creator's casts, it should only be the
@@ -106,6 +109,12 @@ export class CastApi {
 
   /** The raw casts handed over by the backend. */
   rawCasts: RawCast[] = [];
+
+  /** All the loaded casts mapped by UUID. */
+  casts: Map<APITypes.CastUUID, Cast> = new Map<APITypes.CastUUID, Cast>();
+
+  /** Emitter that is called whenever casts are loaded. */
+  castEmitter: EventEmitter<Cast[]> = new EventEmitter();
 
   constructor(
       private loggingService: LoggingService,
@@ -316,12 +325,6 @@ export class CastApi {
         .catch((errorResp) => errorResp)
         .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
-
-  /** All the loaded casts mapped by UUID. */
-  casts: Map<APITypes.CastUUID, Cast> = new Map<APITypes.CastUUID, Cast>();
-
-  /** Emitter that is called whenever casts are loaded. */
-  castEmitter: EventEmitter<Cast[]> = new EventEmitter();
 
   /** Takes backend response, updates data structures for all users. */
   private getAllCastsResponse(): Promise<AllCastsResponse> {
