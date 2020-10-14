@@ -80,7 +80,7 @@ export class UserEditor implements OnInit {
     canReceiveNotifications: 'Receives Notifications',
     managePerformances: 'Manages Performances',
     manageCasts: 'Manages Casts',
-    managePieces: 'Manages Pieces',
+    manageBallets: 'Manages Ballets',
     manageRoles: 'Manages Roles',
     manageRules: 'Manages Rules',
   };
@@ -228,7 +228,7 @@ export class UserEditor implements OnInit {
         canReceiveNotifications: true,
         managePerformances: false,
         manageCasts: false,
-        managePieces: false,
+        manageBallets: false,
         manageRoles: false,
         manageRules: false
       },

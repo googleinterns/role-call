@@ -17,7 +17,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -50,7 +50,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -83,7 +83,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -116,7 +116,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -149,7 +149,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -182,7 +182,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -216,7 +216,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -249,7 +249,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -282,7 +282,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -315,7 +315,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -348,7 +348,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -381,7 +381,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -414,7 +414,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -447,7 +447,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -480,7 +480,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -513,7 +513,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -546,7 +546,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -579,7 +579,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -612,7 +612,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -645,7 +645,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -678,7 +678,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -711,7 +711,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -744,7 +744,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -777,7 +777,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -810,7 +810,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -843,7 +843,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -876,7 +876,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -909,7 +909,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -942,7 +942,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },
@@ -975,7 +975,7 @@ export class MockUserBackend {
         "canReceiveNotifications": true,
         "managePerformances": false,
         "manageCasts": false,
-        "managePieces": false,
+        "manageBallets": false,
         "manageRoles": false,
         "manageRules": false
       },

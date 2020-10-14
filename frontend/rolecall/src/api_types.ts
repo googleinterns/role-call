@@ -26,7 +26,7 @@ export namespace APITypes {
     canReceiveNotifications: boolean;
     managePerformances: boolean;
     manageCasts: boolean;
-    managePieces: boolean;
+    manageBallets: boolean;
     manageRoles: boolean;
     manageRules: boolean;
   };
