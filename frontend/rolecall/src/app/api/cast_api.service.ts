@@ -2,7 +2,6 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import {APITypes} from 'src/api_types';
 import {environment} from 'src/environments/environment';
-import {isNullOrUndefined} from 'util';
 
 import {MockCastBackend} from '../mocks/mock_cast_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -397,7 +396,7 @@ export class CastApi {
   setCast(
       cast: Cast,
       isWorkingCast?: boolean): Promise<APITypes.SuccessIndicator> {
-    if (!isNullOrUndefined(isWorkingCast) && isWorkingCast) {
+    if (isWorkingCast) {
       this.workingCasts.set(cast.uuid, cast);
       return Promise.resolve({
         successful: true
