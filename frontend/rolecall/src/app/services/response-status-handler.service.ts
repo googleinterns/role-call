@@ -73,7 +73,7 @@ export class ResponseStatusHandlerService {
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
     const dialogRef = this.dialog.open(ErrorDialog,
-        {width: '50%', data: {errorEvent: errorEvent}});
+        {width: '50%', data: {errorEvent}});
     return dialogRef.afterClosed().toPromise().then(() => prom);
   }
 

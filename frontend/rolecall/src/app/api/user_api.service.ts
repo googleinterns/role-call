@@ -31,7 +31,7 @@ export type User = {
   }
 };
 
-interface rawUser {
+interface RawUser {
   id: number;
   firstName: string;
   middleName: string;
@@ -58,7 +58,7 @@ interface rawUser {
 }
 
 type RawAllUsersResponse = {
-  data: rawUser[],
+  data: RawUser[],
   warnings: string[]
 };
 
@@ -113,46 +113,47 @@ export class UserApi {
         .catch((errorResp) => errorResp)
         .then(
             (resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
-        .then((val) => {
+        .then((rawAllUsersResponse) => {
           return {
             data: {
-              users: val.data.map((val) => {
+              users: rawAllUsersResponse.data.map((rawUser) => {
                 return {
-                  uuid: String(val.id),
+                  uuid: String(rawUser.id),
                   has_roles: {
-                    isAdmin: val.isAdmin,
-                    isCoreographer: val.isCoreographer,
-                    isDancer: val.isDancer,
-                    isOther: val.isOther,
+                    isAdmin: rawUser.isAdmin,
+                    isCoreographer: rawUser.isCoreographer,
+                    isDancer: rawUser.isDancer,
+                    isOther: rawUser.isOther,
                   },
                   has_permissions: {
-                    canLogin: val.canLogin,
-                    canReceiveNotifications: val.notifications,
-                    managePerformances: val.managePerformances,
-                    manageCasts: val.manageCasts,
-                    manageBallets: val.managePieces,
-                    manageRoles: val.manageRoles,
-                    manageRules: val.manageRules
+                    canLogin: rawUser.canLogin,
+                    canReceiveNotifications: rawUser.notifications,
+                    managePerformances: rawUser.managePerformances,
+                    manageCasts: rawUser.manageCasts,
+                    manageBallets: rawUser.managePieces,
+                    manageRoles: rawUser.manageRoles,
+                    manageRules: rawUser.manageRules
                   },
                   knows_positions: [],
-                  first_name: val.firstName,
-                  middle_name: val.middleName,
-                  last_name: val.lastName,
-                  suffix: val.suffix,
-                  date_joined: moment(val.dateJoined, 'MM-DD-YYYY').valueOf(),
+                  first_name: rawUser.firstName,
+                  middle_name: rawUser.middleName,
+                  last_name: rawUser.lastName,
+                  suffix: rawUser.suffix,
+                  date_joined: moment(rawUser.dateJoined, 'MM-DD-YYYY')
+                      .valueOf(),
                   contact_info: {
-                    phone_number: val.phoneNumber,
-                    email: val.email,
+                    phone_number: rawUser.phoneNumber,
+                    email: rawUser.email,
                     emergency_contact: {
-                      name: val.emergencyContactName,
-                      phone_number: val.emergencyContactNumber,
+                      name: rawUser.emergencyContactName,
+                      phone_number: rawUser.emergencyContactNumber,
                       email: 'N/A'
                     }
                   }
                 };
               })
             },
-            warnings: val.warnings
+            warnings: rawAllUsersResponse.warnings
           };
         });
   }

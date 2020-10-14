@@ -22,8 +22,8 @@ export class Dashboard implements OnInit {
   pastDashPerfs: DashPerformance[];
   processedUpcomingDashPerfs: ProcessedDashPerformance[] = [];
   processedPastDashPerfs: ProcessedDashPerformance[] = [];
-  dashPerfsLoaded: boolean = false;
-  dataLoaded: boolean = false;
+  dashPerfsLoaded = false;
+  dataLoaded = false;
 
   constructor(private dashAPI: DashboardApi) {
   }
