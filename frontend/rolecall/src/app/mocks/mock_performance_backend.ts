@@ -166,7 +166,7 @@ export class MockPerformanceBackend {
       },
       warnings: []
     });
-  };
+  }
 
   /** Mocks performance create/edit response */
   requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {

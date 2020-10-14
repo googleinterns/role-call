@@ -8,7 +8,7 @@ export type ProcessedDashPerformance = {
   location: string,
   uuid: string,
   routerLink: string
-}
+};
 
 @Component({
   selector: 'app-dashboard',

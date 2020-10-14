@@ -1024,8 +1024,7 @@ export class MockUserBackend {
       },
       warnings: []
     });
-  };
-
+  }
 
   requestUserSet(user: User): Promise<HttpResponse<any>> {
     if (this.isValidUser(user)) {

@@ -10,7 +10,7 @@ type ProcessedUnav = {
   user: User,
   fromDateStr: string,
   toDateStr: string
-}
+};
 
 @Component({
   selector: 'app-unavailability-editor',

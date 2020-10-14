@@ -10,11 +10,11 @@ export type ErrorEvent = {
   errorMessage: string,
   status: number,
   statusText: string
-}
+};
 
 export type WarningEvent = {
   warning: string
-}
+};
 
 @Injectable({
   providedIn: 'root'
@@ -94,13 +94,11 @@ export class ResponseStatusHandlerService {
     };
     this.showError(errorEvent);
   }
-
 }
 
 export interface ErrorDialogData {
-  errorEvent: ErrorEvent
+  errorEvent: ErrorEvent;
 }
-
 
 @Component({
   selector: 'app-error-dialog',
@@ -119,7 +117,6 @@ export class ErrorDialog {
     this.respHandler.resolveError(this.data.errorEvent, userResp);
     this.dialogRef.close();
   }
-
 }
 
 @NgModule(

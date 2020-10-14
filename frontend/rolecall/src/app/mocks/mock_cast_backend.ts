@@ -262,7 +262,7 @@ export class MockCastBackend {
       },
       warnings: []
     });
-  };
+  }
 
   /** Mocks cast create/edit response */
   requestCastSet(cast: Cast): Promise<HttpResponse<any>> {

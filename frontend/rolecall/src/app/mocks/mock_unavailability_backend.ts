@@ -34,7 +34,7 @@ export class MockUnavailabilityBackend {
       }),
       warnings: []
     });
-  };
+  }
 
   /** Mock setting the unavailability */
   requestUnavailabilitySet(unav: Unavailability): Promise<HttpResponse<any>> {

@@ -40,12 +40,12 @@ export type Performance = {
       }[]
     }[]
   }
-}
+};
 
 export type RawAllPerformancesResponse = {
   data: RawPerformance[];
   warnings: string[];
-}
+};
 
 export type RawPerformance = {
   'id': number,
@@ -80,7 +80,7 @@ export type RawPerformance = {
                   }[]
             }[]
       }[]
-}
+};
 
 export type AllPerformancesResponse = {
   data: {
@@ -321,7 +321,7 @@ export class PerformanceApi {
   /** Hits backend with one performance GET request */
   requestOnePerformance(uuid: APITypes.UserUUID): Promise<OnePerformanceResponse> {
     return this.mockBackend.requestOnePerformance(uuid);
-  };
+  }
 
   /** Hits backend with create/edit performance POST request */
   async requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {

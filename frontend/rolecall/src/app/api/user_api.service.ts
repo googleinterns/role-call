@@ -59,7 +59,7 @@ interface rawUser {
 type RawAllUsersResponse = {
   data: rawUser[],
   warnings: string[]
-}
+};
 
 export type AllUsersResponse = {
   data: {
@@ -166,7 +166,7 @@ export class UserApi {
       return this.mockBackend.requestOneUser(uuid);
     }
     return this.mockBackend.requestOneUser(uuid);
-  };
+  }
 
   /** Hits backend with create/edit user POST request */
   async requestUserSet(user: User): Promise<HttpResponse<any>> {
@@ -364,5 +364,4 @@ export class UserApi {
            && !isNullOrUndefined(user.last_name) && !isNullOrUndefined(
             user.has_permissions);
   }
-
 }
