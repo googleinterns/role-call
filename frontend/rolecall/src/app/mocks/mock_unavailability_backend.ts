@@ -2,12 +2,10 @@ import {HttpResponse} from '@angular/common/http';
 import {APITypes} from 'src/api_types';
 import {AllUnavailbilitiesResponse, OneUnavailbilityResponse, Unavailability} from '../api/unavailability-api.service';
 
-/**
- * Mocks the unavailability backend responses
- */
+/** Mocks the unavailability backend responses. */
 export class MockUnavailabilityBackend {
 
-  /** Mock unavailability database */
+  /** Mock unavailability database. */
   mockUnavailabilityDB: Unavailability[] = [
     {
       id: 1,
@@ -18,7 +16,7 @@ export class MockUnavailabilityBackend {
     }
   ];
 
-  /** Mocks backend response */
+  /** Mocks backend response. */
   requestAllUnavailabilites(): Promise<AllUnavailbilitiesResponse> {
     return Promise.resolve({
       data: this.mockUnavailabilityDB,
@@ -26,8 +24,9 @@ export class MockUnavailabilityBackend {
     });
   }
 
-  /** Mocks backend response */
-  requestOneUnavailability(uuid: APITypes.UnavailabilityUUID): Promise<OneUnavailbilityResponse> {
+  /** Mocks backend response. */
+  requestOneUnavailability(uuid: APITypes.UnavailabilityUUID):
+      Promise<OneUnavailbilityResponse> {
     return Promise.resolve({
       data: this.mockUnavailabilityDB.find(val => {
         return val.id == uuid || val.id === uuid;
@@ -36,7 +35,7 @@ export class MockUnavailabilityBackend {
     });
   }
 
-  /** Mock setting the unavailability */
+  /** Mock setting the unavailability. */
   requestUnavailabilitySet(unav: Unavailability): Promise<HttpResponse<any>> {
     const userInd = this.mockUnavailabilityDB.findIndex(
         (val) => val.id == unav.id);
@@ -50,13 +49,13 @@ export class MockUnavailabilityBackend {
     } as HttpResponse<any>);
   }
 
-  /** Mocks unavailability delete response */
-  requestUnavailabilityDelete(unav: Unavailability): Promise<HttpResponse<any>> {
+  /** Mocks unavailability delete response. */
+  requestUnavailabilityDelete(unav: Unavailability):
+      Promise<HttpResponse<any>> {
     this.mockUnavailabilityDB =
         this.mockUnavailabilityDB.filter(val => val.id != unav.id);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);
   }
-
 }

@@ -2,12 +2,10 @@ import {HttpResponse} from '@angular/common/http';
 import {APITypes, PerformanceStatus} from 'src/api_types';
 import {AllPerformancesResponse, OnePerformanceResponse, Performance} from '../api/performance-api.service';
 
-/**
- * Mocks the piece backend responses
- */
+/** Mocks the piece backend responses. */
 export class MockPerformanceBackend {
 
-  /** Mock piece database */
+  /** Mock piece database. */
   mockPerformanceDB: Performance[] = [
     {
       uuid: 'performance1:' + Date.now(),
@@ -146,7 +144,7 @@ export class MockPerformanceBackend {
   ];
   shouldRejectSetRequest = false;
 
-  /** Mocks backend response */
+  /** Mocks backend response. */
   requestAllPerformances(): Promise<AllPerformancesResponse> {
     return Promise.resolve({
       data: {
@@ -156,8 +154,9 @@ export class MockPerformanceBackend {
     });
   }
 
-  /** Mocks backend response */
-  requestOnePerformance(uuid: APITypes.PerformanceUUID): Promise<OnePerformanceResponse> {
+  /** Mocks backend response. */
+  requestOnePerformance(uuid: APITypes.PerformanceUUID):
+      Promise<OnePerformanceResponse> {
     return Promise.resolve({
       data: {
         performance: this.mockPerformanceDB.find(val => {
@@ -168,7 +167,7 @@ export class MockPerformanceBackend {
     });
   }
 
-  /** Mocks performance create/edit response */
+  /** Mocks performance create/edit response. */
   requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
       const pieceInd = this.mockPerformanceDB.findIndex(
@@ -188,13 +187,13 @@ export class MockPerformanceBackend {
     }
   }
 
-  /** Mocks piece delete response */
-  requestPerformanceDelete(performance: Performance): Promise<HttpResponse<any>> {
+  /** Mocks piece delete response. */
+  requestPerformanceDelete(performance: Performance):
+      Promise<HttpResponse<any>> {
     this.mockPerformanceDB =
         this.mockPerformanceDB.filter(val => val.uuid != performance.uuid);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);
   }
-
 }

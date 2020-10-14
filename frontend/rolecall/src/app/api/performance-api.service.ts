@@ -98,15 +98,12 @@ export type OnePerformanceResponse = {
 
 /**
  * A service responsible for interfacing with the Performance APIs, as well
- * as maintaining the performance data
+ * as maintaining the performance data.
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class PerformanceApi {
 
-
-  /** Mock backend */
+  /** Mock backend. */
   mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
 
   constructor(
@@ -118,7 +115,7 @@ export class PerformanceApi {
 
   /**
    * Converts a raw performance response to the performance structure
-   * for the performance editor
+   * for the performance editor.
    *
    * @param raw The raw performance from the backend
    */
@@ -174,7 +171,7 @@ export class PerformanceApi {
 
   /**
    * Converts a performance editor performance into a
-   * backend performance to be set on the backend
+   * backend performance to be set on the backend.
    *
    * @param perf The performance editor performance state
    */
@@ -290,7 +287,7 @@ export class PerformanceApi {
     return rawPerf;
   }
 
-  /** Hits backend with all performances GET request */
+  /** Hits backend with all performances GET request. */
   async requestAllPerformances(): Promise<AllPerformancesResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPerformances();
@@ -305,8 +302,9 @@ export class PerformanceApi {
         .toPromise()
         .catch((errorResp) => errorResp)
         .then(
-            (resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(
-                resp))
+            (resp) =>
+                this.respHandler.checkResponse<RawAllPerformancesResponse>(
+                    resp))
         .then((val) => {
           return {
             data: {
@@ -318,13 +316,15 @@ export class PerformanceApi {
         });
   }
 
-  /** Hits backend with one performance GET request */
-  requestOnePerformance(uuid: APITypes.UserUUID): Promise<OnePerformanceResponse> {
+  /** Hits backend with one performance GET request. */
+  requestOnePerformance(uuid: APITypes.UserUUID):
+      Promise<OnePerformanceResponse> {
     return this.mockBackend.requestOnePerformance(uuid);
   }
 
-  /** Hits backend with create/edit performance POST request */
-  async requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
+  /** Hits backend with create/edit performance POST request. */
+  async requestPerformanceSet(performance: Performance):
+      Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceSet(performance);
     }
@@ -365,9 +365,9 @@ export class PerformanceApi {
     }
   }
 
-  /**
-   * Hits backend with delete performance POST request */
-  async requestPerformanceDelete(performance: Performance): Promise<HttpResponse<any>> {
+  /** Hits backend with delete performance POST request. */
+  async requestPerformanceDelete(performance: Performance):
+      Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceDelete(performance);
     }
@@ -385,13 +385,14 @@ export class PerformanceApi {
         .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
-  /** All the loaded performances mapped by UUID */
-  performances: Map<APITypes.PerformanceUUID, Performance> = new Map<APITypes.PerformanceUUID, Performance>();
+  /** All the loaded performances mapped by UUID. */
+  performances: Map<APITypes.PerformanceUUID, Performance> =
+      new Map<APITypes.PerformanceUUID, Performance>();
 
-  /** Emitter that is called whenever performances are loaded */
+  /** Emitter that is called whenever performances are loaded. */
   performanceEmitter: EventEmitter<Performance[]> = new EventEmitter();
 
-  /** Takes backend response, updates data structures for all performances */
+  /** Takes backend response, updates data structures for all performances. */
   private getAllPerformancesResponse(): Promise<AllPerformancesResponse> {
     return this.requestAllPerformances().then(val => {
       // Update the performances map
@@ -407,8 +408,9 @@ export class PerformanceApi {
     });
   }
 
-  /** Takes backend response, updates data structure for one performance */
-  private getOnePerformanceResponse(uuid: APITypes.PerformanceUUID): Promise<OnePerformanceResponse> {
+  /** Takes backend response, updates data structure for one performance. */
+  private getOnePerformanceResponse(uuid: APITypes.PerformanceUUID):
+      Promise<OnePerformanceResponse> {
     return this.requestOnePerformance(uuid).then(val => {
       // Update performance in map
       this.performances.set(val.data.performance.uuid, val.data.performance);
@@ -420,17 +422,19 @@ export class PerformanceApi {
     });
   }
 
-  /** Sends backend request and awaits response */
-  private setPerformanceResponse(performance: Performance): Promise<HttpResponse<any>> {
+  /** Sends backend request and awaits response. */
+  private setPerformanceResponse(performance: Performance):
+      Promise<HttpResponse<any>> {
     return this.requestPerformanceSet(performance);
   }
 
-  /** Sends backend request and awaits response */
-  private deletePerformanceResponse(performance: Performance): Promise<HttpResponse<any>> {
+  /** Sends backend request and awaits response. */
+  private deletePerformanceResponse(performance: Performance):
+      Promise<HttpResponse<any>> {
     return this.requestPerformanceDelete(performance);
   }
 
-  /** Gets all the performances from the backend and returns them */
+  /** Gets all the performances from the backend and returns them. */
   getAllPerformances(): Promise<Performance[]> {
     return this.getAllPerformancesResponse().then(val => {
       this.performanceEmitter.emit(Array.from(this.performances.values()));
@@ -440,7 +444,7 @@ export class PerformanceApi {
     });
   }
 
-  /** Gets a specific performance from the backend by UUID and returns it */
+  /** Gets a specific performance from the backend by UUID and returns it. */
   getPerformance(uuid: APITypes.PerformanceUUID): Promise<Performance> {
     return this.getOnePerformanceResponse(uuid).then(val => {
       this.performanceEmitter.emit(Array.from(this.performances.values()));
@@ -448,7 +452,8 @@ export class PerformanceApi {
     }).then(val => val.data.performance);
   }
 
-  /** Requests an update to the backend which may or may not be successful,
+  /**
+   * Requests an update to the backend which may or may not be successful,
    * depending on whether or not the performance is valid, as well as if the
    * backend request fails for some other reason.
    */
@@ -466,8 +471,9 @@ export class PerformanceApi {
     });
   }
 
-  /** Requests for the backend to delete the performance */
-  deletePerformance(performance: Performance): Promise<APITypes.SuccessIndicator> {
+  /** Requests for the backend to delete the performance. */
+  deletePerformance(performance: Performance):
+      Promise<APITypes.SuccessIndicator> {
     return this.deletePerformanceResponse(performance).then(val => {
       this.getAllPerformances();
       return {
@@ -480,6 +486,4 @@ export class PerformanceApi {
       };
     });
   }
-
-
 }

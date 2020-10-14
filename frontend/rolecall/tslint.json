@@ -42,7 +42,10 @@
     "max-classes-per-file": false,
     "max-line-length": [
       true,
-      80
+      {
+        "limit": 80,
+        "ignore-pattern": "^import "
+      }
     ],
     "member-ordering": [
       true,
