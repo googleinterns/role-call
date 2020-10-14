@@ -77,7 +77,7 @@ describe('LoginApi', () => {
 
   it('should return null or undefined user if not signed in', async () => {
     let loginRespProm = service.login(true);
-    let loginResp = await loginRespProm;
+    await loginRespProm;
     mockObj.isSignedInVal = false;
 
     expect(isNullOrUndefined(service.authInstance.currentUser.get()))
