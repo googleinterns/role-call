@@ -131,7 +131,7 @@
 
         &-left {
           background: $AAOrange;
-          right: none;
+          right: none; // TODO: Fix invalid value.
           left: 1rem;
         }
       }
@@ -189,9 +189,7 @@
           background: $offWhite;
           border: none;
           height: calc(100% - 4rem);
-          padding: 1rem;
-          padding-bottom: 0rem;
-          padding-top: 0.5rem;
+          padding: 0.5rem 1rem 0rem;
           resize: none;
           width: 100%;
         }

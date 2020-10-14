@@ -16,10 +16,7 @@ $buttonRowHeight: 5rem;
     font-size: x-large;
     font-weight: bold;
     margin: 0.5rem;
-    padding-bottom: 0.5em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-    padding-top: 0.5em;
+    padding: 0.5em 1.5em;
     height: 4rem;
   }
 }
@@ -91,10 +88,7 @@ $buttonRowHeight: 5rem;
               .performance-title {
                 font-size: x-large;
                 font-weight: bold;
-                padding-bottom: 0.5em;
-                padding-left: 1em;
-                padding-right: 1em;
-                padding-top: 0.5em;
+                padding: 0.5em 1em;
               }
             }
           }
@@ -157,10 +151,7 @@ $buttonRowHeight: 5rem;
               .performance-title {
                 font-size: x-large;
                 font-weight: bold;
-                padding-bottom: 0.5em;
-                padding-left: 1em;
-                padding-right: 1em;
-                padding-top: 0.5em;
+                padding: 0.5em 1em;
               }
             }
           }
@@ -290,10 +281,7 @@ $buttonRowHeight: 5rem;
               font-size: large;
               height: 100%;
               margin: auto;
-              padding-bottom: 0.75em;
-              padding-left: 1em;
-              padding-right: 1em;
-              padding-top: 0.75em;
+              padding: 0.75em 1em;
               position: relative;
               resize: none;
               white-space: normal;
@@ -368,10 +356,7 @@ $buttonRowHeight: 5rem;
           }
 
           .description-card {
-            margin-bottom: 1em;
-            margin-left: 2rem;
-            margin-right: 2rem;
-            margin-top: 1em;
+            margin: 1em 2rem;
 
             .description-input {
               background: none;
@@ -379,10 +364,7 @@ $buttonRowHeight: 5rem;
               color: black;
               font-size: large;
               margin: 0;
-              padding-bottom: 0.75em;
-              padding-left: 1em;
-              padding-right: 1em;
-              padding-top: 0.75em;
+              padding: 0.75em 1em;
               position: relative;
               resize: none;
 
@@ -581,10 +563,7 @@ $buttonRowHeight: 5rem;
             .segment-title {
               font-size: x-large;
               font-weight: bold;
-              padding-bottom: 0.5em;
-              padding-left: 1em;
-              padding-right: 1em;
-              padding-top: 0.5em;
+              padding: 0.5em 1em;
             }
           }
         }

@@ -40,10 +40,7 @@
 }
 
 .piece-name {
-  margin-bottom: auto;
-  margin-left: 1em;
-  margin-right: 1em;
-  margin-top: auto;
+  margin: auto 1em;
   padding-bottom: 1em;
   padding-top: 1em;
   overflow-x: hidden;
@@ -115,7 +112,7 @@
 .narrow-button {
   background: $white;
   border-radius: $borderRadius;
-  margin-right: 0em;
+  margin-right: 0;
   height: 6vh;
   width: 4vh;
 }
@@ -148,8 +145,7 @@
 }
 
 .right-card-title {
-  margin: 2rem;
-  margin-bottom: 1rem;
+  margin: 2rem 2rem 1rem;
   font-weight: 800;
   font-size: xx-large;
 }
@@ -182,10 +178,7 @@
   font-weight: bold;
   margin-right: 0.6em;
   margin-bottom: 0.6em;
-  padding-bottom: 0.5em;
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
+  padding: 0.5em 1em;
 }
 
 .delete-button {
@@ -194,10 +187,7 @@
   font-size: x-large;
   margin-left: 0.6em;
   margin-bottom: 0.6em;
-  padding-bottom: 0.5em;
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
+  padding: 0.5em 1em;
 
   &:hover {
     background: red;
@@ -215,7 +205,7 @@
 }
 
 .right-top-comment {
-  margin-top: 0rem;
+  margin-top: 0;
   margin-left: 2rem;
 }
 
@@ -230,8 +220,7 @@
 
 .positions-card {
   height: calc(100% - 1em);
-  margin: 1em;
-  margin-top: 0em;
+  margin: 0em 1em 1em;
   width: calc(100% - 2em);
   overflow-y: scroll;
 }
@@ -286,7 +275,7 @@
 
 .position-name {
   margin-bottom: auto;
-  margin-left: 0em;
+  margin-left: 0;
   padding-left: 0;
   margin-top: auto;
   padding-bottom: 0.5em;

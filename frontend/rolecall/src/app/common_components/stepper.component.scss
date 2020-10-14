@@ -19,21 +19,21 @@
 .left-sharp-card {
   background: white;
   border-radius: 0 5px 5px 0;
-  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px 5px 0 rgba(0, 0, 0, 0.25);
 }
 
 .left-sharp-card:hover {
-  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px 5px 0 rgba(0, 0, 0, 0.25);
 }
 
 .bottom-right-sharp-card {
   background: white;
-  border-radius: 0 0px 5px 0;
-  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 0 0 5px 0;
+  box-shadow: 4px 4px 5px 0 rgba(0, 0, 0, 0.25);
 }
 
 .bottom-right-sharp-card:hover {
-  box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px 5px 0 rgba(0, 0, 0, 0.25);
 }
 
 // The div that holds the stepper content inside the card
@@ -41,9 +41,7 @@
   display: flex;
   justify-content: space-around;
   flex-direction: column;
-  margin: 2vh;
-  margin-bottom: 1vh;
-  margin-top: 1vh;
+  margin: 1vh 2vh;
 }
 
 // The sideways menu button at the top of the stepper bar
@@ -88,8 +86,7 @@
 
   .circle {
     border-radius: 50%;
-    border: solid;
-    border-color: $AAOrange;
+    border: solid $AAOrange;
     color: $lightLightGray;
     display: flex;
     flex-direction: column;
@@ -104,8 +101,7 @@
   .selected-circle {
     background: $AAOrange;
     border-radius: 50%;
-    border: solid;
-    border-color: $AAOrange;
+    border: solid $AAOrange;
     color: white;
     display: flex;
     flex-direction: column;
