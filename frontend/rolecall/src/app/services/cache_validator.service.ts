@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 
-
 export type CacheTag = CacheTags | string;
 
 export enum CacheTags {
@@ -8,19 +7,20 @@ export enum CacheTags {
   BALLETS = 'BALLETS'
 }
 
-
 /**
  * This service is responsible for holding cached objects in memory,
- * as well as keeping track of which objects are still valid
+ * as well as keeping track of which objects are still valid.
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class CacheValidatorService {
 
-  /** The map of cache tags to cache objects */
+  /** The map of cache tags to cache objects. */
   cacheMap = new Map<CacheTag, any>();
-  /** The map of cache tags to valid bits (whether or not cache is still active) */
+
+  /**
+   * The map of cache tags to valid bits (whether or not cache is still
+   * active).
+   */
   validBits = new Map<CacheTag, boolean>();
 
   /** Sets the cache for a CacheTag */
@@ -29,7 +29,7 @@ export class CacheValidatorService {
     this.validBits.set(tag, true);
   }
 
-  /** Gets the cached object for a CacheTag, or null if invalid or empty */
+  /** Gets the cached object for a CacheTag, or null if invalid or empty. */
   getCached<T>(tag: CacheTag): T {
     if (!this.cacheMap.has(tag)) {
       return null;
@@ -43,12 +43,12 @@ export class CacheValidatorService {
     return this.cacheMap.get(tag);
   }
 
-  /** Sets the validity of a CacheTag's cached object */
+  /** Sets the validity of a CacheTag's cached object. */
   setValid(tag: CacheTag, valid: boolean) {
     this.validBits.set(tag, valid);
   }
 
-  /** Gets whether a CacheTag's cached object is still valid */
+  /** Gets whether a CacheTag's cached object is still valid. */
   getValid(tag: CacheTag): boolean {
     if (!this.validBits.has(tag)) {
       return false;
@@ -56,10 +56,9 @@ export class CacheValidatorService {
     return this.validBits.get(tag);
   }
 
-  /** Clears the cache */
+  /** Clears the cache. */
   clearCache() {
     this.cacheMap.clear();
     this.validBits.clear();
   }
-
 }

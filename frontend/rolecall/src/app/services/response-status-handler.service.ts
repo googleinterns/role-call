@@ -16,15 +16,16 @@ export type WarningEvent = {
   warning: string
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class ResponseStatusHandlerService {
 
   constructor(public dialog: MatDialog, private loginAPI: LoginApi) {
   }
 
-  pendingErrors: Map<string, [Promise<string>, (value?: string | PromiseLike<string>) => void]> = new Map();
+  pendingErrors:
+      Map<string,
+          [Promise<string>, (value?: string | PromiseLike<string>) => void]> =
+      new Map();
 
   checkResponse<T>(response: HttpResponse<T>): Promise<T> {
     const prom: Promise<T> = new Promise(async (res, rej) => {

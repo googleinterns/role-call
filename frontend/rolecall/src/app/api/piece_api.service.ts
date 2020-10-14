@@ -70,21 +70,18 @@ export type OnePieceResponse = {
  * A service responsible for interfacing with the Sections API and
  * maintaining section/piece data.
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class PieceApi {
-
-  /** Mock backend */
+  /** Mock backend. */
   mockBackend: MockPieceBackend = new MockPieceBackend();
 
-  /** All the loaded pieces mapped by UUID */
+  /** All the loaded pieces mapped by UUID. */
   pieces: Map<APITypes.PieceUUID, Piece> = new Map<APITypes.PieceUUID, Piece>();
 
-  /** The raw piece structures given by the backend */
+  /** The raw piece structures given by the backend. */
   rawPieces: RawPiece[] = [];
 
-  /** Emitter that is called whenever pieces are loaded */
+  /** Emitter that is called whenever pieces are loaded. */
   pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
 
   constructor(
@@ -94,7 +91,7 @@ export class PieceApi {
       private headerUtil: HeaderUtilityService) {
   }
 
-  /** Hits backend with all pieces GET request */
+  /** Hits backend with all pieces GET request. */
   async requestAllPieces(): Promise<AllPiecesResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPieces();
@@ -133,12 +130,12 @@ export class PieceApi {
         });
   }
 
-  /** Hits backend with one piece GET request */
+  /** Hits backend with one piece GET request. */
   requestOnePiece(uuid: APITypes.PieceUUID): Promise<OnePieceResponse> {
     return this.mockBackend.requestOnePiece(uuid);
   }
 
-  /** Hits backend with create/edit piece POST request */
+  /** Hits backend with create/edit piece POST request. */
   async requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceSet(piece);
@@ -191,8 +188,7 @@ export class PieceApi {
     }
   }
 
-  /**
-   * Hits backend with delete piece POST request */
+  /** Hits backend with delete piece POST request. */
   async requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceDelete(piece);
@@ -209,7 +205,7 @@ export class PieceApi {
         .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
-  /** Takes backend response, updates data structures for all pieces */
+  /** Takes backend response, updates data structures for all pieces. */
   private getAllPiecesResponse(): Promise<AllPiecesResponse> {
     return this.requestAllPieces().then(val => {
       // Update the pieces map
@@ -225,8 +221,9 @@ export class PieceApi {
     });
   }
 
-  /** Takes backend response, updates data structure for one piece */
-  private getOnePieceResponse(uuid: APITypes.PieceUUID): Promise<OnePieceResponse> {
+  /** Takes backend response, updates data structure for one piece. */
+  private getOnePieceResponse(uuid: APITypes.PieceUUID):
+      Promise<OnePieceResponse> {
     return this.requestOnePiece(uuid).then(val => {
       // Update piece in map
       this.pieces.set(val.data.piece.uuid, val.data.piece);
@@ -238,17 +235,17 @@ export class PieceApi {
     });
   }
 
-  /** Sends backend request and awaits reponse */
+  /** Sends backend request and awaits response. */
   private setPieceResponse(piece: Piece): Promise<HttpResponse<any>> {
     return this.requestPieceSet(piece);
   }
 
-  /** Sends backend request and awaits reponse */
+  /** Sends backend request and awaits response. */
   private deletePieceResponse(piece: Piece): Promise<HttpResponse<any>> {
     return this.requestPieceDelete(piece);
   }
 
-  /** Gets all the pieces from the backend and returns them */
+  /** Gets all the pieces from the backend and returns them. */
   getAllPieces(): Promise<Piece[]> {
     return this.getAllPiecesResponse().then(val => {
       this.pieceEmitter.emit(Array.from(this.pieces.values()));
@@ -258,7 +255,7 @@ export class PieceApi {
     });
   }
 
-  /** Gets a specific piece from the backend by UUID and returns it */
+  /** Gets a specific piece from the backend by UUID and returns it. */
   getPiece(uuid: APITypes.PieceUUID): Promise<Piece> {
     return this.getOnePieceResponse(uuid).then(val => {
       this.pieceEmitter.emit(Array.from(this.pieces.values()));
@@ -266,7 +263,8 @@ export class PieceApi {
     }).then(val => val.data.piece);
   }
 
-  /** Requests an update to the backend which may or may not be successful,
+  /**
+   * Requests an update to the backend which may or may not be successful,
    * depending on whether or not the piece is valid, as well as if the backend
    * request fails for some other reason.
    */
@@ -284,7 +282,7 @@ export class PieceApi {
     });
   }
 
-  /** Requests for the backend to delete the piece */
+  /** Requests for the backend to delete the piece. */
   deletePiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
     return this.deletePieceResponse(piece).then(val => {
       this.getAllPieces();
