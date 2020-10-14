@@ -21,22 +21,20 @@ export class HeaderUtilityService {
     this.updateSentToken();
     return this.loginAPI.loginPromise.then(() => {
       if (this.sentToken) {
-        const headers = new HttpHeaders({
+        return new HttpHeaders({
           'Content-Type': 'application/json; charset=utf-8',
           'EMAIL': environment.useDevEmail ? environment.devEmail :
               this.loginAPI.email,
         });
-        return headers;
       } else {
-        const headers = new HttpHeaders({
+        this.sentToken = true;
+        return new HttpHeaders({
           'Content-Type': 'application/json; charset=utf-8',
           'EMAIL': environment.useDevEmail ? environment.devEmail :
               this.loginAPI.email,
           'AUTHORIZATION': 'Bearer '
                            + this.loginAPI.user.getAuthResponse().id_token
         });
-        this.sentToken = true;
-        return headers;
       }
     });
   }

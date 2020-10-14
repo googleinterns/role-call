@@ -300,14 +300,14 @@ export class CastApi {
         });
       }
     }
-    const rawCast: RawCast = {
+
+    return {
       id: undefined,
       name: cast.name,
       notes: '',
       sectionId: Number(cast.segment),
       subCasts: allSubCasts,
     };
-    return rawCast;
   }
 
   /** Hits backend with delete cast POST request. */

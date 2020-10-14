@@ -157,7 +157,7 @@ export class CastDragAndDrop implements OnInit {
 
   /** Output the drag and drop data as a cast object. */
   dataToCast(): Cast {
-    const newCast: Cast = {
+    return {
       uuid: this.selectedCastUUID,
       segment: this.cast.segment,
       name: this.cast.name,
@@ -191,7 +191,6 @@ export class CastDragAndDrop implements OnInit {
             };
           })
     };
-    return newCast;
   }
 
   private setupData() {

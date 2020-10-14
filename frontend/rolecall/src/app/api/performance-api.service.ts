@@ -177,7 +177,7 @@ export class PerformanceApi {
    * @param perf The performance editor performance state
    */
   convertPerformanceToRaw(perf: Performance): RawPerformance {
-    const ret: RawPerformance = {
+    return {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
       description: perf.step_1.description,
@@ -214,7 +214,6 @@ export class PerformanceApi {
         };
       })
     };
-    return ret;
   }
 
   /**

@@ -263,7 +263,7 @@ export class PieceEditor implements OnInit {
       uuid: 'segment:' + Date.now(),
 
       // A Super Ballet should initially show its children
-      isOpen: type === 'SUPER' ? true : false,
+      isOpen: type === 'SUPER',
       name,
       siblingId: null,
       positions: [],
