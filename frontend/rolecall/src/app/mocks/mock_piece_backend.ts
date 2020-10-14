@@ -196,7 +196,7 @@ export class MockPieceBackend {
       },
       warnings: []
     });
-  };
+  }
 
   /** Mocks piece create/edit response */
   requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {

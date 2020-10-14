@@ -14,7 +14,7 @@ type RawPosition = {
   order: number,
   siblingId: number,
   size: number,
-}
+};
 
 type RawPiece = {
   id: number,
@@ -24,12 +24,12 @@ type RawPiece = {
   type: PieceType,
   length: number,
   positions: RawPosition[],
-}
+};
 
 type RawAllPiecesResponse = {
   data: RawPiece[],
   warnings: string[],
-}
+};
 
 export type Position = {
   id?: number,
@@ -50,7 +50,7 @@ export type Piece = {
   type: PieceType;
   positions: Position[];
   deletePositions: Position[];
-}
+};
 
 export type AllPiecesResponse = {
   data: {
@@ -136,7 +136,7 @@ export class PieceApi {
   /** Hits backend with one piece GET request */
   requestOnePiece(uuid: APITypes.PieceUUID): Promise<OnePieceResponse> {
     return this.mockBackend.requestOnePiece(uuid);
-  };
+  }
 
   /** Hits backend with create/edit piece POST request */
   async requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {

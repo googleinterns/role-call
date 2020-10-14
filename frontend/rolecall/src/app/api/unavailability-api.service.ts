@@ -13,7 +13,7 @@ export type Unavailability = {
   'description': string,
   'startDate': number
   'endDate': number
-}
+};
 
 export type AllUnavailbilitiesResponse = {
   'data':
@@ -25,7 +25,7 @@ export type AllUnavailbilitiesResponse = {
         'endDate': number
       }[]
   'warnings': []
-}
+};
 
 export type OneUnavailbilityResponse = {
   'data':
@@ -37,7 +37,7 @@ export type OneUnavailbilityResponse = {
         'endDate': number
       }
   'warnings': []
-}
+};
 
 const SixMonthInMS = 6 * 2629800000;
 
@@ -86,7 +86,7 @@ export class UnavailabilityApi {
       return this.mockBackend.requestOneUnavailability(uuid);
     }
     return this.mockBackend.requestOneUnavailability(uuid);
-  };
+  }
 
   /** Hits backend with create/edit unav POST request */
   async requestUnavailabilitySet(unav: Unavailability): Promise<HttpResponse<any>> {
