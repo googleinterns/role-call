@@ -2,8 +2,9 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {APITypes} from 'src/api_types';
 import {CAST_COUNT} from 'src/constants';
-import {Cast, CastGroup, CastApi } from '../api/cast_api.service';
-import {Piece, PieceApi, Position} from '../api/piece_api.service';
+
+import {Cast, CastApi, CastGroup} from '../api/cast_api.service';
+import {PieceApi, Position} from '../api/piece_api.service';
 import {User, UserApi} from '../api/user_api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 import {LoggingService} from '../services/logging.service';
@@ -98,16 +99,18 @@ export class CastDragAndDrop implements OnInit {
   private buildSubCastHeader() {
     this.subCastHeaders = [];
     this.subCastHeaders.push('1st Cast');
-    if (2 <= this.castCount) { this.subCastHeaders.push('2nd Cast'); }
-    if (3 <= this.castCount) { this.subCastHeaders.push('3rd Cast'); }
+    if (2 <= this.castCount) {
+      this.subCastHeaders.push('2nd Cast');
+    }
+    if (3 <= this.castCount) {
+      this.subCastHeaders.push('3rd Cast');
+    }
     for (let i = 4; i <= this.castCount; i++) {
       this.subCastHeaders.push(`${i}th Cast`);
     }
   }
 
-  /** Checks that all the required data is loaded to begin
-   * rendering.
-   */
+  /** Checks that all the required data is loaded to begin rendering. */
   private checkAllLoaded() {
     if (this.usersLoaded && this.castsLoaded) {
       this.dataLoaded = true;
@@ -134,7 +137,8 @@ export class CastDragAndDrop implements OnInit {
     }
   }
 
-  /** Selects the current cast from the Cast API to copy and render
+  /**
+   * Selects the current cast from the Cast API to copy and render
    * in the drag and drop.
    */
   selectCast({uuid, saveDeleteEnabled = true}: {
@@ -157,33 +161,33 @@ export class CastDragAndDrop implements OnInit {
       name: this.cast.name,
       castCount: this.castCount,
       filled_positions: this.castPositions.map(
-          (uiPos: UICastPosition, uiPosIndex: number) => {
-        let subCasts: CastGroup[] = new Array(this.castCount).fill([]);
-        subCasts = subCasts.map((subCast, subCastIndex) => {
-          return {
-            group_index: subCastIndex,
-            members: []
-          };
-        });
-        for (let subCastIndex = 0; subCastIndex < subCasts.length;
-            subCastIndex++) {
-          for (let dancerIndex = 0; dancerIndex < uiPos.dancerCount;
-              dancerIndex++) {
-            const dancer = uiPos.castRows[dancerIndex]
-                .subCastDancers[subCastIndex];
-            if (dancer) {
-              subCasts[subCastIndex].members.push({
-                uuid: dancer.uuid,
-                position_number: dancerIndex,
-              });
+          (uiPos: UICastPosition) => {
+            let subCasts: CastGroup[] = new Array(this.castCount).fill([]);
+            subCasts = subCasts.map((subCast, subCastIndex) => {
+              return {
+                group_index: subCastIndex,
+                members: []
+              };
+            });
+            for (let subCastIndex = 0; subCastIndex < subCasts.length;
+                 subCastIndex++) {
+              for (let dancerIndex = 0; dancerIndex < uiPos.dancerCount;
+                   dancerIndex++) {
+                const dancer = uiPos.castRows[dancerIndex]
+                    .subCastDancers[subCastIndex];
+                if (dancer) {
+                  subCasts[subCastIndex].members.push({
+                    uuid: dancer.uuid,
+                    position_number: dancerIndex,
+                  });
+                }
+              }
             }
-          }
-        }
-        return {
-          position_uuid: uiPos.pos.uuid,
-          groups: subCasts,
-        };
-      })
+            return {
+              position_uuid: uiPos.pos.uuid,
+              groups: subCasts,
+            };
+          })
     };
     return newCast;
   }
@@ -210,7 +214,7 @@ export class CastDragAndDrop implements OnInit {
       };
       this.castPositions.push(castPosition);
       for (let dancerIndex = 0; dancerIndex < castPosition.dancerCount;
-          dancerIndex++) {
+           dancerIndex++) {
         castPosition.castRows.push({
           subCastDancers: new Array(this.castCount),
         });
@@ -219,21 +223,21 @@ export class CastDragAndDrop implements OnInit {
 
     // Sort positions by position order
     this.castPositions = this.castPositions.sort(
-        (a, b) => a.pos.order < b.pos.order ? -1 : 1 );
+        (a, b) => a.pos.order < b.pos.order ? -1 : 1);
     // Sort positions inside cast
     this.cast.filled_positions = this.cast.filled_positions
-      .filter(filledPos => this.castPositions.find(
-          castPos => castPos.pos.uuid === filledPos.position_uuid))
-      .sort((a, b) => {
-        const castPositionOrderA = this.castPositions.find(
-            castPos => castPos.pos.uuid === a.position_uuid).pos.order;
-        const castPositionOrderB = this.castPositions.find(
-            castPos => castPos.pos.uuid === b.position_uuid).pos.order;
-        return castPositionOrderA < castPositionOrderB ? -1 : 1;
-      });
+        .filter(filledPos => this.castPositions.find(
+            castPos => castPos.pos.uuid === filledPos.position_uuid))
+        .sort((a, b) => {
+          const castPositionOrderA = this.castPositions.find(
+              castPos => castPos.pos.uuid === a.position_uuid).pos.order;
+          const castPositionOrderB = this.castPositions.find(
+              castPos => castPos.pos.uuid === b.position_uuid).pos.order;
+          return castPositionOrderA < castPositionOrderB ? -1 : 1;
+        });
 
     for (let posIndex = 0; posIndex < this.cast.filled_positions.length;
-        posIndex++) {
+         posIndex++) {
       const filledPos = this.cast.filled_positions[posIndex];
       const uiPos = this.castPositions[posIndex];
       let maxDancerIndex = 0;
@@ -351,7 +355,8 @@ export class CastDragAndDrop implements OnInit {
     this.castPositions[positionIndex].dancerCount += 1;
   }
 
-  /** Increments cast count by given amount,
+  /**
+   * Increments cast count by given amount,
    * pass in negative value to decrement.
    */
   private incrementCastCountUtil(amount: number) {
