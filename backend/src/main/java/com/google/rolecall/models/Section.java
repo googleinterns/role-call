@@ -27,7 +27,7 @@ import javax.persistence.Table;
 public class Section {
 
   public enum Type {
-    PIECE,
+    BALLET,
     SEGMENT,
     SUPER,
   }

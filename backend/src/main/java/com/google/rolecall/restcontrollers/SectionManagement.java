@@ -81,7 +81,7 @@ public class SectionManagement extends AsyncRestEndpoint {
       @RequestBody SectionInfo newSection) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePieces()) {
-      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_PIECES));
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_BALLETS));
     }
 
     Section section;
@@ -110,7 +110,7 @@ public class SectionManagement extends AsyncRestEndpoint {
       @RequestBody SectionInfo newSection) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePieces()) {
-      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_PIECES));
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_BALLETS));
     }
 
     Section section;
@@ -139,7 +139,7 @@ public class SectionManagement extends AsyncRestEndpoint {
       @RequestParam(value=Constants.RequestParameters.SECTION_ID, required=true) int id) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePieces()) {
-      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_PIECES));
+      return CompletableFuture.failedFuture(insufficientPrivileges(Constants.Permissions.MANAGE_BALLETS));
     }
 
     try {

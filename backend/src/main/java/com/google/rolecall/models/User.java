@@ -225,7 +225,7 @@ public class User {
     permissionsIn.add(recievesNotifications()); // NOTIFICATIONS
     permissionsIn.add(isAdmin() || canManagePerformances()); // MANGAGE_PERFORMANCES
     permissionsIn.add(isAdmin() || canManageCasts()); // MANAGE_CASTS
-    permissionsIn.add(isAdmin() || canManagePieces()); // MANAGE_PIECES
+    permissionsIn.add(isAdmin() || canManagePieces()); // MANAGE_BALLETS
     permissionsIn.add(isAdmin() || canManageRoles()); // MANAGE_ROLES
     permissionsIn.add(isAdmin() || canManageRules()); // MANAGE_RULES
 

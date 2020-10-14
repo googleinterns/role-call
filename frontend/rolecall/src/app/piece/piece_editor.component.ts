@@ -70,7 +70,7 @@ export class PieceEditor implements OnInit {
 
   currentTypeOffset = 0;
 
-  segmentTypes = ['SEGMENT', 'PIECE', 'SUPER'];
+  segmentTypes = ['SEGMENT', 'BALLET', 'SUPER'];
   selectedSegmentType: PieceType;
   segmentPrettyNames = ['', 'Segment', 'Ballet', 'Super Ballet'];
 
@@ -234,7 +234,7 @@ export class PieceEditor implements OnInit {
       return;
     }
     let name = 'TEST';
-    let type: PieceType = 'PIECE';
+    let type: PieceType = 'BALLET';
     let originalName = 'TEST';
     this.currentTypeOffset = pieceTpCd;
     switch (pieceTpCd) {
@@ -245,7 +245,7 @@ export class PieceEditor implements OnInit {
       break;
     case 2:
       name = 'New Ballet';
-      type = 'PIECE';
+      type = 'BALLET';
       originalName = 'New Ballet';
       break;
     case 3:
@@ -335,7 +335,7 @@ export class PieceEditor implements OnInit {
       this.workingPiece = this.currentSelectedPiece;
       this.setCurrentPiece(this.workingPiece);
     }
-    const createPosition = this.currentSelectedPiece.type === 'PIECE';
+    const createPosition = this.currentSelectedPiece.type === 'BALLET';
     this.creatingPiece = true;
     this.pieceSaved = false;
     const nextIndex = (this.currentSelectedPiece.positions.length +
@@ -462,7 +462,7 @@ export class PieceEditor implements OnInit {
     if (!this.currentSelectedPiece) {
       return;
     }
-    const createPosition = this.currentSelectedPiece.type === 'PIECE';
+    const createPosition = this.currentSelectedPiece.type === 'BALLET';
     if (this.pieceSaved) {
       // after deletePiece()
       this.dragAndDropData = this.currentSelectedPiece.positions
@@ -547,7 +547,7 @@ export class PieceEditor implements OnInit {
 
   getCurrentTypeCode(type: PieceType): number {
     let code = 0;
-    if (type === 'PIECE') {
+    if (type === 'BALLET') {
       code = 2;
     } else if (type === 'SUPER') {
       code = 3;

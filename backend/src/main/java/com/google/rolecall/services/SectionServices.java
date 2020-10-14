@@ -104,7 +104,7 @@ public class SectionServices {
               .setNotes("")
               .setLength(0)
               .setSiblingId(0)
-              .setType(Section.Type.PIECE)
+              .setType(Section.Type.BALLET)
               .build();
           savedSubSection = sectionRepo.save(subSection);
           siblingIndexArray[loopCounter] = savedSubSection.getId();
@@ -240,7 +240,7 @@ public class SectionServices {
                 .setNotes("")
                 .setLength(0)
                 .setSiblingId(0)
-                .setType(Section.Type.PIECE)
+                .setType(Section.Type.BALLET)
                 .build();
             savedSubSection = sectionRepo.save(subSection);
             siblingIndexArray[loopCounter] = savedSubSection.getId();
@@ -317,7 +317,7 @@ public class SectionServices {
               .setNotes("")
               .setLength(0)
               .setSiblingId(pos.getId())
-              .setType(Section.Type.PIECE)
+              .setType(Section.Type.BALLET)
               .build();
           sectionRepo.save(subSection);
         }
