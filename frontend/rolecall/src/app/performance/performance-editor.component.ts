@@ -85,15 +85,17 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // --------------------------------------------------------------
 
-  constructor(private performanceAPI: PerformanceApi,
-              private piecesAPI: PieceApi,
-              private castAPI: CastApi,
-              private respHandler: ResponseStatusHandlerService,
-              private userAPI: UserApi,
-              private changeDetectorRef: ChangeDetectorRef,
-              private activatedRoute: ActivatedRoute,
-              private location: Location,
-              private csvGenerator: CsvGenerator) { }
+  constructor(
+      private performanceAPI: PerformanceApi,
+      private piecesAPI: PieceApi,
+      private castAPI: CastApi,
+      private respHandler: ResponseStatusHandlerService,
+      private userAPI: UserApi,
+      private changeDetectorRef: ChangeDetectorRef,
+      private activatedRoute: ActivatedRoute,
+      private location: Location,
+      private csvGenerator: CsvGenerator) {
+  }
 
   toDateString(num: number) {
     return new Date(num).toLocaleDateString('en-US');
@@ -364,7 +366,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   onStep1Input(field: string, event: InputEvent) {
-    const targetValue = (event.target as any).value;
+    const targetValue = (event.target as HTMLInputElement).value;
     if (field === 'title') {
       this.state.step_1.title = targetValue;
     } else if (field === 'city') {

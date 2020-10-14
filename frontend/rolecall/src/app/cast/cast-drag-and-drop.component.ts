@@ -142,14 +142,16 @@ export class CastDragAndDrop implements OnInit {
    * in the drag and drop.
    */
   selectCast({uuid, saveDeleteEnabled = true}: {
-    uuid: APITypes.CastUUID;
+    uuid: APITypes.CastUUID | undefined;
     saveDeleteEnabled?: boolean;
   }) {
-    this.buttonsEnabled = saveDeleteEnabled;
-    this.castSelected = true;
-    this.selectedCastUUID = uuid;
-    if (this.dataLoaded) {
-      this.setupData();
+    if (uuid) {
+      this.buttonsEnabled = saveDeleteEnabled;
+      this.castSelected = true;
+      this.selectedCastUUID = uuid;
+      if (this.dataLoaded) {
+        this.setupData();
+      }
     }
   }
 

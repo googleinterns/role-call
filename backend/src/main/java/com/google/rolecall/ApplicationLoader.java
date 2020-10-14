@@ -108,15 +108,12 @@ public class ApplicationLoader implements ApplicationRunner {
   private DataCreateError createTestData() {
     logger.log(Level.WARNING, "Creating test data.");    
     try {
-      createOneUser("Robert", "", "Battle", "", "rb@gmail.com","1/1/2020");
       createOneUser("Jeroboam", "", "Bozeman", "", "bb@gmail.com","1/1/2020");
-      createOneUser("Clifton", "", "Brown", "", "cb@gmail.com","1/1/2020");
       createOneUser("Khalia", "", "Campbell", "", "kc@gmail.com","1/1/2020");
       createOneUser("Patrick", "", "Coker", "", "pc@gmail.com","1/1/2020");
       createOneUser("Sarah", "", "Daley", "", "sd@gmail.com","1/1/2020");
       createOneUser("Ghrai", "", "Devore", "", "gde@gmail.com","1/1/2020");
       createOneUser("Solomon", "", "Dumas", "", "sdu@gmail.com","1/1/2020");
-      createOneUser("Ronni", "", "Favors", "", "rf@gmail.com","1/1/2020");
       createOneUser("Samantha", "", "Figgins", "", "sf@gmail.com","1/1/2020");
 
       createOneUser("James", "", "Gilmer", "", "jg@gmail.com","1/1/2020");
@@ -135,7 +132,6 @@ public class ApplicationLoader implements ApplicationRunner {
       createOneUser("Jessica", "Amber", "Pinkett", "", "jap@gmail.com","1/1/2020");
       createOneUser("Miranda", "", "Quinn", "", "mq@gmail.com","1/1/2020");
       createOneUser("Jamar", "", "Roberts", "", "jr@gmail.com","1/1/2020");
-      createOneUser("Matthew", "", "Rushing", "", "mr@gmail.com","1/1/2020");
       createOneUser("Kanji", "", "Segawa", "", "ks@gmail.com","1/1/2020");
       createOneUser("Courtney", "Celeste", "Spears", "", "ccs@gmail.com","1/1/2020");
       createOneUser("Jermaine", "", "Terry", "", "jt@gmail.com","1/1/2020");
