@@ -7,7 +7,7 @@
     //    "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitThis": true,
-    //    "noUnusedLocals": true,
+    "noUnusedLocals": true,
     //    "strictPropertyInitialization": true,
     //    "noUnusedParameters": true,
     //    "noImplicitAny": true,
