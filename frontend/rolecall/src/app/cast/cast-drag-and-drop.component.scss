@@ -93,12 +93,10 @@ $lastCellFillerWidth: 2.2rem;
 }
 
 .empty-cell {
-  border-color: $offoffWhite;
-  border-style: solid;
-  // @styleIngore Left must come after style by CSS standards
-  border-left: none;
-  border-top: none;
-  border-width: 2px;
+  // TODO: Verify that this looks right.
+  border: 2px none $offoffWhite;
+  border-right-style: solid;
+  border-bottom-style: solid;
   height: $cellHeight;
   width: $cellWidth;
 }
