@@ -53,10 +53,11 @@ export class UnavailabilityApi {
   /** Mock backend */
   mockBackend: MockUnavailabilityBackend = new MockUnavailabilityBackend();
 
-  constructor(private loggingService: LoggingService,
-              private http: HttpClient,
-              private headerUtil: HeaderUtilityService,
-              private respHandler: ResponseStatusHandlerService) {
+  constructor(
+      private loggingService: LoggingService,
+      private http: HttpClient,
+      private headerUtil: HeaderUtilityService,
+      private respHandler: ResponseStatusHandlerService) {
   }
 
   /** Hits backend with all unavailabilites GET request */
@@ -144,11 +145,11 @@ export class UnavailabilityApi {
     return this.requestAllUnavailabilites().then(val => {
       // Update the unavailabilites map
       this.unavailabilities.clear();
-      for (let unav of val.data) {
+      for (const unav of val.data) {
         this.unavailabilities.set(unav.id, unav);
       }
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;
@@ -161,7 +162,7 @@ export class UnavailabilityApi {
       // Update unav in map
       this.unavailabilities.set(val.data.id, val.data);
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;

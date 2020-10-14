@@ -87,10 +87,11 @@ export class PieceApi {
   /** Emitter that is called whenever pieces are loaded */
   pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
 
-  constructor(private loggingService: LoggingService,
-              private http: HttpClient,
-              private respHandler: ResponseStatusHandlerService,
-              private headerUtil: HeaderUtilityService) {
+  constructor(
+      private loggingService: LoggingService,
+      private http: HttpClient,
+      private respHandler: ResponseStatusHandlerService,
+      private headerUtil: HeaderUtilityService) {
   }
 
   /** Hits backend with all pieces GET request */
@@ -98,7 +99,7 @@ export class PieceApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPieces();
     }
-    let header = await this.headerUtil.generateHeader();
+    const header = await this.headerUtil.generateHeader();
     return this.http.get<RawAllPiecesResponse>(
         environment.backendURL + 'api/section', {
               headers: header,
@@ -146,7 +147,7 @@ export class PieceApi {
     // then do a PATCH, else do a POST
     if (this.pieces.has(piece.uuid)) {
       // Do patch
-      let header = await this.headerUtil.generateHeader();
+      const header = await this.headerUtil.generateHeader();
       return this.http.patch(environment.backendURL + 'api/section', {
             name: piece.name,
             id: Number(piece.uuid),
@@ -173,7 +174,7 @@ export class PieceApi {
           .then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
-      let header = await this.headerUtil.generateHeader();
+      const header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + 'api/section', {
             name: piece.name,
             siblingId: piece.siblingId,
@@ -196,7 +197,7 @@ export class PieceApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceDelete(piece);
     }
-    let header = await this.headerUtil.generateHeader();
+    const header = await this.headerUtil.generateHeader();
     return this.http.delete(
         environment.backendURL + 'api/section?sectionid=' + piece.uuid, {
               headers: header,
@@ -213,11 +214,11 @@ export class PieceApi {
     return this.requestAllPieces().then(val => {
       // Update the pieces map
       this.pieces.clear();
-      for (let piece of val.data.pieces) {
+      for (const piece of val.data.pieces) {
         this.pieces.set(piece.uuid, piece);
       }
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;
@@ -230,7 +231,7 @@ export class PieceApi {
       // Update piece in map
       this.pieces.set(val.data.piece.uuid, val.data.piece);
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;

@@ -30,7 +30,7 @@ describe('UserApi', () => {
   });
 
   it('should return all users', async () => {
-    let users = await service.getAllUsers();
+    const users = await service.getAllUsers();
     expect(users.length).toEqual(mockBackend.mockUserDB.length);
   });
 

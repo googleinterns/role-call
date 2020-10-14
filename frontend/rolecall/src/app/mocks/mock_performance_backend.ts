@@ -171,7 +171,7 @@ export class MockPerformanceBackend {
   /** Mocks performance create/edit response */
   requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
-      let pieceInd = this.mockPerformanceDB.findIndex(
+      const pieceInd = this.mockPerformanceDB.findIndex(
           (val) => val.uuid == performance.uuid);
       if (pieceInd == -1) {
         this.mockPerformanceDB.push(performance);

@@ -109,10 +109,11 @@ export class PerformanceApi {
   /** Mock backend */
   mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
 
-  constructor(private loggingService: LoggingService,
-              private http: HttpClient,
-              private headerUtil: HeaderUtilityService,
-              private respHandler: ResponseStatusHandlerService) {
+  constructor(
+      private loggingService: LoggingService,
+      private http: HttpClient,
+      private headerUtil: HeaderUtilityService,
+      private respHandler: ResponseStatusHandlerService) {
   }
 
   /**
@@ -178,7 +179,7 @@ export class PerformanceApi {
    * @param perf The performance editor performance state
    */
   convertPerformanceToRaw(perf: Performance): RawPerformance {
-    let ret: RawPerformance = {
+    const ret: RawPerformance = {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
       description: perf.step_1.description,
@@ -230,7 +231,7 @@ export class PerformanceApi {
   deletePreviousGroups(rawPerf: RawPerformance) {
     rawPerf.performanceSections.push(
         ...(rawPerf.performanceSections.map(sec => {
-          let copy = JSON.parse(JSON.stringify(sec));
+          const copy = JSON.parse(JSON.stringify(sec));
           copy['delete'] = true;
           copy.sectionPosition = undefined;
           copy.positions = [];
@@ -239,7 +240,7 @@ export class PerformanceApi {
     );
     // Using the original data in the map, find the deleted sections
     // in the performance
-    let deletedSections = this.performances.get(String(rawPerf.id))
+    const deletedSections = this.performances.get(String(rawPerf.id))
         .step_3
         .segments
         .filter(
@@ -274,7 +275,7 @@ export class PerformanceApi {
     }).filter(val => (!(val['delete'] && val['id'] == undefined)));
     // Ensure only 1 deleted perf section for each performance section to be
     // deleted
-    let uuidSet: Set<number> = new Set();
+    const uuidSet: Set<number> = new Set();
     rawPerf.performanceSections = rawPerf.performanceSections.filter(pS => {
       if (pS.id == undefined || (!pS['delete'])) {
         return true;
@@ -294,7 +295,7 @@ export class PerformanceApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllPerformances();
     }
-    let header = await this.headerUtil.generateHeader();
+    const header = await this.headerUtil.generateHeader();
     return this.http.get<RawAllPerformancesResponse>(
         environment.backendURL + 'api/performance', {
               headers: header,
@@ -328,7 +329,7 @@ export class PerformanceApi {
       return this.mockBackend.requestPerformanceSet(performance);
     }
     if (this.performances.has(performance.uuid)) {
-      let header = await this.headerUtil.generateHeader();
+      const header = await this.headerUtil.generateHeader();
       return this.http.patch<HttpResponse<any>>(
           environment.backendURL + 'api/performance',
           this.deletePreviousGroups(this.convertPerformanceToRaw(performance)),
@@ -345,7 +346,7 @@ export class PerformanceApi {
             return this.getAllPerformances().then(() => val);
           });
     } else {
-      let header = await this.headerUtil.generateHeader();
+      const header = await this.headerUtil.generateHeader();
       return this.http.post<HttpResponse<any>>(
           environment.backendURL + 'api/performance',
           this.convertPerformanceToRaw(performance),
@@ -370,7 +371,7 @@ export class PerformanceApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceDelete(performance);
     }
-    let header = await this.headerUtil.generateHeader();
+    const header = await this.headerUtil.generateHeader();
     return this.http.delete(
         environment.backendURL + 'api/performance?performanceid='
         + performance.uuid,
@@ -395,11 +396,11 @@ export class PerformanceApi {
     return this.requestAllPerformances().then(val => {
       // Update the performances map
       this.performances.clear();
-      for (let performance of val.data.performances) {
+      for (const performance of val.data.performances) {
         this.performances.set(performance.uuid, performance);
       }
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;
@@ -412,7 +413,7 @@ export class PerformanceApi {
       // Update performance in map
       this.performances.set(val.data.performance.uuid, val.data.performance);
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;

@@ -89,8 +89,8 @@ describe('SiteHeader', () => {
     expect(component.responseRecieved).toBeTrue();
     expect(component.userIsLoggedIn).toBeTrue();
 
-    let loginRespProm = component.loginAPI.login(true);
-    let loginResp = await loginRespProm;
+    const loginRespProm = component.loginAPI.login(true);
+    const loginResp = await loginRespProm;
 
     expect(loginResp.authenticated).toBeTrue();
 

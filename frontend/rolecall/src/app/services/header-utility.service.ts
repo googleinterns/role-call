@@ -21,14 +21,14 @@ export class HeaderUtilityService {
     this.updateSentToken();
     return this.loginAPI.loginPromise.then(() => {
       if (this.sentToken) {
-        let headers = new HttpHeaders({
+        const headers = new HttpHeaders({
           'Content-Type': 'application/json; charset=utf-8',
           'EMAIL': environment.useDevEmail ? environment.devEmail :
               this.loginAPI.email,
         });
         return headers;
       } else {
-        let headers = new HttpHeaders({
+        const headers = new HttpHeaders({
           'Content-Type': 'application/json; charset=utf-8',
           'EMAIL': environment.useDevEmail ? environment.devEmail :
               this.loginAPI.email,

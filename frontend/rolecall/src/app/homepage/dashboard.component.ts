@@ -36,19 +36,19 @@ export class Dashboard implements OnInit {
 
   onDashPerfsLoad(dashPerfArr: DashPerformance[]) {
     this.allDashPerfs = dashPerfArr.sort((a, b) => a.dateTime - b.dateTime);
-    let now = Date.now();
+    const now = Date.now();
     this.upcomingDashPerfs =
         this.allDashPerfs.filter(val => val.dateTime >= now);
     this.pastDashPerfs = this.allDashPerfs.filter(val => val.dateTime < now);
-    let dateOpts = {
+    const dateOpts = {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     };
-    let timeOpts = {hour: '2-digit', minute: '2-digit'};
+    const timeOpts = {hour: '2-digit', minute: '2-digit'};
     this.processedUpcomingDashPerfs = this.upcomingDashPerfs.map(perf => {
-      let date = new Date(perf.dateTime);
+      const date = new Date(perf.dateTime);
       return {
         title: perf.title,
         dateStr: date.toLocaleDateString('en-US', dateOpts),
@@ -61,7 +61,7 @@ export class Dashboard implements OnInit {
     this.processedPastDashPerfs = this.pastDashPerfs.sort((a, b) => {
       return b.dateTime - a.dateTime;
     }).map(perf => {
-      let date = new Date(perf.dateTime);
+      const date = new Date(perf.dateTime);
       return {
         title: perf.title,
         dateStr: date.toLocaleDateString('en-US', dateOpts),

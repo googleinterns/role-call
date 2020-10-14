@@ -48,13 +48,13 @@ export class UnavailabilityEditor implements OnInit {
   }
 
   onUnavsLoad(unavs: Unavailability[]) {
-    let dateOldToNewComp = (a: Unavailability, b: Unavailability) => {
+    const dateOldToNewComp = (a: Unavailability, b: Unavailability) => {
       return a.startDate - b.startDate;
     };
-    let dateNewToOldComp = (a: Unavailability, b: Unavailability) => {
+    const dateNewToOldComp = (a: Unavailability, b: Unavailability) => {
       return b.startDate - a.startDate;
     };
-    let now = Date.now();
+    const now = Date.now();
     this.currentUnavailabilities =
         unavs.filter(ua => ua.endDate > now).sort(dateOldToNewComp);
     this.pastUnavailabilities =

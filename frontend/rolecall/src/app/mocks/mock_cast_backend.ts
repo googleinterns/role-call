@@ -267,7 +267,7 @@ export class MockCastBackend {
   /** Mocks cast create/edit response */
   requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
-      let castInd = this.mockCastDB.findIndex((val) => val.uuid == cast.uuid);
+      const castInd = this.mockCastDB.findIndex((val) => val.uuid == cast.uuid);
       if (castInd == -1) {
         this.mockCastDB.push(cast);
       } else {
