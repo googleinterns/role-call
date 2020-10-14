@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { UnavailabilityEditor } from './unavailability-editor.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {UnavailabilityEditor} from './unavailability-editor.component';
 
 
 describe('UnavailabilityEditorComponent', () => {
@@ -8,9 +8,9 @@ describe('UnavailabilityEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UnavailabilityEditor]
-    })
-      .compileComponents();
+          declarations: [UnavailabilityEditor]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

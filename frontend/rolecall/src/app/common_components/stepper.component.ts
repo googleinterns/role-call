@@ -1,5 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-stepper',
@@ -74,16 +74,19 @@ export class Stepper implements OnInit, OnChanges {
     e.preventDefault();
     this.isStepperOpen = !this.isStepperOpen;
   }
+
   closeStepper() {
     this.isStepperOpen = false;
   }
+
   navigate(index: number) {
     this.currentStepIndex = index;
     this.emitStep();
   }
 
   nextStep(): boolean {
-    if (!this.stepperOptions || this.stepperOptions.length == 0 || this.currentStepIndex == this.stepperOptions.length - 1) {
+    if (!this.stepperOptions || this.stepperOptions.length == 0
+        || this.currentStepIndex == this.stepperOptions.length - 1) {
       return false;
     }
     this.currentStepIndex++;
@@ -92,7 +95,8 @@ export class Stepper implements OnInit, OnChanges {
   }
 
   prevStep(): boolean {
-    if (!this.stepperOptions || this.stepperOptions.length == 0 || this.currentStepIndex == 0) {
+    if (!this.stepperOptions || this.stepperOptions.length == 0
+        || this.currentStepIndex == 0) {
       return false;
     }
     this.currentStepIndex--;
@@ -101,7 +105,8 @@ export class Stepper implements OnInit, OnChanges {
   }
 
   emitStep() {
-    this.stepChange.emit([this.currentStepIndex, this.stepperOptions[this.currentStepIndex]]);
+    this.stepChange.emit(
+        [this.currentStepIndex, this.stepperOptions[this.currentStepIndex]]);
   }
 
 }

@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { CacheTags, CacheValidatorService } from './cache_validator.service';
+import {TestBed} from '@angular/core/testing';
+import {CacheTags, CacheValidatorService} from './cache_validator.service';
 
 
 describe('CacheValidatorService', () => {
@@ -15,9 +15,9 @@ describe('CacheValidatorService', () => {
   });
 
   it('should add to the cache with string', () => {
-    let cacheKey = "testKey";
+    let cacheKey = 'testKey';
     type testCacheObjType = { test: string; };
-    let testCacheObj: testCacheObjType = { test: "test" };
+    let testCacheObj: testCacheObjType = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached<testCacheObjType>(cacheKey)).toBeNull();
@@ -33,7 +33,7 @@ describe('CacheValidatorService', () => {
   it('should add to the cache with CacheTags.USER', () => {
     let cacheKey = CacheTags.USER;
     type testCacheObjType = { test: string; };
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached<testCacheObjType>(cacheKey)).toBeNull();
@@ -48,7 +48,7 @@ describe('CacheValidatorService', () => {
 
   it('should add to the cache without generics', () => {
     let cacheKey = CacheTags.USER;
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached(cacheKey)).toBeNull();
@@ -62,9 +62,9 @@ describe('CacheValidatorService', () => {
   });
 
   it('should delete from the cache with string', () => {
-    let cacheKey = "testKey";
+    let cacheKey = 'testKey';
     type testCacheObjType = { test: string; };
-    let testCacheObj: testCacheObjType = { test: "test" };
+    let testCacheObj: testCacheObjType = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached<testCacheObjType>(cacheKey)).toBeNull();
@@ -86,7 +86,7 @@ describe('CacheValidatorService', () => {
   it('should delete from the cache with CacheTags.USER', () => {
     let cacheKey = CacheTags.USER;
     type testCacheObjType = { test: string; };
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached<testCacheObjType>(cacheKey)).toBeNull();
@@ -107,7 +107,7 @@ describe('CacheValidatorService', () => {
 
   it('should delete from the cache without generics', () => {
     let cacheKey = CacheTags.USER;
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached(cacheKey)).toBeNull();
@@ -128,7 +128,7 @@ describe('CacheValidatorService', () => {
 
   it('should revalidate the cache', () => {
     let cacheKey = CacheTags.USER;
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached(cacheKey)).toBeNull();
@@ -155,7 +155,7 @@ describe('CacheValidatorService', () => {
 
   it('should clear the cache', () => {
     let cacheKey = CacheTags.USER;
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached(cacheKey)).toBeNull();
@@ -182,7 +182,7 @@ describe('CacheValidatorService', () => {
 
   it('should be valid bit redundant if valid bit DNE', () => {
     let cacheKey = CacheTags.USER;
-    let testCacheObj = { test: "test" };
+    let testCacheObj = {test: 'test'};
 
     expect(service.cacheMap.size).toEqual(0);
     expect(service.getCached(cacheKey)).toBeNull();

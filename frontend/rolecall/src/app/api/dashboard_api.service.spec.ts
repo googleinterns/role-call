@@ -1,6 +1,6 @@
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-import { DashboardApi } from './dashboard_api.service';
+import {HttpClient, HttpHandler} from '@angular/common/http';
+import {TestBed} from '@angular/core/testing';
+import {DashboardApi} from './dashboard_api.service';
 
 describe('DashboardApi', () => {
   let service: DashboardApi;

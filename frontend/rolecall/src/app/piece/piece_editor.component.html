@@ -18,25 +18,25 @@
             <h2 class="piece-name super-name">
               {{item.name}}
             </h2>
-              <button
-                  mat-icon-button
-                  aria-label="Toggle Super Ballet"
-                  class="super-button"
-                  (click)="toggleOpen(item.pieceIndex)">
-                <mat-icon
-                    [inline]="true"
-                    class="add-button-icon">
-                  {{item.isOpen ? 'expand_less' : "expand_more"}}
-                </mat-icon>
-              </button>
+            <button
+                mat-icon-button
+                aria-label="Toggle Super Ballet"
+                class="super-button"
+                (click)="toggleOpen(item.pieceIndex)">
+              <mat-icon
+                  [inline]="true"
+                  class="add-button-icon">
+                {{item.isOpen ? 'expand_less' : "expand_more"}}
+              </mat-icon>
+            </button>
           </div>
-            <ng-template #otherSegments>
-              <h2
-                  class="piece-name"
-                  [class.std-italic-font]="item.siblingId > 0">
-                {{item.name}}
-              </h2>
-            </ng-template>
+          <ng-template #otherSegments>
+            <h2
+                class="piece-name"
+                [class.std-italic-font]="item.siblingId > 0">
+              {{item.name}}
+            </h2>
+          </ng-template>
         </div>
       </div>
       <div class="add-button-width-container-left">
@@ -57,17 +57,20 @@
                 mat-menu-item
                 class="create-segment-menu-item"
                 (click)="addPiece(1)">
-              Create Segment</button>
+              Create Segment
+            </button>
             <button
                 mat-menu-item
                 class="create-segment-menu-item"
                 (click)="addPiece(2)">
-              Create Ballet</button>
+              Create Ballet
+            </button>
             <button
                 mat-menu-item
                 class="create-segment-menu-item"
                 (click)="addPiece(3)">
-              Create Super Ballet</button>
+              Create Super Ballet
+            </button>
           </mat-menu>
         </div>
       </div>
@@ -82,12 +85,12 @@
         <div>
           <div class="right-title-edit">
             <input
-              type="text"
-              class="name-input right-card-title app-card"
-              (input)="onTitleInput($event)"
-              [size]="(((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length'] < 15)
+                type="text"
+                class="name-input right-card-title app-card"
+                (input)="onTitleInput($event)"
+                [size]="(((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length'] < 15)
                   ? 15 : ((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length']"
-              [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)" />
+                [value]="((currentSelectedPiece | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)"/>
           </div>
           <div class="right-top-comment">
             <h2>{{ segmentPrettyNames[currentTypeOffset] }}</h2>
@@ -158,8 +161,8 @@
                     </app-text-input>
                   </div>
                   <div
-                        *ngIf="currentSelectedPiece.type === 'BALLET'"
-                        class="adding-position-size-container">
+                      *ngIf="currentSelectedPiece.type === 'BALLET'"
+                      class="adding-position-size-container">
                     <app-text-input
                         (valueChange)="onInputChange({change: $event, data: data})"
                         [bgColor]="offWhite"

@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { PerformanceApi } from './performance-api.service';
+import {TestBed} from '@angular/core/testing';
+import {PerformanceApi} from './performance-api.service';
 
 describe('PerformanceApiService', () => {
   let service: PerformanceApi;

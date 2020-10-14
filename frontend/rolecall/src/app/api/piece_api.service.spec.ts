@@ -1,6 +1,6 @@
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-import { PieceApi } from './piece_api.service';
+import {HttpClient, HttpHandler} from '@angular/common/http';
+import {TestBed} from '@angular/core/testing';
+import {PieceApi} from './piece_api.service';
 
 
 describe('PieceApiService', () => {

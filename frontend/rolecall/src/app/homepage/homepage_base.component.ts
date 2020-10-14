@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 
 /**
@@ -10,4 +10,5 @@ import { Component } from '@angular/core';
   templateUrl: './homepage_base.component.html',
   styleUrls: ['./homepage_base.component.scss']
 })
-export class HomepageBase { }
+export class HomepageBase {
+}

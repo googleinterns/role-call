@@ -10,7 +10,6 @@ import {CommonComponentsModule} from '../common_components/common_components.mod
 import {PieceEditor} from './piece_editor.component';
 
 
-
 @NgModule({
   declarations: [PieceEditor],
   imports: [
@@ -24,4 +23,5 @@ import {PieceEditor} from './piece_editor.component';
     MatSelectModule,
   ]
 })
-export class PieceModule { }
+export class PieceModule {
+}

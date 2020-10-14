@@ -30,12 +30,14 @@
   margin-right: 1.5em;
   width: fit-content;
 }
+
 // The log in button
 .log-in-button {
   font-size: large;
   height: 50%;
   width: fit-content;
 }
+
 // The profile picture
 .profile-image {
   border: solid;
@@ -65,6 +67,7 @@
   padding-right: 1.5em;
   width: 100%;
 }
+
 .profile-name {
   font-size: larger;
   font-weight: 500;
@@ -83,6 +86,7 @@
   margin-top: auto;
   min-width: 7vh;
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

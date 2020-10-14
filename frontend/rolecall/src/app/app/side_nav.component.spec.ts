@@ -1,13 +1,13 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { MatIconModule } from '@angular/material/icon';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { cleanRouterString } from 'src/app/util';
-import { constNavBarEntries } from 'src/constants';
-import { AppRoutingModule } from './app_routing.module';
-import { SideNav } from './side_nav.component';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {MatIconModule} from '@angular/material/icon';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {Router} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
+import {cleanRouterString} from 'src/app/util';
+import {constNavBarEntries} from 'src/constants';
+import {AppRoutingModule} from './app_routing.module';
+import {SideNav} from './side_nav.component';
 
 
 describe('SideNav', () => {
@@ -18,16 +18,16 @@ describe('SideNav', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SideNav],
-      imports: [
-        RouterTestingModule,
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatIconModule
-      ]
-    })
-      .compileComponents();
+          declarations: [SideNav],
+          imports: [
+            RouterTestingModule,
+            BrowserModule,
+            AppRoutingModule,
+            BrowserAnimationsModule,
+            MatIconModule
+          ]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -58,18 +58,22 @@ describe('SideNav', () => {
 
   it('should navigate to all valid url forms', fakeAsync(() => {
     fixture.ngZone.run(() => {
-      router.navigateByUrl(cleanRouterString(constNavBarEntries[1].routerLinkUrl));
+      router.navigateByUrl(
+          cleanRouterString(constNavBarEntries[1].routerLinkUrl));
       tick();
     });
 
-    expect(router.url).toBe(cleanRouterString(constNavBarEntries[1].routerLinkUrl));
+    expect(router.url)
+        .toBe(cleanRouterString(constNavBarEntries[1].routerLinkUrl));
 
     fixture.ngZone.run(() => {
-      router.navigateByUrl("/" + cleanRouterString(constNavBarEntries[1].routerLinkUrl));
+      router.navigateByUrl(
+          '/' + cleanRouterString(constNavBarEntries[1].routerLinkUrl));
       tick();
     });
 
-    expect(router.url).toBe(cleanRouterString("/" + constNavBarEntries[1].routerLinkUrl));
+    expect(router.url)
+        .toBe(cleanRouterString('/' + constNavBarEntries[1].routerLinkUrl));
   }));
 
   it('should navigate to panel pages', fakeAsync(() => {

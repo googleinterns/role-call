@@ -1,7 +1,7 @@
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-import { MockUserBackend } from '../mocks/mock_user_backend';
-import { UserApi } from './user_api.service';
+import {HttpClient, HttpHandler} from '@angular/common/http';
+import {TestBed} from '@angular/core/testing';
+import {MockUserBackend} from '../mocks/mock_user_backend';
+import {UserApi} from './user_api.service';
 
 describe('UserApi', () => {
   let service: UserApi;
@@ -14,9 +14,15 @@ describe('UserApi', () => {
     service = TestBed.inject(UserApi);
     mockBackend = new MockUserBackend();
     service.mockBackend = mockBackend;
-    service.requestAllUsers = () => { return mockBackend.requestAllUsers() };
-    service.requestOneUser = (uuid) => { return mockBackend.requestOneUser(uuid) };
-    service.requestUserSet = (user) => { return mockBackend.requestUserSet(user) };
+    service.requestAllUsers = () => {
+      return mockBackend.requestAllUsers();
+    };
+    service.requestOneUser = (uuid) => {
+      return mockBackend.requestOneUser(uuid);
+    };
+    service.requestUserSet = (user) => {
+      return mockBackend.requestUserSet(user);
+    };
   });
 
   it('should be created', () => {

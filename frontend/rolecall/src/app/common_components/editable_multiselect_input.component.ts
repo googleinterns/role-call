@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-multi-select-input',
@@ -26,12 +26,15 @@ export class EditableMultiSelectInput implements OnInit {
   }
 
   onChangeSelection(selectedString: string, event: any) {
-    if (!event.isUserInput)
+    if (!event.isUserInput) {
       return;
+    }
     if (event.source.selected) {
-      this.valueChange.emit([this.valueName, [...this.currentlySelected, selectedString]]);
+      this.valueChange.emit(
+          [this.valueName, [...this.currentlySelected, selectedString]]);
     } else {
-      this.valueChange.emit([this.valueName, this.currentlySelected.filter((val) => val != selectedString)]);
+      this.valueChange.emit([this.valueName,
+        this.currentlySelected.filter((val) => val != selectedString)]);
     }
   }
 }

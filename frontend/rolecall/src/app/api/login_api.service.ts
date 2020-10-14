@@ -170,7 +170,9 @@ export class LoginApi {
       ).toPromise().then((resp) => {
         if (resp.status > 299 || resp.status < 200) {
           return Promise.reject('Sign in failed');
-        } else { return resp; }
+        } else {
+          return resp;
+        }
       }).then(() => {
         // If session invalid, go ahead and log out of OAuth
         if (this.isLoggedIn) {

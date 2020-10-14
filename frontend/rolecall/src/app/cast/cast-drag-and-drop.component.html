@@ -11,7 +11,7 @@
           class="name-input"
           (input)="onTitleInput($event)"
           [value]="this.cast.name"
-          [size]="this.cast.name.length < 15 ? 15 : this.cast.name.length" />
+          [size]="this.cast.name.length < 15 ? 15 : this.cast.name.length"/>
       <button
           mat-icon-button
           aria-label="Export Cast Button"
@@ -63,9 +63,9 @@
                       </mat-icon>
                     </button>
                   </div>
-                </div>  
+                </div>
               </div>
-            </div>  
+            </div>
           </div>
           <div
               *ngFor="let header of subCastHeaders; let i2 = index"
@@ -86,7 +86,8 @@
                       class="count-button1"
                       [disabled]="subCastHeaders.length < 2"
                       (click)="decrementCastCount()">
-                    <mat-icon [inline]="true"
+                    <mat-icon
+                        [inline]="true"
                         class="count-icon1">
                       remove_circle_outline
                     </mat-icon>
@@ -102,9 +103,9 @@
                       add_circle_outline
                     </mat-icon>
                   </button>
-                </div>  
+                </div>
               </div>
-            </ng-template> 
+            </ng-template>
           </div>
         </div>
         <div

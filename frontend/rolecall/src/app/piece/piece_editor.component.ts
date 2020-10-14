@@ -4,15 +4,15 @@ import {Component, OnInit} from '@angular/core';
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {COLORS} from 'src/constants';
-import {Piece, PieceType, PieceApi, Position} from '../api/piece_api.service';
+import {Piece, PieceApi, PieceType, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 import {APITypes} from 'src/api_types';
 
 type ValueName =
-  'New Position' |
-  'Existing Position' |
-  'New Ballet' |
-  'Existing Ballet';
+    'New Position' |
+    'Existing Position' |
+    'New Ballet' |
+    'Existing Ballet';
 
 type DraggablePosition = {
   index: number;
@@ -78,7 +78,8 @@ export class PieceEditor implements OnInit {
       private route: ActivatedRoute,
       private pieceAPI: PieceApi,
       private location: Location,
-      private respHandler: ResponseStatusHandlerService) { }
+      private respHandler: ResponseStatusHandlerService) {
+  }
 
   ngOnInit(): void {
     const uuid = this.route.snapshot.params.uuid;
@@ -86,7 +87,9 @@ export class PieceEditor implements OnInit {
       this.urlPointingUUID = uuid;
     }
     this.pieceAPI.pieceEmitter.subscribe(
-        pieces => { this.onPieceLoad(pieces); });
+        pieces => {
+          this.onPieceLoad(pieces);
+        });
     this.pieceAPI.getAllPieces();
   }
 
@@ -238,21 +241,21 @@ export class PieceEditor implements OnInit {
     let originalName = 'TEST';
     this.currentTypeOffset = pieceTpCd;
     switch (pieceTpCd) {
-    case 1:
-      name = 'New Break';
-      type = 'SEGMENT';
-      originalName = 'New Break';
-      break;
-    case 2:
-      name = 'New Ballet';
-      type = 'BALLET';
-      originalName = 'New Ballet';
-      break;
-    case 3:
-      name = 'New Super Ballet';
-      type = 'SUPER';
-      originalName = 'New Super Ballet';
-      break;
+      case 1:
+        name = 'New Break';
+        type = 'SEGMENT';
+        originalName = 'New Break';
+        break;
+      case 2:
+        name = 'New Ballet';
+        type = 'BALLET';
+        originalName = 'New Ballet';
+        break;
+      case 3:
+        name = 'New Super Ballet';
+        type = 'SUPER';
+        originalName = 'New Super Ballet';
+        break;
     }
     this.creatingPiece = true;
     this.prevWorkingState = undefined;
@@ -281,7 +284,7 @@ export class PieceEditor implements OnInit {
 
   onSavePiece() {
     if (this.currentSelectedPiece && (!this.currentSelectedPiece.name ||
-        this.currentSelectedPiece.name === '')) {
+                                      this.currentSelectedPiece.name === '')) {
       this.respHandler.showError({
         url: 'Error occured while saving ballet',
         status: 400,
@@ -339,7 +342,7 @@ export class PieceEditor implements OnInit {
     this.creatingPiece = true;
     this.pieceSaved = false;
     const nextIndex = (this.currentSelectedPiece.positions.length +
-        this.currentSelectedPiece.addingPositions.length);
+                       this.currentSelectedPiece.addingPositions.length);
     const name = createPosition ? 'New Position' : 'New Ballet';
     this.dragAndDropData.push({
       index: nextIndex,
@@ -427,14 +430,13 @@ export class PieceEditor implements OnInit {
     name: string,
     data?: any,
   }) {
-      if (key === 'New Position' || key === 'New Ballet') {
+    if (key === 'New Position' || key === 'New Ballet') {
       const found = this.currentSelectedPiece.addingPositions.find(
           draggablePosition => draggablePosition.index === data.index);
       if (found) {
         found.pos.name = name;
       }
-    }
-    else if (key === 'Existing Position' || key === 'Existing Ballet') {
+    } else if (key === 'Existing Position' || key === 'Existing Ballet') {
       const found = this.currentSelectedPiece.positions.find(
           position => position.order === data.index);
       if (found) {
@@ -448,13 +450,13 @@ export class PieceEditor implements OnInit {
       }
       if (!found) {
         const foundNew = this.currentSelectedPiece.addingPositions.find(
-          draggablePosition => draggablePosition.index === data.index);
+            draggablePosition => draggablePosition.index === data.index);
         if (foundNew) {
           foundNew.pos.size = Number(name);
         }
       }
     } else if (key === 'New Ballet Name') {
-        this.currentSelectedPiece.name = name;
+      this.currentSelectedPiece.name = name;
     }
   }
 
@@ -467,17 +469,18 @@ export class PieceEditor implements OnInit {
       // after deletePiece()
       this.dragAndDropData = this.currentSelectedPiece.positions
           .map((position, positionIndex) => {
-        return {
-          index: positionIndex,
-          pos: position,
-          valueName: createPosition ? 'Existing Position' : 'Existing Ballet',
-          type: 'added',
-          nameDisplay: this.calcNameDisplay(
-              {createPosition, name: position.name}),
-          sizeDisplay: this.calcSizeDisplay(
-              {createPosition, dancerCount: position.size}),
-        };
-      });
+            return {
+              index: positionIndex,
+              pos: position,
+              valueName: createPosition ? 'Existing Position' :
+                  'Existing Ballet',
+              type: 'added',
+              nameDisplay: this.calcNameDisplay(
+                  {createPosition, name: position.name}),
+              sizeDisplay: this.calcSizeDisplay(
+                  {createPosition, dancerCount: position.size}),
+            };
+          });
       return;
     }
     const newDDData = [];

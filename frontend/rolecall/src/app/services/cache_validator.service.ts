@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 
 export type CacheTag = CacheTags | string;
 
 export enum CacheTags {
-  USER = "USER",
-  BALLETS = "BALLETS"
+  USER = 'USER',
+  BALLETS = 'BALLETS'
 }
 
 
@@ -31,12 +31,15 @@ export class CacheValidatorService {
 
   /** Gets the cached object for a CacheTag, or null if invalid or empty */
   getCached<T>(tag: CacheTag): T {
-    if (!this.cacheMap.has(tag))
+    if (!this.cacheMap.has(tag)) {
       return null;
-    if (!this.validBits.has(tag))
+    }
+    if (!this.validBits.has(tag)) {
       return null;
-    if (!this.validBits.get(tag))
+    }
+    if (!this.validBits.get(tag)) {
       return null;
+    }
     return this.cacheMap.get(tag);
   }
 
@@ -47,8 +50,9 @@ export class CacheValidatorService {
 
   /** Gets whether a CacheTag's cached object is still valid */
   getValid(tag: CacheTag): boolean {
-    if (!this.validBits.has(tag))
+    if (!this.validBits.has(tag)) {
       return false;
+    }
     return this.validBits.get(tag);
   }
 

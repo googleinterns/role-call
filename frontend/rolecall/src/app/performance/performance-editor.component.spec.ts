@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { PerformanceEditor } from './performance-editor.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {PerformanceEditor} from './performance-editor.component';
 
 
 describe('PerformanceEditorComponent', () => {
@@ -8,9 +8,9 @@ describe('PerformanceEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PerformanceEditor]
-    })
-      .compileComponents();
+          declarations: [PerformanceEditor]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

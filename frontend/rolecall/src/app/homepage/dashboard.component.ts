@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { DashboardApi, DashPerformance } from '../api/dashboard_api.service';
+import {Component, OnInit} from '@angular/core';
+import {DashboardApi, DashPerformance} from '../api/dashboard_api.service';
 
 export type ProcessedDashPerformance = {
   title: string,
@@ -25,20 +25,28 @@ export class Dashboard implements OnInit {
   dashPerfsLoaded: boolean = false;
   dataLoaded: boolean = false;
 
-  constructor(private dashAPI: DashboardApi) { }
+  constructor(private dashAPI: DashboardApi) {
+  }
 
   ngOnInit(): void {
-    this.dashAPI.dashPerformanceEmitter.subscribe(val => this.onDashPerfsLoad(val));
+    this.dashAPI.dashPerformanceEmitter.subscribe(
+        val => this.onDashPerfsLoad(val));
     this.dashAPI.getAllDashboard();
   }
 
   onDashPerfsLoad(dashPerfArr: DashPerformance[]) {
     this.allDashPerfs = dashPerfArr.sort((a, b) => a.dateTime - b.dateTime);
     let now = Date.now();
-    this.upcomingDashPerfs = this.allDashPerfs.filter(val => val.dateTime >= now);
+    this.upcomingDashPerfs =
+        this.allDashPerfs.filter(val => val.dateTime >= now);
     this.pastDashPerfs = this.allDashPerfs.filter(val => val.dateTime < now);
-    let dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    let timeOpts = { hour: '2-digit', minute: '2-digit' };
+    let dateOpts = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    let timeOpts = {hour: '2-digit', minute: '2-digit'};
     this.processedUpcomingDashPerfs = this.upcomingDashPerfs.map(perf => {
       let date = new Date(perf.dateTime);
       return {
@@ -47,7 +55,7 @@ export class Dashboard implements OnInit {
         timeStr: date.toLocaleTimeString('en-US', timeOpts),
         location: perf.location,
         uuid: String(perf.id),
-        routerLink: "/performance/" + perf.id
+        routerLink: '/performance/' + perf.id
       };
     });
     this.processedPastDashPerfs = this.pastDashPerfs.sort((a, b) => {
@@ -60,7 +68,7 @@ export class Dashboard implements OnInit {
         timeStr: date.toLocaleTimeString('en-US', timeOpts),
         location: perf.location,
         uuid: String(perf.id),
-        routerLink: "/performance/" + perf.id
+        routerLink: '/performance/' + perf.id
       };
     });
     this.dashPerfsLoaded = true;

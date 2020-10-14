@@ -1,13 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatIconModule } from '@angular/material/icon';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MockGAPI } from '../mocks/mock_gapi';
-import { AppRoutingModule } from './app_routing.module';
-import { SideNav } from './side_nav.component';
-import { SiteHeader } from './site_header.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatIconModule} from '@angular/material/icon';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {Router} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
+import {MockGAPI} from '../mocks/mock_gapi';
+import {AppRoutingModule} from './app_routing.module';
+import {SideNav} from './side_nav.component';
+import {SiteHeader} from './site_header.component';
 
 
 describe('SiteHeader', () => {
@@ -17,16 +17,16 @@ describe('SiteHeader', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SiteHeader],
-      imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        RouterTestingModule,
-        MatIconModule,
-      ]
-    })
-      .compileComponents();
+          declarations: [SiteHeader],
+          imports: [
+            BrowserModule,
+            AppRoutingModule,
+            BrowserAnimationsModule,
+            RouterTestingModule,
+            MatIconModule,
+          ]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -67,18 +67,19 @@ describe('SiteHeader', () => {
     expect(component.userIsLoggedIn).toBeTrue();
   });
 
-  it('should unload auth then trigger login if auth instance is not null or undefined to reset auth', async () => {
-    expect(component.responseRecieved).toBeFalse();
+  it('should unload auth then trigger login if auth instance is not null or undefined to reset auth',
+      async () => {
+        expect(component.responseRecieved).toBeFalse();
 
-    await component.loginAPI.initGoogleAuth();
+        await component.loginAPI.initGoogleAuth();
 
-    expect(component.loginAPI.isAuthLoaded).toBeTrue();
+        expect(component.loginAPI.isAuthLoaded).toBeTrue();
 
-    await component.onLoginButtonClick();
+        await component.onLoginButtonClick();
 
-    expect(component.responseRecieved).toBeTrue();
-    expect(component.userIsLoggedIn).toBeTrue();
-  });
+        expect(component.responseRecieved).toBeTrue();
+        expect(component.userIsLoggedIn).toBeTrue();
+      });
 
   it('should sign out on sign out click', async () => {
     expect(component.responseRecieved).toBeFalse();

@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { UnavailabilityApi } from './unavailability-api.service';
+import {TestBed} from '@angular/core/testing';
+import {UnavailabilityApi} from './unavailability-api.service';
 
 
 describe('UnavailabilityApiService', () => {

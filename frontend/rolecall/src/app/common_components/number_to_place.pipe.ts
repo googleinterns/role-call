@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'numberToPlace'
@@ -7,14 +7,14 @@ export class NumberToPlacePipe implements PipeTransform {
 
   public transform(value: number, ...args: unknown[]): string {
     let end;
-    if (String(value).endsWith("1")) {
-      end = "st";
-    } else if (String(value).endsWith("2")) {
-      end = "nd";
-    } else if (String(value).endsWith("3")) {
-      end = "rd";
+    if (String(value).endsWith('1')) {
+      end = 'st';
+    } else if (String(value).endsWith('2')) {
+      end = 'nd';
+    } else if (String(value).endsWith('3')) {
+      end = 'rd';
     } else {
-      end = "th";
+      end = 'th';
     }
     return value + end;
   }

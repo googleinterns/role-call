@@ -1,13 +1,13 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {EventEmitter, Injectable} from '@angular/core';
 import * as moment from 'moment';
-import { APITypes } from 'src/api_types';
-import { environment } from 'src/environments/environment';
-import { isNullOrUndefined } from 'util';
-import { MockUserBackend } from '../mocks/mock_user_backend';
-import { HeaderUtilityService } from '../services/header-utility.service';
-import { LoggingService } from '../services/logging.service';
-import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import {APITypes} from 'src/api_types';
+import {environment} from 'src/environments/environment';
+import {isNullOrUndefined} from 'util';
+import {MockUserBackend} from '../mocks/mock_user_backend';
+import {HeaderUtilityService} from '../services/header-utility.service';
+import {LoggingService} from '../services/logging.service';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 
 export type User = {
   uuid: APITypes.UserUUID;
@@ -94,64 +94,69 @@ export class UserApi {
   /** Emitter that is called whenever users are loaded */
   userEmitter: EventEmitter<User[]> = new EventEmitter();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient,
-    private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
+  constructor(private loggingService: LoggingService,
+              private http: HttpClient,
+              private headerUtil: HeaderUtilityService,
+              private respHandler: ResponseStatusHandlerService) {
+  }
 
   /** Hits backend with all users GET request */
   async requestAllUsers(): Promise<AllUsersResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUsers();
     }
-    return this.http.get<RawAllUsersResponse>(environment.backendURL + "api/user", {
-      headers: await this.headerUtil.generateHeader(),
-      observe: "response",
-      withCredentials: true
-    })
-    .toPromise()
-    .catch((errorResp) => errorResp)
-    .then((resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
-    .then((val) => {
-      return {
-        data: {
-          users: val.data.map((val) => {
-            return {
-              uuid: String(val.id),
-              has_roles: {
-                isAdmin: val.isAdmin,
-                isCoreographer: val.isCoreographer,
-                isDancer: val.isDancer,
-                isOther: val.isOther,
-              },
-              has_permissions: {
-                canLogin: val.canLogin,
-                canReceiveNotifications: val.notifications,
-                managePerformances: val.managePerformances,
-                manageCasts: val.manageCasts,
-                manageBallets: val.managePieces,
-                manageRoles: val.manageRoles,
-                manageRules: val.manageRules
-              },
-              knows_positions: [],
-              first_name: val.firstName,
-              middle_name: val.middleName,
-              last_name: val.lastName,
-              suffix: val.suffix,
-              date_joined: moment(val.dateJoined, 'MM-DD-YYYY').valueOf(),
-              contact_info: {
-                phone_number: val.phoneNumber,
-                email: val.email,
-                emergency_contact: {
-                  name: val.emergencyContactName,
-                  phone_number: val.emergencyContactNumber,
-                  email: "N/A"
-                }
-              }
-            }
-          })
-        },
-        warnings: val.warnings
-      }
-    });
+    return this.http.get<RawAllUsersResponse>(
+        environment.backendURL + 'api/user', {
+              headers: await this.headerUtil.generateHeader(),
+              observe: 'response',
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then(
+            (resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
+        .then((val) => {
+          return {
+            data: {
+              users: val.data.map((val) => {
+                return {
+                  uuid: String(val.id),
+                  has_roles: {
+                    isAdmin: val.isAdmin,
+                    isCoreographer: val.isCoreographer,
+                    isDancer: val.isDancer,
+                    isOther: val.isOther,
+                  },
+                  has_permissions: {
+                    canLogin: val.canLogin,
+                    canReceiveNotifications: val.notifications,
+                    managePerformances: val.managePerformances,
+                    manageCasts: val.manageCasts,
+                    manageBallets: val.managePieces,
+                    manageRoles: val.manageRoles,
+                    manageRules: val.manageRules
+                  },
+                  knows_positions: [],
+                  first_name: val.firstName,
+                  middle_name: val.middleName,
+                  last_name: val.lastName,
+                  suffix: val.suffix,
+                  date_joined: moment(val.dateJoined, 'MM-DD-YYYY').valueOf(),
+                  contact_info: {
+                    phone_number: val.phoneNumber,
+                    email: val.email,
+                    emergency_contact: {
+                      name: val.emergencyContactName,
+                      phone_number: val.emergencyContactNumber,
+                      email: 'N/A'
+                    }
+                  }
+                };
+              })
+            },
+            warnings: val.warnings
+          };
+        });
   }
 
   /** Hits backend with one user GET request */
@@ -169,75 +174,75 @@ export class UserApi {
     }
     if (this.users.has(user.uuid)) {
       // Do patch
-      return this.http.patch(environment.backendURL + "api/user", {
-        id: Number(user.uuid),
-        firstName: user.first_name,
-        middleName: user.middle_name,
-        lastName: user.last_name,
-        suffix: user.suffix,
-        email: user.contact_info.email,
-        phoneNumber: user.contact_info.phone_number,
-        dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
-        // Roles
-        isAdmin: user.has_roles.isAdmin,
-        isCoreographer: user.has_roles.isCoreographer,
-        isDancer: user.has_roles.isDancer,
-        isOther: user.has_roles.isOther,
-        // Permissions
-        canLogin: user.has_permissions.canLogin,
-        canReceiveNotifications: user.has_permissions.canReceiveNotifications,
-        managePerformances: user.has_permissions.managePerformances,
-        manageCasts: user.has_permissions.manageCasts,
-        managePieces: user.has_permissions.manageBallets,
-        manageRoles: user.has_permissions.manageRoles,
-        manageRules: user.has_permissions.manageRules,
-        // Other
-        emergencyContactName: user.contact_info.emergency_contact.name,
-        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
-        isActive: true
-      }, {
-        headers: await this.headerUtil.generateHeader(),
-        observe: "response",
-        withCredentials: true
-      })
-      .toPromise()
-      .catch((errorResp) => errorResp)
-      .then((resp) => this.respHandler.checkResponse<any>(resp));
+      return this.http.patch(environment.backendURL + 'api/user', {
+            id: Number(user.uuid),
+            firstName: user.first_name,
+            middleName: user.middle_name,
+            lastName: user.last_name,
+            suffix: user.suffix,
+            email: user.contact_info.email,
+            phoneNumber: user.contact_info.phone_number,
+            dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
+            // Roles
+            isAdmin: user.has_roles.isAdmin,
+            isCoreographer: user.has_roles.isCoreographer,
+            isDancer: user.has_roles.isDancer,
+            isOther: user.has_roles.isOther,
+            // Permissions
+            canLogin: user.has_permissions.canLogin,
+            canReceiveNotifications: user.has_permissions.canReceiveNotifications,
+            managePerformances: user.has_permissions.managePerformances,
+            manageCasts: user.has_permissions.manageCasts,
+            managePieces: user.has_permissions.manageBallets,
+            manageRoles: user.has_permissions.manageRoles,
+            manageRules: user.has_permissions.manageRules,
+            // Other
+            emergencyContactName: user.contact_info.emergency_contact.name,
+            emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
+            isActive: true
+          }, {
+            headers: await this.headerUtil.generateHeader(),
+            observe: 'response',
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
-      return this.http.post(environment.backendURL + "api/user", {
-        firstName: user.first_name,
-        middleName: user.middle_name,
-        lastName: user.last_name,
-        suffix: user.suffix,
-        email: user.contact_info.email,
-        phoneNumber: user.contact_info.phone_number,
-        dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
-        // Roles
-        isAdmin: user.has_roles.isAdmin,
-        isCoreographer: user.has_roles.isCoreographer,
-        isDancer: user.has_roles.isDancer,
-        isOther: user.has_roles.isOther,
-        // Permissions
-        canLogin: user.has_permissions.canLogin,
-        canReceiveNotifications: user.has_permissions.canReceiveNotifications,
-        managePerformances: user.has_permissions.managePerformances,
-        manageCasts: user.has_permissions.manageCasts,
-        managePieces: user.has_permissions.manageBallets,
-        manageRoles: user.has_permissions.manageRoles,
-        manageRules: user.has_permissions.manageRules,
-        // Other
-        emergencyContactName: user.contact_info.emergency_contact.name,
-        emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
-        isActive: true
-      }, {
-        observe: "response",
-        headers: await this.headerUtil.generateHeader(),
-        withCredentials: true
-      })
-      .toPromise()
-      .catch((errorResp) => errorResp)
-      .then((resp) => this.respHandler.checkResponse<any>(resp));
+      return this.http.post(environment.backendURL + 'api/user', {
+            firstName: user.first_name,
+            middleName: user.middle_name,
+            lastName: user.last_name,
+            suffix: user.suffix,
+            email: user.contact_info.email,
+            phoneNumber: user.contact_info.phone_number,
+            dateJoined: moment(user.date_joined).format('MM-DD-YYYY').toString(),
+            // Roles
+            isAdmin: user.has_roles.isAdmin,
+            isCoreographer: user.has_roles.isCoreographer,
+            isDancer: user.has_roles.isDancer,
+            isOther: user.has_roles.isOther,
+            // Permissions
+            canLogin: user.has_permissions.canLogin,
+            canReceiveNotifications: user.has_permissions.canReceiveNotifications,
+            managePerformances: user.has_permissions.managePerformances,
+            manageCasts: user.has_permissions.manageCasts,
+            managePieces: user.has_permissions.manageBallets,
+            manageRoles: user.has_permissions.manageRoles,
+            manageRules: user.has_permissions.manageRules,
+            // Other
+            emergencyContactName: user.contact_info.emergency_contact.name,
+            emergencyContactNumber: user.contact_info.emergency_contact.phone_number,
+            isActive: true
+          }, {
+            observe: 'response',
+            headers: await this.headerUtil.generateHeader(),
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -246,14 +251,15 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserDelete(user);
     }
-    return this.http.delete(environment.backendURL + 'api/user?userid=' + user.uuid, {
-      observe: "response",
-      headers: await this.headerUtil.generateHeader(),
-      withCredentials: true
-    })
-    .toPromise()
-    .catch((errorResp) => errorResp)
-    .then((resp) => this.respHandler.checkResponse<any>(resp));
+    return this.http.delete(
+        environment.backendURL + 'api/user?userid=' + user.uuid, {
+              observe: 'response',
+              headers: await this.headerUtil.generateHeader(),
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** Takes backend response, updates data structures for all users */
@@ -282,7 +288,7 @@ export class UserApi {
         this.loggingService.logWarn(warning);
       }
       return val;
-    })
+    });
   }
 
   /** Sends backend request and awaits reponse */
@@ -298,20 +304,20 @@ export class UserApi {
   /** Gets all the users from the backend and returns them */
   getAllUsers(): Promise<User[]> {
     return this.getAllUsersResponse().then(val => {
-      this.userEmitter.emit(Array.from(this.users.values()));
-      return val;
-    })
-    .then(val => val.data.users)
-    .catch(err => [] );
+          this.userEmitter.emit(Array.from(this.users.values()));
+          return val;
+        })
+        .then(val => val.data.users)
+        .catch(err => []);
   }
 
   /** Gets a specific user from the backend by UUID and returns it */
   getUser(uuid: APITypes.UserUUID): Promise<User> {
     return this.getOneUserResponse(uuid).then(val => {
-      this.userEmitter.emit(Array.from(this.users.values()));
-      return val;
-    })
-    .then(val => val.data.user);
+          this.userEmitter.emit(Array.from(this.users.values()));
+          return val;
+        })
+        .then(val => val.data.user);
   }
 
   /** Requests an update to the backend which may or may not be successful,
@@ -320,40 +326,42 @@ export class UserApi {
    */
   setUser(user: User): Promise<APITypes.SuccessIndicator> {
     return this.setUserResponse(user).then(val => {
-      this.getAllUsers();
-      return {
-        successful: true
-      }
-    })
-    .catch(reason => {
-      return Promise.resolve({
-        successful: false,
-        error: reason
-      })
-    });
+          this.getAllUsers();
+          return {
+            successful: true
+          };
+        })
+        .catch(reason => {
+          return Promise.resolve({
+            successful: false,
+            error: reason
+          });
+        });
   }
 
   /** Requests for the backend to delete the user */
   deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
     return this.deleteUserResponse(user).then(val => {
-      this.getAllUsers();
-      return {
-        successful: true
-      }
-    })
-    .catch(reason => {
-      return {
-        successful: false,
-        error: reason
-      }
-    });
+          this.getAllUsers();
+          return {
+            successful: true
+          };
+        })
+        .catch(reason => {
+          return {
+            successful: false,
+            error: reason
+          };
+        });
   }
 
   /** Determines if the user object provided is valid for storage in the database */
   public isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(user.contact_info.email)
-      && !isNullOrUndefined(user.first_name)
-      && !isNullOrUndefined(user.last_name) && !isNullOrUndefined(user.has_permissions);
+    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(
+        user.contact_info.email)
+           && !isNullOrUndefined(user.first_name)
+           && !isNullOrUndefined(user.last_name) && !isNullOrUndefined(
+            user.has_permissions);
   }
 
 }
