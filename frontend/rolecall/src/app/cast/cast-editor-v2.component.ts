@@ -1,8 +1,9 @@
 import {Location} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {APITypes} from 'src/api_types';
+import * as APITypes from 'src/api_types';
 import {CAST_COUNT} from 'src/constants';
+
 import {Cast, CastApi} from '../api/cast_api.service';
 import {Piece, PieceApi} from '../api/piece_api.service';
 import {CastDragAndDrop} from './cast-drag-and-drop.component';
