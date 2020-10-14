@@ -119,9 +119,9 @@ export class PieceEditor implements OnInit {
   private buildRenderingItem(
       displayPiece: WorkingPiece,
       displayPieceIndex: number) {
-    const hasNoChidren = displayPiece.type === 'SEGMENT'
+    const hasNoChildren = displayPiece.type === 'SEGMENT'
         ? false : displayPiece.positions.length === 0;
-    const name = hasNoChidren ? '*' + displayPiece.name : displayPiece.name;
+    const name = hasNoChildren ? '*' + displayPiece.name : displayPiece.name;
     return {
       name,
       pieceIndex: displayPieceIndex,
@@ -286,7 +286,7 @@ export class PieceEditor implements OnInit {
     if (this.currentSelectedPiece && (!this.currentSelectedPiece.name ||
                                       this.currentSelectedPiece.name === '')) {
       this.respHandler.showError({
-        url: 'Error occured while saving ballet',
+        url: 'Error occurred while saving ballet',
         status: 400,
         statusText: 'No ballet name!',
         errorMessage: 'You must enter a ballet name!'

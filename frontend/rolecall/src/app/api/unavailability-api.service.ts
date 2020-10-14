@@ -15,7 +15,7 @@ export type Unavailability = {
   'endDate': number
 };
 
-export type AllUnavailbilitiesResponse = {
+export type AllUnavailabilitiesResponse = {
   'data':
       {
         'id': number,
@@ -27,7 +27,7 @@ export type AllUnavailbilitiesResponse = {
   'warnings': []
 };
 
-export type OneUnavailbilityResponse = {
+export type OneUnavailabilityResponse = {
   'data':
       {
         'id': number,
@@ -58,12 +58,12 @@ export class UnavailabilityApi {
       private respHandler: ResponseStatusHandlerService) {
   }
 
-  /** Hits backend with all unavailabilites GET request. */
-  async requestAllUnavailabilites(): Promise<AllUnavailbilitiesResponse> {
+  /** Hits backend with all unavailabilities GET request. */
+  async requestAllUnavailabilities(): Promise<AllUnavailabilitiesResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUnavailabilites();
     }
-    return this.http.get<AllUnavailbilitiesResponse>(
+    return this.http.get<AllUnavailabilitiesResponse>(
         environment.backendURL + 'api/unavailable?startdate=' + (Date.now()
                                                                  - SixMonthInMS)
         + '&enddate=' + (Date.now() + SixMonthInMS), {
@@ -75,20 +75,20 @@ export class UnavailabilityApi {
         .catch((errorResp) => errorResp)
         .then(
             (resp) =>
-                this.respHandler.checkResponse<AllUnavailbilitiesResponse>(
+                this.respHandler.checkResponse<AllUnavailabilitiesResponse>(
                     resp));
   }
 
   /** Hits backend with one unavailability GET request. */
   requestOneUnavailability(uuid: APITypes.UnavailabilityUUID):
-      Promise<OneUnavailbilityResponse> {
+      Promise<OneUnavailabilityResponse> {
     if (environment.mockBackend) {
       return this.mockBackend.requestOneUnavailability(uuid);
     }
     return this.mockBackend.requestOneUnavailability(uuid);
   }
 
-  /** Hits backend with create/edit unav POST request. */
+  /** Hits backend with create/edit unavailability POST request. */
   async requestUnavailabilitySet(unav: Unavailability):
       Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
@@ -119,7 +119,7 @@ export class UnavailabilityApi {
     }
   }
 
-  /** Hits backend with delete unav request. */
+  /** Hits backend with delete unavailability request. */
   async requestUnavailabilityDelete(unav: Unavailability):
       Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
@@ -136,18 +136,20 @@ export class UnavailabilityApi {
         .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
-  /** All the loaded unavs mapped by UUID. */
+  /** All the loaded unavailabilities mapped by UUID. */
   unavailabilities: Map<APITypes.UnavailabilityUUID, Unavailability> =
       new Map<APITypes.UnavailabilityUUID, Unavailability>();
 
-  /** Emitter that is called whenever unavs are loaded. */
+  /** Emitter that is called whenever unavailabilities are loaded. */
   unavailabilityEmitter: EventEmitter<Unavailability[]> = new EventEmitter();
 
-  /** Takes backend response, updates data structures for all unavs. */
+  /**
+   * Takes backend response, updates data structures for all unavailabilities.
+   */
   private getAllUnavailabilitiesResponse():
-      Promise<AllUnavailbilitiesResponse> {
-    return this.requestAllUnavailabilites().then(val => {
-      // Update the unavailabilites map
+      Promise<AllUnavailabilitiesResponse> {
+    return this.requestAllUnavailabilities().then(val => {
+      // Update the unavailabilities map
       this.unavailabilities.clear();
       for (const unav of val.data) {
         this.unavailabilities.set(unav.id, unav);
@@ -160,11 +162,11 @@ export class UnavailabilityApi {
     });
   }
 
-  /** Takes backend response, updates data structure for one unav. */
+  /** Takes backend response, updates data structure for one unavailability. */
   private getOneUnavailabilityResponse(uuid: APITypes.UnavailabilityUUID):
-      Promise<OneUnavailbilityResponse> {
+      Promise<OneUnavailabilityResponse> {
     return this.requestOneUnavailability(uuid).then(val => {
-      // Update unav in map
+      // Update unavailability in map
       this.unavailabilities.set(val.data.id, val.data);
       // Log any warnings
       for (const warning of val.warnings) {
@@ -186,7 +188,7 @@ export class UnavailabilityApi {
     return this.requestUnavailabilityDelete(unav);
   }
 
-  /** Gets all the unavs from the backend and returns them. */
+  /** Gets all the unavailabilities from the backend and returns them. */
   getAllUnavailabilities(): Promise<Unavailability[]> {
     return this.getAllUnavailabilitiesResponse().then(val => {
       this.unavailabilityEmitter.emit(
@@ -197,7 +199,7 @@ export class UnavailabilityApi {
     });
   }
 
-  /** Gets a specific unav from the backend by UUID and returns it. */
+  /** Gets a specific unavailability from the backend by UUID and returns it. */
   getUnavailability(uuid: APITypes.UnavailabilityUUID):
       Promise<Unavailability> {
     return this.getOneUnavailabilityResponse(uuid).then(val => {
@@ -209,8 +211,8 @@ export class UnavailabilityApi {
 
   /**
    * Requests an update to the backend which may or may not be successful,
-   * depending on whether or not the unav is valid, as well as if the backend
-   * request fails for some other reason.
+   * depending on whether or not the unavailability is valid, as well as if the
+   * backend request fails for some other reason.
    */
   setUnavailability(unav: Unavailability): Promise<APITypes.SuccessIndicator> {
     return this.setUnavailabilityResponse(unav).then(val => {
@@ -226,7 +228,7 @@ export class UnavailabilityApi {
     });
   }
 
-  /** Requests for the backend to delete the unav. */
+  /** Requests for the backend to delete the unavailability. */
   deleteUnavailability(unav: Unavailability):
       Promise<APITypes.SuccessIndicator> {
     return this.deleteUnavailabilityResponse(unav).then(val => {

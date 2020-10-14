@@ -10,6 +10,7 @@ import {ResponseStatusHandlerService} from '../services/response-status-handler.
 export type DashPerformance = {
   id: number,
   title: string,
+  // TODO: Resolve typo in `description` property.
   decsription: string,
   location: string,
   dateTime: number,

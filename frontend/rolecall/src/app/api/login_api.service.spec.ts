@@ -32,7 +32,7 @@ describe('LoginApi', () => {
     expect(service.isLoggedIn).toBeTrue();
   });
 
-  it('should login sucessfully without popup enabled if signed in',
+  it('should login successfully without popup enabled if signed in',
       async () => {
         mockObj.isSignedInVal = true;
         const loginRespProm = service.login(false);
