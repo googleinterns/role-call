@@ -28,18 +28,14 @@ $lastCellFillerWidth: 2.2rem;
 }
 
 .table-container {
-  outline-color: $offoffWhite;
-  outline-width: 2px;
-  outline-style: solid;
+  outline: $offoffWhite solid 2px;
   outline-offset: -1px;
   width: fit-content;
 }
 
 .cell {
   background: $offWhite;
-  outline-color: $offoffWhite;
-  outline-width: 2px;
-  outline-style: solid;
+  outline: $offoffWhite solid 2px;
   outline-offset: -1px;
   height: $cellHeight;
   margin: 0;
@@ -68,8 +64,7 @@ $lastCellFillerWidth: 2.2rem;
   }
 
   &BothHeader {
-    padding: 0;
-    padding-left: 1rem;
+    padding: 0 0 0 1rem;
     color: $black;
     font-size: 1.4rem;
     font-weight: bold;
@@ -150,9 +145,7 @@ $lastCellFillerWidth: 2.2rem;
   justify-content: space-between;
   margin-left: 1rem;
   margin-right: 1rem;
-  outline-color: $offoffWhite;
-  outline-width: 2px;
-  outline-style: dashed;
+  outline: $offoffWhite dashed 2px;
   outline-offset: -1px;
 }
 
@@ -172,7 +165,7 @@ $lastCellFillerWidth: 2.2rem;
 .save-delete-button-icon {
   color: $gray;
   background: $AAOrange;
-  background-clip: text;
+  background-clip: text; // TODO: Fix invalid value.
   font-size: 3rem;
   height: 3rem;
   line-height: 3rem;
