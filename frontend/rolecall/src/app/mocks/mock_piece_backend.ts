@@ -201,7 +201,7 @@ export class MockPieceBackend {
   /** Mocks piece create/edit response */
   requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
-      let pieceInd = this.mockPieceDB.findIndex(
+      const pieceInd = this.mockPieceDB.findIndex(
           (val) => val.uuid == piece.uuid);
       if (pieceInd == -1) {
         this.mockPieceDB.push(piece);

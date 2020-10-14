@@ -94,10 +94,11 @@ export class UserApi {
   /** Emitter that is called whenever users are loaded */
   userEmitter: EventEmitter<User[]> = new EventEmitter();
 
-  constructor(private loggingService: LoggingService,
-              private http: HttpClient,
-              private headerUtil: HeaderUtilityService,
-              private respHandler: ResponseStatusHandlerService) {
+  constructor(
+      private loggingService: LoggingService,
+      private http: HttpClient,
+      private headerUtil: HeaderUtilityService,
+      private respHandler: ResponseStatusHandlerService) {
   }
 
   /** Hits backend with all users GET request */
@@ -267,11 +268,11 @@ export class UserApi {
     return this.requestAllUsers().then(val => {
       // Update the users map
       this.users.clear();
-      for (let user of val.data.users) {
+      for (const user of val.data.users) {
         this.users.set(user.uuid, user);
       }
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;
@@ -284,7 +285,7 @@ export class UserApi {
       // Update user in map
       this.users.set(val.data.user.uuid, val.data.user);
       // Log any warnings
-      for (let warning of val.warnings) {
+      for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
       }
       return val;

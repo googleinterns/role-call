@@ -38,7 +38,7 @@ export class MockUnavailabilityBackend {
 
   /** Mock setting the unavailability */
   requestUnavailabilitySet(unav: Unavailability): Promise<HttpResponse<any>> {
-    let userInd = this.mockUnavailabilityDB.findIndex(
+    const userInd = this.mockUnavailabilityDB.findIndex(
         (val) => val.id == unav.id);
     if (userInd == -1) {
       this.mockUnavailabilityDB.push(unav);

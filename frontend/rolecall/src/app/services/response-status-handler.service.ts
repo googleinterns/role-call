@@ -27,7 +27,7 @@ export class ResponseStatusHandlerService {
   pendingErrors: Map<string, [Promise<string>, (value?: string | PromiseLike<string>) => void]> = new Map();
 
   checkResponse<T>(response: HttpResponse<T>): Promise<T> {
-    let prom: Promise<T> = new Promise(async (res, rej) => {
+    const prom: Promise<T> = new Promise(async (res, rej) => {
       await this.doCheck<T>(response, res, rej);
     });
     return prom;
@@ -48,14 +48,14 @@ export class ResponseStatusHandlerService {
     }
 
     if (response.status < 200 || response.status > 299) {
-      let errorEvent: ErrorEvent = {
+      const errorEvent: ErrorEvent = {
         url: response.url,
         errorMessage: response['error'] ? response['error']['error'] :
             response['message'],
         status: response.status,
         statusText: response.statusText
       };
-      let userResp = await this.showError(errorEvent);
+      const userResp = await this.showError(errorEvent);
       rej(userResp);
     } else {
       res(response.body);
@@ -68,17 +68,17 @@ export class ResponseStatusHandlerService {
       return Promise.resolve('');
     }
     let resFunc;
-    let prom: Promise<string> = new Promise((res, rej) => {
+    const prom: Promise<string> = new Promise((res, rej) => {
       resFunc = res;
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
-    let dialogRef = this.dialog.open(ErrorDialog,
+    const dialogRef = this.dialog.open(ErrorDialog,
         {width: '50%', data: {errorEvent: errorEvent}});
     return dialogRef.afterClosed().toPromise().then(() => prom);
   }
 
   resolveError(errEv: ErrorEvent, userResp: string) {
-    let resolveThis = this.pendingErrors.get(errEv.url);
+    const resolveThis = this.pendingErrors.get(errEv.url);
     if (resolveThis) {
       resolveThis[1](userResp);
       this.pendingErrors.delete(errEv.url);
@@ -86,7 +86,7 @@ export class ResponseStatusHandlerService {
   }
 
   noConnectionError(err: HttpErrorResponse) {
-    let errorEvent: ErrorEvent = {
+    const errorEvent: ErrorEvent = {
       url: err.url,
       errorMessage: err.message,
       status: err.status,

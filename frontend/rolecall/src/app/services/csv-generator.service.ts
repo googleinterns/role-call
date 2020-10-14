@@ -16,17 +16,17 @@ export class CsvGenerator {
   async generateCSVFromCast(cast: Cast) {
     await this.userAPI.getAllUsers();
     await this.pieceAPI.getAllPieces();
-    let headers = ['Cast Name', 'Piece', 'Position', 'Cast Number',
+    const headers = ['Cast Name', 'Piece', 'Position', 'Cast Number',
       'Dancer Number',
       'Dancer First', 'Dancer Last'];
-    let objs: any[][][] = cast.filled_positions.map(filledPos => {
+    const objs: any[][][] = cast.filled_positions.map(filledPos => {
       return filledPos.groups.map(g => {
         return g.members.sort(
             (a, b) => a.position_number < b.position_number ? -1 : 1).map(m => {
-          let piece = this.pieceAPI.pieces.get(cast.segment);
-          let position = piece.positions.find(
+          const piece = this.pieceAPI.pieces.get(cast.segment);
+          const position = piece.positions.find(
               pos => pos.uuid == filledPos.position_uuid);
-          let dancer = this.userAPI.users.get(m.uuid);
+          const dancer = this.userAPI.users.get(m.uuid);
           return {
             'Cast Name': cast.name,
             'Piece': piece.name,
@@ -39,7 +39,7 @@ export class CsvGenerator {
         });
       });
     });
-    let allVals = [];
+    const allVals = [];
     for (let i = 0; i < objs.length; i++) {
       for (let n = 0; n < objs[i].length; n++) {
         for (let z = 0; z < objs[i][n].length; z++) {
@@ -56,20 +56,20 @@ export class CsvGenerator {
   async generateCSVFromPerformance(perf: Performance) {
     await this.userAPI.getAllUsers();
     await this.pieceAPI.getAllPieces();
-    let headers = ['Performance', 'Piece', 'Length', 'Position',
+    const headers = ['Performance', 'Piece', 'Length', 'Position',
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
-    let objs: any[][][][] = perf.step_3.segments.filter(
+    const objs: any[][][][] = perf.step_3.segments.filter(
         s => this.pieceAPI.pieces.get(s.segment).type == 'BALLET').map(seg => {
       return seg.custom_groups.map(filledPos => {
         return filledPos.groups.map(g => {
           return g.members.sort(
               (a, b) => a.position_number < b.position_number ? -1 : 1)
               .map(m => {
-                let piece = this.pieceAPI.pieces.get(seg.segment);
-                let position = piece.positions.find(
+                const piece = this.pieceAPI.pieces.get(seg.segment);
+                const position = piece.positions.find(
                     pos => pos.uuid == filledPos.position_uuid);
-                let dancer = this.userAPI.users.get(m.uuid);
+                const dancer = this.userAPI.users.get(m.uuid);
                 return {
                   'Performance': perf.step_1.title,
                   'Piece': piece.name,
@@ -85,7 +85,7 @@ export class CsvGenerator {
         });
       });
     });
-    let allVals = [];
+    const allVals = [];
     for (let i = 0; i < objs.length; i++) {
       for (let n = 0; n < objs[i].length; n++) {
         for (let z = 0; z < objs[i][n].length; z++) {
@@ -109,12 +109,12 @@ export class CsvGenerator {
   downloadFile(data: any, headers: string[], fileName: string) {
     const replacer = (key, value) => (value === null || value == undefined) ?
         '' : value;
-    let csv = data.map(row => headers.map(
+    const csv = data.map(row => headers.map(
         fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
     csv.unshift(headers.join(','));
-    let csvArray = csv.join('\r\n');
+    const csvArray = csv.join('\r\n');
 
-    var blob = new Blob([csvArray], {type: 'text/csv'});
+    const blob = new Blob([csvArray], {type: 'text/csv'});
     saveAs(blob, fileName + '.csv');
   }
 
