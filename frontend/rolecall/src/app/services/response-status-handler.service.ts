@@ -39,7 +39,7 @@ export class ResponseStatusHandlerService {
       rej: (reason?: any) => void
   ) {
 
-    if (response.status == 401) {
+    if (response.status === 401) {
       rej('');
       this.loginAPI.signOut().then(() => {
         this.loginAPI.login(true);

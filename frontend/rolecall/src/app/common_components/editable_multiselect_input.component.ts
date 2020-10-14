@@ -34,7 +34,7 @@ export class EditableMultiSelectInput implements OnInit {
           [this.valueName, [...this.currentlySelected, selectedString]]);
     } else {
       this.valueChange.emit([this.valueName,
-        this.currentlySelected.filter((val) => val != selectedString)]);
+        this.currentlySelected.filter((val) => val !== selectedString)]);
     }
   }
 }

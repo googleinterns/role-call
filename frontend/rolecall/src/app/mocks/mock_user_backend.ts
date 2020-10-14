@@ -1019,7 +1019,7 @@ export class MockUserBackend {
     return Promise.resolve({
       data: {
         user: this.mockUserDB.find(val => {
-          return val.uuid == uuid || val.uuid === uuid;
+          return val.uuid === uuid || val.uuid === uuid;
         })
       },
       warnings: []
@@ -1028,8 +1028,9 @@ export class MockUserBackend {
 
   requestUserSet(user: User): Promise<HttpResponse<any>> {
     if (this.isValidUser(user)) {
-      const userInd = this.mockUserDB.findIndex((val) => val.uuid == user.uuid);
-      if (userInd == -1) {
+      const userInd = this.mockUserDB.findIndex(
+          (val) => val.uuid === user.uuid);
+      if (userInd === -1) {
         this.mockUserDB.push(user);
       } else {
         this.mockUserDB[userInd] = user;
@@ -1046,7 +1047,7 @@ export class MockUserBackend {
 
   /** Mocks user delete response */
   requestUserDelete(user: User): Promise<HttpResponse<any>> {
-    this.mockUserDB = this.mockUserDB.filter(val => val.uuid != user.uuid);
+    this.mockUserDB = this.mockUserDB.filter(val => val.uuid !== user.uuid);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);

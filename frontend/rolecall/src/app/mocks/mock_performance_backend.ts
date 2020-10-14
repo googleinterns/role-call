@@ -161,7 +161,7 @@ export class MockPerformanceBackend {
     return Promise.resolve({
       data: {
         performance: this.mockPerformanceDB.find(val => {
-          return val.uuid == uuid || val.uuid === uuid;
+          return val.uuid === uuid || val.uuid === uuid;
         })
       },
       warnings: []
@@ -172,8 +172,8 @@ export class MockPerformanceBackend {
   requestPerformanceSet(performance: Performance): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
       const pieceInd = this.mockPerformanceDB.findIndex(
-          (val) => val.uuid == performance.uuid);
-      if (pieceInd == -1) {
+          (val) => val.uuid === performance.uuid);
+      if (pieceInd === -1) {
         this.mockPerformanceDB.push(performance);
       } else {
         this.mockPerformanceDB[pieceInd] = performance;
@@ -191,7 +191,7 @@ export class MockPerformanceBackend {
   /** Mocks piece delete response */
   requestPerformanceDelete(performance: Performance): Promise<HttpResponse<any>> {
     this.mockPerformanceDB =
-        this.mockPerformanceDB.filter(val => val.uuid != performance.uuid);
+        this.mockPerformanceDB.filter(val => val.uuid !== performance.uuid);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);

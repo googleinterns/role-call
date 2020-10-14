@@ -25,7 +25,7 @@ export class CsvGenerator {
             (a, b) => a.position_number < b.position_number ? -1 : 1).map(m => {
           const piece = this.pieceAPI.pieces.get(cast.segment);
           const position = piece.positions.find(
-              pos => pos.uuid == filledPos.position_uuid);
+              pos => pos.uuid === filledPos.position_uuid);
           const dancer = this.userAPI.users.get(m.uuid);
           return {
             'Cast Name': cast.name,
@@ -60,7 +60,7 @@ export class CsvGenerator {
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
     const objs: any[][][][] = perf.step_3.segments.filter(
-        s => this.pieceAPI.pieces.get(s.segment).type == 'BALLET').map(seg => {
+        s => this.pieceAPI.pieces.get(s.segment).type === 'BALLET').map(seg => {
       return seg.custom_groups.map(filledPos => {
         return filledPos.groups.map(g => {
           return g.members.sort(
@@ -68,7 +68,7 @@ export class CsvGenerator {
               .map(m => {
                 const piece = this.pieceAPI.pieces.get(seg.segment);
                 const position = piece.positions.find(
-                    pos => pos.uuid == filledPos.position_uuid);
+                    pos => pos.uuid === filledPos.position_uuid);
                 const dancer = this.userAPI.users.get(m.uuid);
                 return {
                   'Performance': perf.step_1.title,
@@ -107,7 +107,7 @@ export class CsvGenerator {
   }
 
   downloadFile(data: any, headers: string[], fileName: string) {
-    const replacer = (key, value) => (value === null || value == undefined) ?
+    const replacer = (key, value) => (value === null || value === undefined) ?
         '' : value;
     const csv = data.map(row => headers.map(
         fieldName => JSON.stringify(row[fieldName], replacer)).join(','));

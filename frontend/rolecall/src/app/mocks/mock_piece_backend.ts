@@ -191,7 +191,7 @@ export class MockPieceBackend {
     return Promise.resolve({
       data: {
         piece: this.mockPieceDB.find(val => {
-          return val.uuid == uuid || val.uuid === uuid;
+          return val.uuid === uuid || val.uuid === uuid;
         })
       },
       warnings: []
@@ -202,8 +202,8 @@ export class MockPieceBackend {
   requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
       const pieceInd = this.mockPieceDB.findIndex(
-          (val) => val.uuid == piece.uuid);
-      if (pieceInd == -1) {
+          (val) => val.uuid === piece.uuid);
+      if (pieceInd === -1) {
         this.mockPieceDB.push(piece);
       } else {
         this.mockPieceDB[pieceInd] = piece;
@@ -220,7 +220,7 @@ export class MockPieceBackend {
 
   /** Mocks piece delete response */
   requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
-    this.mockPieceDB = this.mockPieceDB.filter(val => val.uuid != piece.uuid);
+    this.mockPieceDB = this.mockPieceDB.filter(val => val.uuid !== piece.uuid);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);
