@@ -45,11 +45,11 @@ public class Constants {
     public static final String NOTIFICATIONS = "NOTIFICATIONS";
     public static final String MANAGE_PERFORMANCES = "MANAGE_PERFORMANCES";
     public static final String MANAGE_CASTS = "MANAGE_CASTS";
-    public static final String MANAGE_PIECES = "MANAGE_PIECES";
+    public static final String MANAGE_BALLETS = "MANAGE_BALLETS";
     public static final String MANAGE_ROLES = "MANAGE_ROLES";
     public static final String MANAGE_RULES = "MANAGE_RULES";
     public static final String[] PERMISSIONS = new String[] {
-        LOGIN, NOTIFICATIONS, MANAGE_PERFORMANCES, MANAGE_CASTS, MANAGE_PIECES,
+        LOGIN, NOTIFICATIONS, MANAGE_PERFORMANCES, MANAGE_CASTS, MANAGE_BALLETS,
         MANAGE_ROLES, MANAGE_RULES,
     };
   }

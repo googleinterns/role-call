@@ -126,7 +126,7 @@ export class CastEditorV2 implements OnInit {
   }
 
   private onPieceLoad(pieces: Piece[]) {
-    this.allPieces = pieces.filter(piece => piece.type === 'PIECE');
+    this.allPieces = pieces.filter(piece => piece.type === 'BALLET');
     this.buildPopupList();
     if (!this.selectedPiece && this.allPieces.length > 0) {
       this.selectPiece(this.popupPieceList[0].pieceIndex);

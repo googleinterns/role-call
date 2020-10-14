@@ -96,7 +96,7 @@
       </div>
 
       <div
-          *ngIf="currentSelectedPiece && (currentSelectedPiece.type == 'PIECE' || currentSelectedPiece.type == 'SUPER')"
+          *ngIf="currentSelectedPiece && (currentSelectedPiece.type == 'BALLET' || currentSelectedPiece.type == 'SUPER')"
           class="app-card positions-card">
         <div
             cdkDropList
@@ -149,7 +149,7 @@
                     class="adding-position-container">
                   <div
                       class="adding-position-name-container"
-                      [style.width.%]="currentSelectedPiece.type === 'PIECE' ? 70 : 100">
+                      [style.width.%]="currentSelectedPiece.type === 'BALLET' ? 70 : 100">
                     <app-text-input
                         (valueChange)="onInputChange({change: $event, data: data})"
                         [bgColor]="offWhite"
@@ -158,7 +158,7 @@
                     </app-text-input>
                   </div>
                   <div
-                        *ngIf="currentSelectedPiece.type === 'PIECE'"
+                        *ngIf="currentSelectedPiece.type === 'BALLET'"
                         class="adding-position-size-container">
                     <app-text-input
                         (valueChange)="onInputChange({change: $event, data: data})"

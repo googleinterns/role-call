@@ -41,7 +41,7 @@ export type Position = {
   size: number,
 };
 
-export type PieceType = "SEGMENT" | "PIECE" | "SUPER";
+export type PieceType = "SEGMENT" | "BALLET" | "SUPER";
 
 export type Piece = {
   uuid: string;
@@ -143,7 +143,7 @@ export class PieceApi {
         name: piece.name,
         id: Number(piece.uuid),
         siblingId: piece.siblingId,
-        type: piece.type ? piece.type : "PIECE",
+        type: piece.type ? piece.type : "BALLET",
         positions: piece.positions.map((val, ind) => {
           return {
             ...val,
@@ -169,7 +169,7 @@ export class PieceApi {
       return this.http.post(environment.backendURL + 'api/section', {
         name: piece.name,
         siblingId: piece.siblingId,
-        type: piece.type ? piece.type : "PIECE",
+        type: piece.type ? piece.type : "BALLET",
         positions: piece.positions
       }, {
         headers: header,

@@ -5,7 +5,7 @@ export type CacheTag = CacheTags | string;
 
 export enum CacheTags {
   USER = "USER",
-  PIECES = "PIECES"
+  BALLETS = "BALLETS"
 }
 
 

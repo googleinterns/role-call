@@ -55,7 +55,7 @@ export class CsvGenerator {
     let headers = ['Performance', 'Piece', 'Length', 'Position',
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
-    let objs: any[][][][] = perf.step_3.segments.filter(s => this.pieceAPI.pieces.get(s.segment).type == "PIECE").map(seg => {
+    let objs: any[][][][] = perf.step_3.segments.filter(s => this.pieceAPI.pieces.get(s.segment).type == "BALLET").map(seg => {
       return seg.custom_groups.map(filledPos => {
         return filledPos.groups.map(g => {
           return g.members.sort((a, b) => a.position_number < b.position_number ? -1 : 1).map(m => {
