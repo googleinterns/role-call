@@ -127,7 +127,7 @@ export class UserApi {
                 canReceiveNotifications: val.notifications,
                 managePerformances: val.managePerformances,
                 manageCasts: val.manageCasts,
-                managePieces: val.managePieces,
+                manageBallets: val.managePieces,
                 manageRoles: val.manageRoles,
                 manageRules: val.manageRules
               },
@@ -188,7 +188,7 @@ export class UserApi {
         canReceiveNotifications: user.has_permissions.canReceiveNotifications,
         managePerformances: user.has_permissions.managePerformances,
         manageCasts: user.has_permissions.manageCasts,
-        managePieces: user.has_permissions.managePieces,
+        managePieces: user.has_permissions.manageBallets,
         manageRoles: user.has_permissions.manageRoles,
         manageRules: user.has_permissions.manageRules,
         // Other
@@ -223,7 +223,7 @@ export class UserApi {
         canReceiveNotifications: user.has_permissions.canReceiveNotifications,
         managePerformances: user.has_permissions.managePerformances,
         manageCasts: user.has_permissions.manageCasts,
-        managePieces: user.has_permissions.managePieces,
+        managePieces: user.has_permissions.manageBallets,
         manageRoles: user.has_permissions.manageRoles,
         manageRules: user.has_permissions.manageRules,
         // Other
