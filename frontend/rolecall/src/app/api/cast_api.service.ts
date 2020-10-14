@@ -171,7 +171,7 @@ export class CastApi {
                             };
                           }));
                     } else {
-                      // TODO: This is duplicated with the following else-block
+                      // Note: This is duplicated with the following else-block
                       groups.push({
                         position_uuid: String(allPositions.find(
                             pos => Number(pos.uuid)
@@ -186,6 +186,7 @@ export class CastApi {
                       });
                     }
                   } else {
+                    // Note: This is the same code as the preceding else-block
                     groups.push({
                       position_uuid: String(allPositions.find(
                           pos => Number(pos.uuid)
