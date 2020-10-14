@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { CsvGenerator } from './csv-generator.service';
+import {TestBed} from '@angular/core/testing';
+import {CsvGenerator} from './csv-generator.service';
 
 
 describe('CsvGeneratorService', () => {

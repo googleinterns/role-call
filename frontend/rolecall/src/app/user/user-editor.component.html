@@ -13,10 +13,10 @@
             (click)="setCurrentUser({user : user, fromInputChange : false, shouldSetLastUser : true})">
           <h2 class="user-name">
             {{
-              (user.first_name ? user.first_name + " " : "") + 
-              (user.middle_name ? user.middle_name + " " : "") +
-              (user.last_name ? user.last_name : "") + 
-              (user.suffix ? user.suffix : "") 
+            (user.first_name ? user.first_name + " " : "") +
+            (user.middle_name ? user.middle_name + " " : "") +
+            (user.last_name ? user.last_name : "") +
+            (user.suffix ? user.suffix : "")
             }}
           </h2>
         </div>
@@ -42,10 +42,10 @@
       <div *ngIf="currentSelectedUser">
         <h1 class="right-card-title">
           {{
-            (currentSelectedUser.first_name ? currentSelectedUser.first_name + " " : "") + 
-            (currentSelectedUser.middle_name ? currentSelectedUser.middle_name + " " : "") +
-            (currentSelectedUser.last_name ? currentSelectedUser.last_name : "") + 
-            (currentSelectedUser.suffix ? currentSelectedUser.suffix : "") 
+          (currentSelectedUser.first_name ? currentSelectedUser.first_name + " " : "") +
+          (currentSelectedUser.middle_name ? currentSelectedUser.middle_name + " " : "") +
+          (currentSelectedUser.last_name ? currentSelectedUser.last_name : "") +
+          (currentSelectedUser.suffix ? currentSelectedUser.suffix : "")
           }}
         </h1>
       </div>

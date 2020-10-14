@@ -1,4 +1,4 @@
-import { EmptyStringIfUndefinedPipe } from './empty_string_if_undefined.pipe';
+import {EmptyStringIfUndefinedPipe} from './empty_string_if_undefined.pipe';
 
 describe('EmptyStringIfUndefinedPipe', () => {
   let pipe: EmptyStringIfUndefinedPipe;

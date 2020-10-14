@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, Inject, Injectable, NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LoginApi } from '../api/login_api.service';
+import {CommonModule} from '@angular/common';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {Component, Inject, Injectable, NgModule} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {LoginApi} from '../api/login_api.service';
 
 export type ErrorEvent = {
   url: string,
@@ -21,7 +21,8 @@ export type WarningEvent = {
 })
 export class ResponseStatusHandlerService {
 
-  constructor(public dialog: MatDialog, private loginAPI: LoginApi) { }
+  constructor(public dialog: MatDialog, private loginAPI: LoginApi) {
+  }
 
   pendingErrors: Map<string, [Promise<string>, (value?: string | PromiseLike<string>) => void]> = new Map();
 
@@ -32,9 +33,10 @@ export class ResponseStatusHandlerService {
     return prom;
   }
 
-  private async doCheck<T>(response: HttpResponse<T>,
-    res: (value?: T | PromiseLike<T>) => void,
-    rej: (reason?: any) => void
+  private async doCheck<T>(
+      response: HttpResponse<T>,
+      res: (value?: T | PromiseLike<T>) => void,
+      rej: (reason?: any) => void
   ) {
 
     if (response.status == 401) {
@@ -48,10 +50,11 @@ export class ResponseStatusHandlerService {
     if (response.status < 200 || response.status > 299) {
       let errorEvent: ErrorEvent = {
         url: response.url,
-        errorMessage: response['error'] ? response['error']['error'] : response['message'],
+        errorMessage: response['error'] ? response['error']['error'] :
+            response['message'],
         status: response.status,
         statusText: response.statusText
-      }
+      };
       let userResp = await this.showError(errorEvent);
       rej(userResp);
     } else {
@@ -69,7 +72,8 @@ export class ResponseStatusHandlerService {
       resFunc = res;
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
-    let dialogRef = this.dialog.open(ErrorDialog, { width: "50%", data: { errorEvent: errorEvent } });
+    let dialogRef = this.dialog.open(ErrorDialog,
+        {width: '50%', data: {errorEvent: errorEvent}});
     return dialogRef.afterClosed().toPromise().then(() => prom);
   }
 
@@ -87,7 +91,7 @@ export class ResponseStatusHandlerService {
       errorMessage: err.message,
       status: err.status,
       statusText: err.statusText
-    }
+    };
     this.showError(errorEvent);
   }
 
@@ -106,9 +110,10 @@ export interface ErrorDialogData {
 export class ErrorDialog {
 
   constructor(
-    public dialogRef: MatDialogRef<ErrorDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: ErrorDialogData,
-    private respHandler: ResponseStatusHandlerService) { }
+      public dialogRef: MatDialogRef<ErrorDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: ErrorDialogData,
+      private respHandler: ResponseStatusHandlerService) {
+  }
 
   onOkClick(userResp: string): void {
     this.respHandler.resolveError(this.data.errorEvent, userResp);
@@ -118,12 +123,13 @@ export class ErrorDialog {
 }
 
 @NgModule(
-  {
-    declarations: [ErrorDialog],
-    imports: [
-      CommonModule,
-      MatDialogModule,
-      MatButtonModule
-    ]
-  })
-export class DialogModule { }
+    {
+      declarations: [ErrorDialog],
+      imports: [
+        CommonModule,
+        MatDialogModule,
+        MatButtonModule
+      ]
+    })
+export class DialogModule {
+}

@@ -14,4 +14,5 @@ const routes: Routes = [
     CastModule],
   exports: [RouterModule]
 })
-export class CastRoutingModule { }
+export class CastRoutingModule {
+}

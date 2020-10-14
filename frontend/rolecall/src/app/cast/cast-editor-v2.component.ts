@@ -39,7 +39,8 @@ export class CastEditorV2 implements OnInit {
       private castAPI: CastApi,
       private pieceAPI: PieceApi,
       private route: ActivatedRoute,
-      private location: Location) { }
+      private location: Location) {
+  }
 
   ngOnInit() {
     const uuid = this.route.snapshot.params.uuid;
@@ -102,7 +103,7 @@ export class CastEditorV2 implements OnInit {
       }
     }
     if (this.selectedPiece && !this.selectedPieceCasts.find(
-          cast => cast.uuid === this.urlUUID)) {
+        cast => cast.uuid === this.urlUUID)) {
       if (this.selectedPieceCasts.length > 0) {
         this.setCurrentCast({cast: this.selectedPieceCasts[0]});
       }
@@ -160,8 +161,8 @@ export class CastEditorV2 implements OnInit {
           if (this.selectedPieceCasts.length > 0) {
             this.selectedCast = this.selectedPieceCasts[
                 this.lastSelectedCastIndex
-                ? this.lastSelectedCastIndex - 1
-                : 0];
+                    ? this.lastSelectedCastIndex - 1
+                    : 0];
           } else {
             this.selectedCast = casts[0];
           }

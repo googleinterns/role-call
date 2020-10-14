@@ -1,6 +1,6 @@
-import { EventEmitter } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditableMultiSelectInput } from './editable_multiselect_input.component';
+import {EventEmitter} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {EditableMultiSelectInput} from './editable_multiselect_input.component';
 
 
 describe('EditableMultiSelectInput', () => {
@@ -9,9 +9,9 @@ describe('EditableMultiSelectInput', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EditableMultiSelectInput]
-    })
-      .compileComponents();
+          declarations: [EditableMultiSelectInput]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

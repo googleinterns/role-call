@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditableDateInput } from './editable_date_input.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {EditableDateInput} from './editable_date_input.component';
 
 
 describe('EditableDateInput', () => {
@@ -8,9 +8,9 @@ describe('EditableDateInput', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EditableDateInput]
-    })
-      .compileComponents();
+          declarations: [EditableDateInput]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

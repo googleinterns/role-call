@@ -1,11 +1,11 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { APITypes } from 'src/api_types';
-import { environment } from 'src/environments/environment';
-import { MockPieceBackend } from '../mocks/mock_piece_backend';
-import { HeaderUtilityService } from '../services/header-utility.service';
-import { LoggingService } from '../services/logging.service';
-import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {EventEmitter, Injectable} from '@angular/core';
+import {APITypes} from 'src/api_types';
+import {environment} from 'src/environments/environment';
+import {MockPieceBackend} from '../mocks/mock_piece_backend';
+import {HeaderUtilityService} from '../services/header-utility.service';
+import {LoggingService} from '../services/logging.service';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 
 type RawPosition = {
   id: number,
@@ -41,7 +41,7 @@ export type Position = {
   size: number,
 };
 
-export type PieceType = "SEGMENT" | "BALLET" | "SUPER";
+export type PieceType = 'SEGMENT' | 'BALLET' | 'SUPER';
 
 export type Piece = {
   uuid: string;
@@ -87,8 +87,11 @@ export class PieceApi {
   /** Emitter that is called whenever pieces are loaded */
   pieceEmitter: EventEmitter<Piece[]> = new EventEmitter();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient,
-    private respHandler: ResponseStatusHandlerService, private headerUtil: HeaderUtilityService) { }
+  constructor(private loggingService: LoggingService,
+              private http: HttpClient,
+              private respHandler: ResponseStatusHandlerService,
+              private headerUtil: HeaderUtilityService) {
+  }
 
   /** Hits backend with all pieces GET request */
   async requestAllPieces(): Promise<AllPiecesResponse> {
@@ -96,32 +99,37 @@ export class PieceApi {
       return this.mockBackend.requestAllPieces();
     }
     let header = await this.headerUtil.generateHeader();
-    return this.http.get<RawAllPiecesResponse>(environment.backendURL + "api/section", {
-      headers: header,
-      observe: "response",
-      withCredentials: true
-    })
-    .toPromise()
-    .catch((errorResp) => errorResp)
-    .then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(resp)).then((val) => {
-      this.rawPieces = val.data;
-      return {
-        data: {
-          pieces: val.data.map((section) => {
-            return {
-              uuid: String(section.id),
-              name: section.name,
-              siblingId: section.siblingId,
-              type: section.type,
-              positions: section.positions.sort((a, b) => a.order < b.order ? -1 : 1)
-                  .map(pos => { return { ...pos, uuid: String(pos.id) } }),
-              deletePositions: []
-            }
-          })
-        },
-        warnings: val.warnings
-      }
-    });
+    return this.http.get<RawAllPiecesResponse>(
+        environment.backendURL + 'api/section', {
+              headers: header,
+              observe: 'response',
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(
+            resp)).then((val) => {
+          this.rawPieces = val.data;
+          return {
+            data: {
+              pieces: val.data.map((section) => {
+                return {
+                  uuid: String(section.id),
+                  name: section.name,
+                  siblingId: section.siblingId,
+                  type: section.type,
+                  positions: section.positions.sort(
+                      (a, b) => a.order < b.order ? -1 : 1)
+                      .map(pos => {
+                        return {...pos, uuid: String(pos.id)};
+                      }),
+                  deletePositions: []
+                };
+              })
+            },
+            warnings: val.warnings
+          };
+        });
   }
 
   /** Hits backend with one piece GET request */
@@ -140,63 +148,64 @@ export class PieceApi {
       // Do patch
       let header = await this.headerUtil.generateHeader();
       return this.http.patch(environment.backendURL + 'api/section', {
-        name: piece.name,
-        id: Number(piece.uuid),
-        siblingId: piece.siblingId,
-        type: piece.type ? piece.type : "BALLET",
-        positions: piece.positions.map((val, ind) => {
-          return {
-            ...val,
-            delete: false
-          }
-        }).concat(piece.deletePositions.map((val, ind) => {
-          return {
-            ...val,
-            delete: true
-          }
-        }))
-      }, {
-        headers: header,
-        observe: "response",
-        withCredentials: true
-      })
-      .toPromise()
-      .catch((errorResp) => errorResp)
-      .then((resp) => this.respHandler.checkResponse<any>(resp));
+            name: piece.name,
+            id: Number(piece.uuid),
+            siblingId: piece.siblingId,
+            type: piece.type ? piece.type : 'BALLET',
+            positions: piece.positions.map((val, ind) => {
+              return {
+                ...val,
+                delete: false
+              };
+            }).concat(piece.deletePositions.map((val, ind) => {
+              return {
+                ...val,
+                delete: true
+              };
+            }))
+          }, {
+            headers: header,
+            observe: 'response',
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       let header = await this.headerUtil.generateHeader();
       return this.http.post(environment.backendURL + 'api/section', {
-        name: piece.name,
-        siblingId: piece.siblingId,
-        type: piece.type ? piece.type : "BALLET",
-        positions: piece.positions
-      }, {
-        headers: header,
-        observe: "response",
-        withCredentials: true
-      })
-      .toPromise()
-      .catch((errorResp) => errorResp)
-      .then((resp) => this.respHandler.checkResponse<any>(resp));
+            name: piece.name,
+            siblingId: piece.siblingId,
+            type: piece.type ? piece.type : 'BALLET',
+            positions: piece.positions
+          }, {
+            headers: header,
+            observe: 'response',
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
-  /** 
+  /**
    * Hits backend with delete piece POST request */
   async requestPieceDelete(piece: Piece): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPieceDelete(piece);
     }
     let header = await this.headerUtil.generateHeader();
-    return this.http.delete(environment.backendURL + 'api/section?sectionid=' + piece.uuid, {
-      headers: header,
-      observe: "response",
-      withCredentials: true
-    })
-    .toPromise()
-    .catch((errorResp) => errorResp)
-    .then((resp) => this.respHandler.checkResponse<any>(resp));
+    return this.http.delete(
+        environment.backendURL + 'api/section?sectionid=' + piece.uuid, {
+              headers: header,
+              observe: 'response',
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** Takes backend response, updates data structures for all pieces */
@@ -225,7 +234,7 @@ export class PieceApi {
         this.loggingService.logWarn(warning);
       }
       return val;
-    })
+    });
   }
 
   /** Sends backend request and awaits reponse */
@@ -265,12 +274,12 @@ export class PieceApi {
       this.getAllPieces();
       return {
         successful: true
-      }
+      };
     }).catch(reason => {
       return {
         successful: false,
         error: reason
-      }
+      };
     });
   }
 
@@ -280,12 +289,12 @@ export class PieceApi {
       this.getAllPieces();
       return {
         successful: true
-      }
+      };
     }).catch(reason => {
       return {
         successful: false,
         error: reason
-      }
+      };
     });
   }
 }

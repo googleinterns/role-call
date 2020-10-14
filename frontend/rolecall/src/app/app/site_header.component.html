@@ -1,13 +1,20 @@
 <div class="site-header-container">
-  <button [disabled]="!this.loginAPI.isLoggedIn"
-    [ngStyle]="!this.loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }" mat-icon-button
-    aria-label="Toggle Navigation Button" class="nav-trigger-button" (click)="onNavButtonClick()">
+  <button
+      [disabled]="!this.loginAPI.isLoggedIn"
+      [ngStyle]="!this.loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }"
+      mat-icon-button
+      aria-label="Toggle Navigation Button"
+      class="nav-trigger-button"
+      (click)="onNavButtonClick()">
     <mat-icon class="icon" [inline]="true">
       menu
     </mat-icon>
   </button>
-  <img [ngStyle]="!this.loginAPI.isLoggedIn ? { 'margin-left': '2rem' }: {}" src='/assets/images/AADT-logo.png'
-    class="logo" routerLink="/">
+  <img
+      [ngStyle]="!this.loginAPI.isLoggedIn ? { 'margin-left': '2rem' }: {}"
+      src="/assets/images/AADT-logo.png"
+      class="logo"
+      routerLink="/">
   <div class=" site-header-subcontainer">
   </div>
   <div *ngIf="this.responseRecieved; then showLoginOptions else loadingSpinner">
@@ -21,16 +28,22 @@
 </ng-template>
 <ng-template #loginButtonTemp>
   <div class="log-in-account-container">
-    <button mat-flat-button aria-label="Log In Button" class="log-in-button" #loginButton routerLink="login"
-      (click)="navBar.closeNav(); onLoginButtonClick()">
+    <button
+        mat-flat-button
+        aria-label="Log In Button"
+        class="log-in-button"
+        #loginButton
+        routerLink="login"
+        (click)="navBar.closeNav(); onLoginButtonClick()">
       Log In
     </button>
   </div>
 </ng-template>
 <ng-template #profileImageTemp>
   <div class="log-in-account-container" ngbDropdown #profileDrop="ngbDropdown">
-    <img class="profile-image" [src]="this.loginAPI.imageURL" ngbDropdownAnchor
-      (click)="profileDrop.isOpen() ? profileDrop.close() : profileDrop.open()">
+    <img
+        class="profile-image" [src]="this.loginAPI.imageURL" ngbDropdownAnchor
+        (click)="profileDrop.isOpen() ? profileDrop.close() : profileDrop.open()">
     <div ngbDropdownMenu aria-labelledby="dropdownManual">
       <div class="profile-drop-down-item-container">
         <h3 class="profile-name">{{ this.loginAPI.givenName + " " + this.loginAPI.familyName }}</h3>

@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { UnavailabilityEditor } from './unavailability-editor.component';
-import { UnavailabilityModule } from './unavailability.module';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {UnavailabilityEditor} from './unavailability-editor.component';
+import {UnavailabilityModule} from './unavailability.module';
 
 
 const routes: Routes = [
-  { path: 'unavailability', component: UnavailabilityEditor }
+  {path: 'unavailability', component: UnavailabilityEditor}
 ];
 
 @NgModule({
@@ -13,4 +13,5 @@ const routes: Routes = [
     UnavailabilityModule],
   exports: [RouterModule]
 })
-export class UnavailabilityRoutingModule { }
+export class UnavailabilityRoutingModule {
+}

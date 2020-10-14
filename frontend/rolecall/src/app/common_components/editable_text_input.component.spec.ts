@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditableTextInput } from './editable_text_input.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {EditableTextInput} from './editable_text_input.component';
 
 
 describe('EditableTextInput', () => {
@@ -8,9 +8,9 @@ describe('EditableTextInput', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EditableTextInput]
-    })
-      .compileComponents();
+          declarations: [EditableTextInput]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

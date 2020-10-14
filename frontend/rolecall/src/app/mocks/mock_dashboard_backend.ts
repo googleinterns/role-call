@@ -1,4 +1,4 @@
-import { AllDashResponse, DashPerformance } from '../api/dashboard_api.service';
+import {AllDashResponse, DashPerformance} from '../api/dashboard_api.service';
 
 
 /**

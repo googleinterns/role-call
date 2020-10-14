@@ -1,42 +1,42 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { APITypes } from 'src/api_types';
-import { environment } from 'src/environments/environment';
-import { MockUnavailabilityBackend } from '../mocks/mock_unavailability_backend';
-import { HeaderUtilityService } from '../services/header-utility.service';
-import { LoggingService } from '../services/logging.service';
-import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {EventEmitter, Injectable} from '@angular/core';
+import {APITypes} from 'src/api_types';
+import {environment} from 'src/environments/environment';
+import {MockUnavailabilityBackend} from '../mocks/mock_unavailability_backend';
+import {HeaderUtilityService} from '../services/header-utility.service';
+import {LoggingService} from '../services/logging.service';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 
 export type Unavailability = {
-  "id": number,
-  "userId": number,
-  "description": string,
-  "startDate": number
-  "endDate": number
+  'id': number,
+  'userId': number,
+  'description': string,
+  'startDate': number
+  'endDate': number
 }
 
 export type AllUnavailbilitiesResponse = {
-  "data":
-  {
-    "id": number,
-    "userId": number,
-    "description": string,
-    "startDate": number
-    "endDate": number
-  }[]
-  "warnings": []
+  'data':
+      {
+        'id': number,
+        'userId': number,
+        'description': string,
+        'startDate': number
+        'endDate': number
+      }[]
+  'warnings': []
 }
 
 export type OneUnavailbilityResponse = {
-  "data":
-  {
-    "id": number,
-    "userId": number,
-    "description": string,
-    "startDate": number
-    "endDate": number
-  }
-  "warnings": []
+  'data':
+      {
+        'id': number,
+        'userId': number,
+        'description': string,
+        'startDate': number
+        'endDate': number
+      }
+  'warnings': []
 }
 
 const SixMonthInMS = 6 * 2629800000;
@@ -53,8 +53,11 @@ export class UnavailabilityApi {
   /** Mock backend */
   mockBackend: MockUnavailabilityBackend = new MockUnavailabilityBackend();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient,
-    private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
+  constructor(private loggingService: LoggingService,
+              private http: HttpClient,
+              private headerUtil: HeaderUtilityService,
+              private respHandler: ResponseStatusHandlerService) {
+  }
 
   /** Hits backend with all unavailabilites GET request */
   async requestAllUnavailabilites(): Promise<AllUnavailbilitiesResponse> {
@@ -62,12 +65,18 @@ export class UnavailabilityApi {
       return this.mockBackend.requestAllUnavailabilites();
     }
     return this.http.get<AllUnavailbilitiesResponse>(
-      environment.backendURL + "api/unavailable?startdate=" + (Date.now() - SixMonthInMS)
-      + "&enddate=" + (Date.now() + SixMonthInMS), {
-      headers: await this.headerUtil.generateHeader(),
-      observe: "response",
-      withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<AllUnavailbilitiesResponse>(resp));
+        environment.backendURL + 'api/unavailable?startdate=' + (Date.now()
+                                                                 - SixMonthInMS)
+        + '&enddate=' + (Date.now() + SixMonthInMS), {
+              headers: await this.headerUtil.generateHeader(),
+              observe: 'response',
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then(
+            (resp) => this.respHandler.checkResponse<AllUnavailbilitiesResponse>(
+                resp));
   }
 
   /** Hits backend with one unavailability GET request */
@@ -86,19 +95,25 @@ export class UnavailabilityApi {
     // If this is an unavailability from the backend, do a PATCH, else do a POST
     if (this.unavailabilities.has(unav.id)) {
       // Do patch
-      return this.http.patch(environment.backendURL + "api/unavailable", unav, {
-        headers: await this.headerUtil.generateHeader(),
-        observe: "response",
-        withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      return this.http.patch(environment.backendURL + 'api/unavailable', unav, {
+            headers: await this.headerUtil.generateHeader(),
+            observe: 'response',
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then((resp) => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       unav.id = undefined;
-      return this.http.post(environment.backendURL + "api/unavailable", unav, {
-        observe: "response",
-        headers: await this.headerUtil.generateHeader(),
-        withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+      return this.http.post(environment.backendURL + 'api/unavailable', unav, {
+            observe: 'response',
+            headers: await this.headerUtil.generateHeader(),
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then((resp) => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -107,11 +122,15 @@ export class UnavailabilityApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUnavailabilityDelete(unav);
     }
-    return this.http.delete(environment.backendURL + 'api/unavailable?unavailableid=' + unav.id, {
-      observe: "response",
-      headers: await this.headerUtil.generateHeader(),
-      withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+    return this.http.delete(
+        environment.backendURL + 'api/unavailable?unavailableid=' + unav.id, {
+              observe: 'response',
+              headers: await this.headerUtil.generateHeader(),
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded unavs mapped by UUID */
@@ -146,7 +165,7 @@ export class UnavailabilityApi {
         this.loggingService.logWarn(warning);
       }
       return val;
-    })
+    });
   }
 
   /** Sends backend request and awaits reponse */
@@ -162,7 +181,8 @@ export class UnavailabilityApi {
   /** Gets all the unavs from the backend and returns them */
   getAllUnavailabilities(): Promise<Unavailability[]> {
     return this.getAllUnavailabilitiesResponse().then(val => {
-      this.unavailabilityEmitter.emit(Array.from(this.unavailabilities.values()));
+      this.unavailabilityEmitter.emit(
+          Array.from(this.unavailabilities.values()));
       return val;
     }).then(val => val.data).catch(err => {
       return [];
@@ -172,7 +192,8 @@ export class UnavailabilityApi {
   /** Gets a specific unav from the backend by UUID and returns it */
   getUnavailability(uuid: APITypes.UnavailabilityUUID): Promise<Unavailability> {
     return this.getOneUnavailabilityResponse(uuid).then(val => {
-      this.unavailabilityEmitter.emit(Array.from(this.unavailabilities.values()));
+      this.unavailabilityEmitter.emit(
+          Array.from(this.unavailabilities.values()));
       return val;
     }).then(val => val.data);
   }
@@ -186,12 +207,12 @@ export class UnavailabilityApi {
       this.getAllUnavailabilities();
       return {
         successful: true
-      }
+      };
     }).catch(reason => {
       return Promise.resolve({
         successful: false,
         error: reason
-      })
+      });
     });
   }
 
@@ -201,12 +222,12 @@ export class UnavailabilityApi {
       this.getAllUnavailabilities();
       return {
         successful: true
-      }
+      };
     }).catch(reason => {
       return {
         successful: false,
         error: reason
-      }
+      };
     });
   }
 }

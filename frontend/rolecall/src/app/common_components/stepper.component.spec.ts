@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Stepper } from './stepper.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Stepper} from './stepper.component';
 
 
 describe('StepperComponent', () => {
@@ -8,9 +8,9 @@ describe('StepperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [Stepper]
-    })
-      .compileComponents();
+          declarations: [Stepper]
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {

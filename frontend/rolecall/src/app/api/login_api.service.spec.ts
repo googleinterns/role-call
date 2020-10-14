@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { isNullOrUndefined } from 'util';
-import { MockGAPI } from '../mocks/mock_gapi';
-import { LoginApi } from './login_api.service';
+import {TestBed} from '@angular/core/testing';
+import {isNullOrUndefined} from 'util';
+import {MockGAPI} from '../mocks/mock_gapi';
+import {LoginApi} from './login_api.service';
 
 
 describe('LoginApi', () => {
@@ -32,15 +32,16 @@ describe('LoginApi', () => {
     expect(service.isLoggedIn).toBeTrue();
   });
 
-  it('should login sucessfully without popup enabled if signed in', async () => {
-    mockObj.isSignedInVal = true;
-    let loginRespProm = service.login(false);
-    let loginResp = await loginRespProm;
+  it('should login sucessfully without popup enabled if signed in',
+      async () => {
+        mockObj.isSignedInVal = true;
+        let loginRespProm = service.login(false);
+        let loginResp = await loginRespProm;
 
-    expect(loginResp.authenticated).toBeTrue();
-    expect(service.isAuthLoaded).toBeTrue();
-    expect(service.isLoggedIn).toBeTrue();
-  });
+        expect(loginResp.authenticated).toBeTrue();
+        expect(service.isAuthLoaded).toBeTrue();
+        expect(service.isLoggedIn).toBeTrue();
+      });
 
   it('should login automatically with popup enabled if signed in', async () => {
     mockObj.isSignedInVal = true;
@@ -79,7 +80,8 @@ describe('LoginApi', () => {
     let loginResp = await loginRespProm;
     mockObj.isSignedInVal = false;
 
-    expect(isNullOrUndefined(service.authInstance.currentUser.get())).toBeTrue();
+    expect(isNullOrUndefined(service.authInstance.currentUser.get()))
+        .toBeTrue();
   });
 
   it('should not authenticate if sign in promise is rejected', async () => {
@@ -102,26 +104,28 @@ describe('LoginApi', () => {
     expect(user).toBe(service.user);
   });
 
-  it('should successfully attempt login for current user if not signed in and return user if successful', async () => {
-    let loginRespProm = service.login(true);
-    let loginResp = await loginRespProm;
+  it('should successfully attempt login for current user if not signed in and return user if successful',
+      async () => {
+        let loginRespProm = service.login(true);
+        let loginResp = await loginRespProm;
 
-    expect(loginResp.authenticated).toBeTrue();
+        expect(loginResp.authenticated).toBeTrue();
 
-    service.isLoggedIn = false;
-    let user = await service.getCurrentUser();
+        service.isLoggedIn = false;
+        let user = await service.getCurrentUser();
 
-    expect(user).toBeDefined();
-    expect(user).toBe(service.user);
-  });
+        expect(user).toBeDefined();
+        expect(user).toBe(service.user);
+      });
 
-  it('should attempt login for current user if not signed in and return undefined if unsuccessful', async () => {
-    service.isLoggedIn = false;
-    mockObj.shouldThrowSignInError = true;
-    let user = await service.getCurrentUser();
+  it('should attempt login for current user if not signed in and return undefined if unsuccessful',
+      async () => {
+        service.isLoggedIn = false;
+        mockObj.shouldThrowSignInError = true;
+        let user = await service.getCurrentUser();
 
-    expect(user).toBeUndefined();
-  });
+        expect(user).toBeUndefined();
+      });
 
   it('should sign out when signed in', async () => {
     let loginRespProm = service.login(true);

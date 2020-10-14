@@ -1,7 +1,7 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { isNullOrUndefined } from 'util';
-import { LoginApi, LoginResponse } from '../api/login_api.service';
-import { SideNav } from './side_nav.component';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {isNullOrUndefined} from 'util';
+import {LoginApi, LoginResponse} from '../api/login_api.service';
+import {SideNav} from './side_nav.component';
 
 
 /**
@@ -24,7 +24,8 @@ export class SiteHeader implements OnInit {
   /** Whether we've recieved a response from the login API */
   responseRecieved: boolean = false;
 
-  constructor(public loginAPI: LoginApi) { }
+  constructor(public loginAPI: LoginApi) {
+  }
 
 
   ngOnInit(): void {
@@ -56,7 +57,7 @@ export class SiteHeader implements OnInit {
   /** Sign out of google OAuth2 */
   onSignOut() {
     this.loginAPI.signOut();
-    this.configureHeaderForLogin({ authenticated: false, user: undefined });
+    this.configureHeaderForLogin({authenticated: false, user: undefined});
   }
 
   /** Set state and render page header depending on login state */

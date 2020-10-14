@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoginApi } from '../api/login_api.service';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {LoginApi} from '../api/login_api.service';
 
 @Component({
   selector: 'app-welcome-page',
@@ -9,7 +9,8 @@ import { LoginApi } from '../api/login_api.service';
 })
 export class WelcomePage implements OnInit {
 
-  constructor(private loginAPI: LoginApi, private router: Router) { }
+  constructor(private loginAPI: LoginApi, private router: Router) {
+  }
 
   ngOnInit(): void {
     if (this.loginAPI.isLoggedIn) {

@@ -1,17 +1,17 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { APITypes, PerformanceStatus } from 'src/api_types';
-import { environment } from 'src/environments/environment';
-import { MockPerformanceBackend } from '../mocks/mock_performance_backend';
-import { HeaderUtilityService } from '../services/header-utility.service';
-import { LoggingService } from '../services/logging.service';
-import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {EventEmitter, Injectable} from '@angular/core';
+import {APITypes, PerformanceStatus} from 'src/api_types';
+import {environment} from 'src/environments/environment';
+import {MockPerformanceBackend} from '../mocks/mock_performance_backend';
+import {HeaderUtilityService} from '../services/header-utility.service';
+import {LoggingService} from '../services/logging.service';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 
 export type Performance = {
   uuid: string,
   status: PerformanceStatus.DRAFT |
-  PerformanceStatus.PUBLISHED |
-  PerformanceStatus.CANCELED,
+      PerformanceStatus.PUBLISHED |
+      PerformanceStatus.CANCELED,
   step_1: {
     title: string,
     date: number,
@@ -48,38 +48,38 @@ export type RawAllPerformancesResponse = {
 }
 
 export type RawPerformance = {
-  "id": number,
-  "title": string,
-  "description": string,
-  "city": string,
-  "state": string,
-  "country": string,
-  "venue": string,
-  "dateTime": number,
-  "status": string,
-  "performanceSections":
-  {
-    "id"?: number,
-    "sectionPosition": number,
-    "primaryCast": number,
-    "sectionId": number,
-    "positions":
-    {
-      "positionId": number,
-      "positionOrder": number,
-      "casts":
+  'id': number,
+  'title': string,
+  'description': string,
+  'city': string,
+  'state': string,
+  'country': string,
+  'venue': string,
+  'dateTime': number,
+  'status': string,
+  'performanceSections':
       {
-        "castNumber": number,
-        "members":
-        {
-          "id"?: number,
-          "order": number,
-          "userId": number,
-          "performing": boolean
-        }[]
+        'id'?: number,
+        'sectionPosition': number,
+        'primaryCast': number,
+        'sectionId': number,
+        'positions':
+            {
+              'positionId': number,
+              'positionOrder': number,
+              'casts':
+                  {
+                    'castNumber': number,
+                    'members':
+                        {
+                          'id'?: number,
+                          'order': number,
+                          'userId': number,
+                          'performing': boolean
+                        }[]
+                  }[]
+            }[]
       }[]
-    }[]
-  }[]
 }
 
 export type AllPerformancesResponse = {
@@ -109,20 +109,24 @@ export class PerformanceApi {
   /** Mock backend */
   mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
 
-  constructor(private loggingService: LoggingService, private http: HttpClient,
-    private headerUtil: HeaderUtilityService, private respHandler: ResponseStatusHandlerService) { }
+  constructor(private loggingService: LoggingService,
+              private http: HttpClient,
+              private headerUtil: HeaderUtilityService,
+              private respHandler: ResponseStatusHandlerService) {
+  }
 
   /**
    * Converts a raw performance response to the performance structure
    * for the performance editor
-   * 
+   *
    * @param raw The raw performance from the backend
    */
   convertRawToPerformance(raw: RawPerformance): Performance {
     return {
       uuid: String(raw.id),
-      status: (raw.status == "DRAFT" || raw.status == "PUBLISHED" || raw.status == "CANCELED")
-        ? PerformanceStatus[raw.status] : PerformanceStatus.DRAFT,
+      status: (raw.status == 'DRAFT' || raw.status == 'PUBLISHED' || raw.status
+               == 'CANCELED')
+          ? PerformanceStatus[raw.status] : PerformanceStatus.DRAFT,
       step_1: {
         title: raw.title,
         description: raw.description,
@@ -155,22 +159,22 @@ export class PerformanceApi {
                       return {
                         uuid: String(mem.userId),
                         position_number: mem.order
-                      }
+                      };
                     })
-                  }
+                  };
                 })
-              }
+              };
             })
-          }
+          };
         })
       }
-    }
+    };
   }
 
   /**
-   * Converts a performance editor performance into a 
+   * Converts a performance editor performance into a
    * backend performance to be set on the backend
-   * 
+   *
    * @param perf The performance editor performance state
    */
   convertPerformanceToRaw(perf: Performance): RawPerformance {
@@ -202,13 +206,13 @@ export class PerformanceApi {
                       order: mem.position_number,
                       userId: Number(mem.uuid),
                       performing: subCast.group_index == seg.selected_group
-                    }
+                    };
                   })
-                }
+                };
               })
-            }
+            };
           })
-        }
+        };
       })
     };
     return ret;
@@ -220,39 +224,43 @@ export class PerformanceApi {
    * the deleted sections to be marked for deletion on the backend
    * (since the backend requires a delete tag to remove objects rather
    * than simply omitting them).
-   * 
+   *
    * @param rawPerf The raw performance being patched
    */
   deletePreviousGroups(rawPerf: RawPerformance) {
     rawPerf.performanceSections.push(
-      ...(rawPerf.performanceSections.map(sec => {
-        let copy = JSON.parse(JSON.stringify(sec));
-        copy['delete'] = true;
-        copy.sectionPosition = undefined;
-        copy.positions = [];
-        return copy;
-      }))
+        ...(rawPerf.performanceSections.map(sec => {
+          let copy = JSON.parse(JSON.stringify(sec));
+          copy['delete'] = true;
+          copy.sectionPosition = undefined;
+          copy.positions = [];
+          return copy;
+        }))
     );
     // Using the original data in the map, find the deleted sections
     // in the performance
-    let deletedSections = this.performances.get(String(rawPerf.id)).step_3.segments.filter(
-      val => {
-        return rawPerf.performanceSections.find(perfSec => String(perfSec.id) == val.id) == undefined;
-      }
-    );
+    let deletedSections = this.performances.get(String(rawPerf.id))
+        .step_3
+        .segments
+        .filter(
+            val => {
+              return rawPerf.performanceSections.find(
+                  perfSec => String(perfSec.id) == val.id) == undefined;
+            }
+        );
     // Add the deleted sections with delete tags
     rawPerf.performanceSections.push(
-      ...(deletedSections.map(sec => {
-        return {
-          delete: true,
-          id: Number(sec.id),
-          segment: Number(sec.segment),
-          primaryCast: sec.selected_group,
-          sectionId: Number(sec.id),
-          sectionPosition: undefined,
-          positions: []
-        };
-      }))
+        ...(deletedSections.map(sec => {
+          return {
+            delete: true,
+            id: Number(sec.id),
+            segment: Number(sec.segment),
+            primaryCast: sec.selected_group,
+            sectionId: Number(sec.id),
+            sectionPosition: undefined,
+            positions: []
+          };
+        }))
     );
     // If we are not deleting the section, meaning we are uploading it,
     // give it an undefined id to be set by the backend
@@ -264,7 +272,8 @@ export class PerformanceApi {
         return val;
       }
     }).filter(val => (!(val['delete'] && val['id'] == undefined)));
-    // Ensure only 1 deleted perf section for each performance section to be deleted
+    // Ensure only 1 deleted perf section for each performance section to be
+    // deleted
     let uuidSet: Set<number> = new Set();
     rawPerf.performanceSections = rawPerf.performanceSections.filter(pS => {
       if (pS.id == undefined || (!pS['delete'])) {
@@ -286,17 +295,26 @@ export class PerformanceApi {
       return this.mockBackend.requestAllPerformances();
     }
     let header = await this.headerUtil.generateHeader();
-    return this.http.get<RawAllPerformancesResponse>(environment.backendURL + "api/performance", {
-      headers: header,
-      observe: "response",
-      withCredentials: true
-    }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(resp)).then((val) => {
-      return {
-        data: {
-          performances: val.data.map(val => { return this.convertRawToPerformance(val) })
-        }, warnings: val.warnings
-      };
-    });
+    return this.http.get<RawAllPerformancesResponse>(
+        environment.backendURL + 'api/performance', {
+              headers: header,
+              observe: 'response',
+              withCredentials: true
+            })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then(
+            (resp) => this.respHandler.checkResponse<RawAllPerformancesResponse>(
+                resp))
+        .then((val) => {
+          return {
+            data: {
+              performances: val.data.map(val => {
+                return this.convertRawToPerformance(val);
+              })
+            }, warnings: val.warnings
+          };
+        });
   }
 
   /** Hits backend with one performance GET request */
@@ -311,41 +329,59 @@ export class PerformanceApi {
     }
     if (this.performances.has(performance.uuid)) {
       let header = await this.headerUtil.generateHeader();
-      return this.http.patch<HttpResponse<any>>(environment.backendURL + "api/performance",
-        this.deletePreviousGroups(this.convertPerformanceToRaw(performance)),
-        {
-          headers: header,
-          observe: "response",
-          withCredentials: true
-        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
-          return this.getAllPerformances().then(() => val);
-        });
+      return this.http.patch<HttpResponse<any>>(
+          environment.backendURL + 'api/performance',
+          this.deletePreviousGroups(this.convertPerformanceToRaw(performance)),
+          {
+            headers: header,
+            observe: 'response',
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then(
+              (resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp))
+          .then(val => {
+            return this.getAllPerformances().then(() => val);
+          });
     } else {
       let header = await this.headerUtil.generateHeader();
-      return this.http.post<HttpResponse<any>>(environment.backendURL + "api/performance",
-        this.convertPerformanceToRaw(performance),
-        {
-          headers: header,
-          observe: "response",
-          withCredentials: true
-        }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp)).then(val => {
-          return this.getAllPerformances().then(() => val);
-        });
+      return this.http.post<HttpResponse<any>>(
+          environment.backendURL + 'api/performance',
+          this.convertPerformanceToRaw(performance),
+          {
+            headers: header,
+            observe: 'response',
+            withCredentials: true
+          })
+          .toPromise()
+          .catch((errorResp) => errorResp)
+          .then(
+              (resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp))
+          .then(val => {
+            return this.getAllPerformances().then(() => val);
+          });
     }
   }
-  /** 
+
+  /**
    * Hits backend with delete performance POST request */
   async requestPerformanceDelete(performance: Performance): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
       return this.mockBackend.requestPerformanceDelete(performance);
     }
     let header = await this.headerUtil.generateHeader();
-    return this.http.delete(environment.backendURL + "api/performance?performanceid=" + performance.uuid,
-      {
-        headers: header,
-        observe: "response",
-        withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then((resp) => this.respHandler.checkResponse<any>(resp));
+    return this.http.delete(
+        environment.backendURL + 'api/performance?performanceid='
+        + performance.uuid,
+        {
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        })
+        .toPromise()
+        .catch((errorResp) => errorResp)
+        .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
 
   /** All the loaded performances mapped by UUID */
@@ -380,7 +416,7 @@ export class PerformanceApi {
         this.loggingService.logWarn(warning);
       }
       return val;
-    })
+    });
   }
 
   /** Sends backend request and awaits response */
@@ -412,20 +448,20 @@ export class PerformanceApi {
   }
 
   /** Requests an update to the backend which may or may not be successful,
-   * depending on whether or not the performance is valid, as well as if the backend
-   * request fails for some other reason.
+   * depending on whether or not the performance is valid, as well as if the
+   * backend request fails for some other reason.
    */
   setPerformance(performance: Performance): Promise<APITypes.SuccessIndicator> {
     return this.setPerformanceResponse(performance).then(async val => {
       await this.getAllPerformances();
       return {
         successful: true
-      }
+      };
     }).catch(reason => {
       return {
         successful: false,
         error: reason
-      }
+      };
     });
   }
 
@@ -435,12 +471,12 @@ export class PerformanceApi {
       this.getAllPerformances();
       return {
         successful: true
-      }
+      };
     }).catch(reason => {
       return {
         successful: false,
         error: reason
-      }
+      };
     });
   }
 

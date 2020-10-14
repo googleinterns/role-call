@@ -99,6 +99,7 @@
                   font-weight: bold;
                   position: absolute;
                   right: 1rem;
+
                   &-delete {
                     right: 6rem;
                   }
@@ -127,6 +128,7 @@
         font-weight: bold;
         position: absolute;
         right: 1rem;
+
         &-left {
           background: $AAOrange;
           right: none;
@@ -152,6 +154,7 @@
       .user-select-container {
         margin-left: 2rem;
         width: calc(100% - 4rem);
+
         .user-select {
           width: 100%;
         }

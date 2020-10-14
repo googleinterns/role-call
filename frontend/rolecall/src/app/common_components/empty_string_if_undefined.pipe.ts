@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { isNullOrUndefined } from 'util';
+import {Pipe, PipeTransform} from '@angular/core';
+import {isNullOrUndefined} from 'util';
 
 @Pipe({
   name: 'emptyStringIfUndefined'

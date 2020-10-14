@@ -7,9 +7,9 @@ export const environment = {
   oauthClientID: '1019357530310-7ji3q93sgef1qehiftv4r3ca26mivg47.apps.googleusercontent.com',
   mockBackend: false,
   logRequests: true,
-  devEmail: "admin@rolecall.com",
+  devEmail: 'admin@rolecall.com',
   useDevEmail: true,
-  backendURL: "http://localhost:9091/"
+  backendURL: 'http://localhost:9091/'
 };
 
 /*

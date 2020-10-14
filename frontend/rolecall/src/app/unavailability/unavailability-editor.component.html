@@ -9,12 +9,14 @@
             <div class="child app-card" *ngFor="let procUnav of processedCurrUnavs">
               <div class="child-content">
                 <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
-                <h4 class="date">{{"From " + procUnav.fromDateStr + " to " + procUnav.toDateStr }}</h4>
+                <h4 class="date">{{"From " + procUnav.fromDateStr + " to "
+                + procUnav.toDateStr }}</h4>
                 <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
                   Edit
                 </button>
-                <button mat-flat-button class="action-button-delete action-button"
-                  (click)="onDeleteUnav(procUnav.unav)">
+                <button
+                    mat-flat-button class="action-button-delete action-button"
+                    (click)="onDeleteUnav(procUnav.unav)">
                   Delete
                 </button>
               </div>
@@ -29,7 +31,8 @@
             <div class="child app-card" *ngFor="let procUnav of processedPastUnavs">
               <div class="child-content">
                 <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
-                <h4 class="date">{{"From " + procUnav.fromDateStr + " to " + procUnav.toDateStr }}</h4>
+                <h4 class="date">{{"From " + procUnav.fromDateStr + " to "
+                + procUnav.toDateStr }}</h4>
                 <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
                   Edit
                 </button>
@@ -56,23 +59,35 @@
       <div class="datepickers-container">
         <mat-form-field appearance="fill" class="date-select">
           <mat-label>From Date</mat-label>
-          <input matInput [matDatepicker]="fromPicker" (dateChange)="onFromDateChange($event)" [(ngModel)]="startDate">
+          <input
+              matInput
+              [matDatepicker]="fromPicker"
+              (dateChange)="onFromDateChange($event)"
+              [(ngModel)]="startDate">
           <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
           <mat-datepicker #fromPicker></mat-datepicker>
         </mat-form-field>
         <mat-form-field appearance="fill" class="date-select">
           <mat-label>To Date</mat-label>
-          <input matInput [matDatepicker]="toPicker" (dateChange)="onToDateChange($event)" [(ngModel)]="endDate">
+          <input
+              matInput
+              [matDatepicker]="toPicker"
+              (dateChange)="onToDateChange($event)"
+              [(ngModel)]="endDate">
           <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
           <mat-datepicker #toPicker></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="description-container app-card">
         <h3 class="description-title">Description</h3>
-        <textarea class="description-input" [(ngModel)]="state.description" (input)="onDescChange($event)"></textarea>
+        <textarea
+            class="description-input"
+            [(ngModel)]="state.description"
+            (input)="onDescChange($event)"></textarea>
       </div>
-      <button mat-flat-button class="action-button" [ngStyle]="!canSave ? { 'background': 'none' } : {}"
-        [disabled]="!canSave" (click)="onSaveUnav()">
+      <button
+          mat-flat-button class="action-button" [ngStyle]="!canSave ? { 'background': 'none' } : {}"
+          [disabled]="!canSave" (click)="onSaveUnav()">
         Save
       </button>
       <button mat-flat-button class="action-button-left action-button" (click)="onNewUnav()">

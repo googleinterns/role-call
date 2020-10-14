@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MatSelectChange } from '@angular/material/select';
-import { isNullOrUndefined } from 'util';
-import { Unavailability, UnavailabilityApi } from '../api/unavailability-api.service';
-import { User, UserApi } from '../api/user_api.service';
+import {Component, OnInit} from '@angular/core';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {MatSelectChange} from '@angular/material/select';
+import {isNullOrUndefined} from 'util';
+import {Unavailability, UnavailabilityApi} from '../api/unavailability-api.service';
+import {User, UserApi} from '../api/user_api.service';
 
 type ProcessedUnav = {
   unav: Unavailability,
@@ -36,7 +36,8 @@ export class UnavailabilityEditor implements OnInit {
   unavsLoaded = false;
   usersLoaded = false;
 
-  constructor(private unavAPI: UnavailabilityApi, private userAPI: UserApi) { }
+  constructor(private unavAPI: UnavailabilityApi, private userAPI: UserApi) {
+  }
 
   ngOnInit(): void {
     this.state = this.createNewUnavailability();
@@ -49,13 +50,15 @@ export class UnavailabilityEditor implements OnInit {
   onUnavsLoad(unavs: Unavailability[]) {
     let dateOldToNewComp = (a: Unavailability, b: Unavailability) => {
       return a.startDate - b.startDate;
-    }
+    };
     let dateNewToOldComp = (a: Unavailability, b: Unavailability) => {
       return b.startDate - a.startDate;
-    }
+    };
     let now = Date.now();
-    this.currentUnavailabilities = unavs.filter(ua => ua.endDate > now).sort(dateOldToNewComp);
-    this.pastUnavailabilities = unavs.filter(ua => ua.endDate <= now).sort(dateNewToOldComp);
+    this.currentUnavailabilities =
+        unavs.filter(ua => ua.endDate > now).sort(dateOldToNewComp);
+    this.pastUnavailabilities =
+        unavs.filter(ua => ua.endDate <= now).sort(dateNewToOldComp);
     this.unavsLoaded = true;
     this.checkDataLoaded();
   }
@@ -68,8 +71,9 @@ export class UnavailabilityEditor implements OnInit {
 
   checkDataLoaded(): boolean {
     this.dataLoaded = this.unavsLoaded && this.usersLoaded;
-    if (this.dataLoaded)
+    if (this.dataLoaded) {
       this.afterAllDataLoaded();
+    }
     return this.dataLoaded;
   }
 
@@ -80,7 +84,7 @@ export class UnavailabilityEditor implements OnInit {
         user: this.userAPI.users.get(String(ua.userId)),
         fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
         toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
-      }
+      };
     });
     this.processedPastUnavs = this.pastUnavailabilities.map(ua => {
       return {
@@ -88,24 +92,24 @@ export class UnavailabilityEditor implements OnInit {
         user: this.userAPI.users.get(String(ua.userId)),
         fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
         toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
-      }
+      };
     });
   }
 
   createNewUnavailability(): Unavailability {
     return {
       id: Date.now(),
-      description: "",
+      description: '',
       userId: undefined,
       startDate: Date.now(),
       endDate: Date.now()
-    }
+    };
   }
 
   updateCanSave() {
     this.canSave = (!isNullOrUndefined(this.startDate)
-      && !isNullOrUndefined(this.endDate)
-      && !isNullOrUndefined(this.selectedUser));
+                    && !isNullOrUndefined(this.endDate)
+                    && !isNullOrUndefined(this.selectedUser));
   }
 
   resetCompState() {
@@ -154,7 +158,7 @@ export class UnavailabilityEditor implements OnInit {
   onSaveUnav() {
     this.doSetUnav().then(val => {
       this.onNewUnav();
-    })
+    });
   }
 
   onDeleteUnav(ua: Unavailability) {

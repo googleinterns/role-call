@@ -27,4 +27,5 @@ import {CastEditorV2} from './cast-editor-v2.component';
   ],
   exports: [CastDragAndDrop]
 })
-export class CastModule { }
+export class CastModule {
+}

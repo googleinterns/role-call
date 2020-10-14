@@ -1,9 +1,11 @@
 <app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
-<div class="root-container"
+<div
+    class="root-container"
     [ngStyle]="dataLoaded ? {} : { 'display' : 'none' }">
   <div class="cast-selector-container">
     <div class="app-card card-margins left-card">
-      <div ngbDropdown
+      <div
+          ngbDropdown
           #pieceDropdown="ngbDropdown">
         <div
             ngbDropdownToggle
@@ -36,7 +38,8 @@
             class="app-card cast-select"
             [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
             (click)="setCurrentCast({cast: cast})">
-          <h2 class="cast-name"
+          <h2
+              class="cast-name"
               [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
             {{ cast.name }}
           </h2>
@@ -46,7 +49,7 @@
         <div class="add-button-height-container">
           <button
               mat-icon-button
-              class="add-button" 
+              class="add-button"
               aria-label="Add Cast Button"
               (click)="addCast()">
             <mat-icon

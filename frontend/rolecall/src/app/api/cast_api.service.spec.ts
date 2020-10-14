@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { CastApi } from './cast_api.service';
+import {TestBed} from '@angular/core/testing';
+import {CastApi} from './cast_api.service';
 
 
 describe('CastApiService', () => {
