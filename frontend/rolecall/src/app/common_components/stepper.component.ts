@@ -85,8 +85,8 @@ export class Stepper implements OnInit, OnChanges {
   }
 
   nextStep(): boolean {
-    if (!this.stepperOptions || this.stepperOptions.length == 0
-        || this.currentStepIndex == this.stepperOptions.length - 1) {
+    if (!this.stepperOptions || this.stepperOptions.length === 0
+        || this.currentStepIndex === this.stepperOptions.length - 1) {
       return false;
     }
     this.currentStepIndex++;
@@ -95,8 +95,8 @@ export class Stepper implements OnInit, OnChanges {
   }
 
   prevStep(): boolean {
-    if (!this.stepperOptions || this.stepperOptions.length == 0
-        || this.currentStepIndex == 0) {
+    if (!this.stepperOptions || this.stepperOptions.length === 0
+        || this.currentStepIndex === 0) {
       return false;
     }
     this.currentStepIndex--;

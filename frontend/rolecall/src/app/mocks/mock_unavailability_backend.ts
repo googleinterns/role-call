@@ -29,7 +29,7 @@ export class MockUnavailabilityBackend {
       Promise<OneUnavailbilityResponse> {
     return Promise.resolve({
       data: this.mockUnavailabilityDB.find(val => {
-        return val.id == uuid || val.id === uuid;
+        return val.id === uuid || val.id === uuid;
       }),
       warnings: []
     });
@@ -38,8 +38,8 @@ export class MockUnavailabilityBackend {
   /** Mock setting the unavailability. */
   requestUnavailabilitySet(unav: Unavailability): Promise<HttpResponse<any>> {
     const userInd = this.mockUnavailabilityDB.findIndex(
-        (val) => val.id == unav.id);
-    if (userInd == -1) {
+        (val) => val.id === unav.id);
+    if (userInd === -1) {
       this.mockUnavailabilityDB.push(unav);
     } else {
       this.mockUnavailabilityDB[userInd] = unav;
@@ -53,7 +53,7 @@ export class MockUnavailabilityBackend {
   requestUnavailabilityDelete(unav: Unavailability):
       Promise<HttpResponse<any>> {
     this.mockUnavailabilityDB =
-        this.mockUnavailabilityDB.filter(val => val.id != unav.id);
+        this.mockUnavailabilityDB.filter(val => val.id !== unav.id);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);

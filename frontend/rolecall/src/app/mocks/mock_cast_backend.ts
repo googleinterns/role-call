@@ -257,7 +257,7 @@ export class MockCastBackend {
     return Promise.resolve({
       data: {
         cast: this.mockCastDB.find(val => {
-          return val.uuid == uuid || val.uuid === uuid;
+          return val.uuid === uuid || val.uuid === uuid;
         })
       },
       warnings: []
@@ -267,8 +267,9 @@ export class MockCastBackend {
   /** Mocks cast create/edit response */
   requestCastSet(cast: Cast): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
-      const castInd = this.mockCastDB.findIndex((val) => val.uuid == cast.uuid);
-      if (castInd == -1) {
+      const castInd = this.mockCastDB.findIndex(
+          (val) => val.uuid === cast.uuid);
+      if (castInd === -1) {
         this.mockCastDB.push(cast);
       } else {
         this.mockCastDB[castInd] = cast;
@@ -285,7 +286,7 @@ export class MockCastBackend {
 
   /** Mocks cast delete response */
   requestCastDelete(cast: Cast): Promise<HttpResponse<any>> {
-    this.mockCastDB = this.mockCastDB.filter(val => val.uuid != cast.uuid);
+    this.mockCastDB = this.mockCastDB.filter(val => val.uuid !== cast.uuid);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);

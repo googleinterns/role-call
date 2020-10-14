@@ -122,8 +122,9 @@ export class PerformanceApi {
   convertRawToPerformance(raw: RawPerformance): Performance {
     return {
       uuid: String(raw.id),
-      status: (raw.status == 'DRAFT' || raw.status == 'PUBLISHED' || raw.status
-               == 'CANCELED')
+      status: (raw.status === 'DRAFT' || raw.status === 'PUBLISHED'
+               || raw.status
+               === 'CANCELED')
           ? PerformanceStatus[raw.status] : PerformanceStatus.DRAFT,
       step_1: {
         title: raw.title,
@@ -203,7 +204,7 @@ export class PerformanceApi {
                     return {
                       order: mem.position_number,
                       userId: Number(mem.uuid),
-                      performing: subCast.group_index == seg.selected_group
+                      performing: subCast.group_index === seg.selected_group
                     };
                   })
                 };
@@ -243,7 +244,7 @@ export class PerformanceApi {
         .filter(
             val => {
               return rawPerf.performanceSections.find(
-                  perfSec => String(perfSec.id) == val.id) == undefined;
+                  perfSec => String(perfSec.id) === val.id) === undefined;
             }
         );
     // Add the deleted sections with delete tags
@@ -269,12 +270,12 @@ export class PerformanceApi {
       } else {
         return val;
       }
-    }).filter(val => (!(val['delete'] && val['id'] == undefined)));
+    }).filter(val => (!(val['delete'] && val['id'] === undefined)));
     // Ensure only 1 deleted perf section for each performance section to be
     // deleted
     const uuidSet: Set<number> = new Set();
     rawPerf.performanceSections = rawPerf.performanceSections.filter(pS => {
-      if (pS.id == undefined || (!pS['delete'])) {
+      if (pS.id === undefined || (!pS['delete'])) {
         return true;
       }
       if (uuidSet.has(pS.id)) {
