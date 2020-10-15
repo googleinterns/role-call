@@ -103,9 +103,15 @@ export type OnePerformanceResponse = {
  */
 @Injectable({providedIn: 'root'})
 export class PerformanceApi {
-
   /** Mock backend. */
   mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
+
+  /** All the loaded performances mapped by UUID. */
+  performances: Map<APITypes.PerformanceUUID, Performance> =
+      new Map<APITypes.PerformanceUUID, Performance>();
+
+  /** Emitter that is called whenever performances are loaded. */
+  performanceEmitter: EventEmitter<Performance[]> = new EventEmitter();
 
   constructor(
       private loggingService: LoggingService,
@@ -387,13 +393,6 @@ export class PerformanceApi {
         .catch((errorResp) => errorResp)
         .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
-
-  /** All the loaded performances mapped by UUID. */
-  performances: Map<APITypes.PerformanceUUID, Performance> =
-      new Map<APITypes.PerformanceUUID, Performance>();
-
-  /** Emitter that is called whenever performances are loaded. */
-  performanceEmitter: EventEmitter<Performance[]> = new EventEmitter();
 
   /** Takes backend response, updates data structures for all performances. */
   private getAllPerformancesResponse(): Promise<AllPerformancesResponse> {

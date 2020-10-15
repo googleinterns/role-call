@@ -48,9 +48,15 @@ const SixMonthInMS = 6 * 2629800000;
  */
 @Injectable({providedIn: 'root'})
 export class UnavailabilityApi {
-
   /** Mock backend. */
   mockBackend: MockUnavailabilityBackend = new MockUnavailabilityBackend();
+
+  /** All the loaded unavailabilities mapped by UUID. */
+  unavailabilities: Map<APITypes.UnavailabilityUUID, Unavailability> =
+      new Map<APITypes.UnavailabilityUUID, Unavailability>();
+
+  /** Emitter that is called whenever unavailabilities are loaded. */
+  unavailabilityEmitter: EventEmitter<Unavailability[]> = new EventEmitter();
 
   constructor(
       private loggingService: LoggingService,
@@ -136,13 +142,6 @@ export class UnavailabilityApi {
         .catch((errorResp) => errorResp)
         .then((resp) => this.respHandler.checkResponse<any>(resp));
   }
-
-  /** All the loaded unavailabilities mapped by UUID. */
-  unavailabilities: Map<APITypes.UnavailabilityUUID, Unavailability> =
-      new Map<APITypes.UnavailabilityUUID, Unavailability>();
-
-  /** Emitter that is called whenever unavailabilities are loaded. */
-  unavailabilityEmitter: EventEmitter<Unavailability[]> = new EventEmitter();
 
   /**
    * Takes backend response, updates data structures for all unavailabilities.
