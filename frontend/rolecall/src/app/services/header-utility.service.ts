@@ -3,9 +3,7 @@ import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
 import {LoginApi} from '../api/login_api.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class HeaderUtilityService {
 
   constructor(private loginAPI: LoginApi) {

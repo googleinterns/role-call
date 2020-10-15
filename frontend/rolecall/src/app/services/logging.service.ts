@@ -7,7 +7,6 @@ export const LOG_PREFIX = '{{ LOG }} :: ';
 
 @Injectable({providedIn: 'root'})
 export class LoggingService {
-
   /** Logs an error. */
   public logError(err: any) {
     console.error(ERROR_PREFIX, err);

@@ -88,8 +88,7 @@ export type OneCastResponse = {
  */
 @Injectable({providedIn: 'root'})
 export class CastApi {
-
-  // The last saved id (every time a cast is saved it receives a new id)
+  /** The last saved id (every time a cast is saved it receives a new id). */
   lastSavedCastId: number;
 
   /** Mock backend. */

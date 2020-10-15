@@ -5,9 +5,7 @@ import {Performance} from '../api/performance-api.service';
 import {PieceApi} from '../api/piece_api.service';
 import {UserApi} from '../api/user_api.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class CsvGenerator {
 
   constructor(private userAPI: UserApi, private pieceAPI: PieceApi) {

@@ -13,7 +13,6 @@ export enum CacheTags {
  */
 @Injectable({providedIn: 'root'})
 export class CacheValidatorService {
-
   /** The map of cache tags to cache objects. */
   cacheMap = new Map<CacheTag, any>();
 
