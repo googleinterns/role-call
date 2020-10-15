@@ -4,15 +4,15 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClient} from '@angular/common/http';
 import {createSpyObjWithProps} from 'src/test_utils';
 
 import {MockGAPI} from '../mocks/mock_gapi';
+import {LoginApi, LoginResponse} from '../api/login_api.service';
 
 import {AppRoutingModule} from './app_routing.module';
 import {SideNav} from './side_nav.component';
 import {SiteHeader} from './site_header.component';
-import {HttpClient} from '@angular/common/http';
-import {LoginApi, LoginResponse} from '../api/login_api.service';
 
 describe('SiteHeader', () => {
   const fakeHttpClient = {} as HttpClient;
