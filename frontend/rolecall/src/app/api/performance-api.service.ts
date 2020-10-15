@@ -1,7 +1,8 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import {APITypes, PerformanceStatus} from 'src/api_types';
+import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
+
 import {MockPerformanceBackend} from '../mocks/mock_performance_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
@@ -9,9 +10,9 @@ import {ResponseStatusHandlerService} from '../services/response-status-handler.
 
 export type Performance = {
   uuid: string,
-  status: PerformanceStatus.DRAFT |
-      PerformanceStatus.PUBLISHED |
-      PerformanceStatus.CANCELED,
+  status: APITypes.PerformanceStatus.DRAFT |
+      APITypes.PerformanceStatus.PUBLISHED |
+      APITypes.PerformanceStatus.CANCELED,
   step_1: {
     title: string,
     date: number,
@@ -125,7 +126,8 @@ export class PerformanceApi {
       status: (raw.status === 'DRAFT' || raw.status === 'PUBLISHED'
                || raw.status
                === 'CANCELED')
-          ? PerformanceStatus[raw.status] : PerformanceStatus.DRAFT,
+          ? APITypes.PerformanceStatus[raw.status] :
+          APITypes.PerformanceStatus.DRAFT,
       step_1: {
         title: raw.title,
         description: raw.description,
@@ -186,7 +188,7 @@ export class PerformanceApi {
       venue: perf.step_1.venue,
       state: perf.step_1.state,
       dateTime: perf.step_1.date,
-      status: perf.status ? perf.status : PerformanceStatus.DRAFT,
+      status: perf.status ? perf.status : APITypes.PerformanceStatus.DRAFT,
       performanceSections: perf.step_3.segments.map((seg, segIx) => {
         return {
           id: seg.id ? Number(seg.id) : undefined,

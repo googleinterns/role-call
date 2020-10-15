@@ -1,6 +1,7 @@
 import {HttpResponse} from '@angular/common/http';
-import {APITypes} from 'src/api_types';
+import * as APITypes from 'src/api_types';
 import {isNullOrUndefined} from 'util';
+
 import {AllUsersResponse, OneUserResponse, User} from '../api/user_api.service';
 
 /**

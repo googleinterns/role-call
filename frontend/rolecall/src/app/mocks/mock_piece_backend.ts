@@ -1,5 +1,6 @@
 import {HttpResponse} from '@angular/common/http';
-import {APITypes} from 'src/api_types';
+import * as APITypes from 'src/api_types';
+
 import {AllPiecesResponse, OnePieceResponse, Piece} from '../api/piece_api.service';
 
 /**

@@ -4,9 +4,10 @@ import {Component, OnInit} from '@angular/core';
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {COLORS} from 'src/constants';
+import * as APITypes from 'src/api_types';
+
 import {Piece, PieceApi, PieceType, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
-import {APITypes} from 'src/api_types';
 
 type ValueName =
     'New Position' |

@@ -1,6 +1,6 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import {APITypes} from 'src/api_types';
+import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
 
 import {MockCastBackend} from '../mocks/mock_cast_backend';
