@@ -47,7 +47,7 @@ export class UserEditor implements OnInit {
       key: 'suffix',
       type: 'string'
     },
-    Email: {
+    'Email': {
       key: 'contact_info.email',
       type: 'string'
     },
@@ -55,15 +55,15 @@ export class UserEditor implements OnInit {
       key: 'date_joined',
       type: 'date'
     },
-    Phone: {
+    'Phone': {
       key: 'contact_info.phone_number',
       type: 'string'
     },
-    Roles: {
+    'Roles': {
       key: 'has_roles',
       type: 'roles'
     },
-    Permissions: {
+    'Permissions': {
       key: 'has_permissions',
       type: 'permissions'
     },

@@ -20,9 +20,9 @@ export class SiteHeader implements OnInit {
   /** The log in button */
   @ViewChild('loginButton') loginButton: ElementRef;
   /** Whether or not the user is logged in */
-  userIsLoggedIn: boolean = true;
+  userIsLoggedIn = true;
   /** Whether we've received a response from the login API */
-  responseReceived: boolean = false;
+  responseReceived = false;
 
   constructor(public loginAPI: LoginApi) {
   }

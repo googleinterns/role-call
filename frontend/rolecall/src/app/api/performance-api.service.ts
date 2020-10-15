@@ -307,13 +307,14 @@ export class PerformanceApi {
             (resp) =>
                 this.respHandler.checkResponse<RawAllPerformancesResponse>(
                     resp))
-        .then((val) => {
+        .then((rawAllPerformancesResponse) => {
           return {
             data: {
-              performances: val.data.map(val => {
-                return this.convertRawToPerformance(val);
-              })
-            }, warnings: val.warnings
+              performances: rawAllPerformancesResponse.data.map(
+                  rawPerformance => {
+                    return this.convertRawToPerformance(rawPerformance);
+                  })
+            }, warnings: rawAllPerformancesResponse.warnings
           };
         });
   }

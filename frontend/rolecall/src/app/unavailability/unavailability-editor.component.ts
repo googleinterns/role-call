@@ -29,7 +29,7 @@ export class UnavailabilityEditor implements OnInit {
   selectedUser: User;
   startDate: Date;
   endDate: Date;
-  canSave: boolean = false;
+  canSave = false;
 
   allUsers: User[];
   dataLoaded = false;
