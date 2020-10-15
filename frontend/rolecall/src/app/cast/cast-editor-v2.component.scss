@@ -48,7 +48,7 @@
 
 .left-card-title {
   font-size: xx-large;
-  @media (max-width: 1200px) {
+  @media (max-width: $breakpoint-tablet) {
     font-size: large;
   }
   font-weight: 800;
