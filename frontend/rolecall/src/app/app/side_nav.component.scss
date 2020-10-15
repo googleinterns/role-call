@@ -1,4 +1,5 @@
 @import "../../styles/colors";
+@import "../../styles/constants";
 
 // The container that represents the entire nav bar card and is animated
 .nav-bar-container {
@@ -77,6 +78,10 @@
 
   .title {
     font-size: xx-large;
+    @media (max-width: $breakpoint-tablet) {
+      font-size: large;
+    }
+
     font-weight: bold;
     height: min-content;
     line-height: 100%;
