@@ -21,8 +21,8 @@ export class SiteHeader implements OnInit {
   @ViewChild('loginButton') loginButton: ElementRef;
   /** Whether or not the user is logged in */
   userIsLoggedIn: boolean = true;
-  /** Whether we've recieved a response from the login API */
-  responseRecieved: boolean = false;
+  /** Whether we've received a response from the login API */
+  responseReceived: boolean = false;
 
   constructor(public loginAPI: LoginApi) {
   }
@@ -62,7 +62,7 @@ export class SiteHeader implements OnInit {
 
   /** Set state and render page header depending on login state */
   configureHeaderForLogin(loginResp: LoginResponse) {
-    this.responseRecieved = true;
+    this.responseReceived = true;
     this.userIsLoggedIn = this.loginAPI.isLoggedIn;
   }
 

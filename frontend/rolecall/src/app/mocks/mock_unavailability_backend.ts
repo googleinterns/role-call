@@ -1,6 +1,6 @@
 import {HttpResponse} from '@angular/common/http';
 import {APITypes} from 'src/api_types';
-import {AllUnavailbilitiesResponse, OneUnavailbilityResponse, Unavailability} from '../api/unavailability-api.service';
+import {AllUnavailabilitiesResponse, OneUnavailabilityResponse, Unavailability} from '../api/unavailability-api.service';
 
 /** Mocks the unavailability backend responses. */
 export class MockUnavailabilityBackend {
@@ -17,7 +17,7 @@ export class MockUnavailabilityBackend {
   ];
 
   /** Mocks backend response. */
-  requestAllUnavailabilites(): Promise<AllUnavailbilitiesResponse> {
+  requestAllUnavailabilites(): Promise<AllUnavailabilitiesResponse> {
     return Promise.resolve({
       data: this.mockUnavailabilityDB,
       warnings: []
@@ -26,7 +26,7 @@ export class MockUnavailabilityBackend {
 
   /** Mocks backend response. */
   requestOneUnavailability(uuid: APITypes.UnavailabilityUUID):
-      Promise<OneUnavailbilityResponse> {
+      Promise<OneUnavailabilityResponse> {
     return Promise.resolve({
       data: this.mockUnavailabilityDB.find(val => {
         return val.id === uuid || val.id === uuid;

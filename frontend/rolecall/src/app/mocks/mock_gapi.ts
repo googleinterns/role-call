@@ -1,6 +1,4 @@
-/**
- * A mocked GAPI instance for simulating OAuth2 signins
- */
+/** A mocked GAPI instance for simulating OAuth2 sign-in. */
 export class MockGAPI {
   /** The time at which the GAPI was created */
   moment = Date.now();

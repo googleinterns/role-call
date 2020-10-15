@@ -55,7 +55,6 @@ export class CastDragAndDrop implements OnInit {
   castPositions: UICastPosition[];
   subCastHeaders: string[];
 
-  defaulCastCount = CAST_COUNT;
   castCount = CAST_COUNT;
 
   usersLoaded = false;
@@ -91,7 +90,7 @@ export class CastDragAndDrop implements OnInit {
 
   /** Called when the title input is changed. */
   onTitleInput(inputEvent: InputEvent) {
-    // typescript doesn't know all InputEvent.target fieds
+    // typescript doesn't know all InputEvent.target fields
     this.cast.name = (inputEvent.target as any).value;
     this.castChangeEmitter.emit(this.cast);
   }

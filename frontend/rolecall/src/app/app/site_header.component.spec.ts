@@ -59,17 +59,17 @@ describe('SiteHeader', () => {
   });
 
   it('should trigger login on login button click', async () => {
-    expect(component.responseRecieved).toBeFalse();
+    expect(component.responseReceived).toBeFalse();
 
     await component.onLoginButtonClick();
 
-    expect(component.responseRecieved).toBeTrue();
+    expect(component.responseReceived).toBeTrue();
     expect(component.userIsLoggedIn).toBeTrue();
   });
 
   it('should unload auth then trigger login if auth instance is not null or undefined to reset auth',
       async () => {
-        expect(component.responseRecieved).toBeFalse();
+        expect(component.responseReceived).toBeFalse();
 
         await component.loginAPI.initGoogleAuth();
 
@@ -77,16 +77,16 @@ describe('SiteHeader', () => {
 
         await component.onLoginButtonClick();
 
-        expect(component.responseRecieved).toBeTrue();
+        expect(component.responseReceived).toBeTrue();
         expect(component.userIsLoggedIn).toBeTrue();
       });
 
   it('should sign out on sign out click', async () => {
-    expect(component.responseRecieved).toBeFalse();
+    expect(component.responseReceived).toBeFalse();
 
     await component.onLoginButtonClick();
 
-    expect(component.responseRecieved).toBeTrue();
+    expect(component.responseReceived).toBeTrue();
     expect(component.userIsLoggedIn).toBeTrue();
 
     const loginRespProm = component.loginAPI.login(true);
@@ -98,7 +98,7 @@ describe('SiteHeader', () => {
 
     expect(component.loginAPI.authInstance.isSignedIn.get()).toBeFalse();
     expect(component.userIsLoggedIn).toBeFalse();
-    expect(component.responseRecieved).toBeTrue();
+    expect(component.responseReceived).toBeTrue();
   });
 
 });

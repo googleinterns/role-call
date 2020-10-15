@@ -68,7 +68,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   segmentToCast: Map<string, [Cast, number, number]> = new Map();
   // segment uuid to performance section ID
   segmentToPerfSectionID: Map<string, string> = new Map();
-  // segement index to length
+  // segment index to length
   intermissions: Map<number, number> = new Map();
   chooseFromGroupIndices: number[] = [];
   primaryGroupNum = 0;
@@ -284,7 +284,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.selectedPerformance) {
       this.respHandler.showError({
         errorMessage: 'Must select a performance to edit!',
-        url: 'Error ocurred while selecting performance.',
+        url: 'Error occurred while selecting performance.',
         status: 400,
         statusText: 'Performance not selected!'
       });
@@ -305,7 +305,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.selectedPerformance) {
       this.respHandler.showError({
         errorMessage: 'Must select a performance to duplicate!',
-        url: 'Error ocurred while selecting performance.',
+        url: 'Error occurred while selecting performance.',
         status: 400,
         statusText: 'Performance not selected!'
       });
@@ -332,7 +332,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.selectedPerformance) {
       this.respHandler.showError({
         errorMessage: 'Must select a performance to cancel!',
-        url: 'Error ocurred while selecting performance.',
+        url: 'Error occurred while selecting performance.',
         status: 400,
         statusText: 'Performance not selected!'
       });
