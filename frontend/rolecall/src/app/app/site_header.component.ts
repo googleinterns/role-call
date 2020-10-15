@@ -27,7 +27,6 @@ export class SiteHeader implements OnInit {
   constructor(public loginAPI: LoginApi) {
   }
 
-
   ngOnInit(): void {
     this.loginAPI.login(false).then(loginResp => {
       this.configureHeaderForLogin(loginResp);
@@ -61,9 +60,8 @@ export class SiteHeader implements OnInit {
   }
 
   /** Set state and render page header depending on login state */
-  configureHeaderForLogin(loginResp: LoginResponse) {
+  private configureHeaderForLogin(loginResp: LoginResponse) {
     this.responseReceived = true;
     this.userIsLoggedIn = this.loginAPI.isLoggedIn;
   }
-
 }

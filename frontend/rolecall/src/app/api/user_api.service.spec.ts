@@ -1,15 +1,31 @@
-import {HttpClient, HttpHandler} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {TestBed} from '@angular/core/testing';
+
 import {MockUserBackend} from '../mocks/mock_user_backend';
+
 import {UserApi} from './user_api.service';
+import {RouterTestingModule} from '@angular/router/testing';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 
 describe('UserApi', () => {
+  const fakeHttpClient = {} as HttpClient;
+  const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
+
   let service: UserApi;
   let mockBackend: MockUserBackend;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [HttpClient, HttpHandler]
+      imports: [
+        RouterTestingModule,
+      ],
+      providers: [
+        {provide: HttpClient, useValue: fakeHttpClient},
+        {
+          provide: ResponseStatusHandlerService,
+          useValue: fakeResponseStatusHandlerService
+        },
+      ]
     });
     service = TestBed.inject(UserApi);
     mockBackend = new MockUserBackend();
@@ -33,5 +49,4 @@ describe('UserApi', () => {
     const users = await service.getAllUsers();
     expect(users.length).toEqual(mockBackend.mockUserDB.length);
   });
-
 });
