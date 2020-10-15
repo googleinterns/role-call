@@ -48,6 +48,9 @@
 
 .left-card-title {
   font-size: xx-large;
+  @media (max-width: 1200px) {
+    font-size: large;
+  }
   font-weight: 800;
   height: 100%;
   overflow-wrap: break-word;

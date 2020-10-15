@@ -42,7 +42,10 @@
       height: 100%;
       min-width: 35rem;
       width: 35rem;
-
+      @media (max-width: 1200px) {
+        min-width: 25rem;
+        width: 25rem;
+      }
       .left-card {
         background: $offWhite;
         height: calc(100% - 2rem);

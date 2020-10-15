@@ -77,6 +77,10 @@
 
   .title {
     font-size: xx-large;
+    @media (max-width: 1200px) {
+      font-size: large;
+    }
+
     font-weight: bold;
     height: min-content;
     line-height: 100%;
