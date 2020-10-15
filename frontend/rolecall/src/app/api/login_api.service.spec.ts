@@ -1,5 +1,4 @@
 import {TestBed} from '@angular/core/testing';
-import {isNullOrUndefined} from 'util';
 import {MockGAPI} from '../mocks/mock_gapi';
 import {LoginApi} from './login_api.service';
 
@@ -16,7 +15,7 @@ describe('LoginApi', () => {
     mockObj = new MockGAPI();
     mockGAPI = mockObj.mock();
     // @ts-ignore
-    window['gapi'] = mockGAPI;
+    window.gapi = mockGAPI;
   });
 
   it('should be created', () => {
@@ -80,8 +79,7 @@ describe('LoginApi', () => {
     await loginRespProm;
     mockObj.isSignedInVal = false;
 
-    expect(isNullOrUndefined(service.authInstance.currentUser.get()))
-        .toBeTrue();
+    expect(service.authInstance.currentUser.get()).toBeNull();
   });
 
   it('should not authenticate if sign in promise is rejected', async () => {
