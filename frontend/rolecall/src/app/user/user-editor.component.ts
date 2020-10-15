@@ -342,8 +342,7 @@ export class UserEditor implements OnInit {
       objInQuestion = objInQuestion[splits[i]];
     }
     if (info.type === 'date') {
-      const date = Date.parse(val.value);
-      val = date;
+      val = Date.parse(val.value);
       this.disableSave = false;
     } else if (info.type === 'permissions') {
       const permissions = this.workingUser.has_permissions;

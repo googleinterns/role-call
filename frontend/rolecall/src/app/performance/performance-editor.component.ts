@@ -645,8 +645,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onLengthChange(event: any) {
     const length = event.target.value;
     try {
-      const numLength = Number(length);
-      this.segmentLength = numLength;
+      this.segmentLength = Number(length);
     } catch (err) {
       this.segmentLength = 0;
     }

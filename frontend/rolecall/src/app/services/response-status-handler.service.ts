@@ -28,10 +28,9 @@ export class ResponseStatusHandlerService {
       new Map();
 
   checkResponse<T>(response: HttpResponse<T>): Promise<T> {
-    const prom: Promise<T> = new Promise(async (res, rej) => {
+    return new Promise(async (res, rej) => {
       await this.doCheck<T>(response, res, rej);
     });
-    return prom;
   }
 
   private async doCheck<T>(
