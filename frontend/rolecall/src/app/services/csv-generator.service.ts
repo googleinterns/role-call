@@ -38,10 +38,10 @@ export class CsvGenerator {
       });
     });
     const allVals = [];
-    for (let i = 0; i < objs.length; i++) {
-      for (let n = 0; n < objs[i].length; n++) {
-        for (let z = 0; z < objs[i][n].length; z++) {
-          allVals.push(objs[i][n][z]);
+    for (const iObjs of objs) {
+      for (const nObjs of iObjs) {
+        for (const zObj of nObjs) {
+          allVals.push(zObj);
         }
       }
     }
@@ -70,7 +70,7 @@ export class CsvGenerator {
                 const dancer = this.userAPI.users.get(m.uuid);
                 return {
                   'Performance': perf.step_1.title,
-                  'Piece': piece.name,
+                  'Ballet': piece.name,
                   'Length': seg.length,
                   'Position': position.name,
                   'Selected Cast': seg.selected_group + 1,
@@ -84,18 +84,18 @@ export class CsvGenerator {
       });
     });
     const allVals = [];
-    for (let i = 0; i < objs.length; i++) {
-      for (let n = 0; n < objs[i].length; n++) {
-        for (let z = 0; z < objs[i][n].length; z++) {
-          for (let y = 0; y < objs[i][n][z].length; y++) {
-            allVals.push(objs[i][n][z][y]);
-          }
+    for (const iObjs of objs) {
+      for (const nObjs of iObjs) {
+        for (const zObjs of nObjs) {
+          for (const yObj of zObjs) {
+            allVals.push(yObj);
+            }
         }
       }
     }
     this.downloadFile(
         allVals.sort((a, b) => a['Cast Number'] < b['Cast Number'] ? -1 : 1)
-            .sort((a, b) => a['Piece'] < b['Piece'] ? -1 : 1),
+            .sort((a, b) => a['Ballet'] < b['Ballet'] ? -1 : 1),
         headers,
         perf.step_1.city + ', ' + perf.step_1.state + ' ' + perf.step_1.country
         + ' - ' + perf.step_1.venue + ' - ' +
