@@ -79,8 +79,7 @@ describe('LoginApi', () => {
     await loginRespProm;
     mockObj.isSignedInVal = false;
 
-    expect(service?.authInstance?.currentUser?.get())
-        ?.toBeTrue();
+    expect(service.authInstance.currentUser.get()).toBeNull();
   });
 
   it('should not authenticate if sign in promise is rejected', async () => {
