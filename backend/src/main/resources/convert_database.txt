@@ -1,0 +1,568 @@
+/* SQL make a copy of the rolcall_db database in the database rolecall_new. */
+/* Build Tables */
+DROP DATABASE IF EXISTS rolecall_new;
+CREATE DATABASE rolecall_new;
+USE rolecall_new;
+
+SET FOREIGN_KEY_CHECKS=0;
+
+DROP TABLE IF EXISTS Cast;
+CREATE TABLE Cast (
+   id INT(11) NOT NULL PRIMARY KEY,
+   name VARCHAR(100) NOT NULL,
+   notes VARCHAR(255),
+   section_id INT(11) NOT NULL,
+   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
+);
+
+DROP TABLE IF EXISTS Cast_Id_Lookup;
+CREATE TABLE Cast_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS CastMember;
+CREATE TABLE CastMember (
+   id INT(11) NOT NULL PRIMARY KEY,
+   orderOf INT(11) NOT NULL,
+   cast_id INT(11) NOT NULL,
+   user_id INT(11) NOT NULL,
+   FOREIGN KEY ( cast_id ) REFERENCES Cast ( id ),
+   FOREIGN KEY ( user_id ) REFERENCES User ( id )
+);
+
+DROP TABLE IF EXISTS CastMember_Id_Lookup;
+CREATE TABLE CastMember_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Performance;
+CREATE TABLE Performance (
+   id INT(11) NOT NULL PRIMARY KEY,
+   city VARCHAR(100) NOT NULL,
+   country VARCHAR(100) NOT NULL,
+   dateTime DATETIME NOT NULL,
+   description VARCHAR(1023),
+   state VARCHAR(100) NOT NULL,
+   status VARCHAR(100) NOT NULL,
+   title VARCHAR(100) NOT NULL,
+   venue VARCHAR(100) NOT NULL
+);
+
+DROP TABLE IF EXISTS Performance_Id_Lookup;
+CREATE TABLE Performance_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS PerformanceCastMember;
+CREATE TABLE PerformanceCastMember (
+   id INT(11) NOT NULL PRIMARY KEY,
+   castNumber INT(11) NOT NULL,
+   orderOf INT(11) NOT NULL,
+   performing BIT(1) NOT NULL,
+   performance_id INT(11) NOT NULL,
+   user_id INT(11) NOT NULL,
+   performanceSection_id INT(11) NOT NULL,
+   position_id INT(11) NOT NULL,
+   FOREIGN KEY ( performance_id ) REFERENCES Performance ( id ),
+   FOREIGN KEY ( user_id ) REFERENCES User ( id ),
+   FOREIGN KEY ( performanceSection_id ) REFERENCES PerformanceSection ( id ),
+   FOREIGN KEY ( position_id ) REFERENCES Position ( id )
+);
+
+DROP TABLE IF EXISTS PerformanceCastMember_Id_Lookup;
+CREATE TABLE PerformanceCastMember_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS PerformanceSection;
+CREATE TABLE PerformanceSection (
+   id INT(11) NOT NULL PRIMARY KEY,
+   primaryCast INT(11),
+   sectionPosition INT(11) NOT NULL,
+   performance_id INT(11) NOT NULL,
+   section_id INT(11) NOT NULL,
+   FOREIGN KEY ( performance_id ) REFERENCES Performance ( id ),
+   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
+);
+
+DROP TABLE IF EXISTS PerformanceSection_Id_Lookup;
+CREATE TABLE PerformanceSection_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Position;
+CREATE TABLE Position (
+   id INT(11) NOT NULL PRIMARY KEY,
+   name varchar(100) NOT NULL,
+   notes varchar(255),
+   orderOf INT(11) NOT NULL,
+   siblingId INT(11),
+   size INT(11),
+   section_id INT(11) NOT NULL,
+   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
+);
+
+DROP TABLE IF EXISTS Position_Id_Lookup;
+CREATE TABLE Position_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Section;
+CREATE TABLE Section (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   length INT(11),
+   name varchar(100) NOT NULL,
+   notes varchar(255),
+   siblingId int(11),
+   type INT(11)
+);
+
+DROP TABLE IF EXISTS Section_Id_Lookup;
+CREATE TABLE Section_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS SubCast;
+CREATE TABLE SubCast (
+   id INT(11) NOT NULL PRIMARY KEY,
+   castNumber INT(11) NOT NULL,
+   cast_id INT(11) NOT NULL,
+   position_id INT(11) NOT NULL,
+   FOREIGN KEY ( cast_id ) REFERENCES Cast ( id ),
+   FOREIGN KEY ( position_id ) REFERENCES Position ( id )
+);
+
+DROP TABLE IF EXISTS SubCast_Id_Lookup;
+CREATE TABLE SubCast_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Unavailability;
+CREATE TABLE Unavailability (
+   id INT(11) NOT NULL PRIMARY KEY,
+   description varchar(255) NOT NULL,
+   endDate date,
+   startDate date,
+   user_id INT(11) NOT NULL,
+   FOREIGN KEY ( user_id ) REFERENCES User ( id )
+);
+
+DROP TABLE IF EXISTS Unavailability_Id_Lookup;
+CREATE TABLE Unavailability_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS User;
+CREATE TABLE User (
+   id INT(11) NOT NULL PRIMARY KEY,
+   canLogin BIT(1) NOT NULL,
+   comments VARCHAR(255),
+   dateJoined DATE,
+   email VARCHAR(100) NOT NULL UNIQUE,
+   emergencyContactName VARCHAR(100),
+   emergencyContactNumber VARCHAR(50),
+   firstName VARCHAR(50) NOT NULL,
+   isActive BIT(1) NOT NULL,
+   isAdmin BIT(1) NOT NULL,
+   isCoreographer BIT(1) NOT NULL,
+   isDancer BIT(1) NOT NULL,
+   isOther BIT(1) NOT NULL,
+   lastName VARCHAR(50) NOT NULL,
+   manageCasts BIT(1) NOT NULL,
+   managePerformances BIT(1) NOT NULL,
+   managePieces BIT(1) NOT NULL,
+   manageRoles BIT(1) NOT NULL,
+   manageRules BIT(1) NOT NULL,
+   middleName VARCHAR(50),
+   notifications BIT(1) NOT NULL,
+   phoneNumber VARCHAR(50),
+   suffix VARCHAR(10)
+);
+
+DROP TABLE IF EXISTS User_Id_Lookup;
+CREATE TABLE User_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS hibernate_sequence;
+CREATE TABLE hibernate_sequence (
+   next_val BIGINT(20) DEFAULT NULL
+);
+
+/* Move the data */
+
+/* Logic: Create id lookup tables with auto increment ids.
+ * The source table is sorted the way we want it ->
+ * The new table's ids will be sorted the way we want.
+ */
+
+INSERT INTO User_Id_Lookup (
+   old_id
+)
+SELECT
+   id
+FROM rolecall_db.User
+ORDER by lastName, firstName;
+
+INSERT INTO User (
+   id,
+   canLogin,
+   comments,
+   dateJoined,
+   email,
+   emergencyContactName,
+   emergencyContactNumber,
+   firstName,
+   isActive,
+   isAdmin,
+   isCoreographer,
+   isDancer,
+   isOther,
+   lastName,
+   manageCasts,
+   managePerformances,
+   managePieces,
+   manageRoles,
+   manageRules,
+   middleName,
+   notifications,
+   phoneNumber,
+   suffix
+)
+SELECT
+   il.id,
+   u.canLogin,
+   u.comments,
+   u.dateJoined,
+   u.email,
+   u.emergencyContactName,
+   u.emergencyContactNumber,
+   u.firstName,
+   u.isActive,
+   u.isAdmin,
+   u.isCoreographer,
+   u.isDancer,
+   u.isOther,
+   u.lastName,
+   u.manageCasts,
+   u.managePerformances,
+   u.managePieces,
+   u.manageRoles,
+   u.manageRules,
+   u.middleName,
+   u.notifications,
+   u.phoneNumber,
+   u.suffix
+FROM rolecall_db.User u
+JOIN User_Id_Lookup il ON u.id = il.old_id
+ORDER by lastName, firstName;
+
+INSERT INTO Section_Id_Lookup (
+   old_id
+)
+SELECT
+   id
+FROM rolecall_db.Section
+ORDER by name;
+
+/* Moved up to suppert siblingId in Section */
+INSERT INTO Position_Id_Lookup (
+   old_id
+)
+SELECT
+   p.id
+FROM rolecall_db.Position p
+JOIN rolecall_db.Section s ON p.section_id = s.id
+ORDER by s.name, p.orderOf;
+
+INSERT INTO Section (
+   id,
+   length,
+   name,
+   notes,
+   siblingId,
+   type
+)
+SELECT
+   il_s.id,
+   s.length,
+   s.name,
+   s.notes,
+   il_p.id,
+   s.type
+FROM rolecall_db.Section s
+JOIN Section_Id_Lookup il_s ON s.id = il_s.old_id
+LEFT JOIN Position_Id_Lookup il_p ON s.siblingId = il_p.old_id
+ORDER by name;
+
+INSERT INTO Position (
+   id,
+   name,
+   notes,
+   orderOf,
+   siblingId,
+   size,
+   section_id
+)
+SELECT
+   il_p.id,
+   p.name,
+   p.notes,
+   p.orderOf,
+   il_s2.id,
+   p.size,
+   il_s.id
+FROM rolecall_db.Position p
+JOIN rolecall_db.Section s ON p.section_id = s.id
+JOIN Position_Id_Lookup il_p On p.id = il_p.old_id
+JOIN Section_Id_Lookup il_s On p.section_id = il_s.old_id
+LEFT JOIN Section_Id_Lookup il_s2 On p.siblingId = il_s2.old_id
+ORDER by s.name, p.orderOf;
+
+INSERT INTO Cast_Id_Lookup (
+   old_id
+)
+SELECT
+   c.id
+FROM rolecall_db.Cast c
+JOIN rolecall_db.Section s ON c.section_id = s.id
+ORDER by s.name, c.name;
+
+INSERT INTO Cast (
+   id,
+   name,
+   notes,
+   section_id
+)
+SELECT
+   il_c.id,
+   c.name,
+   c.notes,
+   il_s.id
+FROM rolecall_db.Cast c
+JOIN rolecall_db.Section s ON c.section_id = s.id
+JOIN Cast_Id_Lookup il_c On c.id = il_c.old_id
+JOIN Section_Id_Lookup il_s On c.section_id = il_s.old_id
+ORDER by s.name, c.name;
+
+INSERT INTO SubCast_Id_Lookup (
+   old_id
+)
+SELECT
+   sc.id
+FROM rolecall_db.SubCast sc
+JOIN rolecall_db.Cast c ON sc.cast_id = c.id
+JOIN rolecall_db.Section s ON c.section_id = s.id
+JOIN rolecall_db.Position p ON sc.position_id = p.id
+ORDER by s.name, c.name, p.orderOf, sc.castNumber;
+
+INSERT INTO SubCast (
+   id,
+   castNumber,
+   cast_id,
+   position_id
+)
+SELECT
+   il_sc.id,
+   sc.castNumber,
+   il_c.id,
+   il_p.id
+FROM rolecall_db.SubCast sc
+JOIN rolecall_db.Cast c ON sc.cast_id = c.id
+JOIN rolecall_db.Section s ON c.section_id = s.id
+JOIN rolecall_db.Position p ON sc.position_id = p.id
+JOIN SubCast_Id_Lookup il_sc ON sc.id = il_sc.old_id
+JOIN Cast_Id_Lookup il_c ON sc.cast_id = il_c.old_id
+JOIN Position_Id_Lookup il_p ON sc.position_id = il_p.old_id
+ORDER by s.name, c.name, p.orderOf, sc.castNumber;
+
+INSERT INTO CastMember_Id_Lookup (
+   old_id
+)
+SELECT
+   cm.id
+FROM rolecall_db.CastMember cm
+JOIN rolecall_db.SubCast sc ON cm.cast_id = sc.id
+JOIN rolecall_db.Cast c ON sc.cast_id = c.id
+JOIN rolecall_db.Section s ON c.section_id = s.id
+ORDER by s.name, c.name, cm.orderOf;
+
+INSERT INTO CastMember (
+   id,
+   orderOf,
+   cast_id,
+   user_id
+)
+SELECT
+   il_cm.id,
+   cm.orderOf,
+   il_sc.id,
+   il_u.id
+FROM rolecall_db.CastMember cm
+JOIN rolecall_db.SubCast sc ON cm.cast_id = sc.id
+JOIN rolecall_db.Cast c ON sc.cast_id = c.id
+JOIN rolecall_db.Section s ON c.section_id = s.id
+JOIN CastMember_Id_Lookup il_cm ON cm.id = il_cm.old_id
+JOIN SubCast_Id_Lookup il_sc ON cm.cast_id = il_sc.old_id
+JOIN User_Id_Lookup il_u ON cm.user_id = il_u.old_id
+ORDER by s.name, c.name, cm.orderOf, sc.castNumber;
+
+INSERT INTO Performance_Id_Lookup (
+   old_id
+)
+SELECT
+   id
+FROM rolecall_db.Performance
+ORDER by dateTime;
+
+INSERT INTO Performance (
+   id,
+   city,
+   country,
+   dateTime,
+   description,
+   state,
+   status,
+   title,
+   venue
+)
+SELECT
+   il_pf.id,
+   pf.city,
+   pf.country,
+   pf.dateTime,
+   pf.description,
+   pf.state,
+   pf.status,
+   pf.title,
+   pf.venue
+FROM rolecall_db.Performance pf
+JOIN Performance_Id_Lookup il_pf ON pf.id = il_pf.old_id
+ORDER by pf.dateTime;
+
+INSERT INTO PerformanceSection_Id_Lookup (
+   old_id
+)
+SELECT
+   ps.id
+FROM rolecall_db.PerformanceSection ps
+JOIN rolecall_db.Performance pf ON ps.performance_id = pf.id
+ORDER by pf.dateTime, ps.sectionPosition;
+
+INSERT INTO PerformanceSection (
+   id,
+   primaryCast,
+   sectionPosition,
+   performance_id,
+   section_id
+)
+SELECT
+   il_ps.id,
+   ps.primaryCast,
+   ps.sectionPosition,
+   il_pf.id,
+   il_s.id
+FROM rolecall_db.PerformanceSection ps
+JOIN rolecall_db.Performance pf ON ps.performance_id = pf.id
+JOIN PerformanceSection_Id_Lookup il_ps ON ps.id = il_ps.old_id
+JOIN Performance_Id_Lookup il_pf ON ps.performance_id = il_pf.old_id
+JOIN Section_Id_Lookup il_s ON ps.section_id = il_s.old_id
+ORDER by pf.dateTime, ps.sectionPosition;
+
+INSERT INTO PerformanceCastMember_Id_Lookup (
+   old_id
+)
+SELECT
+   pcm.id
+FROM rolecall_db.PerformanceCastMember pcm
+JOIN rolecall_db.Performance pf ON pcm.performance_id = pf.id
+JOIN rolecall_db.PerformanceSection ps ON pcm.performanceSection_id = ps.id
+ORDER by pf.dateTime, ps.sectionPosition, pcm.orderOf, pcm.castNumber;
+
+INSERT INTO PerformanceCastMember (
+   id,
+   castNumber,
+   orderOf,
+   performing,
+   performance_id,
+   user_id,
+   performanceSection_id,
+   position_id
+)
+SELECT
+   il_pcm.id,
+   pcm.castNumber,
+   pcm.orderOf,
+   pcm.performing,
+   il_pf.id,
+   il_u.id,
+   il_ps.id,
+   il_p.id
+FROM rolecall_db.PerformanceCastMember pcm
+JOIN rolecall_db.Performance pf ON pcm.performance_id = pf.id
+JOIN rolecall_db.PerformanceSection ps ON pcm.performanceSection_id = ps.id
+JOIN PerformanceCastMember_Id_Lookup il_pcm ON pcm.id = il_pcm.old_id
+JOIN Performance_Id_Lookup il_pf ON ps.performance_id = il_pf.old_id
+JOIN User_Id_Lookup il_u ON pcm.user_id = il_u.old_id
+JOIN PerformanceSection_Id_Lookup il_ps ON pcm.performanceSection_id = il_ps.old_id
+JOIN Position_Id_Lookup il_p ON pcm.position_id = il_p.old_id
+ORDER by pf.dateTime, ps.sectionPosition, pcm.orderOf, pcm.castNumber;
+
+INSERT INTO Unavailability_Id_Lookup (
+   old_id
+)
+SELECT
+   ua.id
+FROM rolecall_db.Unavailability ua
+JOIN rolecall_db.User u ON ua.user_id = u.id
+ORDER by startDate, u.lastName, u.firstName;
+
+INSERT INTO Unavailability (
+   id,
+   description,
+   endDate,
+   startDate,
+   user_id
+)
+SELECT
+   il_ua.id,
+   ua.description,
+   ua.endDate,
+   ua.startDate,
+   il_u.id
+FROM rolecall_db.Unavailability ua
+JOIN rolecall_db.User u ON ua.user_id = u.id
+JOIN Unavailability_Id_Lookup il_ua ON ua.id = il_ua.old_id
+JOIN User_Id_Lookup il_u ON ua.user_id = il_u.old_id
+ORDER by startDate, u.lastName, u.firstName;
+
+INSERT INTO hibernate_sequence (
+   next_val
+)
+SELECT
+   next_val
+FROM rolecall_db.hibernate_sequence;
+
+SET FOREIGN_KEY_CHECKS=1;
+
+/* delete lookup tables */
+DROP TABLE IF EXISTS Cast_Id_Lookup;
+DROP TABLE IF EXISTS CastMember_Id_Lookup;
+DROP TABLE IF EXISTS Performance_Id_Lookup;
+DROP TABLE IF EXISTS PerformanceCastMember_Id_Lookup;
+DROP TABLE IF EXISTS PerformanceSection_Id_Lookup;
+DROP TABLE IF EXISTS Position_Id_Lookup;
+DROP TABLE IF EXISTS Section_Id_Lookup;
+DROP TABLE IF EXISTS SubCast_Id_Lookup;
+DROP TABLE IF EXISTS Unavailability_Id_Lookup;
+DROP TABLE IF EXISTS User_Id_Lookup;
