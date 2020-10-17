@@ -279,10 +279,40 @@ public class SectionServices {
    *    in the database.
    */
   public void deleteSection(int id) throws EntityNotFoundException, InvalidParameterException {
+    checkDeleteOk(id, false);
+    Section section = getSection(id);
+
+    if(section.getType() == Section.Type.SUPER) {
+      // Check that all children are OK to delete
+      for(Position position: section.getPositions()) {
+        Integer childId = position.getSiblingId();
+        if(childId != 0 && childId > 0) {
+          Optional<Section> childQuery = sectionRepo.findById(childId);
+          if(!childQuery.isEmpty()) {
+            checkDeleteOk(childId, true);
+          }
+        }
+      }
+      // If none of the children have a deleate problem, we can delete
+      for(Position position: section.getPositions()) {
+        Integer childId = position.getSiblingId();
+        if(childId != 0 && childId > 0) {
+          Optional<Section> childQuery = sectionRepo.findById(childId);
+          if(!childQuery.isEmpty()) { 
+            sectionRepo.deleteById(childId);
+          }
+        }
+      }
+    }  
+    sectionRepo.deleteById(id);
+  }
+
+  // Utility functions
+  private void checkDeleteOk(int id, boolean superChildIsOk) throws EntityNotFoundException, InvalidParameterException {
     Section section = getSection(id);
 
     Integer siblingId = section.getSiblingId();
-    if(siblingId != null) {
+    if(!superChildIsOk && siblingId != null) {
       Optional<Position> test = positionRepo.findById(siblingId);
       if(test.isEmpty()) {
         // Super Ballet's internal Ballet/Position structure has already been deleted
@@ -298,11 +328,7 @@ public class SectionServices {
       throw new InvalidParameterException(
           "Cannot delete Ballet if it has a Cast or is part of a Performance");
     }
-
-    sectionRepo.deleteById(id);
   }
-
-  // Utility functions
 
   private void updateSuperBalletChildren(Section section, Integer[] siblingIndexArray,
       boolean isParentSuper) throws InvalidParameterException {
@@ -343,7 +369,7 @@ public class SectionServices {
               .setNotes(sibling.getNotes())
               .setOrder(sibling.getOrder())
               .setSiblingId(siblingId == -1 ? sibling.getSiblingId() : siblingId)
-              .setSize(sibling.getSiblingId())
+              .setSize(null)
               .build();
           positionRepo.save(updatedSibling);
         } catch (InvalidParameterException e) {
