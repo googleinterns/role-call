@@ -120,7 +120,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   closeStepper() {
-    console.log('tte');
   }
 
   onPerformanceLoad(perfs: Performance[]) {
