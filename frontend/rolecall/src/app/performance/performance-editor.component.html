@@ -276,7 +276,7 @@
                 <div
                     *ngFor="let pos of segment.custom_groups"
                     class="pos-container"
-                    [style.margin-left.rem]="hasSuper && step2Data[i].siblingId === 0 ? 10 : 7">
+                    [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7">
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div

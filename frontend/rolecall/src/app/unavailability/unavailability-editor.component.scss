@@ -131,7 +131,7 @@
 
         &-left {
           background: $AAOrange;
-          right: none; // TODO: Fix invalid value.
+          right: 0;
           left: 1rem;
         }
       }

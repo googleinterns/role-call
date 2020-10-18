@@ -71,8 +71,7 @@ export class UserEditor implements OnInit {
 
   rolesNamesMap = {
     isAdmin: 'Is Admin',
-    // TODO: Spelling error in `choreographer`.
-    isCoreographer: 'Is Coreographer',
+    isCoreographer: 'Is Choreographer',
     isDancer: 'Is Dancer',
     isOther: 'Is Other',
   };

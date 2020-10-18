@@ -93,7 +93,6 @@ $lastCellFillerWidth: 2.2rem;
 }
 
 .empty-cell {
-  // TODO: Verify that this looks right.
   border: 2px none $offoffWhite;
   border-right-style: solid;
   border-bottom-style: solid;
@@ -163,7 +162,7 @@ $lastCellFillerWidth: 2.2rem;
 .save-delete-button-icon {
   color: $gray;
   background: $AAOrange;
-  background-clip: text; // TODO: Fix invalid value.
+  background-clip: border-box;
   font-size: 3rem;
   height: 3rem;
   line-height: 3rem;
