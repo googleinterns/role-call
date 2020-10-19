@@ -42,7 +42,7 @@ public class UserUnitTests {
       .setEmail(email)
       .setDateJoined(dateJoined)
       .setIsAdmin(admin)
-      .setIsCoreographer(admin)
+      .setIsChoreographer(admin)
       .setIsDancer(admin)
       .setIsOther(admin)
       .setCanLogin(canLogin)

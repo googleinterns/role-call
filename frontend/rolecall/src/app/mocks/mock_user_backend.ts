@@ -24,7 +24,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -57,7 +57,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -90,7 +90,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -123,7 +123,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -156,7 +156,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -189,7 +189,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -223,7 +223,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -256,7 +256,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -289,7 +289,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -322,7 +322,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -355,7 +355,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -388,7 +388,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -421,7 +421,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -454,7 +454,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -487,7 +487,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -520,7 +520,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -553,7 +553,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -586,7 +586,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -619,7 +619,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -652,7 +652,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -685,7 +685,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -718,7 +718,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -751,7 +751,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -784,7 +784,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -817,7 +817,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -850,7 +850,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -883,7 +883,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -916,7 +916,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -949,7 +949,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },
@@ -982,7 +982,7 @@ export class MockUserBackend {
       },
       'has_roles': {
         'isAdmin': false,
-        'isCoreographer': false,
+        'isChoreographer': false,
         'isDancer': true,
         'isOther': false,
       },

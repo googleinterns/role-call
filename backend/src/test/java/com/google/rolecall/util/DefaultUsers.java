@@ -15,7 +15,7 @@ public class DefaultUsers {
         .setLastName("User")
         .setEmail("admin@rolecall.com")
         .setIsAdmin(true)
-        .setIsCoreographer(true)
+        .setIsChoreographer(true)
         .setIsDancer(true)
         .setIsOther(true)
         .setCanLogin(true)

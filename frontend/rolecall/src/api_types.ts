@@ -15,7 +15,7 @@ export type SuccessIndicator = {
 };
 export type Roles = {
   isAdmin: boolean;
-  isCoreographer: boolean;
+  isChoreographer: boolean;
   isDancer: boolean;
   isOther: boolean;
 };

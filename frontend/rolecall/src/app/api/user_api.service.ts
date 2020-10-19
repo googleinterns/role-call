@@ -41,7 +41,7 @@ interface RawUser {
   phoneNumber: string;
   dateJoined: string;
   isAdmin: boolean;
-  isCoreographer: boolean;
+  isChoreographer: boolean;
   isDancer: boolean;
   isOther: boolean;
   canLogin: boolean;
@@ -121,7 +121,7 @@ export class UserApi {
                   uuid: String(rawUser.id),
                   has_roles: {
                     isAdmin: rawUser.isAdmin,
-                    isCoreographer: rawUser.isCoreographer,
+                    isChoreographer: rawUser.isChoreographer,
                     isDancer: rawUser.isDancer,
                     isOther: rawUser.isOther,
                   },
@@ -187,7 +187,7 @@ export class UserApi {
                     moment(user.date_joined).format('MM-DD-YYYY').toString(),
                 // Roles
                 isAdmin: user.has_roles.isAdmin,
-                isCoreographer: user.has_roles.isCoreographer,
+                isChoreographer: user.has_roles.isChoreographer,
                 isDancer: user.has_roles.isDancer,
                 isOther: user.has_roles.isOther,
                 // Permissions
@@ -228,7 +228,7 @@ export class UserApi {
                     moment(user.date_joined).format('MM-DD-YYYY').toString(),
                 // Roles
                 isAdmin: user.has_roles.isAdmin,
-                isCoreographer: user.has_roles.isCoreographer,
+                isChoreographer: user.has_roles.isChoreographer,
                 isDancer: user.has_roles.isDancer,
                 isOther: user.has_roles.isOther,
                 // Permissions

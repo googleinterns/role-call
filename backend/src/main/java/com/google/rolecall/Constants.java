@@ -32,11 +32,11 @@ public class Constants {
 
   public static class Roles {
     public static final String ADMIN = "ADMIN";
-    public static final String COREOGRAPHER = "COREOGRAPHER";
+    public static final String CHOREOGRAPHER = "CHOREOGRAPHER";
     public static final String DANCER = "DANCER";
     public static final String OTHER = "OTHER";
     public static final String[] ROLES = new String[] {
-        ADMIN, COREOGRAPHER, DANCER, OTHER,
+        ADMIN, CHOREOGRAPHER, DANCER, OTHER,
     };
   }
 

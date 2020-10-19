@@ -56,7 +56,7 @@ public class User {
   @Column(nullable = false)
   private boolean isAdmin = false;
   @Column(nullable = false)
-  private boolean isCoreographer = false;
+  private boolean isChoreographer = false;
   @Column(nullable = false)
   private boolean isDancer = false;
   @Column(nullable = false)
@@ -128,8 +128,8 @@ public class User {
     return isAdmin;
   }
 
-  public boolean isCoreographer() {
-    return isCoreographer;
+  public boolean isChoreographer() {
+    return isChoreographer;
   }
 
   public boolean isDancer() {
@@ -205,7 +205,7 @@ public class User {
   public String[] getRoles() {
     List<Boolean> roleIn = new ArrayList<>();
     roleIn.add(isAdmin()); // ADMIN
-    roleIn.add(isCoreographer()); // COREOGRAPHER
+    roleIn.add(isChoreographer()); // CHOREOGRAPHER
     roleIn.add(isDancer()); // DANCER
     roleIn.add(isOther()); // OTHER
 
@@ -250,7 +250,7 @@ public class User {
         .setPhoneNumber(phoneNumber)
         .setDateJoined(dateJoined)
         .setIsAdmin(isAdmin)
-        .setIsCoreographer(isCoreographer)
+        .setIsChoreographer(isChoreographer)
         .setIsDancer(isDancer)
         .setIsOther(isOther)
         .setCanLogin(canLogin)
@@ -290,7 +290,7 @@ public class User {
     private String phoneNumber;
     private Calendar dateJoined;
     private Boolean isAdmin = false;
-    private Boolean isCoreographer = false;
+    private Boolean isChoreographer = false;
     private Boolean isDancer = false;
     private Boolean isOther = false;
     private Boolean canLogin = false;
@@ -361,9 +361,9 @@ public class User {
       return this;
     }
   
-    public Builder setIsCoreographer(Boolean isCoreographer) {
-      if(isCoreographer != null) {
-        this.isCoreographer = isCoreographer;
+    public Builder setIsChoreographer(Boolean isChoreographer) {
+      if(isChoreographer != null) {
+        this.isChoreographer = isChoreographer;
       }
       return this;
     }
@@ -473,7 +473,7 @@ public class User {
       user.phoneNumber = this.phoneNumber;
       user.dateJoined = this.dateJoined;
       user.isAdmin = this.isAdmin;
-      user.isCoreographer = this.isCoreographer;
+      user.isChoreographer = this.isChoreographer;
       user.isDancer = this.isDancer;
       user.isOther = this.isOther;
       user.canLogin = this.canLogin;
@@ -500,7 +500,7 @@ public class User {
       this.email = user.email;
       this.dateJoined = user.dateJoined;
       this.isAdmin = user.isAdmin;
-      this.isCoreographer = user.isCoreographer;
+      this.isChoreographer = user.isChoreographer;
       this.isDancer = user.isDancer;
       this.isOther = user.isOther;
       this.canLogin = user.canLogin;
