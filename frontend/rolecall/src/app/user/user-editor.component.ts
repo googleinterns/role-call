@@ -72,7 +72,7 @@ export class UserEditor implements OnInit {
   rolesNamesMap = {
     isAdmin: 'Is Admin',
     // TODO: Spelling error in `choreographer`.
-    isCoreographer: 'Is Coreographer',
+    isChoreographer: 'Is Choreographer',
     isDancer: 'Is Dancer',
     isOther: 'Is Other',
   };
@@ -220,7 +220,7 @@ export class UserEditor implements OnInit {
       suffix: undefined,
       has_roles: {
         isAdmin: false,
-        isCoreographer: false,
+        isChoreographer: false,
         isDancer: false,
         isOther: false,
       },

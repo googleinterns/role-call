@@ -46,7 +46,7 @@ public class UserServiceTests {
   private String phoneNumber = "123-456-7890";
   private Calendar dateJoined = (new Calendar.Builder()).setDate(1, 1, 1).build();
   private Boolean isAdmin = true;
-  private Boolean isCoreographer = true;
+  private Boolean isChoreographer = true;
   private Boolean isDancer = true;
   private Boolean isOther = true;
   private Boolean canLogin = true;
@@ -74,7 +74,7 @@ public class UserServiceTests {
       .setPhoneNumber(phoneNumber)
       .setDateJoined(dateJoined)
       .setIsAdmin(isAdmin)
-      .setIsCoreographer(isCoreographer)
+      .setIsChoreographer(isChoreographer)
       .setIsDancer(isDancer)
       .setIsOther(isOther)
       .setCanLogin(canLogin)
@@ -129,7 +129,7 @@ public class UserServiceTests {
     assertThat(response.getPhoneNumber()).isEqualTo(phoneNumber);
     assertThat(response.getDateJoined().get()).isEqualTo(dateJoined);
     assertThat(response.isAdmin()).isEqualTo(isAdmin.booleanValue());
-    assertThat(response.isCoreographer()).isEqualTo(isCoreographer.booleanValue());
+    assertThat(response.isChoreographer()).isEqualTo(isChoreographer.booleanValue());
     assertThat(response.isDancer()).isEqualTo(isDancer.booleanValue());
     assertThat(response.isOther()).isEqualTo(isOther.booleanValue());
     assertThat(response.canLogin()).isEqualTo(canLogin.booleanValue());
@@ -160,7 +160,7 @@ public class UserServiceTests {
       .setPhoneNumber("123-456-7890")
       .setDateJoined(newdateJoined)
       .setIsAdmin(true)
-      .setIsCoreographer(true)
+      .setIsChoreographer(true)
       .setIsDancer(true)
       .setIsOther(false)
       .setCanLogin(false)
@@ -189,7 +189,7 @@ public class UserServiceTests {
     assertThat(userOut.getPhoneNumber()).isEqualTo("123-456-7890");
     assertThat(userOut.getDateJoined().get()).isEqualTo(newdateJoined);
     assertThat(userOut.isAdmin()).isTrue();
-    assertThat(userOut.isCoreographer()).isTrue();
+    assertThat(userOut.isChoreographer()).isTrue();
     assertThat(userOut.isDancer()).isTrue();
     assertThat(userOut.isOther()).isFalse();
     assertThat(userOut.canLogin()).isFalse();
@@ -228,7 +228,7 @@ public class UserServiceTests {
     assertThat(userOut.getPhoneNumber()).isEqualTo("123-456-7890");
     assertThat(userOut.getDateJoined().isEmpty()).isTrue();
     assertThat(userOut.isAdmin()).isFalse();
-    assertThat(userOut.isCoreographer()).isFalse();
+    assertThat(userOut.isChoreographer()).isFalse();
     assertThat(userOut.isDancer()).isFalse();
     assertThat(userOut.isOther()).isFalse();
     assertThat(userOut.canLogin()).isFalse();
@@ -324,7 +324,7 @@ public class UserServiceTests {
       .setPhoneNumber("098-765-4321")
       .setDateJoined(newdateJoined)
       .setIsAdmin(false)
-      .setIsCoreographer(false)
+      .setIsChoreographer(false)
       .setIsDancer(false)
       .setIsOther(true)
       .setCanLogin(false)
@@ -351,7 +351,7 @@ public class UserServiceTests {
     assertThat(userOut.getPhoneNumber()).isEqualTo("098-765-4321");
     assertThat(userOut.getDateJoined().get()).isEqualTo(newdateJoined);
     assertThat(userOut.isAdmin()).isFalse();
-    assertThat(userOut.isCoreographer()).isFalse();
+    assertThat(userOut.isChoreographer()).isFalse();
     assertThat(userOut.isDancer()).isFalse();
     assertThat(userOut.isOther()).isTrue();
     assertThat(userOut.canLogin()).isFalse();
@@ -386,7 +386,7 @@ public class UserServiceTests {
     assertThat(userOut.getPhoneNumber()).isEqualTo(phoneNumber);
     assertThat(userOut.getDateJoined().get()).isEqualTo(dateJoined);
     assertThat(userOut.isAdmin()).isTrue();
-    assertThat(userOut.isCoreographer()).isTrue();
+    assertThat(userOut.isChoreographer()).isTrue();
     assertThat(userOut.isDancer()).isTrue();
     assertThat(userOut.isOther()).isTrue();
     assertThat(userOut.canLogin()).isTrue();
@@ -420,7 +420,7 @@ public class UserServiceTests {
     assertThat(userOut.getPhoneNumber()).isEqualTo(phoneNumber);
     assertThat(userOut.getDateJoined().get()).isEqualTo(dateJoined);
     assertThat(userOut.isAdmin()).isTrue();
-    assertThat(userOut.isCoreographer()).isTrue();
+    assertThat(userOut.isChoreographer()).isTrue();
     assertThat(userOut.isDancer()).isTrue();
     assertThat(userOut.isOther()).isTrue();
     assertThat(userOut.canLogin()).isTrue();
