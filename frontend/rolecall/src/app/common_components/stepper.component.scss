@@ -86,7 +86,7 @@
 
   .circle {
     border-radius: 50%;
-    border: solid $AAOrangeBorder;
+    border: solid $$AAOrange;
     color: $lightLightGray;
     display: flex;
     flex-direction: column;
@@ -99,9 +99,9 @@
   }
   
   .selected-circle {
-    background: $AAOrange;
+    background: $AAOrangeGradient;
     border-radius: 50%;
-    border: solid $AAOrangeBorder;
+    border: solid $$AAOrange;
     color: white;
     display: flex;
     flex-direction: column;
@@ -149,7 +149,7 @@
 }
 
 .line {
-  background: $AAOrange;
+  background: $AAOrangeGradient;
   height: 6vh;
   width: 5px;
 }
