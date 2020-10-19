@@ -22,7 +22,7 @@ public class UserInfoUnitTests {
       .setEmail("email@gmail.com")
       .setDateJoined(null)
       .setIsAdmin(false)
-      .setIsCoreographer(false)
+      .setIsChoreographer(false)
       .setIsDancer(true)
       .setIsOther(false)
       .setCanLogin(false)

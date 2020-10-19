@@ -50,8 +50,8 @@ public abstract class UserInfo {
   public abstract Boolean isAdmin();
 
   @Nullable
-  @JsonProperty("isCoreographer")
-  public abstract Boolean isCoreographer();
+  @JsonProperty("isChoreographer")
+  public abstract Boolean isChoreographer();
 
   @Nullable
   @JsonProperty("isDancer")
@@ -153,8 +153,8 @@ public abstract class UserInfo {
     @JsonProperty("isAdmin")
     public abstract Builder setIsAdmin(Boolean isAdmin);
 
-    @JsonProperty("isCoreographer")
-    public abstract Builder setIsCoreographer(Boolean isCoreographer);
+    @JsonProperty("isChoreographer")
+    public abstract Builder setIsChoreographer(Boolean isChoreographer);
 
     @JsonProperty("isDancer")
     public abstract Builder setIsDancer(Boolean isDancer);
