@@ -42,7 +42,7 @@ public class UserManagementUnitTests {
   private String email = "goodEmail@gmail.com";
   private Calendar dateJoined = null;
   private Boolean isAdmin = true;
-  private Boolean isCoreographer = true;
+  private Boolean isChoreographer = true;
   private Boolean isDancer = true;
   private Boolean isOther = true;
   private Boolean canLogin = true;
