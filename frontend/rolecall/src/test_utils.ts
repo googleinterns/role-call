@@ -1,5 +1,6 @@
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {Component} from '@angular/core';
 
 /**
  * Creates a jasmine SpyObj with the given methods provided as object or
@@ -15,4 +16,9 @@ export function createSpyObjWithProps<T>({baseName, methods, props}: {
     ...createSpyObj(baseName, methods),
     ...props,
   } as SpyObj<T>;
+}
+
+/** Empty component useful for testing route navigation. */
+@Component({template: ''})
+export class FakePage {
 }

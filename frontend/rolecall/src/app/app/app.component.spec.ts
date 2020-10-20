@@ -1,6 +1,5 @@
 import {async, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-import {Component} from '@angular/core';
 import {of} from 'rxjs';
 
 import {LoginApi} from '../api/login_api.service';
@@ -8,6 +7,7 @@ import {DashboardApi} from '../api/dashboard_api.service';
 
 import {App} from './app.component';
 import {AppModule} from './app.module';
+import {FakePage} from '../../test_utils';
 
 describe('App', () => {
   const fakeDashboardApi = {
@@ -50,8 +50,3 @@ describe('App', () => {
     expect(app.title).toEqual('rolecall');
   });
 });
-
-/** Empty component useful for testing route navigation. */
-@Component({template: ''})
-export class FakePage {
-}

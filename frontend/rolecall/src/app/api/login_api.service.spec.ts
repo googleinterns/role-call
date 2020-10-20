@@ -1,17 +1,29 @@
-import {TestBed} from '@angular/core/testing';
-import {MockGAPI} from '../mocks/mock_gapi';
-import {LoginApi} from './login_api.service';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
+import {MockGAPI} from '../mocks/mock_gapi';
+import {LoggingService} from '../services/logging.service';
+
+import {LoginApi} from './login_api.service';
+import {of} from 'rxjs';
 
 describe('LoginApi', () => {
-  let service: LoginApi;
+  let mockLoggingService: jasmine.SpyObj<LoggingService>;
+  let mockRouter: jasmine.SpyObj<Router>;
+  let mockHttpClient: jasmine.SpyObj<HttpClient>;
   let mockObj = new MockGAPI();
   let mockGAPI = mockObj.mock();
-
+  let service: LoginApi;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(LoginApi);
+    const successResponse = {status: 200};
+    mockHttpClient =
+        jasmine.createSpyObj('mockHttpClient', {get: of(successResponse)});
+    mockRouter = jasmine.createSpyObj('mockRouter', ['navigateByUrl']);
+    mockLoggingService =
+        jasmine.createSpyObj('mockLoggingService', ['logError']);
+
+    service = new LoginApi(mockLoggingService, mockHttpClient, mockRouter);
     mockObj = new MockGAPI();
     mockGAPI = mockObj.mock();
     // @ts-ignore
@@ -74,12 +86,12 @@ describe('LoginApi', () => {
     expect(service.isLoggedIn).toBeTrue();
   });
 
-  it('should return null or undefined user if not signed in', async () => {
+  it('should return undefined user if not signed in', async () => {
     const loginRespProm = service.login(true);
     await loginRespProm;
     mockObj.isSignedInVal = false;
 
-    expect(service.authInstance.currentUser.get()).toBeNull();
+    expect(service.authInstance.currentUser.get()).toBeUndefined();
   });
 
   it('should not authenticate if sign in promise is rejected', async () => {
@@ -131,7 +143,7 @@ describe('LoginApi', () => {
 
     expect(loginResp.authenticated).toBeTrue();
 
-    service.signOut();
+    await service.signOut();
 
     expect(service.authInstance.isSignedIn.get()).toBeFalse();
     expect(service.isLoggedIn).toBeFalse();
@@ -140,9 +152,8 @@ describe('LoginApi', () => {
   it('should sign out when not signed in', async () => {
     expect(service.isLoggedIn).toBeFalse();
 
-    service.signOut();
+    await service.signOut();
 
     expect(service.isLoggedIn).toBeFalse();
   });
-
 });
