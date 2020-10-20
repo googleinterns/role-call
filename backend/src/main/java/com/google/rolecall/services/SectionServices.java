@@ -223,6 +223,13 @@ public class SectionServices {
                     "Cannot delete Position if it has a cast or is involved in a performance.");
           }
 
+          if(positionToDelete.getSiblingId() > 0) {
+            try {
+              sectionRepo.deleteById(positionToDelete.getSiblingId());
+            } catch(IllegalArgumentException e) {
+            }
+          }
+
           section.removePosition(positionToDelete);
           siblingIndexArray[loopCounter] = -1;
           continue;
@@ -275,14 +282,62 @@ public class SectionServices {
    * Deletes an existing {@link Section} object by id and all children objects.
    * 
    * @param id Unique id for the {@link Section} object to be deleted
-   * @throws EntityNotFoundException The id does not match and existing {@link Section}
+   * @throws EntityNotFoundException if thee id does not match an existing {@link Section}
    *    in the database.
    */
   public void deleteSection(int id) throws EntityNotFoundException, InvalidParameterException {
+    assertDeleteIsAllowed(id, false);
+    Section section = getSection(id);
+
+    if(section.getType() == Section.Type.SUPER) {
+      // Check that all children are OK to delete
+      for(Position position: section.getPositions()) {
+        Integer childId = position.getSiblingId();
+        if(childId > 0) {
+          Optional<Section> childQuery = sectionRepo.findById(childId);
+          if(!childQuery.isEmpty()) {
+            assertDeleteIsAllowed(childId, true);
+          }
+        }
+      }
+      // If none of the children have a delete problem, we can delete
+      for(Position position: section.getPositions()) {
+        Integer childId = position.getSiblingId();
+        if(childId > 0) {
+          try {
+            sectionRepo.deleteById(childId);
+          } catch(IllegalArgumentException e) {
+          }
+        }
+      }
+    }  
+    sectionRepo.deleteById(id);
+  }
+
+  // Utility functions
+
+    /** 
+   * Ensures that the Super Ballet and all its chilren are allowed to be deleted.
+   * This means,
+   * 1) they must not have casts associated with them,
+   * 2) they must not be included in any performance, or
+   * 3) a Super Ballet child must not be deleted "from the outside" --
+   * it must be deleted from inside the Super Ballet.
+   * 
+   * @param id For the Super Ballet, this is the standard section id. For the
+   *    children, this is the siblingId in every position / ballet child.
+   * @param deleteSuperChildIsOk marks that condition 3) is not the case. We are on the
+   *    inside, and it is OK to delete a Super Ballet Child.
+   * @throws EntityNotFoundException if the id does not match an existing {@link Section}
+   *    in the database.
+   * @throws InvalidParameterException if conditions 1) through 3) are false.
+   */
+  private void assertDeleteIsAllowed(int id, boolean deleteSuperChildIsOk)
+      throws EntityNotFoundException, InvalidParameterException {
     Section section = getSection(id);
 
     Integer siblingId = section.getSiblingId();
-    if(siblingId != null) {
+    if(!deleteSuperChildIsOk && siblingId != null) {
       Optional<Position> test = positionRepo.findById(siblingId);
       if(test.isEmpty()) {
         // Super Ballet's internal Ballet/Position structure has already been deleted
@@ -298,11 +353,7 @@ public class SectionServices {
       throw new InvalidParameterException(
           "Cannot delete Ballet if it has a Cast or is part of a Performance");
     }
-
-    sectionRepo.deleteById(id);
   }
-
-  // Utility functions
 
   private void updateSuperBalletChildren(Section section, Integer[] siblingIndexArray,
       boolean isParentSuper) throws InvalidParameterException {
@@ -343,7 +394,7 @@ public class SectionServices {
               .setNotes(sibling.getNotes())
               .setOrder(sibling.getOrder())
               .setSiblingId(siblingId == -1 ? sibling.getSiblingId() : siblingId)
-              .setSize(sibling.getSiblingId())
+              .setSize(-1)
               .build();
           positionRepo.save(updatedSibling);
         } catch (InvalidParameterException e) {
