@@ -1,19 +1,25 @@
-import {HttpClient, HttpHandler} from '@angular/common/http';
-import {TestBed} from '@angular/core/testing';
+import {HttpClient} from '@angular/common/http';
+
+import {LoggingService} from '../services/logging.service';
+import {HeaderUtilityService} from '../services/header-utility.service';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+
 import {DashboardApi} from './dashboard_api.service';
 
 describe('DashboardApi', () => {
+  const fakeLoggingService = {} as LoggingService;
+  const fakeHttpClient = {} as HttpClient;
+  const fakeHeaderUtilityService = {} as HeaderUtilityService;
+  const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
+
   let service: DashboardApi;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [HttpClient, HttpHandler]
-    });
-    service = TestBed.inject(DashboardApi);
+    service = new DashboardApi(fakeLoggingService, fakeHttpClient,
+        fakeHeaderUtilityService, fakeResponseStatusHandlerService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
 });

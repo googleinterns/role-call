@@ -150,16 +150,17 @@ export class LoginApi {
   }
 
   /** Sign out of Google OAuth2. */
-  public async signOut() {
+  public async signOut(): Promise<void> {
     if (environment.mockBackend) {
       if (this.isLoggedIn) {
         this.authInstance.signOut();
       }
       this.isLoggedIn = false;
       this.refresh();
+      return Promise.resolve();
     } else {
       // Hit the logout endpoint to invalidate session
-      this.http.get(environment.backendURL + 'logout',
+      return this.http.get(environment.backendURL + 'logout',
           {
             observe: 'response',
             headers: {
@@ -183,8 +184,9 @@ export class LoginApi {
           this.resolveLogin = res;
         });
         this.refresh();
-      }).catch(() => {
+      }).catch((e) => {
         alert('Sign out failed!');
+        console.log(e);
       });
     }
   }
