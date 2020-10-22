@@ -45,6 +45,12 @@ public class User {
   private String email;
 
   @Basic
+  private String notificationEmail;
+
+  @Basic
+  private String pictureFile;
+
+  @Basic
   private String phoneNumber;
 
   @Basic
@@ -113,6 +119,14 @@ public class User {
 
   public String getEmail() {
     return email;
+  }
+
+  public String getNotificationEmail() {
+    return notificationEmail;
+  }
+
+  public String getPictureFile() {
+    return pictureFile;
   }
 
   public String getPhoneNumber() {
@@ -247,6 +261,8 @@ public class User {
         .setLastName(lastName)
         .setSuffix(suffix)
         .setEmail(email)
+        .setNotificationEmail(notificationEmail)
+        .setPictureFile(pictureFile)
         .setPhoneNumber(phoneNumber)
         .setDateJoined(dateJoined)
         .setIsAdmin(isAdmin)
@@ -287,6 +303,8 @@ public class User {
     private String lastName;
     private String suffix;
     private String email;
+    private String notificationEmail;
+    private String pictureFile;
     private String phoneNumber;
     private Calendar dateJoined;
     private Boolean isAdmin = false;
@@ -336,6 +354,20 @@ public class User {
     public Builder setEmail(String email) {
       if(email != null) {
         this.email = email.toLowerCase();
+      }
+      return this;
+    }
+  
+    public Builder setNotificationEmail(String notificationEmail) {
+      if(email != null) {
+        this.notificationEmail = notificationEmail.toLowerCase();
+      }
+      return this;
+    }
+  
+    public Builder setPictureFile(String pictureFile) {
+      if(email != null) {
+        this.pictureFile = pictureFile.toLowerCase();
       }
       return this;
     }
@@ -470,6 +502,8 @@ public class User {
       user.lastName = this.lastName;
       user.suffix = this.suffix;
       user.email = this.email;
+      user.notificationEmail = this.notificationEmail;
+      user.pictureFile = this.pictureFile;
       user.phoneNumber = this.phoneNumber;
       user.dateJoined = this.dateJoined;
       user.isAdmin = this.isAdmin;
@@ -498,6 +532,8 @@ public class User {
       this.lastName = user.lastName;
       this.suffix = user.suffix;
       this.email = user.email;
+      this.notificationEmail = user.notificationEmail;
+      this.pictureFile = user.pictureFile;
       this.dateJoined = user.dateJoined;
       this.isAdmin = user.isAdmin;
       this.isChoreographer = user.isChoreographer;

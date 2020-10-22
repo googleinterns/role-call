@@ -36,6 +36,14 @@ public abstract class UserInfo {
   public abstract String email();
 
   @Nullable
+  @JsonProperty("notificationEmail")
+  public abstract String notificationEmail();
+
+  @Nullable
+  @JsonProperty("pictureFile")
+  public abstract String pictureFile();
+
+  @Nullable
   @JsonProperty("phoneNumber")
   public abstract String phoneNumber();
 
@@ -141,6 +149,12 @@ public abstract class UserInfo {
 
     @JsonProperty("email")
     public abstract Builder setEmail(String email);
+
+    @JsonProperty("notificationEmail")
+    public abstract Builder setNotificationEmail(String notificationEmail);
+
+    @JsonProperty("pictureFile")
+    public abstract Builder setPictureFile(String pictureFile);
 
     @JsonProperty("phoneNumber")
     public abstract Builder setPhoneNumber(String phoneNumber);
