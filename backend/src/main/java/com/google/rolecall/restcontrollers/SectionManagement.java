@@ -15,11 +15,13 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import com.google.rolecall.services.SectionServices;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+/** Endpoints for manipulating Sections and Positions. */
 @Endpoint(Constants.Mappings.SECTION_MANAGEMENT)
 public class SectionManagement extends AsyncRestEndpoint {
 
@@ -43,7 +45,7 @@ public class SectionManagement extends AsyncRestEndpoint {
   }
 
   /**
-   * Gets an {@link Section} object by its {@code USER_ID}.
+   * Gets an {@link Section} object by its {@code SECTION_ID}.
    *
    * @param id the unique ID associate with a section.
    * @return {@link SectionInfo} object with the target ID.
@@ -74,7 +76,7 @@ public class SectionManagement extends AsyncRestEndpoint {
    *    the new {@link Section} and children {@link Position}.
    * @return {@Link SectionInfo} object of {@link Section} created and saved in the database.
    * @throws InvalidParameterException if {@Link SectionInfo} object does not contain sufficient
-   *     or valid new user information. See {@link SectionServices.createSection} for specifics.
+   *     or valid new section information. See {@link SectionServices.createSection} for specifics.
    */
   @Post
   public CompletableFuture<ResponseSchema<SectionInfo>> createNewSection(Principal principal,
@@ -103,7 +105,7 @@ public class SectionManagement extends AsyncRestEndpoint {
    *    the new {@link Section} and children {@link Position}.
    * @return {@Link SectionInfo} object of {@link Section} saved in the database.
    * @throws InvalidParameterException if {@Link SectionInfo} object does not contain sufficient
-   *     or valid new user information. See {@link SectionServices.editSection} for specifics.
+   *    or valid new section information. See {@link SectionServices.editSection} for specifics.
    */
   @Patch
   public CompletableFuture<ResponseSchema<SectionInfo>> editSection(Principal principal,

@@ -13,12 +13,14 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.E
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.UserServices;
 import java.security.Principal;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/** Endpoints for manipulating User objects. */
 @Endpoint("/api/user")
 public class UserManagement extends AsyncRestEndpoint {
   

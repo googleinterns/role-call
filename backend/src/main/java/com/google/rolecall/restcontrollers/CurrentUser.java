@@ -16,7 +16,7 @@ public class CurrentUser extends AsyncRestEndpoint {
   /**
    * Gets the current User from the session.
    * 
-   * @return {@link UserInfo} objects.
+   * @return {@link UserInfo} object.
    */
   @Get
   public CompletableFuture<ResponseSchema<UserInfo>> getCurrentUser(Principal principal) {

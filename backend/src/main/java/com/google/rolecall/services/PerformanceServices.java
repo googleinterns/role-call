@@ -87,6 +87,7 @@ public class PerformanceServices {
 
   // Helper Methods
 
+  /** Creates a new performance object and publishes performacne */
   private Performance buildNewPerformance(PerformanceInfo info) 
     throws InvalidParameterException, EntityNotFoundException {
     Performance performance = Performance.newBuilder()
