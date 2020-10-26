@@ -5,23 +5,19 @@ import {Injectable} from '@angular/core';
 export class SuperBalletDisplayService {
   superBalletIsOpenMap = new Map<string, boolean>();
 
-  changeOpenState(uuid: string, isOpen: boolean) {
-    this.superBalletIsOpenMap.set(uuid, isOpen);
+  isInDisplayList(balletId: string) {
+    return this.superBalletIsOpenMap.has(balletId);
   }
 
-  isOpen(uuid: string): boolean {
-    return Boolean(this.superBalletIsOpenMap.get(uuid));
+  isOpen(balletId: string): boolean {
+    return Boolean(this.superBalletIsOpenMap.get(balletId));
   }
 
-  removeFromDisplayList(uuid: string) {
-    if (this.superBalletIsOpenMap.has(uuid)) {    
-      this.superBalletIsOpenMap.delete(uuid);
-    }    
+  removeFromDisplayList(balletId: string) {
+    return this.superBalletIsOpenMap.delete(balletId);
   }
 
-  verifyIsInDisplayList(uuid: string, isOpen: boolean) {
-    if (!this.superBalletIsOpenMap.has(uuid)) {
-      this.superBalletIsOpenMap.set(uuid, isOpen);
-    }
+  setOpenState(balletId: string, isOpen: boolean) {
+    this.superBalletIsOpenMap.set(balletId, isOpen);
   }
 }

@@ -161,8 +161,9 @@ export class PieceEditor implements OnInit {
     }
 
     const workPieces = pieces.map(piece => {
-      if (piece.type === 'SUPER') {
-        this.superBalletDisplay.verifyIsInDisplayList(piece.uuid, false);
+      if (piece.type === 'SUPER' &&
+          !this.superBalletDisplay.isInDisplayList(piece.uuid)) {
+        this.superBalletDisplay.setOpenState(piece.uuid, false);
       }
       return {
         ...piece,
@@ -281,7 +282,9 @@ export class PieceEditor implements OnInit {
       addingPositions: [],
       deletePositions: [],
     };
-    this.superBalletDisplay.verifyIsInDisplayList(newPiece.uuid, newPiece.isOpen);
+    if (newPiece.type === 'SUPER') {
+      this.superBalletDisplay.setOpenState(newPiece.uuid, newPiece.isOpen);
+    }
     this.selectedSegmentType = type;
     this.currentSelectedPiece = newPiece;
     this.workingPieces.push(newPiece);
@@ -320,7 +323,7 @@ export class PieceEditor implements OnInit {
           if (prevUUID !== foundSame.uuid) {
             const isOpen = this.superBalletDisplay.isOpen(prevUUID);
             this.superBalletDisplay.removeFromDisplayList(prevUUID);
-            this.superBalletDisplay.changeOpenState(foundSame.uuid, isOpen);
+            this.superBalletDisplay.setOpenState(foundSame.uuid, isOpen);
           }
           this.setCurrentPiece(foundSame);
         }
@@ -581,7 +584,7 @@ export class PieceEditor implements OnInit {
     const superBallet = this.displayedPieces[index];
     if (superBallet.type === 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
-      this.superBalletDisplay.changeOpenState(
+      this.superBalletDisplay.setOpenState(
           superBallet.uuid, superBallet.isOpen);
     }
     this.buildRenderingList();

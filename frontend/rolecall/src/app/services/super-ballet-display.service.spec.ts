@@ -4,7 +4,7 @@ describe('SuperBalletDisplayService', () => {
   let service: SuperBalletDisplayService;
 
   beforeEach(() => {
-    service = new SuperBalletDisplayService;
+    service = new SuperBalletDisplayService();
   });
 
   it('should be created', () => {
