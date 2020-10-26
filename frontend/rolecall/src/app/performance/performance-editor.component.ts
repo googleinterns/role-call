@@ -119,9 +119,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.deleteWorkingCasts();
   }
 
-  closeStepper() {
-  }
-
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformances = perfs.sort((a, b) => a.step_1.date - b.step_1.date);
     this.publishedPerfs = this.allPerformances.filter(

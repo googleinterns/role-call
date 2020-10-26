@@ -8,7 +8,7 @@ import * as APITypes from 'src/api_types';
 
 import {Piece, PieceApi, PieceType, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
-import {DisplayService} from '../services/super-display.service';
+import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
 
 export type WorkingPiece = Piece & {
   addingPositions: DraggablePosition[];
@@ -80,7 +80,7 @@ export class PieceEditor implements OnInit {
       private pieceAPI: PieceApi,
       private location: Location,
       private respHandler: ResponseStatusHandlerService,
-      private superDisplay: DisplayService) {
+      private superBalletDisplay: SuperBalletDisplayService) {
   }
 
   ngOnInit(): void {
@@ -100,14 +100,14 @@ export class PieceEditor implements OnInit {
     this.displayedPieces = this.workingPieces.filter(piece => !piece.siblingId);
     this.displayedPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     for (let i = 0; i < this.displayedPieces.length; i++) {
-      if (this.displayedPieces[i].type === 'SUPER' &&
-          this.superDisplay.isOpen(this.displayedPieces[i].uuid)) {
-        this.displayedPieces[i].isOpen = true;
+      const displayPiece = this.displayedPieces[i];
+      if (displayPiece.type === 'SUPER' &&
+          this.superBalletDisplay.isOpen(displayPiece.uuid)) {
+        displayPiece.isOpen = true;
         // If Super Ballet is open, add children
-        this.displayedPieces[i].positions.sort(
-            (a, b) => a.order < b.order ? -1 : 1);
+        displayPiece.positions.sort((a, b) => a.order < b.order ? -1 : 1);
         const children: WorkingPiece[] = [];
-        for (const position of this.displayedPieces[i].positions) {
+        for (const position of displayPiece.positions) {
           const uuid = String(position.siblingId);
           const child = this.workingPieces.find(wp => wp.uuid === uuid);
           children.push(child);
@@ -162,7 +162,7 @@ export class PieceEditor implements OnInit {
 
     const workPieces = pieces.map(piece => {
       if (piece.type === 'SUPER') {
-        this.superDisplay.verifyLoad(piece.uuid, false);
+        this.superBalletDisplay.verifyIsInDisplayList(piece.uuid, false);
       }
       return {
         ...piece,
@@ -281,7 +281,7 @@ export class PieceEditor implements OnInit {
       addingPositions: [],
       deletePositions: [],
     };
-    this.superDisplay.verifyLoad(newPiece.uuid, newPiece.isOpen);
+    this.superBalletDisplay.verifyIsInDisplayList(newPiece.uuid, newPiece.isOpen);
     this.selectedSegmentType = type;
     this.currentSelectedPiece = newPiece;
     this.workingPieces.push(newPiece);
@@ -318,9 +318,9 @@ export class PieceEditor implements OnInit {
             piece => piece.uuid === prevUUID);
         if (foundSame && this.location.path().startsWith('/segment')) {
           if (prevUUID !== foundSame.uuid) {
-            const isOpen = this.superDisplay.isOpen(prevUUID);
-            this.superDisplay.delete(prevUUID);
-            this.superDisplay.update(foundSame.uuid, isOpen);
+            const isOpen = this.superBalletDisplay.isOpen(prevUUID);
+            this.superBalletDisplay.removeFromDisplayList(prevUUID);
+            this.superBalletDisplay.changeOpenState(foundSame.uuid, isOpen);
           }
           this.setCurrentPiece(foundSame);
         }
@@ -331,7 +331,8 @@ export class PieceEditor implements OnInit {
   async deletePiece() {
     let successIndicator: APITypes.SuccessIndicator = {successful: false};
     if (!this.creatingPiece) {
-      this.superDisplay.delete(this.currentSelectedPiece.uuid);
+      this.superBalletDisplay.removeFromDisplayList(
+          this.currentSelectedPiece.uuid);
       successIndicator =
           await this.pieceAPI.deletePiece(this.currentSelectedPiece);
     }
@@ -580,7 +581,8 @@ export class PieceEditor implements OnInit {
     const superBallet = this.displayedPieces[index];
     if (superBallet.type === 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
-      this.superDisplay.update(superBallet.uuid, superBallet.isOpen);
+      this.superBalletDisplay.changeOpenState(
+          superBallet.uuid, superBallet.isOpen);
     }
     this.buildRenderingList();
   }
