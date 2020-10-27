@@ -8,6 +8,13 @@ import * as APITypes from 'src/api_types';
 
 import {Piece, PieceApi, PieceType, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
+
+export type WorkingPiece = Piece & {
+  addingPositions: DraggablePosition[];
+  originalName: string;
+  isOpen: boolean;
+};
 
 type ValueName =
     'New Position' |
@@ -22,12 +29,6 @@ type DraggablePosition = {
   type: 'adding' | 'added' | 'editing';
   nameDisplay: string;
   sizeDisplay: string;
-};
-
-type WorkingPiece = Piece & {
-  addingPositions: DraggablePosition[];
-  originalName: string;
-  isOpen: boolean;
 };
 
 type RenderingItem = {
@@ -68,7 +69,6 @@ export class PieceEditor implements OnInit {
   offWhite: string = COLORS.offWhite;
 
   lastSelectedPieceName: string;
-
   currentTypeOffset = 0;
 
   segmentTypes = ['SEGMENT', 'BALLET', 'SUPER'];
@@ -79,7 +79,8 @@ export class PieceEditor implements OnInit {
       private route: ActivatedRoute,
       private pieceAPI: PieceApi,
       private location: Location,
-      private respHandler: ResponseStatusHandlerService) {
+      private respHandler: ResponseStatusHandlerService,
+      private superBalletDisplay: SuperBalletDisplayService) {
   }
 
   ngOnInit(): void {
@@ -99,12 +100,14 @@ export class PieceEditor implements OnInit {
     this.displayedPieces = this.workingPieces.filter(piece => !piece.siblingId);
     this.displayedPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     for (let i = 0; i < this.displayedPieces.length; i++) {
-      if (this.displayedPieces[i].isOpen) {
+      const displayPiece = this.displayedPieces[i];
+      if (displayPiece.type === 'SUPER' &&
+          this.superBalletDisplay.isOpen(displayPiece.uuid)) {
+        displayPiece.isOpen = true;
         // If Super Ballet is open, add children
-        this.displayedPieces[i].positions.sort(
-            (a, b) => a.order < b.order ? -1 : 1);
+        displayPiece.positions.sort((a, b) => a.order < b.order ? -1 : 1);
         const children: WorkingPiece[] = [];
-        for (const position of this.displayedPieces[i].positions) {
+        for (const position of displayPiece.positions) {
           const uuid = String(position.siblingId);
           const child = this.workingPieces.find(wp => wp.uuid === uuid);
           children.push(child);
@@ -157,12 +160,18 @@ export class PieceEditor implements OnInit {
       }
     }
 
-    const workPieces = pieces.map(piece => ({
-      ...piece,
-      addingPositions: [],
-      originalName: String(piece.name),
-      isOpen: false,
-    }));
+    const workPieces = pieces.map(piece => {
+      if (piece.type === 'SUPER' &&
+          !this.superBalletDisplay.isInDisplayList(piece.uuid)) {
+        this.superBalletDisplay.setOpenState(piece.uuid, false);
+      }
+      return {
+        ...piece,
+        addingPositions: [],
+        originalName: String(piece.name),
+        isOpen: false,
+      };
+    });
     this.workingPieces = workPieces;
 
     if (!this.urlPointingUUID) {
@@ -213,7 +222,6 @@ export class PieceEditor implements OnInit {
         this.location.replaceState('/segment/' + this.urlPointingUUID);
       }
     }
-    this.workingPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedPiece
         ? this.currentSelectedPiece.type : 'SEGMENT';
@@ -262,7 +270,6 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     const newPiece: WorkingPiece = {
       uuid: 'segment:' + Date.now(),
-
       // A Super Ballet should initially show its children
       isOpen: type === 'SUPER',
       name,
@@ -273,6 +280,9 @@ export class PieceEditor implements OnInit {
       addingPositions: [],
       deletePositions: [],
     };
+    if (newPiece.type === 'SUPER') {
+      this.superBalletDisplay.setOpenState(newPiece.uuid, newPiece.isOpen);
+    }
     this.selectedSegmentType = type;
     this.currentSelectedPiece = newPiece;
     this.workingPieces.push(newPiece);
@@ -302,12 +312,36 @@ export class PieceEditor implements OnInit {
         this.pieceSaved = true;
         this.creatingPiece = false;
         const prevUUID = this.currentSelectedPiece.uuid;
+        const superBallet = prevUUID.startsWith("segment:")
+            ? this.currentSelectedPiece : null;
+        const matchName = superBallet ? superBallet.name : "";
+        const matchLength = superBallet ? superBallet.positions.length : -1; 
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
         await this.pieceAPI.getAllPieces();
-        const foundSame = this.workingPieces.find(
-            piece => piece.uuid === prevUUID);
+        let foundSame: WorkingPiece = null;
+        for (let i = this.workingPieces.length; 0 < i--;) {
+          const piece = this.workingPieces[i];
+          if (matchName.length > 0) {
+            if (piece.name === matchName &&
+                piece.positions.length === matchLength) {
+              foundSame = piece;
+              break;
+            }
+          } else {
+            if (piece.uuid === prevUUID) {
+              foundSame = piece;
+              break;
+            }
+          }
+        }
         if (foundSame && this.location.path().startsWith('/segment')) {
+          if (prevUUID !== foundSame.uuid) {
+            const isOpen = this.superBalletDisplay.isOpen(prevUUID);
+            this.superBalletDisplay.removeFromDisplayList(prevUUID);
+            this.superBalletDisplay.setOpenState(foundSame.uuid, isOpen);
+            this.buildRenderingList();
+          }
           this.setCurrentPiece(foundSame);
         }
       }
@@ -317,6 +351,8 @@ export class PieceEditor implements OnInit {
   async deletePiece() {
     let successIndicator: APITypes.SuccessIndicator = {successful: false};
     if (!this.creatingPiece) {
+      this.superBalletDisplay.removeFromDisplayList(
+          this.currentSelectedPiece.uuid);
       successIndicator =
           await this.pieceAPI.deletePiece(this.currentSelectedPiece);
     }
@@ -565,6 +601,8 @@ export class PieceEditor implements OnInit {
     const superBallet = this.displayedPieces[index];
     if (superBallet.type === 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
+      this.superBalletDisplay.setOpenState(
+          superBallet.uuid, superBallet.isOpen);
     }
     this.buildRenderingList();
   }
