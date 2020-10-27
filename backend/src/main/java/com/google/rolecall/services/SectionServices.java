@@ -316,7 +316,7 @@ public class SectionServices {
 
   // Utility functions
 
-    /** 
+  /** 
    * Ensures that the Super Ballet and all its chilren are allowed to be deleted.
    * This means,
    * 1) they must not have casts associated with them,

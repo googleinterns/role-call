@@ -13,6 +13,7 @@ type UICastDancer = {
   uuid: string;
   firstName: string;
   lastName: string;
+  pictureFile: string;
   email: string;
 };
 
@@ -257,6 +258,7 @@ export class CastDragAndDrop implements OnInit {
             uuid: dancer.uuid,
             firstName: dancer.first_name,
             lastName: dancer.last_name,
+            pictureFile: dancer.picture_file,
             email: dancer.contact_info.email,
           };
         }
@@ -299,6 +301,7 @@ export class CastDragAndDrop implements OnInit {
           uuid: fromUser.uuid,
           firstName: fromUser.first_name,
           lastName: fromUser.last_name,
+          pictureFile: fromUser.picture_file,
           email: fromUser.contact_info.email,
         };
         this.castChangeEmitter.emit(this.dataToCast());

@@ -128,7 +128,7 @@
             <div *ngIf="dancer!==undefined">
               <img
                   class="user-image"
-                  [src]="baseImageUrl + dancer.firstName + '_' + dancer.lastName + '.jpg' | lowercase">
+                  [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase">
               {{dancer.firstName + " " + dancer.lastName}}
             </div>
           </div>
@@ -151,7 +151,7 @@
           [cdkDragData]="user">
         <img
             class="user-image"
-            [src]="baseImageUrl + user.first_name + '_' + user.last_name + '.jpg' | lowercase">
+            [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase">
         {{user.first_name + " " + user.last_name}}
       </div>
     </div>
