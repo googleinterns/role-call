@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 
-
 @Injectable({providedIn: 'root'})
 export class SuperBalletDisplayService {
-  superBalletIsOpenMap = new Map<string, boolean>();
+  private readonly superBalletIsOpenMap = new Map<string, boolean>();
 
-  isInDisplayList(balletId: string) {
+  isInDisplayList(balletId: string): boolean {
     return this.superBalletIsOpenMap.has(balletId);
   }
 
@@ -14,7 +13,7 @@ export class SuperBalletDisplayService {
   }
 
   removeFromDisplayList(balletId: string) {
-    return this.superBalletIsOpenMap.delete(balletId);
+    this.superBalletIsOpenMap.delete(balletId);
   }
 
   setOpenState(balletId: string, isOpen: boolean) {
