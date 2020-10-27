@@ -1,12 +1,12 @@
 import {ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 
 import {AppRoutingModule} from './app_routing.module';
 import {SideNav} from './side_nav.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('SideNav', () => {
   let component: SideNav;
@@ -20,8 +20,8 @@ describe('SideNav', () => {
             RouterTestingModule,
             BrowserModule,
             AppRoutingModule,
-            BrowserAnimationsModule,
-            MatIconModule
+            MatIconModule,
+            NoopAnimationsModule,
           ]
         })
         .compileComponents();

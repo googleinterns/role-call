@@ -1,19 +1,33 @@
 import {async, TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
+import {of} from 'rxjs';
+import {createSpyObjWithProps} from 'src/test_utils';
+import {Location} from '@angular/common';
+
 import {EmptyStringIfUndefinedPipe} from '../common_components/empty_string_if_undefined.pipe';
+import {UserApi} from '../api/user_api.service';
+
 import {UserEditor} from './user-editor.component';
 
-const activatedRouteStub = {
-  snapshot: {params: {uuid: 'testUUID'}}
-};
-
 describe('UserEditorComponent', () => {
+  const fakeActivatedRoute = {snapshot: {params: {uuid: 'testUUID'}}};
+  const fakeLocation = {} as Location;
+  const mockUserApi = createSpyObjWithProps({
+    baseName: 'mockUserApi',
+    methods: {getAllUsers: of([])},
+    props: {userEmitter: of([])},
+  });
+
   let userEditor: UserEditor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
           declarations: [UserEditor, EmptyStringIfUndefinedPipe],
-          providers: [{provide: ActivatedRoute, useValue: activatedRouteStub}]
+          providers: [
+            {provide: ActivatedRoute, useValue: fakeActivatedRoute},
+            {provide: UserApi, useValue: mockUserApi},
+            {provide: Location, userValue: fakeLocation},
+          ],
         })
         .compileComponents();
   }));

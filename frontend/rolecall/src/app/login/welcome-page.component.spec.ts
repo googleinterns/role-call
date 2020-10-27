@@ -1,5 +1,6 @@
 import {async, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
+import {FakePage} from 'src/test_utils';
 
 import {LoginApi} from '../api/login_api.service';
 
@@ -14,7 +15,9 @@ describe('WelcomePageComponent', () => {
     TestBed.configureTestingModule({
           declarations: [WelcomePage],
           imports: [
-            RouterTestingModule,
+            RouterTestingModule.withRoutes([
+              {path: `dashboard`, component: FakePage},
+            ]),
           ],
           providers: [
             {provide: LoginApi, useValue: fakeLoginApi},

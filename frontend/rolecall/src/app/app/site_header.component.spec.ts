@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClient} from '@angular/common/http';
@@ -44,9 +44,9 @@ describe('SiteHeader', () => {
           imports: [
             BrowserModule,
             AppRoutingModule,
-            BrowserAnimationsModule,
             RouterTestingModule,
             MatIconModule,
+            NoopAnimationsModule,
           ],
           providers: [
             {provide: LoginApi, useValue: mockLoginApi},

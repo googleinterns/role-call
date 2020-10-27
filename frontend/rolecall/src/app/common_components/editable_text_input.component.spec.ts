@@ -1,6 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {EditableTextInput} from './editable_text_input.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
+import {EditableTextInput} from './editable_text_input.component';
+import {CommonComponentsModule} from './common_components.module';
 
 describe('EditableTextInput', () => {
   let component: EditableTextInput;
@@ -8,7 +10,11 @@ describe('EditableTextInput', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-          declarations: [EditableTextInput]
+          declarations: [EditableTextInput],
+          imports: [
+            CommonComponentsModule,
+            NoopAnimationsModule,
+          ]
         })
         .compileComponents();
   }));
