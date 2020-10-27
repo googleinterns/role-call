@@ -222,7 +222,6 @@ export class PieceEditor implements OnInit {
         this.location.replaceState('/segment/' + this.urlPointingUUID);
       }
     }
-    this.workingPieces.sort((a, b) => a.name < b.name ? -1 : 1);
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedPiece
         ? this.currentSelectedPiece.type : 'SEGMENT';
@@ -271,7 +270,6 @@ export class PieceEditor implements OnInit {
     this.prevWorkingState = undefined;
     const newPiece: WorkingPiece = {
       uuid: 'segment:' + Date.now(),
-
       // A Super Ballet should initially show its children
       isOpen: type === 'SUPER',
       name,
@@ -314,16 +312,35 @@ export class PieceEditor implements OnInit {
         this.pieceSaved = true;
         this.creatingPiece = false;
         const prevUUID = this.currentSelectedPiece.uuid;
+        const superBallet = prevUUID.startsWith("segment:")
+            ? this.currentSelectedPiece : null;
+        const matchName = superBallet ? superBallet.name : "";
+        const matchLength = superBallet ? superBallet.positions.length : -1; 
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
         await this.pieceAPI.getAllPieces();
-        const foundSame = this.workingPieces.find(
-            piece => piece.uuid === prevUUID);
+        let foundSame: WorkingPiece = null;
+        for (let i = this.workingPieces.length; 0 < i--;) {
+          const piece = this.workingPieces[i];
+          if (matchName.length > 0) {
+            if (piece.name === matchName &&
+                piece.positions.length === matchLength) {
+              foundSame = piece;
+              break;
+            }
+          } else {
+            if (piece.uuid === prevUUID) {
+              foundSame = piece;
+              break;
+            }
+          }
+        }
         if (foundSame && this.location.path().startsWith('/segment')) {
           if (prevUUID !== foundSame.uuid) {
             const isOpen = this.superBalletDisplay.isOpen(prevUUID);
             this.superBalletDisplay.removeFromDisplayList(prevUUID);
             this.superBalletDisplay.setOpenState(foundSame.uuid, isOpen);
+            this.buildRenderingList();
           }
           this.setCurrentPiece(foundSame);
         }
