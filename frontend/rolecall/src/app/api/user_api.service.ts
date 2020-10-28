@@ -19,10 +19,12 @@ export type User = {
   middle_name: string | undefined;
   last_name: string | undefined;
   suffix: string | undefined;
+  picture_file:  string | undefined;
   date_joined: number | undefined;
   contact_info: {
     phone_number: string | undefined;
     email: string | undefined;
+    notification_email: string | undefined;
     emergency_contact: {
       name: string | undefined;
       phone_number: string | undefined;
@@ -37,7 +39,9 @@ interface RawUser {
   middleName: string;
   lastName: string;
   suffix: string;
+  pictureFile: string;
   email: string;
+  notificationEmail: string;
   phoneNumber: string;
   dateJoined: string;
   isAdmin: boolean;
@@ -139,11 +143,13 @@ export class UserApi {
                   middle_name: rawUser.middleName,
                   last_name: rawUser.lastName,
                   suffix: rawUser.suffix,
+                  picture_file: rawUser.pictureFile,
                   date_joined: moment(rawUser.dateJoined, 'MM-DD-YYYY')
                       .valueOf(),
                   contact_info: {
                     phone_number: rawUser.phoneNumber,
                     email: rawUser.email,
+                    notification_email: rawUser.notificationEmail,
                     emergency_contact: {
                       name: rawUser.emergencyContactName,
                       phone_number: rawUser.emergencyContactNumber,
@@ -181,7 +187,9 @@ export class UserApi {
                 middleName: user.middle_name,
                 lastName: user.last_name,
                 suffix: user.suffix,
+                pictureFile: user.picture_file,
                 email: user.contact_info.email,
+                notificationEmail: user.contact_info.notification_email,
                 phoneNumber: user.contact_info.phone_number,
                 dateJoined:
                     moment(user.date_joined).format('MM-DD-YYYY').toString(),
@@ -222,7 +230,9 @@ export class UserApi {
                 middleName: user.middle_name,
                 lastName: user.last_name,
                 suffix: user.suffix,
+                pictureFile: user.picture_file,
                 email: user.contact_info.email,
+                notificationEmail: user.contact_info.notification_email,
                 phoneNumber: user.contact_info.phone_number,
                 dateJoined:
                     moment(user.date_joined).format('MM-DD-YYYY').toString(),

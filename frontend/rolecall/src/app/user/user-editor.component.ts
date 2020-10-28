@@ -47,17 +47,25 @@ export class UserEditor implements OnInit {
       key: 'suffix',
       type: 'string'
     },
+    'Notification Email': {
+      key: 'contact_info.notification_email',
+      type: 'string'
+    },
     'Email': {
       key: 'contact_info.email',
+      type: 'string'
+    },
+    'Phone': {
+      key: 'contact_info.phone_number',
+      type: 'string'
+    },
+    'Picture File': {
+      key: 'picture_file',
       type: 'string'
     },
     'Date Joined': {
       key: 'date_joined',
       type: 'date'
-    },
-    'Phone': {
-      key: 'contact_info.phone_number',
-      type: 'string'
     },
     'Roles': {
       key: 'has_roles',
@@ -217,6 +225,7 @@ export class UserEditor implements OnInit {
       middle_name: undefined,
       last_name: undefined,
       suffix: undefined,
+      picture_file: undefined,
       has_roles: {
         isAdmin: false,
         isChoreographer: false,
@@ -236,6 +245,7 @@ export class UserEditor implements OnInit {
       contact_info: {
         phone_number: undefined,
         email: undefined,
+        notification_email: undefined,
         emergency_contact: {
           name: undefined,
           phone_number: undefined,

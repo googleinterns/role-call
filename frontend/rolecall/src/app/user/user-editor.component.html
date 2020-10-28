@@ -79,8 +79,16 @@
           </app-text-input>
         </div>
       </div>
-      <div class="email-date-container">
-        <div class="email-container">
+
+      <div class="notification-email-email-container">
+
+          <div class="email-input">
+            <app-text-input
+                valueName="Notification Email"
+                [initValue]="currentSelectedUser?.contact_info?.notification_email || ''"
+                (valueChange)="onInputChange($event)">
+            </app-text-input>
+          </div>
           <div class="email-input">
             <app-text-input
                 valueName="Email"
@@ -89,17 +97,11 @@
                 (valueChange)="onInputChange($event)">
             </app-text-input>
           </div>
-        </div>
-        <div class="date-input">
-          <app-date-input
-              valueName="Date Joined"
-              [initValue]="currentSelectedUser?.date_joined || getCurrentDate()"
-              (valueChange)="onInputChange($event)">
-          </app-date-input>
-        </div>
+
       </div>
-      <div class="phone-priv-class-container">
-        <div class="phone-container">
+
+      <div class="phone-picture-file-container">
+
           <div class="phone-input">
             <app-text-input
                 valueName="Phone"
@@ -107,6 +109,23 @@
                 (valueChange)="onInputChange($event)">
             </app-text-input>
           </div>
+
+        <div class="picture-file-input">
+          <app-text-input
+              valueName="Picture File"
+              [initValue]="currentSelectedUser?.picture_file || ''"
+              (valueChange)="onInputChange($event)">
+          </app-text-input>
+        </div>
+      </div>
+
+      <div class="date-priv-class-container">
+        <div class="date-input">
+          <app-date-input
+              valueName="Date Joined"
+              [initValue]="currentSelectedUser?.date_joined || getCurrentDate()"
+              (valueChange)="onInputChange($event)">
+          </app-date-input>
         </div>
         <div class="priv-class-input">
           <app-multi-select-input
@@ -118,6 +137,7 @@
           </app-multi-select-input>
         </div>
       </div>
+
       <div class="permissions-input">
         <app-multi-select-input
             valueName="Permissions"

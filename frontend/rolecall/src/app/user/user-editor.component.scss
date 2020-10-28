@@ -102,37 +102,22 @@
   justify-content: space-between;
 }
 
-.email-date-container {
+.notification-email-email-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.phone-priv-class-container {
+.phone-picture-file-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.email-container {
+.date-priv-class-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 50%;
-}
-
-.phone-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 50%;
-}
-
-.phone-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(100% - 2em);
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .name-input {
@@ -153,21 +138,35 @@
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
-  width: calc(100% - 2em);
+  width: calc(50% - 2em);
 }
 
-.date-input {
+.phone-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
   width: calc(50% - 2em);
 }
 
+.picture-file-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(50% - 2em);
+}
+
+.date-input {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(30% - 2em);
+}
+
 .priv-class-input {
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
-  width: calc(100% - 2em);
+  width: calc(70% - 2em);
 }
 
 .permissions-input {
