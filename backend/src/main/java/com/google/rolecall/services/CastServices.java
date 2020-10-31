@@ -61,7 +61,9 @@ public class CastServices {
     Cast cast = createNewCast(newCast);
     List<String> warnings = verifySubCasts(cast);
 
+    System.out.printf("AAA\n");
     cast = castRepo.save(cast);
+    System.out.printf("BBB\n");
 
     ServiceResult<Cast> result = new ServiceResult<>(cast, warnings);
     return result;

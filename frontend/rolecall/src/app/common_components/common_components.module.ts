@@ -12,6 +12,7 @@ import {EditableDateInput} from './editable_date_input.component';
 import {EditableMultiSelectInput} from './editable_multiselect_input.component';
 import {EditableTextInput} from './editable_text_input.component';
 import {EmptyStringIfUndefinedPipe} from './empty_string_if_undefined.pipe';
+import {FullNamePipe} from './full-name.pipe';
 import {LoadingSpinnerComponent} from './loading-spinner.component';
 import {NumberToPlacePipe} from './number_to_place.pipe';
 import {Stepper} from './stepper.component';
@@ -19,7 +20,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   declarations: [EditableTextInput, EditableDateInput, EditableMultiSelectInput,
-    EmptyStringIfUndefinedPipe, NumberToPlacePipe, Stepper,
+    EmptyStringIfUndefinedPipe, FullNamePipe, NumberToPlacePipe, Stepper,
     LoadingSpinnerComponent],
   imports: [
     CommonModule,
@@ -34,7 +35,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     ClickOutsideModule
   ],
   exports: [EditableTextInput, EditableDateInput, EditableMultiSelectInput,
-    EmptyStringIfUndefinedPipe, NumberToPlacePipe, Stepper,
+    EmptyStringIfUndefinedPipe, FullNamePipe, NumberToPlacePipe, Stepper,
     LoadingSpinnerComponent]
 })
 export class CommonComponentsModule {
