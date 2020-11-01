@@ -1,11 +1,9 @@
 package com.google.rolecall.authentication;
 
+import com.google.rolecall.services.GoogleAuthServices;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.google.rolecall.services.GoogleAuthServices;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -19,7 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-@Profile({ "prod", "qa" })
+@Profile({"prod", "qa"})
 @Component
 public class CustomOauthAuthenticationProvider implements AuthenticationProvider {
 
@@ -29,14 +27,11 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
   private Logger logger = Logger.getLogger(CustomOauthAuthenticationProvider.class.getName());
 
   /**
-   * Authenticates a user through existence in the database and a valid Google
-   * Oauth Id Token.
-   * 
+   * Authenticates a user through existence in the database and a valid Google Oauth Id Token.
+   *
    * @param authentication current authentication of a user
-   * @return Returns the user's authentication as a
-   *         {@link RememberAuthenticationToken} token
-   * @throws AuthenticationException when bad credentials are provided or is
-   *                                 unable to authenticate
+   * @return Returns the user's authentication as a {@link RememberAuthenticationToken} token
+   * @throws AuthenticationException when bad credentials are provided or is unable to authenticate
    */
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -49,7 +44,8 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
     try {
       user = detailService.loadUserByUsername(email);
     } catch (UsernameNotFoundException ex) {
-      throw new BadCredentialsException(String.format("User with email %s could not be authenticated.", email));
+      throw new BadCredentialsException(
+          String.format("User with email %s could not be authenticated.", email));
     }
 
     boolean isValid = false;
@@ -71,7 +67,8 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
 
     logger.log(Level.INFO, String.format("Login for %s was successful", email));
 
-    Authentication auth = new RememberMeAuthenticationToken("Bad_HardCoded_Key", user, user.getAuthorities());
+    Authentication auth =
+        new RememberMeAuthenticationToken("Bad_HardCoded_Key", user, user.getAuthorities());
     return auth;
   }
 
@@ -80,7 +77,8 @@ public class CustomOauthAuthenticationProvider implements AuthenticationProvider
     return authentication.equals(PreAuthenticatedAuthenticationToken.class);
   }
 
-  public CustomOauthAuthenticationProvider(UserDetailsService detailService, GoogleAuthServices authService) {
+  public CustomOauthAuthenticationProvider(
+      UserDetailsService detailService, GoogleAuthServices authService) {
     this.detailService = detailService;
     this.authService = authService;
     logger.log(Level.INFO, "Using oauth authentication");

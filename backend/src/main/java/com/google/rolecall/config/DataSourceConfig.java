@@ -10,7 +10,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -20,8 +19,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 /**
- * Configures the database connection as a DataSource object through profile
- * specific inititializing functions.
+ * Configures the database connection as a DataSource object through profile specific inititializing
+ * functions.
  */
 @Configuration
 public class DataSourceConfig {
@@ -61,7 +60,7 @@ public class DataSourceConfig {
    * spring.cloud.gcp.sql.instance-connection-name found through
    * application-prod.properties.
    */
-  @Profile({ "prod", "qa" })
+  @Profile({"prod", "qa"})
   @Bean
   public DataSource getDataSourceCloudSql() {
     return new HikariDataSource(getCloudConfig());
@@ -99,20 +98,24 @@ public class DataSourceConfig {
       password = getSecretResponse(projectId, secretName).getPayload().getData().toStringUtf8();
     } catch (IOException e) {
       throw new RuntimeException(
-          "Unable to access secret manager. " + "Applications calling this method should be run on App Engine.");
+          "Unable to access secret manager. "
+              + "Applications calling this method should be run on App Engine.");
     } catch (ApiException e) {
       logger.log(Level.SEVERE, "Error: " + e.getMessage());
-      throw new RuntimeException("Unable to get cloud db password. Call for password failed. "
-          + "Check spring.cloud.gcp.projectId and cloud.secret.name for correctness.");
+      throw new RuntimeException(
+          "Unable to get cloud db password. Call for password failed. "
+              + "Check spring.cloud.gcp.projectId and cloud.secret.name for correctness.");
     } catch (Exception e) {
-      throw new RuntimeException("Failed to get cloud db password for UNKNOWN reason: \n" + e.getMessage());
+      throw new RuntimeException(
+          "Failed to get cloud db password for UNKNOWN reason: \n" + e.getMessage());
     }
 
     return password;
   }
 
   @VisibleForTesting
-  AccessSecretVersionResponse getSecretResponse(String projectId, String secretName) throws Exception {
+  AccessSecretVersionResponse getSecretResponse(String projectId, String secretName)
+      throws Exception {
     SecretManagerServiceClient client = SecretManagerServiceClient.create();
     SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
 
