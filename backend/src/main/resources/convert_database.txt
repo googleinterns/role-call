@@ -4,7 +4,74 @@ DROP DATABASE IF EXISTS rolecall_new;
 CREATE DATABASE rolecall_new;
 USE rolecall_new;
 
-SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE IF EXISTS User;
+CREATE TABLE User (
+   id INT(11) NOT NULL PRIMARY KEY,
+   canLogin BIT(1) NOT NULL,
+   comments VARCHAR(255),
+   dateJoined DATE,
+   email VARCHAR(50) NOT NULL UNIQUE,
+   emergencyContactName VARCHAR(100),
+   emergencyContactNumber VARCHAR(50),
+   firstName VARCHAR(50) NOT NULL,
+   isActive BIT(1) NOT NULL,
+   isAdmin BIT(1) NOT NULL,
+   isCoreographer BIT(1) NOT NULL,
+   isDancer BIT(1) NOT NULL,
+   isOther BIT(1) NOT NULL,
+   lastName VARCHAR(50) NOT NULL,
+   manageCasts BIT(1) NOT NULL,
+   managePerformances BIT(1) NOT NULL,
+   managePieces BIT(1) NOT NULL,
+   manageRoles BIT(1) NOT NULL,
+   manageRules BIT(1) NOT NULL,
+   middleName VARCHAR(50),
+   notificationEmail VARCHAR(50),
+   notifications BIT(1) NOT NULL,
+   phoneNumber VARCHAR(50),
+   pictureFile VARCHAR(50),
+   suffix VARCHAR(10)
+);
+
+DROP TABLE IF EXISTS User_Id_Lookup;
+CREATE TABLE User_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Section;
+CREATE TABLE Section (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   length INT(11),
+   name varchar(100) NOT NULL,
+   notes varchar(255),
+   siblingId int(11),
+   type INT(11)
+);
+
+DROP TABLE IF EXISTS Section_Id_Lookup;
+CREATE TABLE Section_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Position;
+CREATE TABLE Position (
+   id INT(11) NOT NULL PRIMARY KEY,
+   name varchar(100) NOT NULL,
+   notes varchar(255),
+   orderOf INT(11) NOT NULL,
+   siblingId INT(11),
+   size INT(11),
+   section_id INT(11) NOT NULL,
+   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
+);
+
+DROP TABLE IF EXISTS Position_Id_Lookup;
+CREATE TABLE Position_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
 
 DROP TABLE IF EXISTS Cast;
 CREATE TABLE Cast (
@@ -21,13 +88,29 @@ CREATE TABLE Cast_Id_Lookup (
    old_id INT(11) NOT NULL UNIQUE
 );
 
+DROP TABLE IF EXISTS SubCast;
+CREATE TABLE SubCast (
+   id INT(11) NOT NULL PRIMARY KEY,
+   castNumber INT(11) NOT NULL,
+   cast_id INT(11) NOT NULL,
+   position_id INT(11) NOT NULL,
+   FOREIGN KEY ( cast_id ) REFERENCES Cast ( id ),
+   FOREIGN KEY ( position_id ) REFERENCES Position ( id )
+);
+
+DROP TABLE IF EXISTS SubCast_Id_Lookup;
+CREATE TABLE SubCast_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
 DROP TABLE IF EXISTS CastMember;
 CREATE TABLE CastMember (
    id INT(11) NOT NULL PRIMARY KEY,
    orderOf INT(11) NOT NULL,
    cast_id INT(11) NOT NULL,
    user_id INT(11) NOT NULL,
-   FOREIGN KEY ( cast_id ) REFERENCES Cast ( id ),
+   FOREIGN KEY ( cast_id ) REFERENCES SubCast ( id ),
    FOREIGN KEY ( user_id ) REFERENCES User ( id )
 );
 
@@ -56,6 +139,23 @@ CREATE TABLE Performance_Id_Lookup (
    old_id INT(11) NOT NULL UNIQUE
 );
 
+DROP TABLE IF EXISTS PerformanceSection;
+CREATE TABLE PerformanceSection (
+   id INT(11) NOT NULL PRIMARY KEY,
+   primaryCast INT(11),
+   sectionPosition INT(11) NOT NULL,
+   performance_id INT(11) NOT NULL,
+   section_id INT(11) NOT NULL,
+   FOREIGN KEY ( performance_id ) REFERENCES Performance ( id ),
+   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
+);
+
+DROP TABLE IF EXISTS PerformanceSection_Id_Lookup;
+CREATE TABLE PerformanceSection_Id_Lookup (
+   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   old_id INT(11) NOT NULL UNIQUE
+);
+
 DROP TABLE IF EXISTS PerformanceCastMember;
 CREATE TABLE PerformanceCastMember (
    id INT(11) NOT NULL PRIMARY KEY,
@@ -78,73 +178,6 @@ CREATE TABLE PerformanceCastMember_Id_Lookup (
    old_id INT(11) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS PerformanceSection;
-CREATE TABLE PerformanceSection (
-   id INT(11) NOT NULL PRIMARY KEY,
-   primaryCast INT(11),
-   sectionPosition INT(11) NOT NULL,
-   performance_id INT(11) NOT NULL,
-   section_id INT(11) NOT NULL,
-   FOREIGN KEY ( performance_id ) REFERENCES Performance ( id ),
-   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
-);
-
-DROP TABLE IF EXISTS PerformanceSection_Id_Lookup;
-CREATE TABLE PerformanceSection_Id_Lookup (
-   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   old_id INT(11) NOT NULL UNIQUE
-);
-
-DROP TABLE IF EXISTS Position;
-CREATE TABLE Position (
-   id INT(11) NOT NULL PRIMARY KEY,
-   name varchar(100) NOT NULL,
-   notes varchar(255),
-   orderOf INT(11) NOT NULL,
-   siblingId INT(11),
-   size INT(11),
-   section_id INT(11) NOT NULL,
-   FOREIGN KEY ( section_id ) REFERENCES Section ( id )
-);
-
-DROP TABLE IF EXISTS Position_Id_Lookup;
-CREATE TABLE Position_Id_Lookup (
-   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   old_id INT(11) NOT NULL UNIQUE
-);
-
-DROP TABLE IF EXISTS Section;
-CREATE TABLE Section (
-   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   length INT(11),
-   name varchar(100) NOT NULL,
-   notes varchar(255),
-   siblingId int(11),
-   type INT(11)
-);
-
-DROP TABLE IF EXISTS Section_Id_Lookup;
-CREATE TABLE Section_Id_Lookup (
-   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   old_id INT(11) NOT NULL UNIQUE
-);
-
-DROP TABLE IF EXISTS SubCast;
-CREATE TABLE SubCast (
-   id INT(11) NOT NULL PRIMARY KEY,
-   castNumber INT(11) NOT NULL,
-   cast_id INT(11) NOT NULL,
-   position_id INT(11) NOT NULL,
-   FOREIGN KEY ( cast_id ) REFERENCES Cast ( id ),
-   FOREIGN KEY ( position_id ) REFERENCES Position ( id )
-);
-
-DROP TABLE IF EXISTS SubCast_Id_Lookup;
-CREATE TABLE SubCast_Id_Lookup (
-   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   old_id INT(11) NOT NULL UNIQUE
-);
-
 DROP TABLE IF EXISTS Unavailability;
 CREATE TABLE Unavailability (
    id INT(11) NOT NULL PRIMARY KEY,
@@ -157,39 +190,6 @@ CREATE TABLE Unavailability (
 
 DROP TABLE IF EXISTS Unavailability_Id_Lookup;
 CREATE TABLE Unavailability_Id_Lookup (
-   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   old_id INT(11) NOT NULL UNIQUE
-);
-
-DROP TABLE IF EXISTS User;
-CREATE TABLE User (
-   id INT(11) NOT NULL PRIMARY KEY,
-   canLogin BIT(1) NOT NULL,
-   comments VARCHAR(255),
-   dateJoined DATE,
-   email VARCHAR(100) NOT NULL UNIQUE,
-   emergencyContactName VARCHAR(100),
-   emergencyContactNumber VARCHAR(50),
-   firstName VARCHAR(50) NOT NULL,
-   isActive BIT(1) NOT NULL,
-   isAdmin BIT(1) NOT NULL,
-   isChoreographer BIT(1) NOT NULL,
-   isDancer BIT(1) NOT NULL,
-   isOther BIT(1) NOT NULL,
-   lastName VARCHAR(50) NOT NULL,
-   manageCasts BIT(1) NOT NULL,
-   managePerformances BIT(1) NOT NULL,
-   managePieces BIT(1) NOT NULL,
-   manageRoles BIT(1) NOT NULL,
-   manageRules BIT(1) NOT NULL,
-   middleName VARCHAR(50),
-   notifications BIT(1) NOT NULL,
-   phoneNumber VARCHAR(50),
-   suffix VARCHAR(10)
-);
-
-DROP TABLE IF EXISTS User_Id_Lookup;
-CREATE TABLE User_Id_Lookup (
    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
    old_id INT(11) NOT NULL UNIQUE
 );
@@ -225,7 +225,7 @@ INSERT INTO User (
    firstName,
    isActive,
    isAdmin,
-   isChoreographer,
+   isCoreographer,
    isDancer,
    isOther,
    lastName,
@@ -235,8 +235,10 @@ INSERT INTO User (
    manageRoles,
    manageRules,
    middleName,
+   notificationEmail,
    notifications,
    phoneNumber,
+   pictureFile,
    suffix
 )
 SELECT
@@ -250,7 +252,7 @@ SELECT
    u.firstName,
    u.isActive,
    u.isAdmin,
-   u.isChoreographer,
+   u.isCoreographer,
    u.isDancer,
    u.isOther,
    u.lastName,
@@ -260,8 +262,10 @@ SELECT
    u.manageRoles,
    u.manageRules,
    u.middleName,
+   null,
    u.notifications,
    u.phoneNumber,
+   CONCAT( u.firstName, "_", u.lastName ),
    u.suffix
 FROM rolecall_db.User u
 JOIN User_Id_Lookup il ON u.id = il.old_id
@@ -518,6 +522,11 @@ JOIN PerformanceSection_Id_Lookup il_ps ON pcm.performanceSection_id = il_ps.old
 JOIN Position_Id_Lookup il_p ON pcm.position_id = il_p.old_id
 ORDER by pf.dateTime, ps.sectionPosition, pcm.orderOf, pcm.castNumber;
 
+/* Guarntees that Max(id) later doesn't return NULL */
+INSERT INTO Unavailability_Id_Lookup (
+     old_id
+)
+VALUES ( 1 );
 INSERT INTO Unavailability_Id_Lookup (
    old_id
 )
@@ -553,9 +562,78 @@ SELECT
    next_val
 FROM rolecall_db.hibernate_sequence;
 
-SET FOREIGN_KEY_CHECKS=1;
+DROP TABLE IF EXISTS MaxIds;
+CREATE TABLE MaxIds (
+  Cast INT,
+  CastMember INT,
+  Performance INT,
+  PerformanceCastMember INT,
+  PerformanceSection INT,
+  Position INT,
+  Section INT,
+  SubCast INT,
+  Unavailability INT,
+  User INT
+);
+
+INSERT INTO MaxIds(
+  Cast,
+  CastMember,
+  Performance,
+  PerformanceCastMember,
+  PerformanceSection,
+  Position,
+  Section,
+  SubCast,
+  Unavailability,
+  User
+)
+SELECT
+  Max(a.id),
+  Max(b.id),
+  Max(c.id),
+  Max(d.id),
+  Max(e.id),
+  Max(f.id),
+  Max(g.id),
+  Max(h.id),
+  Max(i.id),
+  Max(j.id)
+FROM
+  Cast_Id_Lookup a,
+  CastMember_Id_Lookup b,
+  Performance_Id_Lookup c,
+  PerformanceCastMember_Id_Lookup d,
+  PerformanceSection_Id_Lookup e,
+  Position_Id_Lookup f,
+  Section_Id_Lookup g,
+  SubCast_Id_Lookup h,
+  Unavailability_Id_Lookup i,
+  User_Id_Lookup j;
+
+  select * from MaxIds;
+
+/* hibernate_sequence has many values not just one
+INSERT INTO hibernate_sequence (
+   next_val
+)
+SELECT 1 + GREATEST (
+  Cast,
+  CastMember,
+  Performance,
+  PerformanceCastMember,
+  PerformanceSection,
+  Position,
+  Section,
+  SubCast,
+  Unavailability,
+  User
+)
+FROM MaxIds;
+*/
 
 /* delete lookup tables */
+/*
 DROP TABLE IF EXISTS Cast_Id_Lookup;
 DROP TABLE IF EXISTS CastMember_Id_Lookup;
 DROP TABLE IF EXISTS Performance_Id_Lookup;
@@ -566,3 +644,5 @@ DROP TABLE IF EXISTS Section_Id_Lookup;
 DROP TABLE IF EXISTS SubCast_Id_Lookup;
 DROP TABLE IF EXISTS Unavailability_Id_Lookup;
 DROP TABLE IF EXISTS User_Id_Lookup;
+DROP TABLE IF EXISTS MaxIds;
+*/
