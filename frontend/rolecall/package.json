@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build_prod": "ng build --prod",
-    "build_qa": "ng build --qa",
+    "build_qa": "ng build --configuration=qa",
     "test": "ng test",
     "coverage": "ng test --code-coverage",
     "lint": "ng lint",
