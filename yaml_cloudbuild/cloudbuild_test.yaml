@@ -18,10 +18,11 @@ steps:
 
   # Clean and build the backend, then deploy to GAE backend service
   - id: build_and_deploy_backend
-    name: "gcr.io/cloud-builders/mvn"
+    name: "gcr.io/cloud-builders/mvn@sha256:87877ba911c20b9cf622142e990739ecf6c25f3b380970e672d19913238b57a4"
     args:
       [
-        "-e",
+        "-P",
+        "qa",
         "-f",
         "backend/pom.xml",
         "-D",
