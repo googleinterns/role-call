@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 /**
- * Configures the database connection as a DataSource object through profile specific
- * inititializing functions.
+ * Configures the database connection as a DataSource object through profile
+ * specific inititializing functions.
  */
 @Configuration
 public class DataSourceConfig {
@@ -31,8 +31,9 @@ public class DataSourceConfig {
   private Logger logger = Logger.getLogger(DataSourceConfig.class.getName());
 
   /*
-   * Conncects to a mysql database given valid spring.datasource.url, 
-   * spring.datasource.username, spring.datasource.password found in application-dev.properties. 
+   * Conncects to a mysql database given valid spring.datasource.url,
+   * spring.datasource.username, spring.datasource.password found in
+   * application-dev.properties.
    */
   @Profile("dev")
   @Bean
@@ -53,13 +54,14 @@ public class DataSourceConfig {
   }
 
   /*
-   * Connects to a cloud sql mysql database when the server is running on a GCP App Engine
-   * instance located in the same project. Requires a secret in the secret manager containing the
-   * database password in addition to spring.cloud.gcp.sql.databaseName, 
-   * spring.datasource.username, and spring.cloud.gcp.sql.instance-connection-name found through 
+   * Connects to a cloud sql mysql database when the server is running on a GCP
+   * App Engine instance located in the same project. Requires a secret in the
+   * secret manager containing the database password in addition to
+   * spring.cloud.gcp.sql.databaseName, spring.datasource.username, and
+   * spring.cloud.gcp.sql.instance-connection-name found through
    * application-prod.properties.
    */
-  @Profile({"prod", "clouddev"})
+  @Profile({ "prod", "qa" })
   @Bean
   public DataSource getDataSourceCloudSql() {
     return new HikariDataSource(getCloudConfig());
@@ -83,9 +85,10 @@ public class DataSourceConfig {
     return config;
   }
 
-  /* 
-   * Fetches the latest version of the cloud sql database password from the GCP secret manager
-   * through a given project id and secret name (set in application-prod.properties).
+  /*
+   * Fetches the latest version of the cloud sql database password from the GCP
+   * secret manager through a given project id and secret name (set in
+   * application-prod.properties).
    */
   @VisibleForTesting
   String getCloudDbPassword() throws RuntimeException {
@@ -95,24 +98,22 @@ public class DataSourceConfig {
     try {
       password = getSecretResponse(projectId, secretName).getPayload().getData().toStringUtf8();
     } catch (IOException e) {
-      throw new RuntimeException("Unable to access secret manager. "
-          + "Applications calling this method should be run on App Engine.");
+      throw new RuntimeException(
+          "Unable to access secret manager. " + "Applications calling this method should be run on App Engine.");
     } catch (ApiException e) {
       logger.log(Level.SEVERE, "Error: " + e.getMessage());
       throw new RuntimeException("Unable to get cloud db password. Call for password failed. "
           + "Check spring.cloud.gcp.projectId and cloud.secret.name for correctness.");
     } catch (Exception e) {
-      throw new RuntimeException("Failed to get cloud db password for UNKNOWN reason: \n" 
-          + e.getMessage());
+      throw new RuntimeException("Failed to get cloud db password for UNKNOWN reason: \n" + e.getMessage());
     }
 
     return password;
   }
 
   @VisibleForTesting
-  AccessSecretVersionResponse getSecretResponse(String projectId, String secretName) 
-      throws Exception {
-    SecretManagerServiceClient  client = SecretManagerServiceClient.create();
+  AccessSecretVersionResponse getSecretResponse(String projectId, String secretName) throws Exception {
+    SecretManagerServiceClient client = SecretManagerServiceClient.create();
     SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
 
     return client.accessSecretVersion(name);

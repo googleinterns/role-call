@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-@Profile({"dev", "clouddev"})
+@Profile({ "dev", "qa" })
 @Component
 public class CustomDebugAuthenticationProvider implements AuthenticationProvider {
 
@@ -26,28 +26,26 @@ public class CustomDebugAuthenticationProvider implements AuthenticationProvider
   /**
    * Verifies the email of the user is in the database.
    * 
-   * @param authentication Contains the session's current authentication levels and at least 
-   *    the email of the user.
-   * @return The authentication based on the email of the user as a {@link RememberMeToken} token.
+   * @param authentication Contains the session's current authentication levels
+   *                       and at least the email of the user.
+   * @return The authentication based on the email of the user as a
+   *         {@link RememberMeToken} token.
    * @throws AuthenticationException When the email is not in the database.
    */
   @Override
-  public Authentication authenticate(Authentication authentication)
-      throws AuthenticationException {
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     String email = authentication.getName();
 
     UserDetails user;
     try {
       user = detailService.loadUserByUsername(email);
-    } catch(UsernameNotFoundException ex) {
-      throw new BadCredentialsException(String.format(
-          "User with email %s could not be authenticated.", email));
+    } catch (UsernameNotFoundException ex) {
+      throw new BadCredentialsException(String.format("User with email %s could not be authenticated.", email));
     }
 
     Authentication auth = new RememberMeAuthenticationToken("Bad_HardCoded_Key", user, user.getAuthorities());
     return auth;
   }
-
 
   @Override
   public boolean supports(Class<?> authentication) {
