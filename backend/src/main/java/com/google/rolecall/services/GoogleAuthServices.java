@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-@Profile("prod")
+@Profile({ "prod", "qa" })
 @Service("googleAuthServices")
 public class GoogleAuthServices {
 
@@ -27,36 +27,35 @@ public class GoogleAuthServices {
   private Logger logger = Logger.getLogger(GoogleAuthServices.class.getName());
 
   /**
-   * Decodes and verifies Google Oauth id_token. Compares the provided email to the email
-   * associated with the token.
+   * Decodes and verifies Google Oauth id_token. Compares the provided email to
+   * the email associated with the token.
    * 
-   * @param email String email supplied by the User.
+   * @param email        String email supplied by the User.
    * @param encodedToken String id_token provided by the user.
    * @return True if the email token combination is valid.
-   * @throws GeneralSecurityException 
-   * @throws IOException When unable to make a request to the Google Oauth API.
+   * @throws GeneralSecurityException
+   * @throws IOException              When unable to make a request to the Google
+   *                                  Oauth API.
    */
-  public boolean isValidAccessToken(String email, String encodedToken)
-      throws IOException {
-    if(encodedToken == "") {
+  public boolean isValidAccessToken(String email, String encodedToken) throws IOException {
+    if (encodedToken == "") {
       return false;
     }
 
     GoogleIdToken idToken = null;
     try {
       idToken = verifier.verify(encodedToken);
-    } catch(GeneralSecurityException e) {
+    } catch (GeneralSecurityException e) {
       logger.log(Level.SEVERE, e.getMessage());
       throw new RuntimeException("Unable to verify with Google.");
-    } catch(IOException e) {
+    } catch (IOException e) {
       logger.log(Level.SEVERE, e.getMessage());
-      throw new IOException(
-          "Unable to verify with Google. Please try again.");
+      throw new IOException("Unable to verify with Google. Please try again.");
     }
 
-    if(idToken != null) {
+    if (idToken != null) {
       Payload payload = idToken.getPayload();
-      if(email.equals(payload.getEmail())) {
+      if (email.equals(payload.getEmail())) {
         return true;
       }
     }
@@ -72,22 +71,20 @@ public class GoogleAuthServices {
     try {
       id = getSecretResponse(projectId, secretName).getPayload().getData().toStringUtf8();
     } catch (IOException e) {
-      throw new RuntimeException("Unable to access secret manager. "
-          + "Applications calling this method should be run on App Engine.");
+      throw new RuntimeException(
+          "Unable to access secret manager. " + "Applications calling this method should be run on App Engine.");
     } catch (ApiException e) {
       throw new RuntimeException("Unable to get cloud db password. Call for password failed. "
           + "Check spring.cloud.gcp.projectId and cloud.secret.name for correctness.");
     } catch (Exception e) {
-      throw new RuntimeException("Failed to get cloud db password for UNKNOWN reason: \n" 
-          + e.getMessage());
+      throw new RuntimeException("Failed to get cloud db password for UNKNOWN reason: \n" + e.getMessage());
     }
-    
+
     return id;
   }
 
-  AccessSecretVersionResponse getSecretResponse(String projectId, String secretName) 
-      throws Exception {
-    SecretManagerServiceClient  client = SecretManagerServiceClient.create();
+  AccessSecretVersionResponse getSecretResponse(String projectId, String secretName) throws Exception {
+    SecretManagerServiceClient client = SecretManagerServiceClient.create();
     SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
 
     return client.accessSecretVersion(name);
@@ -95,8 +92,7 @@ public class GoogleAuthServices {
 
   public GoogleAuthServices(Environment env) {
     this.env = env;
-    verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport() , new JacksonFactory())
-        .setAudience(Collections.singletonList(getClientId()))
-        .build();
+    verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+        .setAudience(Collections.singletonList(getClientId())).build();
   }
 }
