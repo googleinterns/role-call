@@ -295,17 +295,6 @@ export class UserEditor implements OnInit {
       }
     });
   }
-
-  getFullName(user?: User): string {
-    if (!user) {
-      return "";
-    }
-    let fullName = user.first_name ? user.first_name + " ": "";
-    fullName += user.middle_name ? user.middle_name + " " : "";
-    fullName += user.last_name ? user.last_name : "";
-    fullName += user.suffix ? user.suffix : "";
-    return fullName;
-  }
   
   getCurrentDate(): number {
     return this.currentDate;
