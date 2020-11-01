@@ -22,6 +22,7 @@ steps:
     args:
       [
         "-f",
+        "e",
         "backend/pom.xml",
         "-D",
         "skipTests",
