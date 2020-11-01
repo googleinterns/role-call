@@ -28,8 +28,10 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "bootstrap": "^4.4.0",
     "file-saver": "^2.0.2",
+    "lodash": "^4.17.20",
     "moment": "^2.27.0",
     "ng-click-outside": "^7.0.0",
+    "pdfmake": "^0.1.68",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

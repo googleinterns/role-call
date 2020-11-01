@@ -2,13 +2,19 @@
 <div *ngIf="dataLoaded">
   <div *ngIf="performanceSelected; else selectPerformanceView">
     <app-stepper
-        #stepper
-        [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
-        [stepperOptions]="stepperOpts"
-        (stepChange)="onStepChange($event)"></app-stepper>
+      #stepper
+      [ngStyle]="
+        stepper.currentStepIndex == 3 && submitted ? { display: 'none' } : {}
+      "
+      [stepperOptions]="stepperOpts"
+      (stepChange)="onStepChange($event)"
+    ></app-stepper>
 
     <div>
-      <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
+      <ng-container
+        [ngSwitch]="stepper.currentStepIndex"
+        class="page-container"
+      >
         <ng-container *ngSwitchCase="0">
           <ng-container *ngTemplateOutlet="step1"></ng-container>
         </ng-container>
@@ -27,62 +33,76 @@
     <div class="button-overall-container">
       <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
         <button
-            mat-flat-button
-            class="button"
-            aria-label="Save Performance Draft"
-            (click)="onSaveDraft()">
+          mat-flat-button
+          class="button"
+          aria-label="Save Performance Draft"
+          (click)="onSaveDraft()"
+        >
           save draft
         </button>
         <div>
           <button
-              mat-flat-button
-              class="button"
-              aria-label="Previous Step"
-              (click)="onPrevClick()">
+            mat-flat-button
+            class="button"
+            aria-label="Previous Step"
+            (click)="onPrevClick()"
+          >
             previous
           </button>
           <button
-              mat-flat-button
-              class="button"
-              aria-label="Next Step"
-              (click)="onNextClick()">
+            mat-flat-button
+            class="button"
+            aria-label="Next Step"
+            (click)="onNextClick()"
+          >
             next
           </button>
         </div>
       </ng-container>
       <ng-template #finalButtons>
-        <ng-container *ngIf="(!submitted); else submittedButtons">
+        <ng-container *ngIf="!submitted; else submittedButtons">
           <button
-              mat-flat-button
-              class="button"
-              aria-label="Save Performance Draft"
-              (click)="onSaveDraft()">
+            mat-flat-button
+            class="button"
+            aria-label="Save Performance Draft"
+            (click)="onSaveDraft()"
+          >
             save draft
           </button>
           <div>
             <button
-                mat-flat-button
-                class="button"
-                aria-label="Previous Step"
-                (click)="onPrevClick()">
+              mat-flat-button
+              class="button"
+              aria-label="Previous Step"
+              (click)="onPrevClick()"
+            >
               previous
             </button>
             <button
-                mat-flat-button
-                class="button"
-                aria-label="Publish Performance"
-                (click)="onSubmit()">
+              mat-flat-button
+              class="button"
+              aria-label="Publish Performance"
+              (click)="onSubmit()"
+            >
               publish
             </button>
           </div>
         </ng-container>
         <ng-template #submittedButtons>
-          <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              justify-content: flex-end;
+              width: 100%;
+            "
+          >
             <button
-                mat-flat-button
-                class="button"
-                aria-label="New Performance"
-                (click)="onResetFromStart($event)">
+              mat-flat-button
+              class="button"
+              aria-label="New Performance"
+              (click)="onResetFromStart($event)"
+            >
               new performance
             </button>
           </div>
@@ -103,13 +123,30 @@
           <div class="children-container">
             <div class="child-container">
               <div
-                  *ngFor="let perf of publishedPerfs" class="child app-card"
-                  [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
-                  (click)="onSelectRecentPerformance(perf)">
+                *ngFor="let perf of publishedPerfs"
+                class="child app-card"
+                [ngClass]="
+                  this.selectedPerformance &&
+                  perf.uuid == this.selectedPerformance.uuid
+                    ? 'child-selected'
+                    : ''
+                "
+                (click)="onSelectRecentPerformance(perf)"
+              >
                 <h3 class="performance-title">
-                  {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
-                + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - "
-                + perf.step_1.title }}
+                  {{
+                    perf.step_1.city +
+                      ", " +
+                      perf.step_1.state +
+                      " " +
+                      perf.step_1.country +
+                      " - " +
+                      perf.step_1.venue +
+                      " - " +
+                      toDateString(perf.step_1.date) +
+                      " - " +
+                      perf.step_1.title
+                  }}
                 </h3>
               </div>
             </div>
@@ -132,13 +169,30 @@
           <div class="children-container">
             <div class="child-container">
               <div
-                  *ngFor="let perf of draftPerfs" class="child app-card"
-                  [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
-                  (click)="onSelectRecentPerformance(perf)">
+                *ngFor="let perf of draftPerfs"
+                class="child app-card"
+                [ngClass]="
+                  this.selectedPerformance &&
+                  perf.uuid == this.selectedPerformance.uuid
+                    ? 'child-selected'
+                    : ''
+                "
+                (click)="onSelectRecentPerformance(perf)"
+              >
                 <h3 class="performance-title">
-                  {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
-                + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - "
-                + perf.step_1.title }}
+                  {{
+                    perf.step_1.city +
+                      ", " +
+                      perf.step_1.state +
+                      " " +
+                      perf.step_1.country +
+                      " - " +
+                      perf.step_1.venue +
+                      " - " +
+                      toDateString(perf.step_1.date) +
+                      " - " +
+                      perf.step_1.title
+                  }}
                 </h3>
               </div>
             </div>
@@ -156,31 +210,42 @@
     </div>
     <div class="button-overall-container">
       <button
-          mat-flat-button
-          aria-label="New Performance"
-          class="button"
-          (click)="onNewPerformance()">
+        mat-flat-button
+        aria-label="New Performance"
+        class="button"
+        (click)="onNewPerformance()"
+      >
         new performance
       </button>
       <button
-          mat-flat-button
-          aria-label="Edit Performance"
-          class="button"
-          (click)="onEditPerformance()">
+        mat-flat-button
+        aria-label="Edit Performance"
+        class="button"
+        (click)="onEditPerformance()"
+      >
         edit
       </button>
       <button
-          mat-flat-button aria-label="Duplicate Performance" class="button"
-          (click)="onDuplicatePerformance(selectedPerformance)">
+        mat-flat-button
+        aria-label="Duplicate Performance"
+        class="button"
+        (click)="onDuplicatePerformance(selectedPerformance)"
+      >
         duplicate
       </button>
       <button
-          mat-flat-button
-          aria-label="Cancel Performance"
-          class="button"
-          (click)="onCancelPerformance()">
-        {{ selectedPerformance ? (selectedPerformance.status == "PUBLISHED" ? "cancel" : "delete")
-          : "cancel" }}
+        mat-flat-button
+        aria-label="Cancel Performance"
+        class="button"
+        (click)="onCancelPerformance()"
+      >
+        {{
+          selectedPerformance
+            ? selectedPerformance.status == "PUBLISHED"
+              ? "cancel"
+              : "delete"
+            : "cancel"
+        }}
       </button>
     </div>
   </div>
@@ -194,13 +259,21 @@
         <div class="content">
           <div class="title-reset-container">
             <input
-                type="text" class="title-input app-card" [value]="state.step_1.title"
-                [size]="state.step_1.title.length < 15 ? 15 : state.step_1.title.length"
-                (input)="onStep1Input('title', $event)"/>
+              type="text"
+              class="title-input app-card"
+              [value]="state.step_1.title"
+              [size]="
+                state.step_1.title.length < 15 ? 15 : state.step_1.title.length
+              "
+              (input)="onStep1Input('title', $event)"
+            />
             <div class="reset-button-container">
               <button
-                  mat-icon-button aria-label="Reset Performance Button" class="reset-button"
-                  (click)="resetPerformance()">
+                mat-icon-button
+                aria-label="Reset Performance Button"
+                class="reset-button"
+                (click)="resetPerformance()"
+              >
                 <mat-icon [inline]="true" class="reset-button-icon">
                   refresh
                 </mat-icon>
@@ -214,10 +287,11 @@
             <mat-form-field appearance="fill" class="date-input">
               <mat-label>Date</mat-label>
               <input
-                  matInput
-                  type="datetime-local"
-                  (input)="onStep1Input('date', $event)"
-                  [value]="dateStr">
+                matInput
+                type="datetime-local"
+                (input)="onStep1Input('date', $event)"
+                [value]="dateStr"
+              />
             </mat-form-field>
           </div>
           <div class="location-container">
@@ -226,64 +300,88 @@
             </div>
             <div class="location-card app-card">
               <textarea
-                  type="text" class="location-input" rows="1" [value]="state.step_1.city"
-                  (input)="onStep1Input('city', $event)"></textarea>
+                type="text"
+                class="location-input"
+                rows="1"
+                [value]="state.step_1.city"
+                (input)="onStep1Input('city', $event)"
+              ></textarea>
             </div>
             <div class="location-title-container">
               <h3 class="input-title location-title">State</h3>
             </div>
             <div class="location-card app-card">
               <textarea
-                  type="text" class="location-input" rows="1" [value]="state.step_1.state"
-                  (input)="onStep1Input('state', $event)"></textarea>
+                type="text"
+                class="location-input"
+                rows="1"
+                [value]="state.step_1.state"
+                (input)="onStep1Input('state', $event)"
+              ></textarea>
             </div>
             <div class="location-title-container">
               <h3 class="input-title location-title">Country</h3>
             </div>
             <div class="location-card app-card">
               <textarea
-                  type="text" class="location-input" rows="1" [value]="state.step_1.country"
-                  (input)="onStep1Input('country', $event)"></textarea>
+                type="text"
+                class="location-input"
+                rows="1"
+                [value]="state.step_1.country"
+                (input)="onStep1Input('country', $event)"
+              ></textarea>
             </div>
             <div class="location-title-container">
               <h3 class="input-title location-title">Venue</h3>
             </div>
             <div class="location-card app-card">
               <textarea
-                  type="text"
-                  class="location-input"
-                  rows="1"
-                  [value]="state.step_1.venue"
-                  (input)="onStep1Input('venue', $event)"></textarea>
+                type="text"
+                class="location-input"
+                rows="1"
+                [value]="state.step_1.venue"
+                (input)="onStep1Input('venue', $event)"
+              ></textarea>
             </div>
           </div>
           <div class="description-container">
             <h3 class="input-title">Description</h3>
             <div class="description-card app-card">
               <textarea
-                  type="text"
-                  class="description-input"
-                  rows="2"
-                  [value]="state.step_1.description"
-                  (input)="onStep1Input('description', $event)"></textarea>
+                type="text"
+                class="description-input"
+                rows="2"
+                [value]="state.step_1.description"
+                (input)="onStep1Input('description', $event)"
+              ></textarea>
             </div>
             <div class="segment-list app-card">
               <div
-                  *ngFor="let segment of state.step_3.segments; let i = index"
-                  class="segment-container"
-                  [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1">
-                <h3 class="title">{{segment['name']}}</h3>
+                *ngFor="let segment of state.step_3.segments; let i = index"
+                class="segment-container"
+                [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1"
+              >
+                <h3 class="title">{{ segment["name"] }}</h3>
                 <div
-                    *ngFor="let pos of segment.custom_groups"
-                    class="pos-container"
-                    [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7">
-                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  *ngFor="let pos of segment.custom_groups"
+                  class="pos-container"
+                  [style.margin-left.rem]="
+                    hasSuper && step2Data[i].siblingId < 1 ? 10 : 7
+                  "
+                >
+                  <h4 class="pos-title">{{ pos["name"] }}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                        *ngIf="group.group_index == segment.selected_group"
-                        class="dancer-list">
+                      *ngIf="group.group_index == segment.selected_group"
+                      class="dancer-list"
+                    >
                       <p class="names">
-                        {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
+                        {{
+                          group["memberNames"]
+                            ? group["memberNames"].join(", ")
+                            : ""
+                        }}
+                      </p>
                     </div>
                   </ng-container>
                 </div>
@@ -303,17 +401,11 @@
         <div class="title-container">
           <h2 class="title">Program Segments</h2>
         </div>
-        <div
-            cdkDropList
-            id="piece-list"
-            [cdkDropListData]="step2PickFrom">
+        <div cdkDropList id="piece-list" [cdkDropListData]="step2PickFrom">
           <div *ngFor="let data of step2PickFrom; let i = index">
-            <div
-                cdkDrag
-                class="piece-name-container"
-                [cdkDragData]="data">
+            <div cdkDrag class="piece-name-container" [cdkDragData]="data">
               <div class="app-card piece-name-card">
-                <h2 class="piece-name">{{data.name}}</h2>
+                <h2 class="piece-name">{{ data.name }}</h2>
               </div>
             </div>
           </div>
@@ -325,30 +417,29 @@
         <div class="content">
           <h2 class="program-title">Program Order</h2>
           <div
-              id="program-list"
-              cdkDropList
-              (cdkDropListDropped)="step2Drop($event)"
-              [cdkDropListData]="step2Data">
+            id="program-list"
+            cdkDropList
+            (cdkDropListDropped)="step2Drop($event)"
+            [cdkDropListData]="step2Data"
+          >
             <div *ngFor="let data of step2Data; let i = index">
-              <div
-                  cdkDrag
-                  class="piece-container"
-                  [cdkDragData]="data">
+              <div cdkDrag class="piece-container" [cdkDragData]="data">
                 <div
-                    class="app-card piece-name-card"
-                    [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0">
+                  class="app-card piece-name-card"
+                  [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0"
+                >
                   <h2 class="piece-name-delete">
-                    {{data.name}}</h2>
+                    {{ data.name }}
+                  </h2>
                 </div>
                 <div class="delete-button-height-container">
                   <button
-                      mat-icon-button
-                      class="delete-button"
-                      aria-label="Delete Piece Button"
-                      (click)="deletePiece(data, i)">
-                    <mat-icon
-                        [inline]="true"
-                        class="delete-button-icon">
+                    mat-icon-button
+                    class="delete-button"
+                    aria-label="Delete Piece Button"
+                    (click)="deletePiece(data, i)"
+                  >
+                    <mat-icon [inline]="true" class="delete-button-icon">
                       delete
                     </mat-icon>
                   </button>
@@ -372,11 +463,14 @@
         <div class="children-container">
           <div class="child-container">
             <div
-                *ngFor="let segment of step2Data; let i = index"
-                class="child app-card"
-                [class.child-selected]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i"
-                [style.margin-left.rem]="segment.siblingId > 0 ? 2 : 0"
-                (click)="onSelectStep3Segment(segment, i)">
+              *ngFor="let segment of step2Data; let i = index"
+              class="child app-card"
+              [class.child-selected]="
+                segment.uuid == this.selectedSegment.uuid && selectedIndex == i
+              "
+              [style.margin-left.rem]="segment.siblingId > 0 ? 2 : 0"
+              (click)="onSelectStep3Segment(segment, i)"
+            >
               <h3 class="segment-title">{{ segment.name }}</h3>
             </div>
           </div>
@@ -384,57 +478,80 @@
       </div>
     </div>
     <div class="right-card-container">
-      <div
-          *ngIf="selectedSegment != undefined"
-          class="app-card right-card">
+      <div *ngIf="selectedSegment != undefined" class="app-card right-card">
         <div class="toolbar-drag-and-drop-container">
           <div
-              class="cast-tool-container"
-              [class.cast-tool-container-solo]="selectedSegment.type == 'SEGMENT'">
+            class="cast-tool-container"
+            [class.cast-tool-container-solo]="selectedSegment.type == 'SEGMENT'"
+          >
             <mat-form-field
-                appearance="fill" class="tool"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
+              appearance="fill"
+              class="tool"
+              [ngStyle]="
+                selectedSegment.type == 'SEGMENT' ||
+                selectedSegment.type == 'SUPER'
+                  ? { display: 'none' }
+                  : { height: '100%' }
+              "
+            >
               <mat-label>Dancing Cast</mat-label>
               <mat-select
-                  [(value)]="this.primaryGroupNum"
-                  (selectionChange)="onChoosePrimaryCast($event)">
+                [(value)]="this.primaryGroupNum"
+                (selectionChange)="onChoosePrimaryCast($event)"
+              >
                 <mat-option
-                    *ngFor="let num of chooseFromGroupIndices"
-                    [value]="num">
+                  *ngFor="let num of chooseFromGroupIndices"
+                  [value]="num"
+                >
                   {{ num + 1 | numberToPlace }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field
-                class="tool"
-                appearance="fill"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
+              class="tool"
+              appearance="fill"
+              [ngStyle]="
+                selectedSegment.type == 'SEGMENT' ||
+                selectedSegment.type == 'SUPER'
+                  ? { display: 'none' }
+                  : { height: '100%' }
+              "
+            >
               <mat-label>Autofill Cast</mat-label>
               <mat-select>
                 <mat-option
-                    *ngFor="let cast of castsForSegment"
-                    [value]="cast"
-                    (click)="onAutofillCast(cast)">
+                  *ngFor="let cast of castsForSegment"
+                  [value]="cast"
+                  (click)="onAutofillCast(cast)"
+                >
                   {{ cast.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field
-                class="tool"
-                appearance="fill"
-                [class.tool-solo]="selectedSegment.type == 'SEGMENT'">
+              class="tool"
+              appearance="fill"
+              [class.tool-solo]="selectedSegment.type == 'SEGMENT'"
+            >
               <mat-label>Length (min)</mat-label>
               <input
-                  matInput
-                  [value]="segmentLength"
-                  (input)="onLengthChange($event)">
+                matInput
+                [value]="segmentLength"
+                (input)="onLengthChange($event)"
+              />
             </mat-form-field>
           </div>
           <div class="cast-drag-and-drop-container">
             <app-cast-drag-and-drop
-                #castDnD
-                (castChangeEmitter)="onChangeCast($event)"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
+              #castDnD
+              (castChangeEmitter)="onChangeCast($event)"
+              [ngStyle]="
+                selectedSegment.type == 'SEGMENT' ||
+                selectedSegment.type == 'SUPER'
+                  ? { display: 'none' }
+                  : { height: '100%' }
+              "
+            >
             </app-cast-drag-and-drop>
           </div>
         </div>
@@ -451,31 +568,56 @@
           <div class="content">
             <div class="title-export-container">
               <h2 class="title">Review Casting</h2>
-              <button
-                  mat-icon-button aria-label="Export Cast Button" class="export-button"
-                  (click)="exportPerformance()">
-                <mat-icon [inline]="true" class="export-button-icon">
-                  save_alt
-                </mat-icon>
-              </button>
+              <div>
+                <button
+                  mat-icon-button
+                  aria-label="Export Cast Button"
+                  class="export-button"
+                  (click)="exportPerformance()"
+                >
+                  <mat-icon [inline]="true" class="export-button-icon">
+                    save_alt
+                  </mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  aria-label="Export Cast Button"
+                  class="export-button"
+                  (click)="exportPerformanceAsPDF()"
+                >
+                  <mat-icon [inline]="true" class="export-button-icon">
+                    save_alt
+                  </mat-icon>
+                </button>
+              </div>
             </div>
             <div class="segment-list app-card">
               <div
-                  *ngFor="let segment of state.step_3.segments; let i = index"
-                  class="segment-container"
-                  [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1">
-                <h3 class="title">{{segment['name']}}</h3>
+                *ngFor="let segment of state.step_3.segments; let i = index"
+                class="segment-container"
+                [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1"
+              >
+                <h3 class="title">{{ segment["name"] }}</h3>
                 <div
-                    *ngFor="let pos of segment.custom_groups"
-                    class="pos-container"
-                    [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7">
-                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  *ngFor="let pos of segment.custom_groups"
+                  class="pos-container"
+                  [style.margin-left.rem]="
+                    hasSuper && step2Data[i].siblingId < 1 ? 10 : 7
+                  "
+                >
+                  <h4 class="pos-title">{{ pos["name"] }}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                        *ngIf="group.group_index == segment.selected_group"
-                        class="dancer-list">
+                      *ngIf="group.group_index == segment.selected_group"
+                      class="dancer-list"
+                    >
                       <p class="names">
-                        {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
+                        {{
+                          group["memberNames"]
+                            ? group["memberNames"].join(", ")
+                            : ""
+                        }}
+                      </p>
                     </div>
                   </ng-container>
                 </div>
@@ -490,22 +632,31 @@
         <div class="finalize-card-submitted finalize-card app-card">
           <div class="content">
             <h2 class="title">Performance Submitted!</h2>
-            <h2 class="title">{{'Scheduled ' + state.step_1.title + ' for '
-            + date.toLocaleDateString()}}</h2>
+            <h2 class="title">
+              {{
+                "Scheduled " +
+                  state.step_1.title +
+                  " for " +
+                  date.toLocaleDateString()
+              }}
+            </h2>
             <div class="segment-list-submitted segment-list app-card">
               <div
-                  *ngFor="let segment of state.step_3.segments"
-                  class="segment-container">
-                <h3 class="title">{{segment['name']}}</h3>
+                *ngFor="let segment of state.step_3.segments"
+                class="segment-container"
+              >
+                <h3 class="title">{{ segment["name"] }}</h3>
                 <div
-                    *ngFor="let pos of segment.custom_groups"
-                    class="pos-container">
-                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  *ngFor="let pos of segment.custom_groups"
+                  class="pos-container"
+                >
+                  <h4 class="pos-title">{{ pos["name"] }}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                        *ngIf="group.group_index == segment.selected_group"
-                        class="dancer-list">
-                      <p class="names">{{group['memberNames'].join(", ")}}</p>
+                      *ngIf="group.group_index == segment.selected_group"
+                      class="dancer-list"
+                    >
+                      <p class="names">{{ group["memberNames"].join(", ") }}</p>
                     </div>
                   </ng-container>
                 </div>
