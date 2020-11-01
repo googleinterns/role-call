@@ -12,12 +12,7 @@
             [ngClass]="user.uuid == currentSelectedUser.uuid ? 'selected-user' : ''"
             (click)="setCurrentUser({user : user, fromInputChange : false, shouldSetLastUser : true})">
           <h2 class="user-name">
-            {{
-            (user.first_name ? user.first_name + " " : "") +
-            (user.middle_name ? user.middle_name + " " : "") +
-            (user.last_name ? user.last_name : "") +
-            (user.suffix ? user.suffix : "")
-            }}
+            {{ user | fullName }}
           </h2>
         </div>
       </div>
@@ -41,12 +36,7 @@
     <div class="app-card card-margins right-card">
       <div *ngIf="currentSelectedUser">
         <h1 class="right-card-title">
-          {{
-          (currentSelectedUser.first_name ? currentSelectedUser.first_name + " " : "") +
-          (currentSelectedUser.middle_name ? currentSelectedUser.middle_name + " " : "") +
-          (currentSelectedUser.last_name ? currentSelectedUser.last_name : "") +
-          (currentSelectedUser.suffix ? currentSelectedUser.suffix : "")
-          }}
+          {{ currentSelectedUser | fullName }}
         </h1>
       </div>
       <div class="name-container">

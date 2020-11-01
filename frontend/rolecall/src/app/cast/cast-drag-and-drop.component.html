@@ -129,7 +129,7 @@
               <img
                   class="user-image"
                   [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase">
-              {{dancer.firstName + " " + dancer.lastName}}
+              {{dancer.user | fullName}}
             </div>
           </div>
         </div>

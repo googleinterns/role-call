@@ -11,10 +11,8 @@ import {LoggingService} from '../services/logging.service';
 
 type UICastDancer = {
   uuid: string;
-  firstName: string;
-  lastName: string;
+  user: User;
   pictureFile: string;
-  email: string;
 };
 
 type UICastRow = {
@@ -256,10 +254,8 @@ export class CastDragAndDrop implements OnInit {
           uiPos.castRows[member.position_number]
               .subCastDancers[group.group_index] = {
             uuid: dancer.uuid,
-            firstName: dancer.first_name,
-            lastName: dancer.last_name,
+            user: dancer,
             pictureFile: dancer.picture_file,
-            email: dancer.contact_info.email,
           };
         }
       }
@@ -299,10 +295,8 @@ export class CastDragAndDrop implements OnInit {
         this.castPositions[toIndexs[0]].castRows[toIndexs[1]]
             .subCastDancers[toCastIndex] = {
           uuid: fromUser.uuid,
-          firstName: fromUser.first_name,
-          lastName: fromUser.last_name,
+          user: fromUser,
           pictureFile: fromUser.picture_file,
-          email: fromUser.contact_info.email,
         };
         this.castChangeEmitter.emit(this.dataToCast());
       }
