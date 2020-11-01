@@ -3,7 +3,6 @@ package com.google.rolecall;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,7 +10,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -31,7 +29,7 @@ public class ApplicationLoader implements ApplicationRunner {
   private String adminLastName;
   private String adminEmail;
 
-  @Profile({ "dev", "prod", "qa" })
+  @Profile({"dev", "prod", "qa"})
   @Override
   public void run(ApplicationArguments args) throws Exception {
     // Initialize admin if exists, or create one with given information.
@@ -45,21 +43,35 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   private void adminExists(User user) {
-    logger.log(Level.INFO,
-        String.format("Admin User already exists: %s %s %s", user.getFirstName(), user.getLastName(), user.getEmail()));
+    logger.log(
+        Level.INFO,
+        String.format(
+            "Admin User already exists: %s %s %s",
+            user.getFirstName(), user.getLastName(), user.getEmail()));
   }
 
   private void createAdmin() {
     User admin;
     try {
-      admin = User.newBuilder().setFirstName(adminFirstName).setMiddleName("").setLastName(adminLastName).setSuffix("")
-          .setEmail(adminEmail).setIsActive(true).setCanLogin(true).setIsAdmin(true).build();
+      admin =
+          User.newBuilder()
+              .setFirstName(adminFirstName)
+              .setMiddleName("")
+              .setLastName(adminLastName)
+              .setSuffix("")
+              .setEmail(adminEmail)
+              .setIsActive(true)
+              .setCanLogin(true)
+              .setIsAdmin(true)
+              .build();
     } catch (InvalidParameterException e) {
       logger.log(Level.SEVERE, "Unable to Create admin. Insufficient Properties.");
       return;
     }
     userRepo.save(admin);
-    logger.log(Level.WARNING, String.format("Admin User Created: %s %s %s", adminFirstName, adminLastName, adminEmail));
+    logger.log(
+        Level.WARNING,
+        String.format("Admin User Created: %s %s %s", adminFirstName, adminLastName, adminEmail));
     if (DataCreateError.OK != createTestData()) {
       logger.log(Level.SEVERE, "Unable to Create Sample Data");
     }
@@ -70,10 +82,12 @@ public class ApplicationLoader implements ApplicationRunner {
   // Create sample data
 
   private enum DataCreateError {
-    OK, OtherError
+    OK,
+    OtherError
   }
 
-  private void createOneUser(String fName, String mName, String lName, String suffix, String email, String dateJoined)
+  private void createOneUser(
+      String fName, String mName, String lName, String suffix, String email, String dateJoined)
       throws ParseException, InvalidParameterException {
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
@@ -81,8 +95,18 @@ public class ApplicationLoader implements ApplicationRunner {
 
     cal.setTime(sdf.parse(dateJoined));
 
-    user = User.newBuilder().setFirstName(fName).setMiddleName(mName).setLastName(lName).setSuffix(suffix)
-        .setEmail(email).setDateJoined(cal).setIsActive(true).setCanLogin(true).setIsDancer(true).build();
+    user =
+        User.newBuilder()
+            .setFirstName(fName)
+            .setMiddleName(mName)
+            .setLastName(lName)
+            .setSuffix(suffix)
+            .setEmail(email)
+            .setDateJoined(cal)
+            .setIsActive(true)
+            .setCanLogin(true)
+            .setIsDancer(true)
+            .build();
     userRepo.save(user);
   }
 
