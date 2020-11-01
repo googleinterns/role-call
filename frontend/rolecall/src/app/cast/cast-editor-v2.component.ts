@@ -81,7 +81,7 @@ export class CastEditorV2 implements OnInit {
     let autoSelectFirst = false;
     this.selectedPiece = piece;
     this.updateFilteredCasts();
-    if (this.selectedPiece && this.selectedPiece.uuid !== piece.uuid) {
+    if (this.selectedPiece) {
       autoSelectFirst = this.selectedPieceCasts.length > 0;
     }
     if (autoSelectFirst) {
