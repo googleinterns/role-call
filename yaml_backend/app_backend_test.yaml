@@ -1,7 +1,10 @@
 runtime: java11
 
 # Deploy to backend service
-service: backend-test
+service: backend-qa
+
+env_variables:
+  SPRING_PROFILES_ACTIVE: "qa"
 
 # Only use 1 instance for development
 manual_scaling:
