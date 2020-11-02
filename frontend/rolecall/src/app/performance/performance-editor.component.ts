@@ -120,12 +120,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit() {
     this.urlUUID = this.activatedRoute.snapshot.params.uuid;
     this.state = this.createNewPerformance();
-    this.performanceAPI.performanceEmitter.subscribe((val) =>
+    this.performanceAPI.performanceEmitter.subscribe(val =>
       this.onPerformanceLoad(val)
     );
-    this.piecesAPI.pieceEmitter.subscribe((val) => this.onPieceLoad(val));
-    this.castAPI.castEmitter.subscribe((val) => this.onCastLoad(val));
-    this.userAPI.userEmitter.subscribe((val) => this.onUserLoad(val));
+    this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
+    this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
+    this.userAPI.userEmitter.subscribe(val => this.onUserLoad(val));
     this.performanceAPI.getAllPerformances();
     this.piecesAPI.getAllPieces();
     this.castAPI.getAllCasts();
@@ -155,10 +155,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformances = perfs.sort((a, b) => a.step_1.date - b.step_1.date);
     this.publishedPerfs = this.allPerformances.filter(
-      (val) => val.status === PerformanceStatus.PUBLISHED
+      val => val.status === PerformanceStatus.PUBLISHED
     );
     this.draftPerfs = this.allPerformances.filter(
-      (val) => val.status === PerformanceStatus.DRAFT
+      val => val.status === PerformanceStatus.DRAFT
     );
     this.performancesLoaded = true;
     this.checkDataLoaded();
@@ -171,7 +171,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   onPieceLoad(pieces: Piece[]) {
     this.step2AllSegments = [];
-    this.step2AllSegments.push(...pieces.map((val) => val));
+    this.step2AllSegments.push(...pieces.map(val => val));
     // Make sure pick list only includes top level segments and excludes
     // children of Super Ballets
     this.step2PickFrom = this.step2AllSegments.filter(
@@ -202,7 +202,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   startAtPerformance(uuid: string) {
-    const foundPerf = this.allPerformances.find((val) => val.uuid === uuid);
+    const foundPerf = this.allPerformances.find(val => val.uuid === uuid);
     if (foundPerf) {
       this.onSelectRecentPerformance(foundPerf);
       this.onEditPerformance();
@@ -440,16 +440,15 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   initStep2Data() {
     this.step2Data = this.state.step_2.segments
-      .map((segmentUUID) =>
-        this.step2AllSegments.find((segment) => segment.uuid === segmentUUID)
+      .map(segmentUUID =>
+        this.step2AllSegments.find(segment => segment.uuid === segmentUUID)
       )
-      .filter((val) => val !== undefined);
+      .filter(val => val !== undefined);
   }
 
   updateStep2State() {
-    this.state.step_2.segments = this.step2Data.map((val) => val.uuid);
-    this.hasSuper = !!this.step2Data.find(
-      (segment) => segment.type === 'SUPER'
+    this.state.step_2.segments = this.step2Data.map(val => val.uuid);
+    this.hasSuper = !!this.step2Data.find(segment => segment.type === 'SUPER'
     );
   }
 
@@ -498,8 +497,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       if (segment.uuid === draggedSegment.uuid) {
         for (const position of segment.positions) {
           if (position.siblingId) {
-            this.step2Data = this.step2Data.filter(
-              (filterSegment) =>
+            this.step2Data = this.step2Data.filter(filterSegment =>
                 Number(filterSegment.uuid) !== position.siblingId
             );
           }
@@ -521,8 +519,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         const childArr: Piece[] = [];
         for (const position of segment.positions) {
           if (position.siblingId) {
-            const sibling = this.step2AllSegments.find(
-              (filterSegment) =>
+            const sibling = this.step2AllSegments.find(filterSegment =>
                 Number(filterSegment.uuid) === position.siblingId
             );
             childArr.push(sibling);
@@ -592,7 +589,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         name: 'New Cast',
         segment: this.selectedSegment.uuid,
         castCount: CAST_COUNT,
-        filled_positions: this.selectedSegment.positions.map((val) => {
+        filled_positions: this.selectedSegment.positions.map(val => {
           return {
             position_uuid: val.uuid,
             groups: [
@@ -634,7 +631,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   updateCastsForSegment() {
     this.castsForSegment = this.allCasts.filter(
-      (val) => val.segment === this.selectedSegment.uuid
+      val => val.segment === this.selectedSegment.uuid
     );
   }
 
@@ -735,12 +732,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     finishedPerf.status = PerformanceStatus.PUBLISHED;
     this.performanceAPI
       .setPerformance(finishedPerf)
-      .then((val) => {
+      .then(val => {
         this.submitted = true;
         this.initCastsLoaded = false;
         this.deleteWorkingCasts();
       })
-      .catch((err) => {
+      .catch(err => {
         alert(
           'Unable to save performance: ' +
             err.error.status +
@@ -795,15 +792,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         content.push({ text: seg.name, style: 'mleft1' });
       }
       const positions = _.get(seg, 'custom_groups');
-      _.each(positions, (pos) => {
+      _.each(positions,pos => {
         if (this.hasSuper && siblingId < 1) {
           content.push({ text: _.get(pos, 'name'), style: 'mleft10' });
         } else {
           content.push({ text: _.get(pos, 'name'), style: 'mleft10' });
         }
         const selectedGroup = _.filter(
-          pos.groups,
-          (grp) => grp.group_index === seg.selected_group
+          pos.groups,grp => grp.group_index === seg.selected_group
         );
         content.push({
           text: _.join(_.get(selectedGroup, '[0].memberNames'), ', '),
@@ -890,12 +886,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         selected_group: info ? info[1] : 0,
         length: info[2] ? info[2] : 0,
         custom_groups: info
-          ? info[0].filled_positions.map((val) => {
+          ? info[0].filled_positions.map(val => {
               let positionName = '';
               let positionOrder = 0;
-              this.step2AllSegments.forEach((val2) => {
+              this.step2AllSegments.forEach(val2 => {
                 const foundPos = val2.positions.find(
-                  (val3) => val3.uuid === val.position_uuid
+                  val3 => val3.uuid === val.position_uuid
                 );
                 if (foundPos) {
                   positionName = foundPos.name;
@@ -906,13 +902,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
                 ...val,
                 name: positionName,
                 position_order: positionOrder,
-                groups: val.groups.map((g) => {
+                groups: val.groups.map(g => {
                   return {
                     ...g,
                     memberNames: g.members
-                      .map((mem) => this.userAPI.users.get(mem.uuid))
-                      .map(
-                        (usr) =>
+                      .map(mem => this.userAPI.users.get(mem.uuid))
+                      .map(usr =>
                           usr.first_name +
                           ' ' +
                           (usr.middle_name ? usr.middle_name + ' ' : '') +
