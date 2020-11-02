@@ -1,45 +1,31 @@
-import {
-  CdkDragDrop,
-  copyArrayItem,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { Location } from '@angular/common';
+import {CdkDragDrop, copyArrayItem, transferArrayItem} from '@angular/cdk/drag-drop';
+import {Location} from '@angular/common';
 import _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
-import { ActivatedRoute } from '@angular/router';
-import { PerformanceStatus } from 'src/api_types';
-import { Cast, CastApi } from '../api/cast_api.service';
-import { Performance, PerformanceApi } from '../api/performance-api.service';
-import { Piece, PieceApi } from '../api/piece_api.service';
-import { User, UserApi } from '../api/user_api.service';
-import { CastDragAndDrop } from '../cast/cast-drag-and-drop.component';
-import { Stepper } from '../common_components/stepper.component';
-import { CsvGenerator } from '../services/csv-generator.service';
-import { ResponseStatusHandlerService } from '../services/response-status-handler.service';
-import { CAST_COUNT } from 'src/constants';
+import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatSelectChange} from '@angular/material/select';
+import {ActivatedRoute} from '@angular/router';
+import {PerformanceStatus} from 'src/api_types';
+import {Cast, CastApi} from '../api/cast_api.service';
+import {Performance, PerformanceApi} from '../api/performance-api.service';
+import {Piece, PieceApi} from '../api/piece_api.service';
+import {User, UserApi} from '../api/user_api.service';
+import {CastDragAndDrop} from '../cast/cast-drag-and-drop.component';
+import {Stepper} from '../common_components/stepper.component';
+import {CsvGenerator} from '../services/csv-generator.service';
+import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {CAST_COUNT} from 'src/constants';
 
 @Component({
   selector: 'app-performance-editor',
   templateUrl: './performance-editor.component.html',
-  styleUrls: ['./performance-editor.component.scss'],
+  styleUrls: ['./performance-editor.component.scss']
 })
 export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
+
   @ViewChild('stepper') stepper: Stepper;
-  stepperOpts = [
-    'Performance Details',
-    'Pieces & Intermissions',
-    'Fill Casts',
-    'Finalize',
-  ];
+  stepperOpts = ['Performance Details', 'Pieces & Intermissions', 'Fill Casts',
+    'Finalize'];
 
   state: Performance;
 
@@ -102,16 +88,16 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // --------------------------------------------------------------
 
   constructor(
-    private performanceAPI: PerformanceApi,
-    private piecesAPI: PieceApi,
-    private castAPI: CastApi,
-    private respHandler: ResponseStatusHandlerService,
-    private userAPI: UserApi,
-    private changeDetectorRef: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute,
-    private location: Location,
-    private csvGenerator: CsvGenerator
-  ) {}
+      private performanceAPI: PerformanceApi,
+      private piecesAPI: PieceApi,
+      private castAPI: CastApi,
+      private respHandler: ResponseStatusHandlerService,
+      private userAPI: UserApi,
+      private changeDetectorRef: ChangeDetectorRef,
+      private activatedRoute: ActivatedRoute,
+      private location: Location,
+      private csvGenerator: CsvGenerator) {
+  }
 
   toDateString(num: number) {
     return new Date(num).toLocaleDateString('en-US');
@@ -120,9 +106,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit() {
     this.urlUUID = this.activatedRoute.snapshot.params.uuid;
     this.state = this.createNewPerformance();
-    this.performanceAPI.performanceEmitter.subscribe(val =>
-      this.onPerformanceLoad(val)
-    );
+    this.performanceAPI.performanceEmitter.subscribe(
+        val => this.onPerformanceLoad(val));
     this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
     this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
     this.userAPI.userEmitter.subscribe(val => this.onUserLoad(val));
@@ -155,11 +140,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onPerformanceLoad(perfs: Performance[]) {
     this.allPerformances = perfs.sort((a, b) => a.step_1.date - b.step_1.date);
     this.publishedPerfs = this.allPerformances.filter(
-      val => val.status === PerformanceStatus.PUBLISHED
-    );
+        val => val.status === PerformanceStatus.PUBLISHED);
     this.draftPerfs = this.allPerformances.filter(
-      val => val.status === PerformanceStatus.DRAFT
-    );
+        val => val.status === PerformanceStatus.DRAFT);
     this.performancesLoaded = true;
     this.checkDataLoaded();
   }
@@ -175,8 +158,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     // Make sure pick list only includes top level segments and excludes
     // children of Super Ballets
     this.step2PickFrom = this.step2AllSegments.filter(
-      (segment: Piece) => !segment.siblingId
-    );
+        (segment: Piece) => !segment.siblingId);
     this.step2Data = [];
     this.initStep2Data();
     this.piecesLoaded = true;
@@ -190,11 +172,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   checkDataLoaded(): boolean {
-    this.dataLoaded =
-      this.performancesLoaded &&
-      this.piecesLoaded &&
-      this.castsLoaded &&
-      this.usersLoaded;
+    this.dataLoaded = this.performancesLoaded && this.piecesLoaded &&
+                      this.castsLoaded && this.usersLoaded;
     if (this.dataLoaded && this.urlUUID && !this.performanceSelected) {
       this.startAtPerformance(this.urlUUID);
     }
@@ -237,14 +216,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         city: 'New York',
         country: 'USA',
         venue: '',
-        description: '',
+        description: ''
       },
       step_2: {
-        segments: [],
+        segments: []
       },
       step_3: {
-        segments: [],
-      },
+        segments: []
+      }
     };
   }
 
@@ -262,6 +241,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.deleteWorkingCasts();
     this.resetState();
   }
+
 
   resetState() {
     this.deleteWorkingCasts();
@@ -320,7 +300,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         errorMessage: 'Must select a performance to edit!',
         url: 'Error occurred while selecting performance.',
         status: 400,
-        statusText: 'Performance not selected!',
+        statusText: 'Performance not selected!'
       });
       return;
     }
@@ -341,7 +321,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         errorMessage: 'Must select a performance to duplicate!',
         url: 'Error occurred while selecting performance.',
         status: 400,
-        statusText: 'Performance not selected!',
+        statusText: 'Performance not selected!'
       });
       return;
     }
@@ -355,6 +335,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateUrl(this.state);
   }
 
+
   onNewPerformance() {
     this.resetPerformance();
     this.performanceSelected = true;
@@ -367,15 +348,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         errorMessage: 'Must select a performance to cancel!',
         url: 'Error occurred while selecting performance.',
         status: 400,
-        statusText: 'Performance not selected!',
+        statusText: 'Performance not selected!'
       });
       return;
     }
     if (this.selectedPerformance.status === PerformanceStatus.DRAFT) {
       this.performanceAPI.deletePerformance(this.selectedPerformance);
-    } else if (
-      this.selectedPerformance.status === PerformanceStatus.PUBLISHED
-    ) {
+    } else if (this.selectedPerformance.status ===
+               PerformanceStatus.PUBLISHED) {
       this.selectedPerformance.status = PerformanceStatus.CANCELED;
       this.selectedPerformance.step_3.segments = [];
       this.selectedPerformance.step_2.segments = [];
@@ -433,49 +413,34 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   deletePiece(piece: Piece, index: number) {
     this.step2Data = this.step2Data.filter(
-      (val, ind) => val.uuid !== piece.uuid || ind !== index
-    );
+        (val, ind) => val.uuid !== piece.uuid || ind !== index);
     this.updateStep2State();
   }
 
   initStep2Data() {
     this.step2Data = this.state.step_2.segments
-      .map(segmentUUID =>
-        this.step2AllSegments.find(segment => segment.uuid === segmentUUID)
-      )
-      .filter(val => val !== undefined);
+        .map(segmentUUID => this.step2AllSegments
+            .find(segment => segment.uuid === segmentUUID))
+        .filter(val => val !== undefined);
   }
 
   updateStep2State() {
     this.state.step_2.segments = this.step2Data.map(val => val.uuid);
-    this.hasSuper = !!this.step2Data.find(segment => segment.type === 'SUPER'
-    );
+    this.hasSuper = !!this.step2Data.find(segment => segment.type === 'SUPER');
   }
 
   step2Drop(event: CdkDragDrop<Piece[]>) {
     let draggedSegment;
-    if (
-      event.container.id === 'program-list' &&
-      event.previousContainer.id === 'program-list'
-    ) {
+    if (event.container.id === 'program-list' &&
+        event.previousContainer.id === 'program-list') {
       draggedSegment = event.previousContainer.data[event.previousIndex];
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else if (
-      event.previousContainer.id === 'piece-list' &&
-      event.container.id === 'program-list'
-    ) {
+      transferArrayItem(event.previousContainer.data, event.container.data,
+          event.previousIndex, event.currentIndex);
+    } else if (event.previousContainer.id === 'piece-list' &&
+               event.container.id === 'program-list') {
       draggedSegment = event.item.data;
-      copyArrayItem(
-        [draggedSegment],
-        event.container.data,
-        0,
-        event.currentIndex
-      );
+      copyArrayItem([draggedSegment], event.container.data, 0,
+          event.currentIndex);
     }
     if (draggedSegment) {
       const isDraggingSuper = draggedSegment.type === 'SUPER';
@@ -497,9 +462,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       if (segment.uuid === draggedSegment.uuid) {
         for (const position of segment.positions) {
           if (position.siblingId) {
-            this.step2Data = this.step2Data.filter(filterSegment =>
-                Number(filterSegment.uuid) !== position.siblingId
-            );
+            this.step2Data = this.step2Data.filter(filterSegment => Number(
+                filterSegment.uuid) !== position.siblingId);
           }
         }
       }
@@ -509,19 +473,16 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // A Super Ballet has children that need to be placed right below the Super
   // Ballet
   private addSuperChildren(draggedSegment: Piece) {
-    for (
-      let segmentIndex = 0;
-      segmentIndex < this.step2Data.length;
-      segmentIndex++
-    ) {
+    for (let segmentIndex = 0; segmentIndex < this.step2Data.length;
+         segmentIndex++) {
       const segment = this.step2Data[segmentIndex];
       if (segment.uuid === draggedSegment.uuid) {
         const childArr: Piece[] = [];
         for (const position of segment.positions) {
           if (position.siblingId) {
-            const sibling = this.step2AllSegments.find(filterSegment =>
-                Number(filterSegment.uuid) === position.siblingId
-            );
+            const sibling = this.step2AllSegments.find(
+                filterSegment => Number(
+                    filterSegment.uuid) === position.siblingId);
             childArr.push(sibling);
           }
         }
@@ -538,32 +499,22 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   saveCastChanges() {
     if (this.selectedSegment) {
       const prevCastUUID = this.state.uuid + 'cast' + this.selectedSegment.uuid;
-      if (
-        this.selectedSegment &&
-        this.castDnD &&
-        this.castDnD.cast &&
-        this.castDnD.castSelected
-      ) {
+      if (this.selectedSegment && this.castDnD && this.castDnD.cast &&
+          this.castDnD.castSelected) {
         const exportedCast: Cast = this.castDnD.dataToCast();
         if (this.castAPI.hasCast(exportedCast.uuid)) {
           this.castAPI.deleteCast(exportedCast);
         }
-        this.segmentToCast.set(exportedCast.uuid, [
-          exportedCast,
-          this.primaryGroupNum,
-          this.segmentLength,
-        ]);
+        this.segmentToCast.set(exportedCast.uuid, [exportedCast,
+          this.primaryGroupNum, this.segmentLength]);
         this.castAPI.setCast(exportedCast, true);
         this.castAPI.getAllCasts();
       }
       if (this.selectedSegment && this.selectedSegment.type === 'SEGMENT') {
         this.intermissions.set(this.selectedIndex, this.segmentLength);
       }
-      this.castDnD?.setBoldedCast(
-        this.segmentToCast.get(prevCastUUID)
-          ? this.segmentToCast.get(prevCastUUID)[1]
-          : undefined
-      );
+      this.castDnD?.setBoldedCast(this.segmentToCast.get(prevCastUUID)
+          ? this.segmentToCast.get(prevCastUUID)[1] : undefined);
     }
   }
 
@@ -595,11 +546,11 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
             groups: [
               {
                 group_index: 0,
-                members: [],
-              },
-            ],
+                members: []
+              }
+            ]
           };
-        }),
+        })
       };
       this.segmentToCast.set(newCast.uuid, [newCast, 0, 0]);
       this.castAPI.setCast(newCast, true);
@@ -607,7 +558,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    this.castDnD?.selectCast({ uuid: castUUID, saveDeleteEnabled: false });
+    this.castDnD?.selectCast({uuid: castUUID, saveDeleteEnabled: false});
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
@@ -624,15 +575,13 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
-    this.chooseFromGroupIndices = Array(maxGroupInd + 1)
-      .fill(0)
-      .map((val, ind) => ind);
+    this.chooseFromGroupIndices = Array(maxGroupInd + 1).fill(0)
+        .map((val, ind) => ind);
   }
 
   updateCastsForSegment() {
     this.castsForSegment = this.allCasts.filter(
-      val => val.segment === this.selectedSegment.uuid
-    );
+        val => val.segment === this.selectedSegment.uuid);
   }
 
   onChangeCast(cast: Cast) {
@@ -653,10 +602,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.shouldSelectFirstSegment = true;
     const newInterms: Map<number, number> = new Map();
     for (const entry of this.intermissions.entries()) {
-      if (
-        this.step2Data.length > entry[0] &&
-        this.step2Data[entry[0]].type === 'SEGMENT'
-      ) {
+      if (this.step2Data.length > entry[0] &&
+          this.step2Data[entry[0]].type === 'SEGMENT') {
         newInterms.set(entry[0], entry[1]);
       }
     }
@@ -665,9 +612,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       // Sort the positions (=custom_groups) of all ballets (=segments)
       // in the performance
       for (const segment of this.state.step_3.segments) {
-        segment.custom_groups.sort((a, b) =>
-          a.position_order < b.position_order ? -1 : 1
-        );
+        segment.custom_groups.sort(
+            (a, b) => a.position_order < b.position_order ? -1 : 1);
       }
       for (const [i, seg] of this.state.step_3.segments.entries()) {
         const castUUID = this.state.uuid + 'cast' + seg.segment;
@@ -680,13 +626,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
             name: 'Copied Cast',
             segment: seg.segment,
             castCount: CAST_COUNT,
-            filled_positions: seg.custom_groups,
+            filled_positions: seg.custom_groups
           };
-          this.segmentToCast.set(castUUID, [
-            cast,
-            seg.selected_group,
-            seg.length ? seg.length : 0,
-          ]);
+          this.segmentToCast.set(castUUID, [cast, seg.selected_group,
+            seg.length ? seg.length : 0]);
           this.segmentToPerfSectionID.set(castUUID, seg.id);
           this.castAPI.setCast(cast, true);
           this.castAPI.getAllCasts();
@@ -723,6 +666,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.saveCastChanges();
   }
 
+
   // --------------------------------------------------------------
 
   // Step 4 -------------------------------------------------------
@@ -730,21 +674,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   async onSubmit() {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
-    this.performanceAPI
-      .setPerformance(finishedPerf)
-      .then(val => {
-        this.submitted = true;
-        this.initCastsLoaded = false;
-        this.deleteWorkingCasts();
-      })
-      .catch(err => {
-        alert(
-          'Unable to save performance: ' +
-            err.error.status +
-            ' ' +
-            err.error.error
-        );
-      });
+    this.performanceAPI.setPerformance(finishedPerf).then(val => {
+      this.submitted = true;
+      this.initCastsLoaded = false;
+      this.deleteWorkingCasts();
+    }).catch(err => {
+      alert('Unable to save performance: ' + err.error.status + ' ' +
+            err.error.error);
+    });
   }
 
   deleteWorkingCasts() {
@@ -763,12 +700,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   exportPerformance() {
     this.csvGenerator.generateCSVFromPerformance(this.state);
   }
+
   exportPerformanceAsPDF() {
     const data = _.get(this.state, 'step_3.segments');
     pdfMake.createPdf(this.getCastDetailsForPDF(data)).open();
     console.log(data);
     console.log(this.step2Data);
   }
+
   getCastDetailsForPDF(segments: Piece[]) {
     const content = [];
     const picURI =
@@ -855,44 +794,41 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       },
     };
   }
+  
   dataToPerformance(): Performance {
     this.updateStep2State();
     const newState: Performance = JSON.parse(JSON.stringify(this.state));
-    newState.step_3.segments = this.step2Data.map((segment, segmentIx) => {
-      const segUUID = newState.uuid + 'cast' + segment.uuid;
-      const info: [Cast, number, number] = this.segmentToCast.get(segUUID);
-      if (segment.type === 'SEGMENT' || segment.type === 'SUPER' || !info) {
-        return {
-          id: this.segmentToPerfSectionID.has(segUUID)
-            ? this.segmentToPerfSectionID.get(segUUID)
-            : undefined,
-          segment: segment.uuid,
-          name: segment.name,
-          type: segment.type,
-          selected_group: undefined,
-          length: this.intermissions.get(segmentIx)
-            ? this.intermissions.get(segmentIx)
-            : 0,
-          custom_groups: [],
-        };
-      }
-      return {
-        id: this.segmentToPerfSectionID.has(segUUID)
-          ? this.segmentToPerfSectionID.get(segUUID)
-          : undefined,
-        segment: segment.uuid,
-        name: segment.name,
-        type: segment.type,
-        selected_group: info ? info[1] : 0,
-        length: info[2] ? info[2] : 0,
-        custom_groups: info
-          ? info[0].filled_positions.map(val => {
+    newState.step_3.segments =
+        this.step2Data.map((segment, segmentIx) => {
+          const segUUID = newState.uuid + 'cast' + segment.uuid;
+          const info: [Cast, number, number] = this.segmentToCast.get(segUUID);
+          if (segment.type === 'SEGMENT' || segment.type === 'SUPER' || !info) {
+            return {
+              id: this.segmentToPerfSectionID.has(segUUID)
+                  ? this.segmentToPerfSectionID.get(segUUID) : undefined,
+              segment: segment.uuid,
+              name: segment.name,
+              type: segment.type,
+              selected_group: undefined,
+              length: this.intermissions.get(segmentIx)
+                  ? this.intermissions.get(segmentIx) : 0,
+              custom_groups: []
+            };
+          }
+          return {
+            id: this.segmentToPerfSectionID.has(segUUID)
+                ? this.segmentToPerfSectionID.get(segUUID) : undefined,
+            segment: segment.uuid,
+            name: segment.name,
+            type: segment.type,
+            selected_group: info ? info[1] : 0,
+            length: info[2] ? info[2] : 0,
+            custom_groups: info ? info[0].filled_positions.map(val => {
               let positionName = '';
               let positionOrder = 0;
               this.step2AllSegments.forEach(val2 => {
                 const foundPos = val2.positions.find(
-                  val3 => val3.uuid === val.position_uuid
-                );
+                    val3 => val3.uuid === val.position_uuid);
                 if (foundPos) {
                   positionName = foundPos.name;
                   positionOrder = foundPos.order;
@@ -905,22 +841,19 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
                 groups: val.groups.map(g => {
                   return {
                     ...g,
-                    memberNames: g.members
-                      .map(mem => this.userAPI.users.get(mem.uuid))
-                      .map(usr =>
-                          usr.first_name +
-                          ' ' +
-                          (usr.middle_name ? usr.middle_name + ' ' : '') +
-                          usr.last_name +
-                          (usr.suffix ? usr.suffix : '')
-                      ),
+                    memberNames: g.members.map(
+                        mem => this.userAPI.users.get(mem.uuid)).map(
+                        usr => usr.first_name + ' ' +
+                               (usr.middle_name ? usr.middle_name + ' ' : '') +
+                               usr.last_name +
+                               (usr.suffix ? usr.suffix : ''),
+                    )
                   };
-                }),
+                })
               };
-            })
-          : [],
-      };
-    });
+            }) : []
+          };
+        });
     return newState;
   }
 
@@ -938,4 +871,5 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   // --------------------------------------------------------------
+
 }
