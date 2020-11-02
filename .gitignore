@@ -6,3 +6,4 @@ backend/.settings/*
 backend/.classpath
 backend/.factorypath
 .idea
+frontend/rolecall/.vscode/settings.json
