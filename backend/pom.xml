@@ -30,9 +30,9 @@
       </properties>
     </profile>
     <profile>
-      <id>clouddev</id>
+      <id>qa</id>
       <properties>
-        <spring.profiles.active>clouddev</spring.profiles.active>
+        <spring.profiles.active>qa</spring.profiles.active>
       </properties>
     </profile>
     <profile>
