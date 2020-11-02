@@ -89,7 +89,7 @@ export class CsvGenerator {
         for (const zObjs of nObjs) {
           for (const yObj of zObjs) {
             allVals.push(yObj);
-            }
+          }
         }
       }
     }
@@ -105,7 +105,7 @@ export class CsvGenerator {
   }
 
   downloadFile(data: any, headers: string[], fileName: string) {
-    const replacer = (key, value) => (value === null || value === undefined) ?
+    const replacer = (_, value) => (value === null || value === undefined) ?
         '' : value;
     const csv = data.map(row => headers.map(
         fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
@@ -115,5 +115,4 @@ export class CsvGenerator {
     const blob = new Blob([csvArray], {type: 'text/csv'});
     saveAs(blob, fileName + '.csv');
   }
-
 }

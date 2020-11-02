@@ -105,13 +105,13 @@ export class PieceApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<RawAllPiecesResponse>(
-            resp)).then((val) => {
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<RawAllPiecesResponse>(
+            resp)).then(val => {
           this.rawPieces = val.data;
           return {
             data: {
-              pieces: val.data.map((section) => {
+              pieces: val.data.map(section => {
                 return {
                   uuid: String(section.id),
                   name: section.name,
@@ -131,11 +131,6 @@ export class PieceApi {
         });
   }
 
-  /** Hits backend with one piece GET request. */
-  requestOnePiece(uuid: APITypes.PieceUUID): Promise<OnePieceResponse> {
-    return this.mockBackend.requestOnePiece(uuid);
-  }
-
   /** Hits backend with create/edit piece POST request. */
   async requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     if (environment.mockBackend) {
@@ -151,12 +146,12 @@ export class PieceApi {
             id: Number(piece.uuid),
             siblingId: piece.siblingId,
             type: piece.type ? piece.type : 'BALLET',
-            positions: piece.positions.map((val, ind) => {
+            positions: piece.positions.map(val => {
               return {
                 ...val,
                 delete: false
               };
-            }).concat(piece.deletePositions.map((val, ind) => {
+            }).concat(piece.deletePositions.map(val => {
               return {
                 ...val,
                 delete: true
@@ -168,8 +163,8 @@ export class PieceApi {
             withCredentials: true
           })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then((resp) => this.respHandler.checkResponse<any>(resp));
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       const header = await this.headerUtil.generateHeader();
@@ -184,8 +179,8 @@ export class PieceApi {
             withCredentials: true
           })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then((resp) => this.respHandler.checkResponse<any>(resp));
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -202,8 +197,8 @@ export class PieceApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<any>(resp));
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
   }
 
   /** Takes backend response, updates data structures for all pieces. */
@@ -214,20 +209,6 @@ export class PieceApi {
       for (const piece of val.data.pieces) {
         this.pieces.set(piece.uuid, piece);
       }
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-  }
-
-  /** Takes backend response, updates data structure for one piece. */
-  private getOnePieceResponse(uuid: APITypes.PieceUUID):
-      Promise<OnePieceResponse> {
-    return this.requestOnePiece(uuid).then(val => {
-      // Update piece in map
-      this.pieces.set(val.data.piece.uuid, val.data.piece);
       // Log any warnings
       for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
@@ -251,17 +232,9 @@ export class PieceApi {
     return this.getAllPiecesResponse().then(val => {
       this.pieceEmitter.emit(Array.from(this.pieces.values()));
       return val;
-    }).then(val => val.data.pieces).catch(err => {
+    }).then(val => val.data.pieces).catch(() => {
       return [];
     });
-  }
-
-  /** Gets a specific piece from the backend by UUID and returns it. */
-  getPiece(uuid: APITypes.PieceUUID): Promise<Piece> {
-    return this.getOnePieceResponse(uuid).then(val => {
-      this.pieceEmitter.emit(Array.from(this.pieces.values()));
-      return val;
-    }).then(val => val.data.piece);
   }
 
   /**
@@ -270,7 +243,7 @@ export class PieceApi {
    * request fails for some other reason.
    */
   setPiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
-    return this.setPieceResponse(piece).then(val => {
+    return this.setPieceResponse(piece).then(() => {
       this.getAllPieces();
       return {
         successful: true
@@ -285,7 +258,7 @@ export class PieceApi {
 
   /** Requests for the backend to delete the piece. */
   deletePiece(piece: Piece): Promise<APITypes.SuccessIndicator> {
-    return this.deletePieceResponse(piece).then(val => {
+    return this.deletePieceResponse(piece).then(() => {
       this.getAllPieces();
       return {
         successful: true

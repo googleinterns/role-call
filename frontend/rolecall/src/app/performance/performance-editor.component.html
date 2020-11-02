@@ -5,7 +5,7 @@
         #stepper
         [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
         [stepperOptions]="stepperOpts"
-        (stepChange)="onStepChange($event)"></app-stepper>
+        (stepChange)="onStepChange()"></app-stepper>
 
     <div>
       <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
