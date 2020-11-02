@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /*
  * Initializes the entity manager factory for all transactions.
- * Does NOT initialize the DataSource which is setup via configurations in 
- * application-dev.properties in Dev.  
+ * Does NOT initialize the DataSource which is setup via configurations in
+ * application-dev.properties in Dev.
  */
 @Configuration
 @EnableJpaRepositories("com.google.rolecall.repos")
 @EnableTransactionManagement
-@Profile({"dev","prod"})
+@Profile({"dev", "prod", "qa"})
 public class RepositoryConfig {
 
   private final DataSource dataSource;
@@ -35,7 +35,7 @@ public class RepositoryConfig {
     vendorAdapter.setGenerateDdl(true);
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-    
+
     // TODO: Add shared caching here
     factory.setJpaVendorAdapter(vendorAdapter);
     factory.setPackagesToScan("com.google.rolecall.models");

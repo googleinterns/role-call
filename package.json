@@ -9,6 +9,7 @@
     "test_prod": "cd test_server/ && ts-node test_prod_server.ts",
     "installAng": "npm i && cd ./frontend/rolecall/ && npm i",
     "buildAng": "cd ./frontend/rolecall/ && npm run build_prod",
+    "buildAngQA": "cd ./frontend/rolecall/ && npm run build_qa",
     "configureYamls": "run(){ cp ./yaml_frontend/$1 ./app.yaml; cp ./yaml_backend/$2 ./backend/src/main/appengine/app.yaml; }; run",
     "configurePort": "sed -i -E \"s/server.port=([0-9])+/server.port=8080/\" ./backend/src/main/resources/application.properties"
   },
