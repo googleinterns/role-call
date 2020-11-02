@@ -7,6 +7,20 @@ import {MockPerformanceBackend} from '../mocks/mock_performance_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+export type PerformaceSegments = {
+  id: string,
+  segment: string,
+  length: number,
+  selected_group: number,
+  custom_groups: {
+    position_uuid: string,
+    position_order: number,
+    groups: {
+      group_index: number,
+      members: { uuid: string, position_number: number }[]
+    }[]
+  }[]
+};
 
 export type Performance = {
   uuid: string,
@@ -26,20 +40,7 @@ export type Performance = {
     segments: string[],
   },
   step_3: {
-    segments: {
-      id: string,
-      segment: string,
-      length: number,
-      selected_group: number,
-      custom_groups: {
-        position_uuid: string,
-        position_order: number,
-        groups: {
-          group_index: number,
-          members: { uuid: string, position_number: number }[]
-        }[]
-      }[]
-    }[]
+    segments: PerformaceSegments[]
   }
 };
 
