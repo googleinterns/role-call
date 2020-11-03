@@ -5,12 +5,6 @@ import {environment} from 'src/environments/environment';
 
 import {LoggingService} from '../services/logging.service';
 
-/** Request and Response types */
-export type LoginRequest = {
-  email: string,
-  password: string
-};
-
 export type LoginResponse = {
   authenticated: boolean,
   user: gapi.auth2.GoogleUser
@@ -32,7 +26,7 @@ export class LoginApi {
   isAuthLoaded = false;
 
   /** Promise that resolves when logged in. */
-  loginPromise = new Promise((res) => {
+  loginPromise = new Promise(res => {
     this.resolveLogin = res;
   });
   resolveLogin: (value?: unknown) => void;
@@ -51,7 +45,7 @@ export class LoginApi {
 
   /** Initialize OAuth2. */
   public async initGoogleAuth(): Promise<void> {
-    const pload = new Promise((resolve) => {
+    const pload = new Promise(resolve => {
       gapi.load('auth2', resolve);
     });
     return pload.then(async () => {
@@ -101,7 +95,7 @@ export class LoginApi {
               (user => {
                 return this.getLoginResponse(true, true, user);
               }),
-              ((reason) => {
+              (reason => {
                 this.loggingService.logError(reason);
                 return this.getLoginResponse(false, false, undefined);
               })
@@ -168,7 +162,7 @@ export class LoginApi {
               'EMAIL': this.email
             }
           }
-      ).toPromise().then((resp) => {
+      ).toPromise().then(resp => {
         if (resp.status > 299 || resp.status < 200) {
           return Promise.reject('Sign in failed');
         } else {
@@ -180,11 +174,11 @@ export class LoginApi {
           this.authInstance.signOut();
         }
         this.isLoggedIn = false;
-        this.loginPromise = new Promise((res) => {
+        this.loginPromise = new Promise(res => {
           this.resolveLogin = res;
         });
         this.refresh();
-      }).catch((e) => {
+      }).catch(e => {
         alert('Sign out failed!');
         console.log(e);
       });

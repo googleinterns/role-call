@@ -19,7 +19,7 @@ export type User = {
   middle_name: string | undefined;
   last_name: string | undefined;
   suffix: string | undefined;
-  picture_file:  string | undefined;
+  picture_file: string | undefined;
   date_joined: number | undefined;
   contact_info: {
     phone_number: string | undefined;
@@ -114,13 +114,12 @@ export class UserApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then(
-            (resp) => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
-        .then((rawAllUsersResponse) => {
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
+        .then(rawAllUsersResponse => {
           return {
             data: {
-              users: rawAllUsersResponse.data.map((rawUser) => {
+              users: rawAllUsersResponse.data.map(rawUser => {
                 return {
                   uuid: String(rawUser.id),
                   has_roles: {
@@ -219,8 +218,8 @@ export class UserApi {
                 withCredentials: true
               })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then((resp) => this.respHandler.checkResponse<any>(resp));
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       return this.http
@@ -262,8 +261,8 @@ export class UserApi {
                 withCredentials: true
               })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then((resp) => this.respHandler.checkResponse<any>(resp));
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -279,8 +278,8 @@ export class UserApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<any>(resp));
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
   }
 
   /** Takes backend response, updates data structures for all users. */
@@ -330,7 +329,7 @@ export class UserApi {
           return val;
         })
         .then(val => val.data.users)
-        .catch(err => []);
+        .catch(() => []);
   }
 
   /** Gets a specific user from the backend by UUID and returns it. */
@@ -348,7 +347,7 @@ export class UserApi {
    * request fails for some other reason.
    */
   setUser(user: User): Promise<APITypes.SuccessIndicator> {
-    return this.setUserResponse(user).then(val => {
+    return this.setUserResponse(user).then(() => {
           this.getAllUsers();
           return {
             successful: true
@@ -364,7 +363,7 @@ export class UserApi {
 
   /** Requests for the backend to delete the user. */
   deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
-    return this.deleteUserResponse(user).then(val => {
+    return this.deleteUserResponse(user).then(() => {
           this.getAllUsers();
           return {
             successful: true

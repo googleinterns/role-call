@@ -8,7 +8,7 @@ import {PerformanceStatus} from 'src/api_types';
 import {Cast, CastApi} from '../api/cast_api.service';
 import {Performance, PerformanceApi, PerformanceSegment} from '../api/performance-api.service';
 import {Piece, PieceApi} from '../api/piece_api.service';
-import {User, UserApi} from '../api/user_api.service';
+import {UserApi} from '../api/user_api.service';
 import {CastDragAndDrop} from '../cast/cast-drag-and-drop.component';
 import {Stepper} from '../common_components/stepper.component';
 import {CsvGenerator} from '../services/csv-generator.service';
@@ -109,7 +109,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         val => this.onPerformanceLoad(val));
     this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
     this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
-    this.userAPI.userEmitter.subscribe(val => this.onUserLoad(val));
+    this.userAPI.userEmitter.subscribe(() => this.onUserLoad());
     this.performanceAPI.getAllPerformances();
     this.piecesAPI.getAllPieces();
     this.castAPI.getAllCasts();
@@ -146,7 +146,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.checkDataLoaded();
   }
 
-  onUserLoad(users: User[]) {
+  onUserLoad() {
     this.usersLoaded = true;
     this.checkDataLoaded();
   }
@@ -271,7 +271,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateBasedOnStep();
   }
 
-  onStepChange(step) {
+  onStepChange() {
     this.updateBasedOnStep();
   }
 
@@ -575,7 +575,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
     this.chooseFromGroupIndices = Array(maxGroupInd + 1).fill(0)
-        .map((val, ind) => ind);
+        .map((_, ind) => ind);
   }
 
   updateCastsForSegment() {
@@ -673,7 +673,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   async onSubmit() {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
-    this.performanceAPI.setPerformance(finishedPerf).then(val => {
+    this.performanceAPI.setPerformance(finishedPerf).then(() => {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
@@ -856,11 +856,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           };
         });
     return newState;
-  }
-
-  onReturn() {
-    this.onPrevClick();
-    this.submitted = false;
   }
 
   onResetFromStart(e) {

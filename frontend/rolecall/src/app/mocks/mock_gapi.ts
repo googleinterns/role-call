@@ -79,7 +79,7 @@ export class MockGAPI {
   mock() {
     return {
       auth2: {
-        init: (options) => {
+        init: () => {
           return Promise.resolve({
             signIn: () => {
               if (this.shouldThrowSignInError) {
@@ -110,7 +110,7 @@ export class MockGAPI {
           });
         }
       },
-      load: (tag: string, callback: Function) => {
+      load: (_, callback: Function) => {
         callback();
       },
     };

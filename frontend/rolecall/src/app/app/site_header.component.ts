@@ -1,8 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {isNullOrUndefined} from 'util';
-import {LoginApi, LoginResponse} from '../api/login_api.service';
+import {LoginApi} from '../api/login_api.service';
 import {SideNav} from './side_nav.component';
-
 
 /**
  * The site-wide header that holds the menu bar, login information,
@@ -28,8 +27,8 @@ export class SiteHeader implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginAPI.login(false).then(loginResp => {
-      this.configureHeaderForLogin(loginResp);
+    this.loginAPI.login(false).then(() => {
+      this.configureHeaderForLogin();
     });
   }
 
@@ -48,19 +47,19 @@ export class SiteHeader implements OnInit {
       this.loginAPI.authInstance.disconnect();
       this.loginAPI.isAuthLoaded = false;
     }
-    return this.loginAPI.login(true).then(loginResp => {
-      this.configureHeaderForLogin(loginResp);
+    return this.loginAPI.login(true).then(() => {
+      this.configureHeaderForLogin();
     });
   }
 
   /** Sign out of google OAuth2 */
   onSignOut() {
     this.loginAPI.signOut();
-    this.configureHeaderForLogin({authenticated: false, user: undefined});
+    this.configureHeaderForLogin();
   }
 
   /** Set state and render page header depending on login state */
-  private configureHeaderForLogin(loginResp: LoginResponse) {
+  private configureHeaderForLogin() {
     this.responseReceived = true;
     this.userIsLoggedIn = this.loginAPI.isLoggedIn;
   }

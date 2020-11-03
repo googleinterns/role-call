@@ -106,7 +106,7 @@ export class UserEditor implements OnInit {
     if (uuid) {
       this.urlPointingUUID = uuid;
     }
-    this.userAPI.userEmitter.subscribe((user) => {
+    this.userAPI.userEmitter.subscribe(user => {
       this.onUserLoad(user);
     });
     this.userAPI.getAllUsers();
@@ -149,7 +149,7 @@ export class UserEditor implements OnInit {
       this.setCurrentUser({user: this.renderingUsers[0]});
     } else {
       const foundUser = this.renderingUsers.find(
-          (user) => user.uuid === this.urlPointingUUID);
+          user => user.uuid === this.urlPointingUUID);
       if (!foundUser) {
         this.setCurrentUser({
           user: this.renderingUsers[0],
@@ -183,8 +183,8 @@ export class UserEditor implements OnInit {
 
     if (this.workingUser && user.uuid !== this.workingUser.uuid) {
       this.renderingUsers = this.renderingUsers.filter(
-          (renderingUser) => renderingUser.uuid !== this.workingUser.uuid
-                             && this.userAPI.isValidUser(renderingUser));
+          renderingUser => renderingUser.uuid !== this.workingUser.uuid
+                           && this.userAPI.isValidUser(renderingUser));
       if (this.prevWorkingState) {
         this.currentSelectedUser = this.prevWorkingState;
         this.renderingUsers.push(this.currentSelectedUser);

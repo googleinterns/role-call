@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-date-input',
@@ -17,7 +17,7 @@ export class EditableDateInput implements OnInit, OnChanges {
     this.currentValue = new Date(this.initValue);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     this.currentValue = new Date(this.initValue);
   }
 
