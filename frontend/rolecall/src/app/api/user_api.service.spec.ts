@@ -30,15 +30,15 @@ describe('UserApi', () => {
     service = TestBed.inject(UserApi);
     mockBackend = new MockUserBackend();
     service.mockBackend = mockBackend;
-    service.requestAllUsers = () => {
+    service.requestAllUsers = (() => {
       return mockBackend.requestAllUsers();
-    };
-    service.requestOneUser = (uuid) => {
+    });
+    service.requestOneUser = (uuid => {
       return mockBackend.requestOneUser(uuid);
-    };
-    service.requestUserSet = (user) => {
+    });
+    service.requestUserSet = (user => {
       return mockBackend.requestUserSet(user);
-    };
+    });
   });
 
   it('should be created', () => {

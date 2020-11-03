@@ -74,11 +74,11 @@ export class CastDragAndDrop implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userAPI.userEmitter.subscribe((users) => {
+    this.userAPI.userEmitter.subscribe(users => {
       this.onUserLoad(users);
     });
-    this.castAPI.castEmitter.subscribe((casts) => {
-      this.onCastLoad(casts);
+    this.castAPI.castEmitter.subscribe(() => {
+      this.onCastLoad();
     });
     this.castAPI.getAllCasts();
     this.userAPI.getAllUsers();
@@ -130,7 +130,7 @@ export class CastDragAndDrop implements OnInit {
   }
 
   /** Called when casts are loaded from the Cast API. */
-  private onCastLoad(casts: Cast[]) {
+  private onCastLoad() {
     this.castsLoaded = true;
     if (this.checkAllLoaded()) {
       this.setupData();
@@ -165,7 +165,7 @@ export class CastDragAndDrop implements OnInit {
       filled_positions: this.castPositions.map(
           (uiPos: UICastPosition) => {
             let subCasts: CastGroup[] = new Array(this.castCount).fill([]);
-            subCasts = subCasts.map((subCast, subCastIndex) => {
+            subCasts = subCasts.map((_, subCastIndex) => {
               return {
                 group_index: subCastIndex,
                 members: []

@@ -1,7 +1,7 @@
 runtime: python37
 
 # Deploy to frontend service
-service: frontend-test
+service: frontend-qa
 
 # Only use 1 instance for development
 manual_scaling:
@@ -12,9 +12,9 @@ manual_scaling:
 #    requested file
 # 2) Map all other requests to the index.html of the angular app
 handlers:
-- url: /(.*\.(gif|png|jpg|css|js)(|\.map))$
-  static_files: frontend/rolecall/dist/rolecall/\1
-  upload: frontend/rolecall/dist/rolecall/(.*)(|\.map)
-- url: /(.*)
-  static_files: frontend/rolecall/dist/rolecall/index.html
-  upload: frontend/rolecall/dist/rolecall/index.html
+  - url: /(.*\.(gif|png|jpg|css|js)(|\.map))$
+    static_files: frontend/rolecall/dist/rolecall/\1
+    upload: frontend/rolecall/dist/rolecall/(.*)(|\.map)
+  - url: /(.*)
+    static_files: frontend/rolecall/dist/rolecall/index.html
+    upload: frontend/rolecall/dist/rolecall/index.html

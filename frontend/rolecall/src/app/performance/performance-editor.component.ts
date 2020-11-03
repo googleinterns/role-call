@@ -1,13 +1,14 @@
 import {CdkDragDrop, copyArrayItem, transferArrayItem} from '@angular/cdk/drag-drop';
 import {Location} from '@angular/common';
+import pdfMake from 'pdfmake/build/pdfmake';
 import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {PerformanceStatus} from 'src/api_types';
 import {Cast, CastApi} from '../api/cast_api.service';
-import {Performance, PerformanceApi} from '../api/performance-api.service';
+import {Performance, PerformanceApi, PerformanceSegment} from '../api/performance-api.service';
 import {Piece, PieceApi} from '../api/piece_api.service';
-import {User, UserApi} from '../api/user_api.service';
+import {UserApi} from '../api/user_api.service';
 import {CastDragAndDrop} from '../cast/cast-drag-and-drop.component';
 import {Stepper} from '../common_components/stepper.component';
 import {CsvGenerator} from '../services/csv-generator.service';
@@ -108,15 +109,31 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         val => this.onPerformanceLoad(val));
     this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
     this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
-    this.userAPI.userEmitter.subscribe(val => this.onUserLoad(val));
+    this.userAPI.userEmitter.subscribe(() => this.onUserLoad());
     this.performanceAPI.getAllPerformances();
     this.piecesAPI.getAllPieces();
     this.castAPI.getAllCasts();
     this.userAPI.getAllUsers();
+    this.initPDFMake();
   }
 
   ngOnDestroy() {
     this.deleteWorkingCasts();
+  }
+
+  initPDFMake() {
+    pdfMake.fonts = {
+      Roboto: {
+        normal:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+        bold:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+        italics:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+        bolditalics:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
+      },
+    };
   }
 
   onPerformanceLoad(perfs: Performance[]) {
@@ -129,7 +146,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.checkDataLoaded();
   }
 
-  onUserLoad(users: User[]) {
+  onUserLoad() {
     this.usersLoaded = true;
     this.checkDataLoaded();
   }
@@ -254,7 +271,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateBasedOnStep();
   }
 
-  onStepChange(step) {
+  onStepChange() {
     this.updateBasedOnStep();
   }
 
@@ -558,7 +575,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
     this.chooseFromGroupIndices = Array(maxGroupInd + 1).fill(0)
-        .map((val, ind) => ind);
+        .map((_, ind) => ind);
   }
 
   updateCastsForSegment() {
@@ -656,7 +673,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   async onSubmit() {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
-    this.performanceAPI.setPerformance(finishedPerf).then(val => {
+    this.performanceAPI.setPerformance(finishedPerf).then(() => {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
@@ -681,6 +698,102 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   exportPerformance() {
     this.csvGenerator.generateCSVFromPerformance(this.state);
+  }
+
+  exportPerformanceAsPDF() {
+    const data = this.state.step_3.segments;
+    pdfMake.createPdf(this.getCastDetailsForPDF(data)).open();
+    console.log(data);
+    console.log(this.step2Data);
+  }
+
+  getCastDetailsForPDF(segments: PerformanceSegment[]) {
+    const content = [];
+    const picURI =
+        'data:image/png;base64,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';
+    content.push({image: picURI});
+
+    const perfDetail = this.state.step_1;
+
+    content.push({text: perfDetail.title, style: 'header'});
+    content.push({
+      text: perfDetail.description,
+      style: 'header_desc',
+    });
+
+    const step2Data = this.step2Data;
+    segments.forEach((segment, index) => {
+      const siblingId = step2Data[index] && step2Data[index].siblingId;
+      if (siblingId > 0) {
+        content.push({text: segment.name, style: 'mleft4'});
+      } else {
+        content.push({text: segment.name, style: 'mleft1'});
+      }
+      const positions = segment.custom_groups;
+      positions.forEach(position => {
+        if (this.hasSuper && siblingId < 1) {
+          content.push({text: position.name, style: 'mleft10'});
+        } else {
+          content.push({text: position.name, style: 'mleft10'});
+        }
+        const selectedGroup = position.groups.filter(
+            grp => grp.group_index === segment.selected_group
+        ) || [];
+        if (selectedGroup.length > 0) {
+          content.push({
+            text: selectedGroup[0].memberNames.join(', '),
+            style: 'mleft14',
+          });
+        }        
+      });
+    });
+
+    return {
+      content,
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 20, 0, 10],
+        },
+        header_desc: {
+          fontSize: 10,
+          bold: false,
+          italics: true,
+          alignment: 'center',
+          margin: [0, 10, 0, 10],
+        },
+        mleft4: {
+          fontSize: 16,
+          bold: true,
+          margin: [40, 10, 0, 0],
+        },
+        mleft1: {
+          fontSize: 18,
+          bold: true,
+          margin: [10, 10, 0, 0],
+        },
+        mleft10: {
+          fontSize: 14,
+          bold: false,
+          italics: false,
+          decoration: 'underline',
+          margin: [100, 10, 0, 0],
+        },
+        mleft14: {
+          fontSize: 14,
+          bold: false,
+          italics: true,
+          margin: [130, 10, 0, 0],
+        },
+        // mleft7: {
+        //   fontSize: 14,
+        //   bold: false,
+        //   margin: [70, 2, 0, 0],
+        // },
+      },
+    };
   }
 
   dataToPerformance(): Performance {
@@ -743,11 +856,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           };
         });
     return newState;
-  }
-
-  onReturn() {
-    this.onPrevClick();
-    this.submitted = false;
   }
 
   onResetFromStart(e) {

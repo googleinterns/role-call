@@ -1089,8 +1089,7 @@ export class MockUserBackend {
 
   requestUserSet(user: User): Promise<HttpResponse<any>> {
     if (this.isValidUser(user)) {
-      const userInd = this.mockUserDB.findIndex(
-          (val) => val.uuid === user.uuid);
+      const userInd = this.mockUserDB.findIndex(val => val.uuid === user.uuid);
       if (userInd === -1) {
         this.mockUserDB.push(user);
       } else {

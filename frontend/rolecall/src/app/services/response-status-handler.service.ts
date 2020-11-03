@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 import {Component, Inject, Injectable, NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -10,10 +10,6 @@ export type ErrorEvent = {
   errorMessage: string,
   status: number,
   statusText: string
-};
-
-export type WarningEvent = {
-  warning: string
 };
 
 @Injectable({providedIn: 'root'})
@@ -68,7 +64,7 @@ export class ResponseStatusHandlerService {
       return Promise.resolve('');
     }
     let resFunc;
-    const prom: Promise<string> = new Promise((res, rej) => {
+    const prom: Promise<string> = new Promise(res => {
       resFunc = res;
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
@@ -83,16 +79,6 @@ export class ResponseStatusHandlerService {
       resolveThis[1](userResp);
       this.pendingErrors.delete(errEv.url);
     }
-  }
-
-  noConnectionError(err: HttpErrorResponse) {
-    const errorEvent: ErrorEvent = {
-      url: err.url,
-      errorMessage: err.message,
-      status: err.status,
-      statusText: err.statusText
-    };
-    this.showError(errorEvent);
   }
 }
 

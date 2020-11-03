@@ -156,7 +156,7 @@ export class UnavailabilityEditor implements OnInit {
   }
 
   onSaveUnav() {
-    this.doSetUnav().then(val => {
+    this.doSetUnav().then(() => {
       this.onNewUnav();
     });
   }

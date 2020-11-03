@@ -177,8 +177,8 @@ export class PieceEditor implements OnInit {
     if (!this.urlPointingUUID) {
       this.setCurrentPiece(workPieces[0]);
     } else {
-      const foundPiece = workPieces.find((
-          workPiece) => workPiece.uuid === this.urlPointingUUID);
+      const foundPiece = workPieces.find(
+          workPiece => workPiece.uuid === this.urlPointingUUID);
       if (!foundPiece) {
         this.setCurrentPiece(workPieces[0]);
       } else {
@@ -312,10 +312,10 @@ export class PieceEditor implements OnInit {
         this.pieceSaved = true;
         this.creatingPiece = false;
         const prevUUID = this.currentSelectedPiece.uuid;
-        const superBallet = prevUUID.startsWith("segment:")
+        const superBallet = prevUUID.startsWith('segment:')
             ? this.currentSelectedPiece : null;
-        const matchName = superBallet ? superBallet.name : "";
-        const matchLength = superBallet ? superBallet.positions.length : -1; 
+        const matchName = superBallet ? superBallet.name : '';
+        const matchLength = superBallet ? superBallet.positions.length : -1;
         this.prevWorkingState = undefined;
         this.workingPiece = undefined;
         await this.pieceAPI.getAllPieces();
