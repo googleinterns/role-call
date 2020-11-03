@@ -29,14 +29,3 @@ steps:
   name: 'buildkite/puppeteer'
   args: ['npm', 'run', 'coverage']
   dir: "frontend/rolecall"
-
-# Upload generated coverage tests data.
-- id: upload_coverage_data
-  name: 'gcr.io/cloud-builders/docker'
-  entrypoint: bash
-  args: ['-c', 'bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -X fix -F unittests']
-  env:
-    - 'VCS_COMMIT_ID=$COMMIT_SHA'
-    - 'VCS_BRANCH_NAME=$BRANCH_NAME'
-    - 'CI_BUILD_ID=$BUILD_ID'
-    - 'CODECOV_TOKEN=$_CODECOV_TOKEN'  
