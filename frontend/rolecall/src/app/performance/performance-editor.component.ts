@@ -738,11 +738,13 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         }
         const selectedGroup = position.groups.filter(
             grp => grp.group_index === segment.selected_group
-        );
-        content.push({
-          text: selectedGroup[0].memberNames.join(', '),
-          style: 'mleft14',
-        });
+        ) || [];
+        if (selectedGroup.length > 0) {
+          content.push({
+            text: selectedGroup[0].memberNames.join(', '),
+            style: 'mleft14',
+          });
+        }        
       });
     });
 
