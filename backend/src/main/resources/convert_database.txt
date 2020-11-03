@@ -633,7 +633,7 @@ FROM MaxIds;
 */
 
 /* delete lookup tables */
-/*
+
 DROP TABLE IF EXISTS Cast_Id_Lookup;
 DROP TABLE IF EXISTS CastMember_Id_Lookup;
 DROP TABLE IF EXISTS Performance_Id_Lookup;
@@ -645,4 +645,30 @@ DROP TABLE IF EXISTS SubCast_Id_Lookup;
 DROP TABLE IF EXISTS Unavailability_Id_Lookup;
 DROP TABLE IF EXISTS User_Id_Lookup;
 DROP TABLE IF EXISTS MaxIds;
-*/
+
+CREATE DATABASE rolecall_old;
+RENAME TABLE rolecall_db.Cast TO rolecall_old.Cast;
+RENAME TABLE rolecall_db.CastMember TO rolecall_old.CastMember;
+RENAME TABLE rolecall_db.Performance TO rolecall_old.Performance;
+RENAME TABLE rolecall_db.PerformanceCastMember TO rolecall_old.PerformanceCastMember;
+RENAME TABLE rolecall_db.PerformanceSection TO rolecall_old.PerformanceSection;
+RENAME TABLE rolecall_db.Position TO rolecall_old.Position;
+RENAME TABLE rolecall_db.Section TO rolecall_old.Section;
+RENAME TABLE rolecall_db.SubCast TO rolecall_old.SubCast;
+RENAME TABLE rolecall_db.Unavailability TO rolecall_old.Unavailability;
+RENAME TABLE rolecall_db.User TO rolecall_old.User;
+RENAME TABLE rolecall_db.hibernate_sequence TO rolecall_old.hibernate_sequence;
+
+RENAME TABLE rolecall_new.Cast TO rolecall_db.Cast;
+RENAME TABLE rolecall_new.CastMember TO rolecall_db.CastMember;
+RENAME TABLE rolecall_new.Performance TO rolecall_db.Performance;
+RENAME TABLE rolecall_new.PerformanceCastMember TO rolecall_db.PerformanceCastMember;
+RENAME TABLE rolecall_new.PerformanceSection TO rolecall_db.PerformanceSection;
+RENAME TABLE rolecall_new.Position TO rolecall_db.Position;
+RENAME TABLE rolecall_new.Section TO rolecall_db.Section;
+RENAME TABLE rolecall_new.SubCast TO rolecall_db.SubCast;
+RENAME TABLE rolecall_new.Unavailability TO rolecall_db.Unavailability;
+RENAME TABLE rolecall_new.User TO rolecall_db.User;
+RENAME TABLE rolecall_new.hibernate_sequence TO rolecall_db.hibernate_sequence;
+
+DROP DATABASE IF EXISTS rolecall_new;
