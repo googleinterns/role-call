@@ -6,7 +6,7 @@ import {User} from '../api/user_api.service';
 })
 export class FullNamePipe implements PipeTransform {
 
-  public transform(user?: User): string {
+  public transform(user: User|undefined|null): string {
     if (!user) {
       return "";
     }
