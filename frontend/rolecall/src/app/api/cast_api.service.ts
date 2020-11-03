@@ -136,10 +136,9 @@ export class CastApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then(
-            (resp) => this.respHandler.checkResponse<AllRawCastsResponse>(resp))
-        .then((result) => {
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<AllRawCastsResponse>(resp))
+        .then(result => {
           this.rawCasts = result.data;
           const allPositions: Position[] = [];
           Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
@@ -250,7 +249,7 @@ export class CastApi {
                 withCredentials: true
               })
           .toPromise()
-          .catch((errorResp) => errorResp)
+          .catch(errorResp => errorResp)
           .then(
               resp => this.respHandler.checkResponse<any>(resp))
           .then(async () => {
@@ -260,7 +259,7 @@ export class CastApi {
                   headers: header,
                   observe: 'response',
                   withCredentials: true
-                }).toPromise().catch((errorResp) => errorResp).then(
+                }).toPromise().catch(errorResp => errorResp).then(
                 resp => this.respHandler.checkResponse<any>(resp));
           });
     } else {
@@ -271,7 +270,7 @@ export class CastApi {
         headers: header,
         observe: 'response',
         withCredentials: true
-      }).toPromise().catch((errorResp) => errorResp).then(
+      }).toPromise().catch(errorResp => errorResp).then(
           resp => this.respHandler.checkResponse<any>(resp));
     }
   }
@@ -322,8 +321,8 @@ export class CastApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<any>(resp));
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
   }
 
   /** Takes backend response, updates data structures for all users. */

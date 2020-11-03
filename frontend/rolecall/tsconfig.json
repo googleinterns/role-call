@@ -9,7 +9,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     //    "strictPropertyInitialization": true,
-    //    "noUnusedParameters": true,
+    "noUnusedParameters": true,
     //    "noImplicitAny": true,
     "noImplicitReturns": true,
     "baseUrl": "./",

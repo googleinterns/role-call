@@ -58,9 +58,9 @@ export class DashboardApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<AllDashResponse>(resp))
-        .then((val) => {
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<AllDashResponse>(resp))
+        .then(val => {
           return val;
         });
   }

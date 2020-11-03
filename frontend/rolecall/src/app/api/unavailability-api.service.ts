@@ -79,11 +79,10 @@ export class UnavailabilityApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then(
-            (resp) =>
-                this.respHandler.checkResponse<AllUnavailabilitiesResponse>(
-                    resp));
+        .catch(errorResp => errorResp)
+        .then(resp =>
+            this.respHandler.checkResponse<AllUnavailabilitiesResponse>(
+                resp));
   }
 
   /** Hits backend with one unavailability GET request. */
@@ -110,8 +109,8 @@ export class UnavailabilityApi {
             withCredentials: true
           })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then((resp) => this.respHandler.checkResponse<any>(resp));
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       unav.id = undefined;
@@ -121,8 +120,8 @@ export class UnavailabilityApi {
             withCredentials: true
           })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then((resp) => this.respHandler.checkResponse<any>(resp));
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -139,8 +138,8 @@ export class UnavailabilityApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<any>(resp));
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
   }
 
   /**
@@ -154,20 +153,6 @@ export class UnavailabilityApi {
       for (const unav of val.data) {
         this.unavailabilities.set(unav.id, unav);
       }
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-  }
-
-  /** Takes backend response, updates data structure for one unavailability. */
-  private getOneUnavailabilityResponse(uuid: APITypes.UnavailabilityUUID):
-      Promise<OneUnavailabilityResponse> {
-    return this.requestOneUnavailability(uuid).then(val => {
-      // Update unavailability in map
-      this.unavailabilities.set(val.data.id, val.data);
       // Log any warnings
       for (const warning of val.warnings) {
         this.loggingService.logWarn(warning);
@@ -191,22 +176,14 @@ export class UnavailabilityApi {
   /** Gets all the unavailabilities from the backend and returns them. */
   getAllUnavailabilities(): Promise<Unavailability[]> {
     return this.getAllUnavailabilitiesResponse().then(val => {
-      this.unavailabilityEmitter.emit(
-          Array.from(this.unavailabilities.values()));
-      return val;
-    }).then(val => val.data).catch(err => {
-      return [];
-    });
-  }
-
-  /** Gets a specific unavailability from the backend by UUID and returns it. */
-  getUnavailability(uuid: APITypes.UnavailabilityUUID):
-      Promise<Unavailability> {
-    return this.getOneUnavailabilityResponse(uuid).then(val => {
-      this.unavailabilityEmitter.emit(
-          Array.from(this.unavailabilities.values()));
-      return val;
-    }).then(val => val.data);
+          this.unavailabilityEmitter.emit(
+              Array.from(this.unavailabilities.values()));
+          return val;
+        })
+        .then(val => val.data)
+        .catch(() => {
+          return [];
+        });
   }
 
   /**
@@ -215,32 +192,36 @@ export class UnavailabilityApi {
    * backend request fails for some other reason.
    */
   setUnavailability(unav: Unavailability): Promise<APITypes.SuccessIndicator> {
-    return this.setUnavailabilityResponse(unav).then(val => {
-      this.getAllUnavailabilities();
-      return {
-        successful: true
-      };
-    }).catch(reason => {
-      return Promise.resolve({
-        successful: false,
-        error: reason
-      });
-    });
+    return this.setUnavailabilityResponse(unav)
+        .then(() => {
+          this.getAllUnavailabilities();
+          return {
+            successful: true
+          };
+        })
+        .catch(reason => {
+          return Promise.resolve({
+            successful: false,
+            error: reason
+          });
+        });
   }
 
   /** Requests for the backend to delete the unavailability. */
   deleteUnavailability(unav: Unavailability):
       Promise<APITypes.SuccessIndicator> {
-    return this.deleteUnavailabilityResponse(unav).then(val => {
-      this.getAllUnavailabilities();
-      return {
-        successful: true
-      };
-    }).catch(reason => {
-      return {
-        successful: false,
-        error: reason
-      };
-    });
+    return this.deleteUnavailabilityResponse(unav)
+        .then(() => {
+          this.getAllUnavailabilities();
+          return {
+            successful: true
+          };
+        })
+        .catch(reason => {
+          return {
+            successful: false,
+            error: reason
+          };
+        });
   }
 }

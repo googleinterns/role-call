@@ -8,6 +8,28 @@ import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 
+type Group = {
+  group_index: number,
+  members: { uuid: string, position_number: number }[]
+  memberNames?: string[],
+};
+
+type CustomGroup = {
+  position_uuid: string,
+  position_order: number,
+  groups: Group[],
+  name?: string,
+};
+
+export type PerformanceSegment = {
+  id: string,
+  segment: string,
+  length: number,
+  selected_group: number,
+  custom_groups: CustomGroup[],
+  name?: string,
+};
+
 export type Performance = {
   uuid: string,
   status: APITypes.PerformanceStatus.DRAFT |
@@ -26,20 +48,7 @@ export type Performance = {
     segments: string[],
   },
   step_3: {
-    segments: {
-      id: string,
-      segment: string,
-      length: number,
-      selected_group: number,
-      custom_groups: {
-        position_uuid: string,
-        position_order: number,
-        groups: {
-          group_index: number,
-          members: { uuid: string, position_number: number }[]
-        }[]
-      }[]
-    }[]
+    segments: PerformanceSegment[]
   }
 };
 
@@ -155,11 +164,11 @@ export class PerformanceApi {
             segment: String(val.sectionId),
             length: 0,
             selected_group: val.primaryCast,
-            custom_groups: val.positions.map((position, positionIx) => {
+            custom_groups: val.positions.map(position => {
               return {
                 position_uuid: String(position.positionId),
                 position_order: position.positionOrder,
-                groups: position.casts.map((sumCast, subCastIx) => {
+                groups: position.casts.map(sumCast => {
                   return {
                     group_index: sumCast.castNumber,
                     members: sumCast.members.map(mem => {
@@ -201,11 +210,11 @@ export class PerformanceApi {
           sectionPosition: segIx,
           primaryCast: seg.selected_group,
           sectionId: Number(seg.segment),
-          positions: seg.custom_groups.map((customGroup, customGroupIx) => {
+          positions: seg.custom_groups.map(customGroup => {
             return {
               positionId: Number(customGroup.position_uuid),
               positionOrder: customGroup.position_order,
-              casts: customGroup.groups.map((subCast, subCastIx) => {
+              casts: customGroup.groups.map(subCast => {
                 return {
                   castNumber: subCast.group_index,
                   members: subCast.members.map(mem => {
@@ -308,12 +317,11 @@ export class PerformanceApi {
               withCredentials: true
             })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then(
-            (resp) =>
-                this.respHandler.checkResponse<RawAllPerformancesResponse>(
-                    resp))
-        .then((rawAllPerformancesResponse) => {
+        .catch(errorResp => errorResp)
+        .then(resp =>
+            this.respHandler.checkResponse<RawAllPerformancesResponse>(
+                resp))
+        .then(rawAllPerformancesResponse => {
           return {
             data: {
               performances: rawAllPerformancesResponse.data.map(
@@ -348,9 +356,8 @@ export class PerformanceApi {
             withCredentials: true
           })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then(
-              (resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp))
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<HttpResponse<any>>(resp))
           .then(val => {
             return this.getAllPerformances().then(() => val);
           });
@@ -365,9 +372,8 @@ export class PerformanceApi {
             withCredentials: true
           })
           .toPromise()
-          .catch((errorResp) => errorResp)
-          .then(
-              (resp) => this.respHandler.checkResponse<HttpResponse<any>>(resp))
+          .catch(errorResp => errorResp)
+          .then(resp => this.respHandler.checkResponse<HttpResponse<any>>(resp))
           .then(val => {
             return this.getAllPerformances().then(() => val);
           });
@@ -390,8 +396,8 @@ export class PerformanceApi {
           withCredentials: true
         })
         .toPromise()
-        .catch((errorResp) => errorResp)
-        .then((resp) => this.respHandler.checkResponse<any>(resp));
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
   }
 
   /** Takes backend response, updates data structures for all performances. */
@@ -441,7 +447,7 @@ export class PerformanceApi {
     return this.getAllPerformancesResponse().then(val => {
       this.performanceEmitter.emit(Array.from(this.performances.values()));
       return val;
-    }).then(val => val.data.performances).catch(err => {
+    }).then(val => val.data.performances).catch(() => {
       return [];
     });
   }
@@ -460,7 +466,7 @@ export class PerformanceApi {
    * backend request fails for some other reason.
    */
   setPerformance(performance: Performance): Promise<APITypes.SuccessIndicator> {
-    return this.setPerformanceResponse(performance).then(async val => {
+    return this.setPerformanceResponse(performance).then(async () => {
       await this.getAllPerformances();
       return {
         successful: true
@@ -476,7 +482,7 @@ export class PerformanceApi {
   /** Requests for the backend to delete the performance. */
   deletePerformance(performance: Performance):
       Promise<APITypes.SuccessIndicator> {
-    return this.deletePerformanceResponse(performance).then(val => {
+    return this.deletePerformanceResponse(performance).then(() => {
       this.getAllPerformances();
       return {
         successful: true
