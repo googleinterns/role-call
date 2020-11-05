@@ -295,7 +295,7 @@ export class UserEditor implements OnInit {
       }
     });
   }
-
+  
   getCurrentDate(): number {
     return this.currentDate;
   }
