@@ -750,6 +750,21 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
     return {
       content,
+      footer: (currentPage, pageCount) =>  {
+        return { 
+          columns: [     
+            {
+              text: `Printed at: ${new Date(Date.now()).toLocaleDateString()}  ${new Date(Date.now()).toLocaleTimeString()}`,
+              style: 'footer_timestamp',
+            },      
+            {
+              text: `Pages: ${currentPage.toString()} of ${pageCount}`, 
+              alignment: 'right',
+              style: 'footer_page',
+            }
+          ]          
+        };
+      },
       styles: {
         header: {
           fontSize: 18,
@@ -787,11 +802,18 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           italics: true,
           margin: [130, 10, 0, 0],
         },
-        // mleft7: {
-        //   fontSize: 14,
-        //   bold: false,
-        //   margin: [70, 2, 0, 0],
-        // },
+        footer_page: {
+          fontSize: 8,
+          bold: false,
+          italics: true,
+          margin: [0, 10, 20, 0],
+        },
+        footer_timestamp: {
+          fontSize: 8,
+          bold: false,
+          italics: true,
+          margin: [20, 10, 0, 0],
+        },
       },
     };
   }
