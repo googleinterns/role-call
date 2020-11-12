@@ -76,7 +76,8 @@ public class ApplicationLoaderUnitTests {
     loader.run(new DefaultApplicationArguments(new String[]{}));
     
     // Assert
-    verify(userRepo, times(1)).save(any(User.class));
+    // TODO: Change this to 1 when user load is removed
+    verify(userRepo, times(28)).save(any(User.class));
   }
 
   @Test

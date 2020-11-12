@@ -28,7 +28,7 @@
     "@material/textfield": "^7.0.0",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "bootstrap": "^4.4.0",
-    "file-saver": "^2.0.2",    
+    "file-saver": "^2.0.2",
     "moment": "^2.27.0",
     "ng-click-outside": "^7.0.0",
     "pdfmake": "^0.1.68",
