@@ -367,7 +367,7 @@ public class User {
   
     public Builder setPictureFile(String pictureFile) {
       if(pictureFile != null) {
-        this.pictureFile = pictureFile.toLowerCase();
+        this.pictureFile = pictureFile;
       }
       return this;
     }
