@@ -147,7 +147,7 @@ public class UserServices {
     if(castMemberRepo.findFirstByUser(user).isPresent() ||
         performanceCastMemberRepo.findFirstByUser(user).isPresent()) {
       throw new InvalidParameterException(
-          "User involved in cast or performances cannot be deleted. Change is active.");
+          String.format("User involved in cast or performances cannot be deleted. User ID = %s\n", id));
     }
 
     userRepo.deleteById(id);
