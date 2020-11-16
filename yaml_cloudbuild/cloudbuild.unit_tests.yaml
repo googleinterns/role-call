@@ -13,10 +13,10 @@ steps:
   dir: "backend"
 
 # Prepare frontend environment for unit testing.
-#- id: 'frontend_install_dependencies'
-#  name: 'buildkite/puppeteer'
-#  args: ['npm', 'install']
-#  dir: "frontend/rolecall"
+- id: 'frontend_install_dependencies'
+  name: 'buildkite/puppeteer'
+  args: ['npm', 'install']
+  dir: "frontend/rolecall"
 
 # Trigger unit tests for the front.
 #- id: frontend_unit_tests
