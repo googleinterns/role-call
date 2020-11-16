@@ -7,10 +7,10 @@ steps:
   dir: "backend"
 
 # Trigger coverage tests for the backend.
-#- id: backend_coverage_report
-#  name: 'gcr.io/cloud-builders/mvn'
-#  args: ['jacoco:report']
-#  dir: "backend"
+- id: backend_coverage_report
+  name: 'gcr.io/cloud-builders/mvn'
+  args: ['jacoco:report']
+  dir: "backend"
 
 # Prepare frontend environment for unit testing.
 #- id: 'frontend_install_dependencies'
