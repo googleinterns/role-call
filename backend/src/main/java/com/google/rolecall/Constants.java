@@ -55,8 +55,9 @@ public class Constants {
   }
 
   // Prevents object creation
-  // private
-  // the above (private) was commented out because it breaks our unit tests
+  // Sometimes the compiler can't find this file. I solve this by editing the comment.
+  // TODO: figure out what is really going on and fix it.
+  private
   Constants() {
   }
 }

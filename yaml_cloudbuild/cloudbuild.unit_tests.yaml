@@ -7,26 +7,26 @@ steps:
   dir: "backend"
 
 # Trigger coverage tests for the backend.
-- id: backend_coverage_report
-  name: 'gcr.io/cloud-builders/mvn'
-  args: ['jacoco:report']
-  dir: "backend"
+#- id: backend_coverage_report
+#  name: 'gcr.io/cloud-builders/mvn'
+#  args: ['jacoco:report']
+#  dir: "backend"
 
 # Prepare frontend environment for unit testing.
-- id: 'frontend_install_dependencies'
-  name: 'buildkite/puppeteer'
-  args: ['npm', 'install']
-  dir: "frontend/rolecall"
+#- id: 'frontend_install_dependencies'
+#  name: 'buildkite/puppeteer'
+#  args: ['npm', 'install']
+#  dir: "frontend/rolecall"
 
 # Trigger unit tests for the front.
-- id: frontend_unit_tests
-  name: 'buildkite/puppeteer'
-  args: ['npm', 'run', 'test']
-  dir: "frontend/rolecall"
+#- id: frontend_unit_tests
+#  name: 'buildkite/puppeteer'
+#  args: ['npm', 'run', 'test']
+#  dir: "frontend/rolecall"
 
 # Trigger unit tests with coverage for the front.
-- id: frontend_coverage_report
-  name: 'buildkite/puppeteer'
-  args: ['npm', 'run', 'coverage']
-  dir: "frontend/rolecall"
+#- id: frontend_coverage_report
+#  name: 'buildkite/puppeteer'
+#  args: ['npm', 'run', 'coverage']
+#  dir: "frontend/rolecall"
 timeout: "1800s"
