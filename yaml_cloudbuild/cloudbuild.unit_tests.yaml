@@ -29,3 +29,4 @@ steps:
   name: 'buildkite/puppeteer'
   args: ['npm', 'run', 'coverage']
   dir: "frontend/rolecall"
+timeout: "1800s"
