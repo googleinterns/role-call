@@ -5,7 +5,7 @@
         #stepper
         [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
         [stepperOptions]="stepperOpts"
-        (stepChange)="onStepChange($event)"></app-stepper>
+        (stepChange)="onStepChange()"></app-stepper>
 
     <div>
       <ng-container [ngSwitch]="stepper.currentStepIndex" class="page-container">
@@ -451,13 +451,25 @@
           <div class="content">
             <div class="title-export-container">
               <h2 class="title">Review Casting</h2>
-              <button
-                  mat-icon-button aria-label="Export Cast Button" class="export-button"
-                  (click)="exportPerformance()">
-                <mat-icon [inline]="true" class="export-button-icon">
-                  save_alt
-                </mat-icon>
-              </button>
+              <div>
+                <button
+                    mat-icon-button aria-label="Export Cast Button" class="export-button"
+                    (click)="exportPerformance()">
+                  <mat-icon [inline]="true" class="export-button-icon">
+                    save_alt
+                  </mat-icon>
+                </button>
+                <button
+                    mat-icon-button
+                    aria-label="Export Cast Button"
+                    class="export-button"
+                    (click)="exportPerformanceAsPDF()">
+                    <mat-icon [inline]="true" class="export-button-icon">
+                      print
+                    </mat-icon>
+                </button>
+              </div>
+              
             </div>
             <div class="segment-list app-card">
               <div

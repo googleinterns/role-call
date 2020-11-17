@@ -1,7 +1,6 @@
 import {HttpResponse} from '@angular/common/http';
-import * as APITypes from 'src/api_types';
 
-import {AllPiecesResponse, OnePieceResponse, Piece} from '../api/piece_api.service';
+import {AllPiecesResponse, Piece} from '../api/piece_api.service';
 
 /**
  * Mocks the piece backend responses
@@ -187,23 +186,11 @@ export class MockPieceBackend {
     });
   }
 
-  /** Mocks backend response */
-  requestOnePiece(uuid: APITypes.PieceUUID): Promise<OnePieceResponse> {
-    return Promise.resolve({
-      data: {
-        piece: this.mockPieceDB.find(val => {
-          return val.uuid === uuid || val.uuid === uuid;
-        })
-      },
-      warnings: []
-    });
-  }
-
   /** Mocks piece create/edit response */
   requestPieceSet(piece: Piece): Promise<HttpResponse<any>> {
     if (!this.shouldRejectSetRequest) {
       const pieceInd = this.mockPieceDB.findIndex(
-          (val) => val.uuid === piece.uuid);
+          val => val.uuid === piece.uuid);
       if (pieceInd === -1) {
         this.mockPieceDB.push(piece);
       } else {

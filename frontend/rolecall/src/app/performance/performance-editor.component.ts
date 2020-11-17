@@ -1,13 +1,14 @@
 import {CdkDragDrop, copyArrayItem, transferArrayItem} from '@angular/cdk/drag-drop';
 import {Location} from '@angular/common';
+import pdfMake from 'pdfmake/build/pdfmake';
 import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {PerformanceStatus} from 'src/api_types';
 import {Cast, CastApi} from '../api/cast_api.service';
-import {Performance, PerformanceApi} from '../api/performance-api.service';
+import {Performance, PerformanceApi, PerformanceSegment} from '../api/performance-api.service';
 import {Piece, PieceApi} from '../api/piece_api.service';
-import {User, UserApi} from '../api/user_api.service';
+import {UserApi} from '../api/user_api.service';
 import {CastDragAndDrop} from '../cast/cast-drag-and-drop.component';
 import {Stepper} from '../common_components/stepper.component';
 import {CsvGenerator} from '../services/csv-generator.service';
@@ -108,15 +109,31 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         val => this.onPerformanceLoad(val));
     this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
     this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
-    this.userAPI.userEmitter.subscribe(val => this.onUserLoad(val));
+    this.userAPI.userEmitter.subscribe(() => this.onUserLoad());
     this.performanceAPI.getAllPerformances();
     this.piecesAPI.getAllPieces();
     this.castAPI.getAllCasts();
     this.userAPI.getAllUsers();
+    this.initPDFMake();
   }
 
   ngOnDestroy() {
     this.deleteWorkingCasts();
+  }
+
+  initPDFMake() {
+    pdfMake.fonts = {
+      Roboto: {
+        normal:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+        bold:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+        italics:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+        bolditalics:
+            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
+      },
+    };
   }
 
   onPerformanceLoad(perfs: Performance[]) {
@@ -129,7 +146,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.checkDataLoaded();
   }
 
-  onUserLoad(users: User[]) {
+  onUserLoad() {
     this.usersLoaded = true;
     this.checkDataLoaded();
   }
@@ -254,7 +271,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateBasedOnStep();
   }
 
-  onStepChange(step) {
+  onStepChange() {
     this.updateBasedOnStep();
   }
 
@@ -558,7 +575,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
     this.chooseFromGroupIndices = Array(maxGroupInd + 1).fill(0)
-        .map((val, ind) => ind);
+        .map((_, ind) => ind);
   }
 
   updateCastsForSegment() {
@@ -656,7 +673,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   async onSubmit() {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
-    this.performanceAPI.setPerformance(finishedPerf).then(val => {
+    this.performanceAPI.setPerformance(finishedPerf).then(() => {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
@@ -681,6 +698,124 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   exportPerformance() {
     this.csvGenerator.generateCSVFromPerformance(this.state);
+  }
+
+  exportPerformanceAsPDF() {
+    const data = this.state.step_3.segments;
+    pdfMake.createPdf(this.getCastDetailsForPDF(data)).open();
+    console.log(data);
+    console.log(this.step2Data);
+  }
+
+  getCastDetailsForPDF(segments: PerformanceSegment[]) {
+    const content = [];
+
+    content.push({image: 'banner', width: 510, margin: [ 0, 0, 0, 0 ]});
+    const perfDetail = this.state.step_1;
+    content.push({text: perfDetail.title, style: 'header'});
+    content.push({
+      text: perfDetail.description,
+      style: 'header_desc',
+    });
+
+    const step2Data = this.step2Data;
+    segments.forEach((segment, index) => {
+      const siblingId = step2Data[index] && step2Data[index].siblingId;
+      if (siblingId > 0) {
+        content.push({text: segment.name, style: 'mleft4'});
+      } else {
+        content.push({text: segment.name, style: 'mleft1'});
+      }
+      const positions = segment.custom_groups;
+      positions.forEach(position => {
+        if (this.hasSuper && siblingId < 1) {
+          content.push({text: position.name, style: 'mleft10'});
+        } else {
+          content.push({text: position.name, style: 'mleft10'});
+        }
+        const selectedGroup = position.groups.filter(
+            grp => grp.group_index === segment.selected_group
+        ) || [];
+        if (selectedGroup.length > 0) {
+          content.push({
+            text: selectedGroup[0].memberNames.join(', '),
+            style: 'mleft14',
+          });
+        }        
+      });
+    });
+
+    return {
+      content,
+      images: {        
+        banner: `${window.location.origin}/assets/images/AADT-banner.jpg`
+      },
+      footer: (currentPage, pageCount) =>  {
+        return { 
+          columns: [     
+            {
+              text: `Printed at: ${new Date(Date.now()).toLocaleDateString()}  ${new Date(Date.now()).toLocaleTimeString()}`,
+              style: 'footer_timestamp',
+            },      
+            {
+              text: `Pages: ${currentPage.toString()} of ${pageCount}`, 
+              alignment: 'right',
+              style: 'footer_page',
+            }
+          ]          
+        };
+      },
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 20, 0, 10],
+        },
+        header_desc: {
+          fontSize: 10,
+          bold: false,
+          italics: true,
+          alignment: 'center',
+          margin: [0, 10, 0, 10],
+        },
+        mleft4: {
+          fontSize: 16,
+          bold: true,
+          margin: [40, 10, 0, 0],
+        },
+        mleft1: {
+          fontSize: 18,
+          bold: true,
+          margin: [10, 10, 0, 0],
+        },
+        mleft10: {
+          fontSize: 14,
+          bold: false,
+          italics: false,
+          decoration: 'underline',
+          margin: [100, 10, 0, 0],
+        },
+        mleft14: {
+          fontSize: 14,
+          bold: false,
+          italics: true,
+          margin: [130, 10, 0, 0],
+        },
+        footer_page: {
+          fontSize: 8,
+          bold: false,
+          italics: true,
+          margin: [0, 10, 20, 0],
+        },
+        footer_timestamp: {
+          fontSize: 8,
+          bold: false,
+          italics: true,
+          margin: [20, 10, 0, 0],
+        },
+      },
+    };
   }
 
   dataToPerformance(): Performance {
@@ -743,11 +878,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           };
         });
     return newState;
-  }
-
-  onReturn() {
-    this.onPrevClick();
-    this.submitted = false;
   }
 
   onResetFromStart(e) {

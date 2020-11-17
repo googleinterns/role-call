@@ -48,11 +48,11 @@ export class CastEditorV2 implements OnInit {
     if (uuid) {
       this.urlUUID = uuid;
     }
-    this.castAPI.castEmitter.subscribe((cast) => {
+    this.castAPI.castEmitter.subscribe(cast => {
       this.onCastLoad(cast);
     });
     this.castAPI.getAllCasts();
-    this.pieceAPI.pieceEmitter.subscribe((piece) => {
+    this.pieceAPI.pieceEmitter.subscribe(piece => {
       this.onPieceLoad(piece);
     });
     this.pieceAPI.getAllPieces();
@@ -81,7 +81,7 @@ export class CastEditorV2 implements OnInit {
     let autoSelectFirst = false;
     this.selectedPiece = piece;
     this.updateFilteredCasts();
-    if (this.selectedPiece && this.selectedPiece.uuid !== piece.uuid) {
+    if (this.selectedPiece) {
       autoSelectFirst = this.selectedPieceCasts.length > 0;
     }
     if (autoSelectFirst) {

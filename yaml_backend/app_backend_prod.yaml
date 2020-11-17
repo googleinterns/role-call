@@ -1,7 +1,7 @@
 runtime: java11
 
 # Deploy to backend service
-service: backend-dev
+service: backend-prod
 
 env_variables:
   SPRING_PROFILES_ACTIVE: "prod"

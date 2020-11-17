@@ -359,15 +359,15 @@ public class User {
     }
   
     public Builder setNotificationEmail(String notificationEmail) {
-      if(email != null) {
+      if(notificationEmail != null) {
         this.notificationEmail = notificationEmail.toLowerCase();
       }
       return this;
     }
   
     public Builder setPictureFile(String pictureFile) {
-      if(email != null) {
-        this.pictureFile = pictureFile.toLowerCase();
+      if(pictureFile != null) {
+        this.pictureFile = pictureFile;
       }
       return this;
     }
@@ -534,6 +534,7 @@ public class User {
       this.email = user.email;
       this.notificationEmail = user.notificationEmail;
       this.pictureFile = user.pictureFile;
+      this.phoneNumber = user.phoneNumber;
       this.dateJoined = user.dateJoined;
       this.isAdmin = user.isAdmin;
       this.isChoreographer = user.isChoreographer;

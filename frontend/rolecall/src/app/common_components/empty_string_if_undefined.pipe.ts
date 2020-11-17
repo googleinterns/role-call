@@ -6,12 +6,11 @@ import {isNullOrUndefined} from 'util';
 })
 export class EmptyStringIfUndefinedPipe implements PipeTransform {
 
-  public transform(value: unknown, ...args: unknown[]): unknown {
+  public transform(value: unknown): unknown {
     if (isNullOrUndefined(value)) {
       return '';
     } else {
       return value;
     }
   }
-
 }
