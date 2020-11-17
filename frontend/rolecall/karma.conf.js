@@ -39,7 +39,7 @@ module.exports = function (config) {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox']
-      }     
+      }
     },
     singleRun: false,
     restartOnFileChange: true
