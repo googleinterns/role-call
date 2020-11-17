@@ -55,6 +55,8 @@ public class Constants {
   }
 
   // Prevents object creation
-  private Constants() {
+  // private
+  // the above (private) was commented out because it breaks our unit tests
+  Constants() {
   }
 }

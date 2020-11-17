@@ -14,6 +14,8 @@ public class DefaultUsers {
         .setFirstName("Admin")
         .setLastName("User")
         .setEmail("admin@rolecall.com")
+        .setNotificationEmail("admin@rolecall.com")
+        .setPictureFile("Admin_User")
         .setIsAdmin(true)
         .setIsChoreographer(true)
         .setIsDancer(true)
@@ -32,7 +34,7 @@ public class DefaultUsers {
     }
 
     CustomUserDetail detail = CustomUserDetail.build(user);
-    Principal principal = new RememberMeAuthenticationToken("", detail, detail.getAuthorities());
+    Principal principal = new RememberMeAuthenticationToken("X", detail, detail.getAuthorities());
 
     return principal;
   }
