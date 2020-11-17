@@ -19,10 +19,10 @@ steps:
   dir: "frontend/rolecall"
 
 # Trigger unit tests for the front.
-#- id: frontend_unit_tests
-#  name: 'buildkite/puppeteer'
-#  args: ['npm', 'run', 'test']
-#  dir: "frontend/rolecall"
+- id: frontend_unit_tests
+  name: 'buildkite/puppeteer'
+  args: ['npm', 'run', 'test']
+  dir: "frontend/rolecall"
 
 # Trigger unit tests with coverage for the front.
 #- id: frontend_coverage_report
