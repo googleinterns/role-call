@@ -33,6 +33,7 @@ export class SiteHeader implements OnInit {
     this.loginAPI.isLoggedIn$.subscribe( (isLogin) => {
       if (!isLogin) {
         this.configureHeaderForLogin();
+        this.loginAPI.signOut();
       }      
     })
   }
