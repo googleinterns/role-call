@@ -70,9 +70,7 @@ export class LoginApi {
       prom = prom.then(() => {
         return this.initGoogleAuth();
       });
-    }
-
-    
+    }    
     return prom.then(() => {
       // Return user if already signed in and token not expired
       if (this.authInstance.isSignedIn.get()) {
