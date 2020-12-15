@@ -185,7 +185,7 @@ export class LoginApi {
         });
         this.refresh();
       }).catch(e => {
-        alert('Sign out failed!');
+        //alert('Sign out failed!');  it makes no sense to pop this to user. they cannot do anything anyway. 
         console.log(e);
       });
     }
