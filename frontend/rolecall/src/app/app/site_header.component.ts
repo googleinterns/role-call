@@ -30,6 +30,11 @@ export class SiteHeader implements OnInit {
     this.loginAPI.login(false).then(() => {
       this.configureHeaderForLogin();
     });
+    this.loginAPI.isLoggedIn$.subscribe( (isLogin) => {
+      if (!isLogin) {
+        this.configureHeaderForLogin();
+      }      
+    })
   }
 
   /**

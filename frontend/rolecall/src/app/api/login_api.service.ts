@@ -2,7 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {environment} from 'src/environments/environment';
-
+import {BehaviorSubject} from 'rxjs';
 import {LoggingService} from '../services/logging.service';
 
 export type LoginResponse = {
@@ -15,6 +15,8 @@ export type LoginResponse = {
 export class LoginApi {
   /** Whether the user has been loaded already. */
   isLoggedIn = false;
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   /** The current user. */
   user: gapi.auth2.GoogleUser;
@@ -41,6 +43,7 @@ export class LoginApi {
       private loggingService: LoggingService,
       private http: HttpClient,
       private router: Router) {
+        this.updateSigninStatus = this.updateSigninStatus.bind(this);
   }
 
   /** Initialize OAuth2. */
@@ -54,6 +57,7 @@ export class LoginApi {
           .then(auth => {
             this.isAuthLoaded = true;
             this.authInstance = auth;
+            auth.isSignedIn.listen(this.updateSigninStatus);
           });
     });
   }
@@ -67,6 +71,8 @@ export class LoginApi {
         return this.initGoogleAuth();
       });
     }
+
+    
     return prom.then(() => {
       // Return user if already signed in and token not expired
       if (this.authInstance.isSignedIn.get()) {
@@ -133,7 +139,9 @@ export class LoginApi {
       user: this.user
     };
   }
-
+  public updateSigninStatus(isLoggedIn) {
+    this.isLoggedInSubject.next(isLoggedIn || false);    
+  }
   /** Get the current user object if logged in or force a login. */
   public async getCurrentUser(): Promise<gapi.auth2.GoogleUser> {
     if (this.isLoggedIn) {
