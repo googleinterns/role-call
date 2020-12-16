@@ -8,12 +8,15 @@ import {Cast, CastApi} from '../api/cast_api.service';
 import {Piece, PieceApi} from '../api/piece_api.service';
 import {CastDragAndDrop} from './cast-drag-and-drop.component';
 
-type PieceMenuItem = {
-  name: string;
-  sortString: string;
-  hasSibling: boolean;
-  pieceIndex: number;
-};
+import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
+import {SegmentDisplayListService} from '../services/segment-display-list.service';
+
+// type PieceMenuItem = {
+//   name: string;
+//   sortString: string;
+//   hasSibling: boolean;
+//   pieceIndex: number;
+// };
 
 @Component({
   selector: 'app-cast-editor-v2',
@@ -27,8 +30,9 @@ export class CastEditorV2 implements OnInit {
   urlUUID: APITypes.CastUUID;
   allCasts: Cast[] = [];
   selectedPieceCasts: Cast[] = [];
-  allPieces: Piece[] = [];
-  popupPieceList: PieceMenuItem[] = [];
+  // popupPieceList: PieceMenuItem[] = [];
+  expandedSegments: boolean = true;
+
   lastSelectedCastIndex: number;
   lastSelectedCast: Cast;
   dataLoaded = false;
@@ -36,12 +40,16 @@ export class CastEditorV2 implements OnInit {
   castsLoaded = false;
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
+  private allPieces: Piece[] = [];
+ 
   constructor(
       private castAPI: CastApi,
       private pieceAPI: PieceApi,
       private route: ActivatedRoute,
-      private location: Location) {
-  }
+      private location: Location,
+      private superBalletDisplay: SuperBalletDisplayService,
+      public leftList: SegmentDisplayListService,
+  ) { }
 
   ngOnInit() {
     const uuid = this.route.snapshot.params.uuid;
@@ -70,8 +78,13 @@ export class CastEditorV2 implements OnInit {
     }
   }
 
+  // Select from screen
+  selectSegment(pieceIndex: number) {
+    this.expandedSegments = false;
+    this.selectPiece(pieceIndex);
+  }
   selectPiece(pieceIndex: number) {
-    this.setPiece(this.allPieces[pieceIndex]);
+    this.setPiece(this.leftList.topLevelSegments[pieceIndex]);
   }
 
   private setPiece(piece: Piece) {
@@ -111,27 +124,31 @@ export class CastEditorV2 implements OnInit {
     }
   }
 
-  private buildPopupList() {
-    this.popupPieceList = this.allPieces.map((piece, pieceIndex) => {
-      const existingCasts = this.allCasts.filter(
-          cast => cast.segment === piece.uuid);
-      const prefix = existingCasts.length === 0 ? ' ' : 'z';
-      const name = existingCasts.length === 0 ? '*' + piece.name : piece.name;
-      return {
-        name,
-        sortString: prefix + piece.name,
-        hasSibling: piece.siblingId > 0,
-        pieceIndex,
-      };
-    });
-    this.popupPieceList.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
+  private buildLeftList() {
+    this.leftList.buildDisplayList(this.allPieces);
   }
 
+  // private buildPopupList() {
+  //   this.popupPieceList = this.allPieces.map((piece, pieceIndex) => {
+  //     const existingCasts = this.allCasts.filter(
+  //         cast => cast.segment === piece.uuid);
+  //     const prefix = existingCasts.length === 0 ? ' ' : 'z';
+  //     const name = existingCasts.length === 0 ? '*' + piece.name : piece.name;
+  //     return {
+  //       name,
+  //       sortString: prefix + piece.name,
+  //       hasSibling: piece.siblingId > 0,
+  //       pieceIndex,
+  //     };
+  //   });
+  //   this.popupPieceList.sort((a, b) => a.sortString < b.sortString ? -1 : 1);
+  // }
+
   private onPieceLoad(pieces: Piece[]) {
-    this.allPieces = pieces.filter(piece => piece.type === 'BALLET');
-    this.buildPopupList();
+    this.allPieces = pieces.filter(piece => piece.type !== 'SEGMENT');
+    this.buildLeftList();
     if (!this.selectedPiece && this.allPieces.length > 0) {
-      this.selectPiece(this.popupPieceList[0].pieceIndex);
+      this.selectPiece(0);
     }
     this.checkForUrlCompliance();
     this.piecesLoaded = true;
@@ -237,5 +254,20 @@ export class CastEditorV2 implements OnInit {
     await this.castAPI.setCast(newCast, true);
     this.setCurrentCast({cast: newCast});
     await this.castAPI.getAllCasts();
+  }
+
+  toggleExpanded() {
+    this.expandedSegments = !this.expandedSegments;
+    console.log('Expanded =', this.expandedSegments);
+  }
+
+  toggleOpen(index: number) {
+    const superBallet = this.leftList.topLevelSegments[index];
+    if (superBallet.type === 'SUPER') {
+      superBallet.isOpen = !superBallet.isOpen;
+      this.superBalletDisplay.setOpenState(
+          superBallet.uuid, superBallet.isOpen);
+    }
+    this.buildLeftList();
   }
 }

@@ -9,11 +9,11 @@ import * as APITypes from 'src/api_types';
 import {Piece, PieceApi, PieceType, Position} from '../api/piece_api.service';
 import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
 import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
+import {SegmentDisplayListService} from '../services/segment-display-list.service';
 
 export type WorkingPiece = Piece & {
   addingPositions: DraggablePosition[];
   originalName: string;
-  isOpen: boolean;
 };
 
 type ValueName =
@@ -31,14 +31,7 @@ type DraggablePosition = {
   sizeDisplay: string;
 };
 
-type RenderingItem = {
-  name: string;
-  pieceIndex: number;
-  siblingId: number;
-  type: PieceType;
-  isOpen: boolean;
-  uuid: string
-};
+
 
 @Component({
   selector: 'app-piece-editor',
@@ -52,9 +45,9 @@ export class PieceEditor implements OnInit {
   // All pieces or segments in the system ready to be edited.
   workingPieces: WorkingPiece[];
   // Displayed items (some children of Super Ballets may be hidden)
-  displayedPieces: WorkingPiece[];
+  // displayedPieces: WorkingPiece[];
   // List of segments visible on the left side of the page.
-  renderingItems: RenderingItem[];
+  // renderingItems: DisplayItem[];
   urlPointingUUID: string;
 
   sizeValueName = '# Dancers';
@@ -80,8 +73,9 @@ export class PieceEditor implements OnInit {
       private pieceAPI: PieceApi,
       private location: Location,
       private respHandler: ResponseStatusHandlerService,
-      private superBalletDisplay: SuperBalletDisplayService) {
-  }
+      private superBalletDisplay: SuperBalletDisplayService,
+      public leftList: SegmentDisplayListService,
+  ) { }
 
   ngOnInit(): void {
     const uuid = this.route.snapshot.params.uuid;
@@ -95,45 +89,49 @@ export class PieceEditor implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
-  private buildRenderingList() {
-    // Remove Super Ballet children
-    this.displayedPieces = this.workingPieces.filter(piece => !piece.siblingId);
-    this.displayedPieces.sort((a, b) => a.name < b.name ? -1 : 1);
-    for (let i = 0; i < this.displayedPieces.length; i++) {
-      const displayPiece = this.displayedPieces[i];
-      if (displayPiece.type === 'SUPER' &&
-          this.superBalletDisplay.isOpen(displayPiece.uuid)) {
-        displayPiece.isOpen = true;
-        // If Super Ballet is open, add children
-        displayPiece.positions.sort((a, b) => a.order < b.order ? -1 : 1);
-        const children: WorkingPiece[] = [];
-        for (const position of displayPiece.positions) {
-          const uuid = String(position.siblingId);
-          const child = this.workingPieces.find(wp => wp.uuid === uuid);
-          children.push(child);
-        }
-        this.displayedPieces.splice(i + 1, 0, ...children);
-      }
-    }
-    this.renderingItems = this.displayedPieces.map(
-        (displayPiece, displayPieceIndex) =>
-            this.buildRenderingItem(displayPiece, displayPieceIndex));
-  }
+  // private buildRenderingList() {
+  //   // Remove Super Ballet children
+  //   this.displayedPieces = this.workingPieces.filter(piece => !piece.siblingId);
+  //   this.displayedPieces.sort((a, b) => a.name < b.name ? -1 : 1);
+  //   for (let i = 0; i < this.displayedPieces.length; i++) {
+  //     const displayPiece = this.displayedPieces[i];
+  //     if (displayPiece.type === 'SUPER' &&
+  //         this.superBalletDisplay.isOpen(displayPiece.uuid)) {
+  //       displayPiece.isOpen = true;
+  //       // If Super Ballet is open, add children
+  //       displayPiece.positions.sort((a, b) => a.order < b.order ? -1 : 1);
+  //       const children: WorkingPiece[] = [];
+  //       for (const position of displayPiece.positions) {
+  //         const uuid = String(position.siblingId);
+  //         const child = this.workingPieces.find(wp => wp.uuid === uuid);
+  //         children.push(child);
+  //       }
+  //       this.displayedPieces.splice(i + 1, 0, ...children);
+  //     }
+  //   }
+  //   this.renderingItems = this.displayedPieces.map(
+  //       (displayPiece, displayPieceIndex) =>
+  //           this.buildRenderingItem(displayPiece, displayPieceIndex));
+  // }
 
-  private buildRenderingItem(
-      displayPiece: WorkingPiece,
-      displayPieceIndex: number) {
-    const hasNoChildren = displayPiece.type === 'SEGMENT'
-        ? false : displayPiece.positions.length === 0;
-    const name = hasNoChildren ? '*' + displayPiece.name : displayPiece.name;
-    return {
-      name,
-      pieceIndex: displayPieceIndex,
-      siblingId: displayPiece.siblingId,
-      type: displayPiece.type,
-      isOpen: displayPiece.isOpen,
-      uuid: displayPiece.uuid,
-    };
+  // private buildRenderingItem(
+  //     displayPiece: WorkingPiece,
+  //     displayPieceIndex: number) {
+  //   const hasNoChildren = displayPiece.type === 'SEGMENT'
+  //       ? false : displayPiece.positions.length === 0;
+  //   const name = hasNoChildren ? '*' + displayPiece.name : displayPiece.name;
+  //   return {
+  //     name,
+  //     pieceIndex: displayPieceIndex,
+  //     siblingId: displayPiece.siblingId,
+  //     type: displayPiece.type,
+  //     isOpen: displayPiece.isOpen,
+  //     uuid: displayPiece.uuid,
+  //   };
+  // }
+
+  private buildLeftList() {
+    this.leftList.buildDisplayList(this.workingPieces);
   }
 
   onPieceLoad(pieces: Piece[]) {
@@ -186,11 +184,16 @@ export class PieceEditor implements OnInit {
       }
     }
     this.piecesLoaded = true;
-    this.buildRenderingList();
+    this.buildLeftList();
   }
 
   setCurrentPieceFromIndex(pieceIndex: number) {
-    this.setCurrentPiece(this.displayedPieces[pieceIndex]);
+    //console.log('setCurrentPieceFromIndex INDEX =', pieceIndex, 'Array =', this.displayedPieces);
+    const selectedWorking = this.workingPieces.find(piece =>
+      piece.uuid === this.leftList.topLevelSegments[pieceIndex].uuid);
+    if (selectedWorking) {
+      this.setCurrentPiece(selectedWorking);
+    }
   }
 
   setCurrentPiece(piece: WorkingPiece) {
@@ -290,7 +293,7 @@ export class PieceEditor implements OnInit {
     this.pieceSaved = false;
     this.dragAndDropData = [];
     this.setCurrentPiece(this.workingPiece);
-    this.buildRenderingList();
+    this.buildLeftList();
   }
 
   onSavePiece() {
@@ -340,7 +343,7 @@ export class PieceEditor implements OnInit {
             const isOpen = this.superBalletDisplay.isOpen(prevUUID);
             this.superBalletDisplay.removeFromDisplayList(prevUUID);
             this.superBalletDisplay.setOpenState(foundSame.uuid, isOpen);
-            this.buildRenderingList();
+            this.buildLeftList();
           }
           this.setCurrentPiece(foundSame);
         }
@@ -359,7 +362,7 @@ export class PieceEditor implements OnInit {
     if (successIndicator.successful === true) {
       this.workingPieces = this.workingPieces.filter(
           piece => piece.uuid !== this.currentSelectedPiece.uuid);
-      this.buildRenderingList();
+      this.buildLeftList();
       this.workingPieces.length > 0
           ? this.setCurrentPiece(this.workingPieces[0])
           : this.setCurrentPiece(undefined);
@@ -598,12 +601,12 @@ export class PieceEditor implements OnInit {
   }
 
   toggleOpen(index: number) {
-    const superBallet = this.displayedPieces[index];
+    const superBallet = this.leftList.topLevelSegments[index];
     if (superBallet.type === 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
       this.superBalletDisplay.setOpenState(
           superBallet.uuid, superBallet.isOpen);
     }
-    this.buildRenderingList();
+    this.buildLeftList();
   }
 }
