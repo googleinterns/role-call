@@ -9,7 +9,7 @@
         <div
             *ngFor="let item of leftList.visibleItems"
             class="app-card segment-select"
-            [class.selected-segment]="item.uuid === currentSelectedPiece.uuid "
+            [class.selected-segment]="currentSelectedPiece && item.uuid === currentSelectedPiece.uuid "
             [style.marginLeft.rem]="item.siblingId > 0 ? 3 : .9"
             (click)="setCurrentPieceFromIndex(item.pieceIndex)">
           <div
@@ -25,7 +25,7 @@
                 (click)="toggleOpen(item.pieceIndex)">
               <mat-icon
                   [inline]="true"
-                  class="add-button-icon">
+                  class="super-button-icon">
                 {{item.isOpen ? 'expand_less' : "expand_more"}}
               </mat-icon>
             </button>

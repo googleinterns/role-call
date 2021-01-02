@@ -29,8 +29,8 @@ type DraggablePosition = {
   type: 'adding' | 'added' | 'editing';
   nameDisplay: string;
   sizeDisplay: string;
+  shouldBeDeleted: boolean;
 };
-
 
 
 @Component({
@@ -44,10 +44,7 @@ export class PieceEditor implements OnInit {
 
   // All pieces or segments in the system ready to be edited.
   workingPieces: WorkingPiece[];
-  // Displayed items (some children of Super Ballets may be hidden)
-  // displayedPieces: WorkingPiece[];
-  // List of segments visible on the left side of the page.
-  // renderingItems: DisplayItem[];
+
   urlPointingUUID: string;
 
   sizeValueName = '# Dancers';
@@ -89,49 +86,12 @@ export class PieceEditor implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
-  // private buildRenderingList() {
-  //   // Remove Super Ballet children
-  //   this.displayedPieces = this.workingPieces.filter(piece => !piece.siblingId);
-  //   this.displayedPieces.sort((a, b) => a.name < b.name ? -1 : 1);
-  //   for (let i = 0; i < this.displayedPieces.length; i++) {
-  //     const displayPiece = this.displayedPieces[i];
-  //     if (displayPiece.type === 'SUPER' &&
-  //         this.superBalletDisplay.isOpen(displayPiece.uuid)) {
-  //       displayPiece.isOpen = true;
-  //       // If Super Ballet is open, add children
-  //       displayPiece.positions.sort((a, b) => a.order < b.order ? -1 : 1);
-  //       const children: WorkingPiece[] = [];
-  //       for (const position of displayPiece.positions) {
-  //         const uuid = String(position.siblingId);
-  //         const child = this.workingPieces.find(wp => wp.uuid === uuid);
-  //         children.push(child);
-  //       }
-  //       this.displayedPieces.splice(i + 1, 0, ...children);
-  //     }
-  //   }
-  //   this.renderingItems = this.displayedPieces.map(
-  //       (displayPiece, displayPieceIndex) =>
-  //           this.buildRenderingItem(displayPiece, displayPieceIndex));
-  // }
-
-  // private buildRenderingItem(
-  //     displayPiece: WorkingPiece,
-  //     displayPieceIndex: number) {
-  //   const hasNoChildren = displayPiece.type === 'SEGMENT'
-  //       ? false : displayPiece.positions.length === 0;
-  //   const name = hasNoChildren ? '*' + displayPiece.name : displayPiece.name;
-  //   return {
-  //     name,
-  //     pieceIndex: displayPieceIndex,
-  //     siblingId: displayPiece.siblingId,
-  //     type: displayPiece.type,
-  //     isOpen: displayPiece.isOpen,
-  //     uuid: displayPiece.uuid,
-  //   };
-  // }
+  private starTest = (segment: Piece): boolean => {
+    return segment.type === 'SEGMENT' ? false : segment.positions.length === 0;
+  }
 
   private buildLeftList() {
-    this.leftList.buildDisplayList(this.workingPieces);
+    this.leftList.buildDisplayList(this.workingPieces, this.starTest);
   }
 
   onPieceLoad(pieces: Piece[]) {
@@ -188,7 +148,6 @@ export class PieceEditor implements OnInit {
   }
 
   setCurrentPieceFromIndex(pieceIndex: number) {
-    //console.log('setCurrentPieceFromIndex INDEX =', pieceIndex, 'Array =', this.displayedPieces);
     const selectedWorking = this.workingPieces.find(piece =>
       piece.uuid === this.leftList.topLevelSegments[pieceIndex].uuid);
     if (selectedWorking) {
@@ -392,17 +351,19 @@ export class PieceEditor implements OnInit {
         notes: '',
         order: nextIndex,
         siblingId: null,
-        size: 1
+        size: 1,
       },
       valueName: createPosition ? 'New Position' : 'New Ballet',
       type: 'adding',
       nameDisplay: this.calcNameDisplay({createPosition, name}),
       sizeDisplay: this.calcSizeDisplay({createPosition, dancerCount: 1}),
+      shouldBeDeleted: false,
     });
     this.updateDragAndDropData();
   }
 
   deleteAddingPosition(index: number) {
+    // 
     this.dragAndDropData = this.dragAndDropData.filter(
         position => position.index !== index);
     this.pieceSaved = false;
@@ -519,6 +480,7 @@ export class PieceEditor implements OnInit {
                   {createPosition, name: position.name}),
               sizeDisplay: this.calcSizeDisplay(
                   {createPosition, dancerCount: position.size}),
+              shouldBeDeleted: false, // Verify 'after deletePiece()'
             };
           });
       return;
@@ -537,7 +499,8 @@ export class PieceEditor implements OnInit {
               {createPosition, dancerCount: data.pos.size}),
           valueName: createPosition ? 'Existing Position' : 'Existing Ballet',
           index: i,
-          pos: {...data.pos, order: i}
+          pos: {...data.pos, order: i},
+          shouldBeDeleted: false,
         };
         newDDData.push(struct);
         this.currentSelectedPiece.positions.push(struct.pos);
@@ -550,7 +513,8 @@ export class PieceEditor implements OnInit {
               {createPosition, dancerCount: data.pos.size}),
           valueName: createPosition ? 'New Position' : 'New Ballet',
           index: i,
-          pos: {...data.pos, order: i}
+          pos: {...data.pos, order: i},
+          shouldBeDeleted: false,
         };
         newDDData.push(struct);
         this.currentSelectedPiece.addingPositions.push(struct);

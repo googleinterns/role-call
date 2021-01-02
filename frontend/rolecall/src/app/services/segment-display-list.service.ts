@@ -25,7 +25,8 @@ export class SegmentDisplayListService {
     private superBalletDisplay: SuperBalletDisplayService,
   ) { }
 
-  public buildDisplayList(allSegments: Piece[]): void {
+  public buildDisplayList(allSegments: Piece[],
+        starTest: (segment: Piece) => boolean): void {
     // Remove Super Ballet children
     this.topLevelSegments = allSegments.filter(segment => !segment.siblingId);
     this.topLevelSegments.sort((a, b) => a.name < b.name ? -1 : 1);
@@ -47,23 +48,22 @@ export class SegmentDisplayListService {
     }
     this.visibleItems = this.topLevelSegments.map(
         (displayPiece, displayPieceIndex) =>
-            this.buildDisplayItem(displayPiece, displayPieceIndex));
+            this.buildDisplayItem(displayPiece, displayPieceIndex, starTest));
   }
 
   private buildDisplayItem(
-      displayPiece: Piece,
-      displayPieceIndex: number): DisplayItem {
-    const hasNoChildren = displayPiece.type === 'SEGMENT'
-        ? false : displayPiece.positions.length === 0;
-    const name = hasNoChildren ? '*' + displayPiece.name : displayPiece.name;
-    console.log('buildDisplayItem for', name, 'index =', displayPieceIndex);
+      segment: Piece,
+      segmentIndex: number,
+      starTest: (segment: Piece) => boolean,
+  ): DisplayItem {
+    const name = starTest(segment) ? '*' + segment.name : segment.name;
     return {
       name,
-      pieceIndex: displayPieceIndex,
-      siblingId: displayPiece.siblingId,
-      type: displayPiece.type,
-      isOpen: displayPiece.isOpen,
-      uuid: displayPiece.uuid,
+      pieceIndex: segmentIndex,
+      siblingId: segment.siblingId,
+      type: segment.type,
+      isOpen: segment.isOpen,
+      uuid: segment.uuid,
     } as DisplayItem;
   }
 }

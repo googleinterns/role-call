@@ -2,6 +2,7 @@
 <div style="height: 10%;">
   <app-site-header [navBar]="sideNav"></app-site-header>
 </div>
-<div style="height: 90%;">
+<!-- overflow:hidden prevents main screen from scrolling regardless of child setup -->
+<div style="height: 90%;overflow:hidden">
   <router-outlet></router-outlet>
 </div>
