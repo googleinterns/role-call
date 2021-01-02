@@ -231,7 +231,8 @@ export class PieceEditor implements OnInit {
     createPosition: boolean,
     name: string,
   }) {
-    return (createPosition ? '' : 'Ballet ') + name;
+    // You can prefix a ballet by adding text here
+    return (createPosition ? '' : '') + name;
   }
 
   private calcSizeDisplay({createPosition, dancerCount}: {
