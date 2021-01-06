@@ -2,55 +2,21 @@
 <div
     class="root-container"
     [ngStyle]="dataLoaded ? {} : { 'display' : 'none' }">
+
   <div class="cast-selector-container">
     <div class="app-card card-margins left-card">
+
       <div
-          ngbDropdown
-          #pieceDropdown="ngbDropdown">
-        <div
-            ngbDropdownToggle
-            class="app-card piece-select">
-          <h1
-              class="left-card-title"
-              [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
-            {{selectedPiece ? selectedPiece.name : " "}}
+          class="group-wrapper1"
+          [class.small-cast-list-wrapper]="expandedCode === 1">
+        <div class="select-container-header">
+          <h1 class="left-card-title">
+            Casts
           </h1>
-          <mat-icon class="dropdownArrow">
-            expand_more
-          </mat-icon>
-          <div
-              ngbDropdownMenu
-              class="piece-options"
-              aria-label="Piece Dropdown">
-            <button
-                *ngFor="let piece of popupPieceList"
-                ngbDropdownItem
-                [class.std-italic-font]="piece.hasSibling"
-                (click)="selectPiece(piece.pieceIndex)">
-              {{piece.name}}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="cast-select-container">
-        <div
-            *ngFor="let cast of selectedPieceCasts"
-            class="app-card cast-select"
-            [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
-            (click)="setCurrentCast({cast: cast})">
-          <h2
-              class="cast-name"
-              [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
-            {{ cast.name }}
-          </h2>
-        </div>
-      </div>
-      <div class="add-button-width-container">
-        <div class="add-button-height-container">
           <button
               mat-icon-button
-              class="add-button"
               aria-label="Add Cast Button"
+              class="add-button"
               (click)="addCast()">
             <mat-icon
                 [inline]="true"
@@ -59,7 +25,81 @@
             </mat-icon>
           </button>
         </div>
+        <div
+            #castList
+            class="cast-select-container"
+            [class.small-cast-list]="expandedCode === 1">
+          <div
+              *ngFor="let cast of selectedPieceCasts"
+              class="app-card cast-select"
+              [class.selected-cast]="cast.uuid == castDragAndDrop.selectedCastUUID"
+              (click)="setCurrentCast({cast: cast})">
+            <h2
+                class="cast-name"
+                [class.std-italic-font]="selectedPiece && selectedPiece.siblingId > 0">
+              {{ cast.name }}
+            </h2>
+          </div>
+        </div>
       </div>
+
+      <div
+          class="group-wrapper2"
+          [class.small-segment-list-wrapper]="expandedCode === 2">
+        <div class="select-container-header">
+          <h1 class="left-card-title">
+            Segments
+          </h1>
+          <button
+              mat-icon-button
+              aria-label="Add Cast Button"
+              class="add-button"
+              (click)="toggleExpanded()">
+            <mat-icon
+                [inline]="true"
+                class="add-button-icon">
+              {{expandedCode === 0 ? "expand_less" : expandedCode === 1 ? "expand_more" : "remove"}}
+            </mat-icon>
+          </button>
+        </div>
+        <div
+            class="segment-select-container"
+            [class.small-segment-list]="expandedCode === 2">
+          <div
+              *ngFor="let item of leftList.visibleItems"
+              class="app-card segment-select"
+              [class.selected-segment]="selectedPiece && item.uuid === selectedPiece.uuid "
+              [style.marginLeft.rem]="item.siblingId > 0 ? 3 : .9"
+              (click)="selectSegment(item.pieceIndex)">
+            <div
+                *ngIf="item.type === 'SUPER'; else otherSegments"
+                class="super-container">
+              <h2 class="segment-name super-name">
+                {{item.name}}
+              </h2>
+              <button
+                  mat-icon-button
+                  aria-label="Toggle Super Ballet"
+                  class="super-button"
+                  (click)="toggleOpen(item.pieceIndex)">
+                <mat-icon
+                    [inline]="true"
+                    class="super-button-icon">
+                  {{item.isOpen ? 'expand_less' : "expand_more"}}
+                </mat-icon>
+              </button>
+            </div>
+            <ng-template #otherSegments>
+              <h2
+                  class="segment-name"
+                  [class.std-italic-font]="item.siblingId > 0">
+                {{item.name}}
+              </h2>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
   <div class="drag-and-drop-container">

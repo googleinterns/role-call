@@ -1,132 +1,7 @@
 @import "../../styles/colors";
 @import "../../styles/constants";
+@import "../../styles/segment-left";
 
-// Overall container for panels styling
-.panel-container {
-  display: flex;
-  justify-content: space-evenly;
-  min-height: 90vh;
-  width: 100%;
-}
-
-// Margins on the panel cards
-.card-margins {
-  height: 96vh;
-  margin: 2vh;
-}
-
-// Left card arrangement and styling
-.left-card {
-  background: $offWhite;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 1em;
-  max-height: 86vh;
-}
-
-.piece-select-container {
-  overflow-y: scroll;
-  height: 100%;
-  width: 100%;
-}
-
-.piece-select {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-}
-
-.piece-name {
-  margin: auto 1em;
-  padding-bottom: 1em;
-  padding-top: 1em;
-  overflow-x: hidden;
-  white-space: nowrap;
-}
-
-.selected-piece {
-  background-color: $offoffWhite;
-}
-
-.super-container {
-  display: flex;
-}
-
-.super-name {
-  width: 80%;
-  text-decoration: underline;
-}
-
-.super-button {
-  margin-top: .6rem;
-  border-radius: $borderRadius;
-  height: 5vh;
-  width: 5vh;
-}
-
-.add-button-width-container-left {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  min-height: 7.5vh;
-  width: 96.5%;
-}
-
-// Space below the Positions
-.add-button-width-container-right {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  min-height: 8vh;
-  width: 99%;
-}
-
-.add-button-height-container-left {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  max-width: 5vh;
-}
-
-.add-button-height-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.add-button {
-  background: $white;
-  border-radius: $borderRadius;
-  height: 5vh;
-  margin-right: 1em;
-  width: 5vh;
-}
-
-.add-button-icon {
-  font-size: 4vh;
-}
-
-.narrow-button {
-  background: $white;
-  border-radius: $borderRadius;
-  margin-right: 0;
-  height: 6vh;
-  width: 4vh;
-}
-
-.narrow-button-icon {
-  font-size: 4vh;
-}
-
-// Title styling
-.left-card-title {
-  margin: 1rem;
-  font-weight: 800;
-  font-size: xx-large;
-}
 
 // Right card arrangement and styling
 .right-card {
@@ -169,6 +44,24 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+
+.add-button-height-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.narrow-button {
+  background: $white;
+  border-radius: $borderRadius;
+  margin-right: 0;
+  height: 6vh;
+  width: 4vh;
+}
+
+.narrow-button-icon {
+  font-size: 4vh;
 }
 
 .save-button {
@@ -334,4 +227,14 @@
 
 .create-segment-menu-item {
   font-size: 1.3rem;
+}
+
+
+// Space below the Positions
+.add-button-width-container-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  min-height: 8vh;
+  width: 99%;
 }

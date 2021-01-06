@@ -5,17 +5,17 @@
       <h1 class="left-card-title">
         Segments
       </h1>
-      <div class="piece-select-container">
+      <div class="segment-select-container">
         <div
-            *ngFor="let item of renderingItems"
-            class="app-card piece-select"
-            [class.selected-piece]="item.uuid === currentSelectedPiece.uuid "
+            *ngFor="let item of leftList.visibleItems"
+            class="app-card segment-select"
+            [class.selected-segment]="currentSelectedPiece && item.uuid === currentSelectedPiece.uuid "
             [style.marginLeft.rem]="item.siblingId > 0 ? 3 : .9"
             (click)="setCurrentPieceFromIndex(item.pieceIndex)">
           <div
               *ngIf="item.type === 'SUPER'; else otherSegments"
               class="super-container">
-            <h2 class="piece-name super-name">
+            <h2 class="segment-name super-name">
               {{item.name}}
             </h2>
             <button
@@ -25,14 +25,14 @@
                 (click)="toggleOpen(item.pieceIndex)">
               <mat-icon
                   [inline]="true"
-                  class="add-button-icon">
+                  class="super-button-icon">
                 {{item.isOpen ? 'expand_less' : "expand_more"}}
               </mat-icon>
             </button>
           </div>
           <ng-template #otherSegments>
             <h2
-                class="piece-name"
+                class="segment-name"
                 [class.std-italic-font]="item.siblingId > 0">
               {{item.name}}
             </h2>
@@ -43,7 +43,7 @@
         <div class="add-button-height-container-left">
           <button
               mat-icon-button
-              aria-label="Add Piece Button"
+              aria-label="Add Segment Button"
               class="add-button"
               [matMenuTriggerFor]="addMenu">
             <mat-icon
@@ -79,7 +79,7 @@
 
   <div class="right-panel">
     <div
-        *ngIf="renderingItems && renderingItems.length > 0"
+        *ngIf="leftList.visibleItems && leftList.visibleItems.length > 0"
         class="app-card card-margins right-card">
       <div *ngIf="currentSelectedPiece">
         <div>

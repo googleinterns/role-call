@@ -158,6 +158,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     // children of Super Ballets
     this.step2PickFrom = this.step2AllSegments.filter(
         (segment: Piece) => !segment.siblingId);
+    this.step2PickFrom.sort((a, b) => a.name < b.name ? -1 : 1);
     this.step2Data = [];
     this.initStep2Data();
     this.piecesLoaded = true;

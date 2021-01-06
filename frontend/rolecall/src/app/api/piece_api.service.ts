@@ -47,6 +47,7 @@ export type PieceType = 'SEGMENT' | 'BALLET' | 'SUPER';
 export type Piece = {
   uuid: string;
   name: string;
+  isOpen: boolean;
   siblingId: number,
   type: PieceType;
   positions: Position[];
@@ -115,6 +116,7 @@ export class PieceApi {
                 return {
                   uuid: String(section.id),
                   name: section.name,
+                  isOpen: false,
                   siblingId: section.siblingId,
                   type: section.type,
                   positions: section.positions.sort(
