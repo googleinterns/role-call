@@ -43,7 +43,7 @@ export class LoginApi {
       private loggingService: LoggingService,
       private http: HttpClient,
       private router: Router) {
-        this.updateSigninStatus = this.updateSigninStatus.bind(this);
+    this.updateSigninStatus = this.updateSigninStatus.bind(this);
   }
 
   /** Initialize OAuth2. */
@@ -137,9 +137,11 @@ export class LoginApi {
       user: this.user
     };
   }
+
   public updateSigninStatus(isLoggedIn) {
-    this.isLoggedInSubject.next(isLoggedIn || false);    
+    this.isLoggedInSubject.next(isLoggedIn || false);
   }
+
   /** Get the current user object if logged in or force a login. */
   public async getCurrentUser(): Promise<gapi.auth2.GoogleUser> {
     if (this.isLoggedIn) {
@@ -185,7 +187,8 @@ export class LoginApi {
         });
         this.refresh();
       }).catch(e => {
-        //alert('Sign out failed!');  it makes no sense to pop this to user. they cannot do anything anyway. 
+        //alert('Sign out failed!');  it makes no sense to pop this to user.
+        // they cannot do anything anyway.
         console.log(e);
       });
     }
