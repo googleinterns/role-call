@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClient} from '@angular/common/http';
 import {createSpyObjWithProps} from 'src/test_utils';
+import {Subject} from 'rxjs';
 
 import {MockGAPI} from '../mocks/mock_gapi';
 import {LoginApi, LoginResponse} from '../api/login_api.service';
@@ -16,6 +17,7 @@ import {SiteHeader} from './site_header.component';
 
 describe('SiteHeader', () => {
   const fakeHttpClient = {} as HttpClient;
+  const isLoggedIn$ = new Subject<boolean>();
 
   let mockLoginApi: jasmine.SpyObj<LoginApi>;
   let component: SiteHeader;
@@ -29,7 +31,9 @@ describe('SiteHeader', () => {
         login: Promise.resolve({} as LoginResponse),
         signOut: Promise.resolve(),
       },
-      props: {}
+      props: {
+        isLoggedIn$
+      }
     });
     mockLoginApi.login.and.callFake(async () => {
       mockLoginApi.isLoggedIn = true;

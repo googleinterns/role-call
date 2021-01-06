@@ -91,6 +91,8 @@ export class MockGAPI {
             isSignedIn: {
               get: () => {
                 return this.isSignedInVal;
+              },
+              listen: () => {
               }
             },
             currentUser: {
