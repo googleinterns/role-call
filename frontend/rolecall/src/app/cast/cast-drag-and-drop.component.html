@@ -124,7 +124,7 @@
               class="cell"
               cdkDrag
               [cdkDragData]="dancer"
-              [ngStyle]="i4 == boldedCast ? {'font-weight' : 'bold'} : {}">
+              [ngStyle]="i4 == boldedCast ? {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}">
             <div *ngIf="dancer!==undefined">
               <img
                   class="user-image"

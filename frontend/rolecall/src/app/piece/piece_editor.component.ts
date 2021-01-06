@@ -231,7 +231,10 @@ export class PieceEditor implements OnInit {
     createPosition: boolean,
     name: string,
   }) {
-    return (createPosition ? '' : 'Ballet ') + name;
+    // TODO: Remove this once the customer confirms it is not needed.
+    // You can prefix a ballet by adding text here
+    // return (createPosition ? '' : '') + name;
+    return name;
   }
 
   private calcSizeDisplay({createPosition, dancerCount}: {
