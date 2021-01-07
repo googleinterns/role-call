@@ -22,7 +22,6 @@ describe('CastEditorV2Component', () => {
   const fakeActivatedRoute = {snapshot: {params: {uuid: 'testUUID'}}};
   const fakeLocation = {} as Location;
   const fakeSuperBalletDisplay = {} as SuperBalletDisplayService;
-  const fakeSegmentDisplayList = {} as SegmentDisplayListService;
   const mockCastApi = createSpyObjWithProps<CastApi>({
     baseName: 'mockCastApi',
     methods: {
@@ -41,6 +40,8 @@ describe('CastEditorV2Component', () => {
     methods: {getAllUsers: Promise.resolve([])},
     props: {userEmitter: of([])},
   });
+  const mockSegmentDisplayList =
+  jasmine.createSpyObj('mockSegmentDisplayList', ['buildDisplayList']);
 
   let component: CastEditorV2;
   let fixture: ComponentFixture<CastEditorV2>;
@@ -65,7 +66,7 @@ describe('CastEditorV2Component', () => {
             },
             {
               provide: SegmentDisplayListService,
-              useValue: fakeSegmentDisplayList
+              useValue: mockSegmentDisplayList
             },
           ]
         })
