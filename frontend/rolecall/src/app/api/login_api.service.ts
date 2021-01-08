@@ -167,7 +167,7 @@ export class LoginApi {
             observe: 'response',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
-              'EMAIL': this.email
+              'EMAIL': this.email || ''
             }
           }
       ).toPromise().then(resp => {
