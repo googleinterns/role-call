@@ -54,7 +54,7 @@ export class CsvGenerator {
   async generateCSVFromPerformance(perf: Performance) {
     await this.userAPI.getAllUsers();
     await this.pieceAPI.getAllPieces();
-    const headers = ['Performance', 'Piece', 'Length', 'Position',
+    const headers = ['Performance', 'Ballet', 'Length', 'Position',
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
     const objs: any[][][][] = perf.step_3.segments.filter(
