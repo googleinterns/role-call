@@ -1,5 +1,6 @@
 @import "../../styles/colors";
 @import "../../styles/constants";
+@import "../../styles/segment-left";
 
 .root-container {
   display: flex;
@@ -7,84 +8,59 @@
   justify-content: space-between;
 }
 
-.cast-selector-container {
-  width: 15vw;
+.drag-and-drop-container {
+  width: 75vw;
 }
 
-.drag-and-drop-container {
-  width: 85vw;
+.cast-selector-container {
+  width: 25vw;
 }
 
 //-------------------------
 
-// Margins on the panel cards
-.card-margins {
-  height: 96vh;
-  margin: 2vh;
-}
-
-// Left card arrangement and styling
-.left-card {
-  background: $offWhite;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 1em 0 1em 1em;
-  max-height: 86vh;
-}
-
-.piece-select {
+.select-container-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.piece-options {
-  font-size: large;
-  max-height: 70vh;
-  overflow-y: scroll;
-  width: 100%;
+.add-button {
+  margin-top: .5rem;
+  width: 4vh;
+  height: 4vh;
 }
 
-.left-card-title {
-  font-size: xx-large;
-  @media (max-width: $breakpoint-tablet) {
-    font-size: large;
-  }
-  font-weight: 800;
+.group-wrapper1 {
+  // Noop to avoid compiler warning
+  background: transparent;
+}
+
+.group-wrapper2 {
   height: 100%;
-  overflow-wrap: break-word;
-  white-space: pre-line;
-  padding-bottom: 0.2em;
-  padding-left: 0.5em;
-  padding-top: 0.7em;
-  width: calc(100% - 1em);
 }
 
-.dropdownArrow {
-  font-size: 3em;
-  line-height: 0.5em;
-  position: relative;
-  right: 0.25em;
-  margin-bottom: auto;
-  margin-top: auto;
-  width: min-content;
+.small-cast-list-wrapper {
+  height: 15.3rem;
 }
 
-.dropdown-toggle::after {
-  display: none;
+.small-cast-list {
+  height: 8.3rem;
 }
 
-.position-container {
-  height: 100%;
-  width: 100%;
+.small-segment-list-wrapper {
+  height: 14.5rem;
+}
+
+.small-segment-list {
+  height: 10.5rem;
+}
+
+.segment-select-container {
+  overflow: scroll;
 }
 
 .cast-select-container {
-  margin-top: 1rem;
-  overflow-y: scroll;
-  height: 100%;
-  width: 100%;
+  overflow: scroll;
 }
 
 .cast-select {
@@ -109,28 +85,3 @@
   background-color: $offoffWhite;
 }
 
-.add-button-width-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  min-height: 10vh;
-}
-
-.add-button-height-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.add-button {
-  background: $white;
-  border-radius: $borderRadius;
-  height: 6vh;
-  margin-right: 1em;
-  width: 6vh;
-}
-
-.add-button-icon {
-  font-size: 6vh;
-  vertical-align: middle;
-}

@@ -312,7 +312,8 @@
                 cdkDrag
                 class="piece-name-container"
                 [cdkDragData]="data">
-              <div class="app-card piece-name-card">
+              <div class="app-card piece-name-card"
+                [class.std-underlined-font]="data.type === 'SUPER'">
                 <h2 class="piece-name">{{data.name}}</h2>
               </div>
             </div>
@@ -337,7 +338,9 @@
                 <div
                     class="app-card piece-name-card"
                     [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0">
-                  <h2 class="piece-name-delete">
+                  <h2 class="piece-name-delete"
+                  [class.std-italic-font]="data.siblingId > 0"
+                  [class.std-underlined-font]="data.type === 'SUPER'">
                     {{data.name}}</h2>
                 </div>
                 <div class="delete-button-height-container">

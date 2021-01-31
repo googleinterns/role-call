@@ -13,11 +13,15 @@ import {CsvGenerator} from '../services/csv-generator.service';
 import {CastEditorV2} from './cast-editor-v2.component';
 import {CastModule} from './cast.module';
 
+import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
+import {SegmentDisplayListService} from '../services/segment-display-list.service';
+
 describe('CastEditorV2Component', () => {
   const fakeLoggingService = {} as LoggingService;
   const fakeCsvGenerator = {} as CsvGenerator;
   const fakeActivatedRoute = {snapshot: {params: {uuid: 'testUUID'}}};
   const fakeLocation = {} as Location;
+  const fakeSuperBalletDisplay = {} as SuperBalletDisplayService;
   const mockCastApi = createSpyObjWithProps<CastApi>({
     baseName: 'mockCastApi',
     methods: {
@@ -36,6 +40,8 @@ describe('CastEditorV2Component', () => {
     methods: {getAllUsers: Promise.resolve([])},
     props: {userEmitter: of([])},
   });
+  const mockSegmentDisplayList =
+  jasmine.createSpyObj('mockSegmentDisplayList', ['buildDisplayList']);
 
   let component: CastEditorV2;
   let fixture: ComponentFixture<CastEditorV2>;
@@ -54,6 +60,14 @@ describe('CastEditorV2Component', () => {
             {provide: UserApi, useValue: mockUserApi},
             {provide: LoggingService, useValue: fakeLoggingService},
             {provide: CsvGenerator, useValue: fakeCsvGenerator},
+            {
+              provide: SuperBalletDisplayService,
+              useValue: fakeSuperBalletDisplay
+            },
+            {
+              provide: SegmentDisplayListService,
+              useValue: mockSegmentDisplayList
+            },
           ]
         })
         .compileComponents();

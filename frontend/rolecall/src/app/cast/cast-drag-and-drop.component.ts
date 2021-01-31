@@ -7,7 +7,6 @@ import {Cast, CastApi, CastGroup} from '../api/cast_api.service';
 import {PieceApi, Position} from '../api/piece_api.service';
 import {User, UserApi} from '../api/user_api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
-import {LoggingService} from '../services/logging.service';
 
 type UICastDancer = {
   uuid: string;
@@ -65,7 +64,6 @@ export class CastDragAndDrop implements OnInit {
       private userAPI: UserApi,
       private castAPI: CastApi,
       private pieceAPI: PieceApi,
-      private logging: LoggingService,
       private csvGenerator: CsvGenerator
   ) {
     this.buildSubCastHeader();
@@ -173,13 +171,15 @@ export class CastDragAndDrop implements OnInit {
                  subCastIndex++) {
               for (let dancerIndex = 0; dancerIndex < uiPos.dancerCount;
                    dancerIndex++) {
-                const dancer = uiPos.castRows[dancerIndex]
-                    .subCastDancers[subCastIndex];
-                if (dancer) {
-                  subCasts[subCastIndex].members.push({
-                    uuid: dancer.uuid,
-                    position_number: dancerIndex,
-                  });
+                const castRow = uiPos.castRows[dancerIndex];
+                if (castRow) {
+                  const dancer = castRow.subCastDancers[subCastIndex];
+                  if (dancer) {
+                    subCasts[subCastIndex].members.push({
+                      uuid: dancer.uuid,
+                      position_number: dancerIndex,
+                    });
+                  }
                 }
               }
             }
@@ -197,18 +197,31 @@ export class CastDragAndDrop implements OnInit {
     }
     this.castPositions = [];
     if (!this.castAPI.hasCast(this.selectedCastUUID)) {
-      this.logging.logError('Missing cast: ' + this.selectedCastUUID);
+      // In performances, casts are specified in section 3 and there is
+      // a pointer to 'this' there. This pointer is not available
+      // in section 4, so if the performance is saved in section 4
+      // 'this.castSelected' can't be set to false there. Hence this logic.
       this.castSelected = false;
       return;
     }
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
     this.castCount = this.cast.castCount;
     this.buildSubCastHeader();
+    let dancerCount = 0;
+    for (const filledPosition of this.cast.filled_positions) {
+      for (const group of filledPosition.groups) {
+        for (const member of group.members) {
+          if (member.position_number >= dancerCount) {
+            dancerCount = member.position_number + 1;
+          }
+        }
+      }
+    }
     const positions = this.pieceAPI.pieces.get(this.cast.segment).positions;
     for (const position of positions) {
       const castPosition: UICastPosition = {
         pos: position,
-        dancerCount: position.size,
+        dancerCount: dancerCount,
         castRows: []
       };
       this.castPositions.push(castPosition);
@@ -251,12 +264,14 @@ export class CastDragAndDrop implements OnInit {
             }
           }
           const dancer = this.userAPI.users.get(member.uuid);
-          uiPos.castRows[member.position_number]
-              .subCastDancers[group.group_index] = {
-            uuid: dancer.uuid,
-            user: dancer,
-            pictureFile: dancer.picture_file,
-          };
+          const castRow = uiPos.castRows[member.position_number];
+          if (castRow) {
+            castRow.subCastDancers[group.group_index] = {
+              uuid: dancer.uuid,
+              user: dancer,
+              pictureFile: dancer.picture_file,
+            };          
+          }
         }
       }
       uiPos.dancerCount = Math.max(maxDancerIndex + 1, uiPos.pos.size);

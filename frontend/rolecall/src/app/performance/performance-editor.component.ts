@@ -158,6 +158,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     // children of Super Ballets
     this.step2PickFrom = this.step2AllSegments.filter(
         (segment: Piece) => !segment.siblingId);
+    this.step2PickFrom.sort((a, b) => a.name < b.name ? -1 : 1);
     this.step2Data = [];
     this.initStep2Data();
     this.piecesLoaded = true;
@@ -703,8 +704,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   exportPerformanceAsPDF() {
     const data = this.state.step_3.segments;
     pdfMake.createPdf(this.getCastDetailsForPDF(data)).open();
-    console.log(data);
-    console.log(this.step2Data);
   }
 
   getCastDetailsForPDF(segments: PerformanceSegment[]) {
@@ -754,7 +753,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         return { 
           columns: [     
             {
-              text: `Printed at: ${new Date(Date.now()).toLocaleDateString()}  ${new Date(Date.now()).toLocaleTimeString()}`,
+              text: `Printed at: ${new Date(Date.now()).toLocaleDateString()}  ${
+                new Date(Date.now()).toLocaleTimeString()}`,
               style: 'footer_timestamp',
             },      
             {

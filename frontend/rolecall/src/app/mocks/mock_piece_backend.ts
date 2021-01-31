@@ -12,6 +12,7 @@ export class MockPieceBackend {
     'uuid': '212',
     'name': 'Ode',
     'siblingId': null,
+    'isOpen': false,
     'type': 'SEGMENT',
     'positions':
         [{
@@ -28,6 +29,7 @@ export class MockPieceBackend {
     'uuid': '214',
     'name': 'Divining',
     'siblingId': null,
+    'isOpen': false,
     'type': 'SEGMENT',
     'positions':
         [{
@@ -63,6 +65,7 @@ export class MockPieceBackend {
       'uuid': '220',
       'name': 'Greenwood',
       'siblingId': null,
+      'isOpen': false,
       'type': 'SEGMENT',
       'positions':
           [{
@@ -143,6 +146,7 @@ export class MockPieceBackend {
       'uuid': '247',
       'name': 'Fandango',
       'siblingId': null,
+      'isOpen': false,
       'type': 'SEGMENT',
       'positions':
           [{
@@ -159,6 +163,7 @@ export class MockPieceBackend {
     {
       'uuid': '358',
       'siblingId': null,
+      'isOpen': false,
       'type': 'SEGMENT',
       'name': 'Ella',
       'positions':
