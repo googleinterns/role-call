@@ -191,6 +191,16 @@ export class CastDragAndDrop implements OnInit {
     };
   }
 
+  private getPosIndex(cast: Cast, uuid: string): number {
+    const positions = this.pieceAPI.pieces.get(cast.segment).positions;
+    for (let i = 0; i < positions.length; i++) {
+      if (positions[i].uuid === uuid) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   private setupData() {
     if (!this.castSelected) {
       return;
@@ -207,8 +217,10 @@ export class CastDragAndDrop implements OnInit {
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
     this.castCount = this.cast.castCount;
     this.buildSubCastHeader();
-    let dancerCount = 0;
+    const positions = this.pieceAPI.pieces.get(this.cast.segment).positions;
+    const dancerCounts = new Array(positions.length);
     for (const filledPosition of this.cast.filled_positions) {
+      let dancerCount = 0;
       for (const group of filledPosition.groups) {
         for (const member of group.members) {
           if (member.position_number >= dancerCount) {
@@ -216,12 +228,15 @@ export class CastDragAndDrop implements OnInit {
           }
         }
       }
+      const pos = this.getPosIndex(this.cast, filledPosition.position_uuid);
+      dancerCounts[pos] = dancerCount;
     }
-    const positions = this.pieceAPI.pieces.get(this.cast.segment).positions;
-    for (const position of positions) {
+    for (let i = 0; i < positions.length; i++) {
+      const position = positions[i];
+      let dancerCount = Math.max(position.size, dancerCounts[i]);
       const castPosition: UICastPosition = {
         pos: position,
-        dancerCount: dancerCount,
+        dancerCount,
         castRows: []
       };
       this.castPositions.push(castPosition);
