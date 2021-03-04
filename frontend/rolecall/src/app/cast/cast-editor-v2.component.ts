@@ -67,6 +67,7 @@ export class CastEditorV2 implements OnInit {
     if (this.selectedPiece) {
       this.selectedPieceCasts = this.allCasts.filter(
           cast => cast.segment === this.selectedPiece.uuid);
+      this.selectedPieceCasts.sort((a, b) => a.name < b.name ? -1 : 1);
     }
   }
 
