@@ -1,6 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {DashboardApi, DashPerformance} from '../api/dashboard_api.service';
 
+type WeekdayOptions = 'long' | 'short' | 'narrow';
+type YearOptions = 'numeric' | '2-digit';
+type MonthOptions = 'numeric' | '2-digit' | 'long' |
+                    'short' | 'narrow';
+
+type DayOptions = 'numeric' | '2-digit';
+type HourOptions = 'numeric' | '2-digit';
+type MinutesOptions = 'numeric' | '2-digit';
+
 export type ProcessedDashPerformance = {
   title: string,
   dateStr: string,
@@ -41,12 +50,15 @@ export class Dashboard implements OnInit {
         this.allDashPerfs.filter(val => val.dateTime >= now);
     this.pastDashPerfs = this.allDashPerfs.filter(val => val.dateTime < now);
     const dateOpts = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+      weekday: 'long' as WeekdayOptions,
+      year: 'numeric' as YearOptions,
+      month: 'long' as MonthOptions,
+      day: 'numeric' as DayOptions,
     };
-    const timeOpts = {hour: '2-digit', minute: '2-digit'};
+    const timeOpts = {
+      hour: '2-digit' as HourOptions,
+      minute: '2-digit' as MinutesOptions,
+    };
     this.processedUpcomingDashPerfs = this.upcomingDashPerfs.map(perf => {
       const date = new Date(perf.dateTime);
       return {

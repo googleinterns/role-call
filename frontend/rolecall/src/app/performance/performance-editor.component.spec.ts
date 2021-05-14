@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {of} from 'rxjs';
 import {RouterTestingModule} from '@angular/router/testing';
 import {createSpyObjWithProps} from 'src/test_utils';
@@ -47,7 +47,7 @@ describe('PerformanceEditorComponent', () => {
   let component: PerformanceEditor;
   let fixture: ComponentFixture<PerformanceEditor>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
           declarations: [PerformanceEditor],
           imports: [

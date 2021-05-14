@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {isNullOrUndefined} from 'util';
+//import {isNullOrUndefined} from 'util';
 import {LoginApi} from '../api/login_api.service';
 import {SideNav} from './side_nav.component';
 
@@ -48,7 +48,7 @@ export class SiteHeader implements OnInit {
 
   /** Initiate a google OAuth2 login when login button is clicked */
   onLoginButtonClick() {
-    if (!isNullOrUndefined(this.loginAPI.authInstance)) {
+    if (!!this.loginAPI?.authInstance) {
       this.loginAPI.authInstance.signOut();
       this.loginAPI.authInstance.disconnect();
       this.loginAPI.isAuthLoaded = false;

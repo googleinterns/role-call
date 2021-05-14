@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
 import {BrowserModule} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -24,7 +24,7 @@ describe('SiteHeader', () => {
   let fixture: ComponentFixture<SiteHeader>;
   let router: Router;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     mockLoginApi = createSpyObjWithProps<LoginApi>({
       baseName: 'mockLoginApi',
       methods: {
@@ -61,7 +61,7 @@ describe('SiteHeader', () => {
   }));
 
   beforeEach(() => {
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(SiteHeader);
     component = fixture.componentInstance;
     component.navBar = TestBed.createComponent(SideNav).componentInstance;

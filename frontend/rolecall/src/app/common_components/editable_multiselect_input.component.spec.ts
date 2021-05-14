@@ -1,5 +1,5 @@
 import {EventEmitter} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {EditableMultiSelectInput} from './editable_multiselect_input.component';
 
 
@@ -7,7 +7,7 @@ describe('EditableMultiSelectInput', () => {
   let component: EditableMultiSelectInput;
   let fixture: ComponentFixture<EditableMultiSelectInput>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
           declarations: [EditableMultiSelectInput]
         })

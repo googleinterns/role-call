@@ -1,6 +1,6 @@
 import {HttpResponse} from '@angular/common/http';
 import * as APITypes from 'src/api_types';
-import {isNullOrUndefined} from 'util';
+//mport {isNullOrUndefined} from 'util';
 
 import {AllUsersResponse, OneUserResponse, User} from '../api/user_api.service';
 
@@ -1115,10 +1115,11 @@ export class MockUserBackend {
 
   /** Checks if user is valid, like the backend */
   public isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(
-        user.contact_info.email) && !isNullOrUndefined(user.first_name) &&
-           !isNullOrUndefined(user.last_name) && !isNullOrUndefined(
-            user.has_permissions);
+    return !!user
+            && !!user.uuid
+            && !!user.contact_info.email
+            && !!user.first_name
+            && !!user.last_name
+            && !!user.has_permissions;
   }
-
 }
