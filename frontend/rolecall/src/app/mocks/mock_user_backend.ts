@@ -1,6 +1,5 @@
 import {HttpResponse} from '@angular/common/http';
 import * as APITypes from 'src/api_types';
-//mport {isNullOrUndefined} from 'util';
 
 import {AllUsersResponse, OneUserResponse, User} from '../api/user_api.service';
 

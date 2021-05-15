@@ -1,5 +1,4 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-//import {isNullOrUndefined} from 'util';
 import {LoginApi} from '../api/login_api.service';
 import {SideNav} from './side_nav.component';
 

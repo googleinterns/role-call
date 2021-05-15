@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatSelectChange} from '@angular/material/select';
-//import {isNullOrUndefined} from 'util';
 import {Unavailability, UnavailabilityApi} from '../api/unavailability-api.service';
 import {User, UserApi} from '../api/user_api.service';
 

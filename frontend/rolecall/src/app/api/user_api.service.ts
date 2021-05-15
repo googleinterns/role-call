@@ -3,7 +3,6 @@ import {EventEmitter, Injectable} from '@angular/core';
 import * as moment from 'moment';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
-//import {isNullOrUndefined} from 'util';
 
 import {MockUserBackend} from '../mocks/mock_user_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
