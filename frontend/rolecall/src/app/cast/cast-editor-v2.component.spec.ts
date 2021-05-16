@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
@@ -46,7 +46,7 @@ describe('CastEditorV2Component', () => {
   let component: CastEditorV2;
   let fixture: ComponentFixture<CastEditorV2>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
           declarations: [CastEditorV2],
           imports: [

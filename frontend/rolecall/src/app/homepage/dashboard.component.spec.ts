@@ -1,4 +1,4 @@
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {of} from 'rxjs';
 
 import {DashboardApi} from '../api/dashboard_api.service';
@@ -8,7 +8,7 @@ import {Dashboard} from './dashboard.component';
 describe('DashboardComponent', () => {
   let component: Dashboard;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const fakeDashboardApi = {
       dashPerformanceEmitter: of([]),
       getAllDashboard() {

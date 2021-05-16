@@ -1,4 +1,4 @@
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
 import {of} from 'rxjs';
 import {createSpyObjWithProps} from 'src/test_utils';
@@ -20,7 +20,7 @@ describe('UserEditorComponent', () => {
 
   let userEditor: UserEditor;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
           declarations: [UserEditor, EmptyStringIfUndefinedPipe],
           providers: [

@@ -26,7 +26,7 @@ describe('SideNav', () => {
         })
         .compileComponents();
 
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(SideNav);
     component = fixture.componentInstance;
     fixture.detectChanges();

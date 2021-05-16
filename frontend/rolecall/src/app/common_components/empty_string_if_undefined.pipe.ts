@@ -1,5 +1,4 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {isNullOrUndefined} from 'util';
 
 @Pipe({
   name: 'emptyStringIfUndefined'
@@ -7,7 +6,7 @@ import {isNullOrUndefined} from 'util';
 export class EmptyStringIfUndefinedPipe implements PipeTransform {
 
   public transform(value: unknown): unknown {
-    if (isNullOrUndefined(value)) {
+    if (!value) {
       return '';
     } else {
       return value;

@@ -3,7 +3,6 @@ import {EventEmitter, Injectable} from '@angular/core';
 import * as moment from 'moment';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
-import {isNullOrUndefined} from 'util';
 
 import {MockUserBackend} from '../mocks/mock_user_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -382,10 +381,11 @@ export class UserApi {
    * database.
    */
   public isValidUser(user: User): boolean {
-    return !isNullOrUndefined(user.uuid) && !isNullOrUndefined(
-        user.contact_info.email)
-           && !isNullOrUndefined(user.first_name)
-           && !isNullOrUndefined(user.last_name) && !isNullOrUndefined(
-            user.has_permissions);
+    return !!user
+           && !!user.uuid
+           && !!user.contact_info.email
+           && !!user.first_name
+           && !!user.last_name
+           && !!user.has_permissions;
   }
 }

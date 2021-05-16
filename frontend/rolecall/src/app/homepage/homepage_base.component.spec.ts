@@ -1,4 +1,4 @@
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
 
 import {HomepageBase} from './homepage_base.component';
@@ -6,7 +6,7 @@ import {HomepageBase} from './homepage_base.component';
 describe('HomepageBase', () => {
   let component: HomepageBase;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
           declarations: [HomepageBase],
           imports: [

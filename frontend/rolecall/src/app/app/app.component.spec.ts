@@ -1,4 +1,4 @@
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {of} from 'rxjs';
 import {FakePage} from 'src/test_utils';
@@ -17,7 +17,7 @@ describe('App', () => {
   } as DashboardApi;
   const fakeLoginApi = {loginPromise: Promise.resolve()} as LoginApi;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         App,

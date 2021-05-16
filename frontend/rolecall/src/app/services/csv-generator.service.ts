@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {saveAs} from 'file-saver';
+import {saveAs} from 'file-saver-es';
 import {Cast} from '../api/cast_api.service';
 import {Performance} from '../api/performance-api.service';
 import {PieceApi} from '../api/piece_api.service';
