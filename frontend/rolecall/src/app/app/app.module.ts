@@ -1,5 +1,6 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ClassProvider, NgModule} from '@angular/core';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
@@ -35,6 +36,7 @@ const LOGGING_INTERCEPTOR_PROVIDER: ClassProvider = {
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
+    MatDialogModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
