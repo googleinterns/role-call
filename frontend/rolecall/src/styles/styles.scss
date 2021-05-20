@@ -1,5 +1,5 @@
 /* Add/import global styles in this file. */
-@import "~@angular/material/theming";
+@use '~@angular/material' as mat;
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
 @import "constants";
 
@@ -37,7 +37,7 @@ body {
   outline: none;
 }
 
-$custom-typography: mat-typography-config(
+$custom-typography: mat.define-typography-config(
     $font-family: "Source Sans Pro, sans-serif",
 );
-@include mat-core($custom-typography);
+@include mat.core($custom-typography);
