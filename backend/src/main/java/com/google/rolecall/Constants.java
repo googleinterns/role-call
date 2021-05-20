@@ -54,6 +54,11 @@ public class Constants {
     };
   }
 
+  public static class Notifications {
+    public static final String PROJECT_ID = "absolute-water-286821";
+    public static final String TOPIC_ID = "rolecall";
+  }
+
   // Prevents object creation
   // private
   // the above (private) was commented out because it breaks our unit tests
