@@ -10,5 +10,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class App {
+  // a test comment
   title = 'rolecall';
 }
