@@ -1,5 +1,6 @@
 package com.google.rolecall.services;
 
+import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.PerformanceCastInfo;
 import com.google.rolecall.jsonobjects.PerformanceCastMemberInfo;
 import com.google.rolecall.jsonobjects.PerformanceInfo;
@@ -75,7 +76,7 @@ public class PerformanceServices {
     if (performance.getStatus().equals(Performance.Status.PUBLISHED)) {
       String[] profiles = this.environment.getActiveProfiles();
       String profile = profiles[0];
-      String message = performance.getDescription();
+      String message = Constants.Notifications.PERF_PUB_PREFIX + performance.getDescription();
 
       // get all performers
       List<PerformanceSectionInfo> sections = newPerformance.performanceSections();

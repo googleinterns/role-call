@@ -57,6 +57,8 @@ public class Constants {
   public static class Notifications {
     public static final String PROJECT_ID = "absolute-water-286821";
     public static final String TOPIC_ID = "rolecall";
+    public static final String SUBSCRIPTION_ID = "rolecall_notif";
+    public static final String PERF_PUB_PREFIX = "Performance Published: ";
   }
 
   // Prevents object creation
