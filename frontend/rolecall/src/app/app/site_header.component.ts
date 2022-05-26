@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {LoginApi} from '../api/login_api.service';
 import {SideNav} from './side_nav.component';
 
@@ -11,7 +11,7 @@ import {SideNav} from './side_nav.component';
   templateUrl: './site_header.component.html',
   styleUrls: ['./site_header.component.scss']
 })
-export class SiteHeader implements OnInit {
+export class SiteHeader implements OnInit, AfterViewInit {
 
   /** Reference to the nav bar */
   @Input() navBar: SideNav;
@@ -28,7 +28,7 @@ export class SiteHeader implements OnInit {
   ngOnInit(): void {
     this.loginAPI.login(false).then(() => {
       this.configureHeaderForLogin();
-    });
+    });    
     this.loginAPI.isLoggedIn$.subscribe( (isLogin) => {
       if (!isLogin) {
         this.configureHeaderForLogin();
@@ -36,7 +36,10 @@ export class SiteHeader implements OnInit {
       }      
     })
   }
-
+  
+  ngAfterViewInit(): void {  
+    google.accounts.id.renderButton(document.getElementById("gsi_btn"),{type: 'standard', size: "large", theme: "filled_blue" });  
+  }
   /**
    * Toggles the open state of the nav side bar
    * when the menu button is clicked
@@ -47,11 +50,12 @@ export class SiteHeader implements OnInit {
 
   /** Initiate a google OAuth2 login when login button is clicked */
   onLoginButtonClick() {
-    if (!!this.loginAPI?.authInstance) {
-      this.loginAPI.authInstance.signOut();
-      this.loginAPI.authInstance.disconnect();
-      this.loginAPI.isAuthLoaded = false;
-    }
+    // if (!!this.loginAPI?.authInstance) {
+    //   this.loginAPI.authInstance.signOut();
+    //   this.loginAPI.authInstance.disconnect();
+    //   this.loginAPI.isAuthLoaded = false;
+    // }
+    this.navBar.closeNav();
     return this.loginAPI.login(true).then(() => {
       this.configureHeaderForLogin();
     });
