@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {LoginApi} from '../api/login_api.service';
 import {SideNav} from './side_nav.component';
 
@@ -15,50 +15,39 @@ export class SiteHeader implements OnInit, AfterViewInit {
 
   /** Reference to the nav bar */
   @Input() navBar: SideNav;
-  /** The log in button */
-  @ViewChild('loginButton') loginButton: ElementRef;
-  /** Whether or not the user is logged in */
-  userIsLoggedIn = true;
+
   /** Whether we've received a response from the login API */
   responseReceived = false;
 
-  constructor(public loginAPI: LoginApi) {
+  constructor(
+    public loginAPI: LoginApi,
+  ) {
   }
 
   ngOnInit(): void {
-    this.loginAPI.login(false).then(() => {
+    this.loginAPI.login().then(() => {
       this.configureHeaderForLogin();
-    });    
-    this.loginAPI.isLoggedIn$.subscribe( (isLogin) => {
-      if (!isLogin) {
-        this.configureHeaderForLogin();
+    });
+    this.loginAPI.isLoggedIn$.subscribe(isLoggedIn => {
+      if (!isLoggedIn) {
         this.loginAPI.signOut();
-      }      
-    })
+      }
+      this.configureHeaderForLogin();
+      this.loginAPI.refresh();
+    });
   }
-  
-  ngAfterViewInit(): void {  
-    google.accounts.id.renderButton(document.getElementById("gsi_btn"),{type: 'standard', size: "large", theme: "filled_blue" });  
+
+  ngAfterViewInit(): void {
+    this.loginAPI.loginBtn = document.getElementById('gsi_btn');
+    this.loginAPI.showLoginButton();
   }
+
   /**
    * Toggles the open state of the nav side bar
    * when the menu button is clicked
    */
-  onNavButtonClick() {
+  onNavButtonClick(): void {
     this.navBar.isNavOpen ? this.navBar.closeNav() : this.navBar.openNav();
-  }
-
-  /** Initiate a google OAuth2 login when login button is clicked */
-  onLoginButtonClick() {
-    // if (!!this.loginAPI?.authInstance) {
-    //   this.loginAPI.authInstance.signOut();
-    //   this.loginAPI.authInstance.disconnect();
-    //   this.loginAPI.isAuthLoaded = false;
-    // }
-    this.navBar.closeNav();
-    return this.loginAPI.login(true).then(() => {
-      this.configureHeaderForLogin();
-    });
   }
 
   /** Sign out of google OAuth2 */
@@ -70,6 +59,5 @@ export class SiteHeader implements OnInit, AfterViewInit {
   /** Set state and render page header depending on login state */
   private configureHeaderForLogin() {
     this.responseReceived = true;
-    this.userIsLoggedIn = this.loginAPI.isLoggedIn;
   }
 }

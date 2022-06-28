@@ -1,52 +1,62 @@
 <div class="site-header-container">
   <button
-      [disabled]="!this.loginAPI.isLoggedIn"
-      [ngStyle]="!this.loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }"
-      mat-icon-button
-      aria-label="Toggle Navigation Button"
-      class="nav-trigger-button"
-      (click)="onNavButtonClick()">
+    [disabled]="!loginAPI.isLoggedIn"
+    [ngStyle]="!loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }"
+    mat-icon-button
+    aria-label="Toggle Navigation Button"
+    class="nav-trigger-button"
+    (click)="onNavButtonClick()"
+  >
     <mat-icon class="icon" [inline]="true">
       menu
     </mat-icon>
   </button>
   <img
-      [ngStyle]="!this.loginAPI.isLoggedIn ? { 'margin-left': '2rem' }: {}"
-      src="/assets/images/AADT-logo.png"
-      class="logo"
-      routerLink="/">
+    [ngStyle]="!loginAPI.isLoggedIn ? { 'margin-left': '2rem' }: {}"
+    src="/assets/images/AADT-logo.png"
+    class="logo"
+    routerLink="/"
+  >
   <div class=" site-header-subcontainer">
   </div>
-  <div *ngIf="this.responseReceived; then showLoginOptions else loadingSpinner">
+  <div *ngIf="!responseReceived; then loadingSpinner">
   </div>
-</div>
-
-<!-- Login Templates -->
-<ng-template #showLoginOptions>
-  <div *ngIf="this.loginAPI.isLoggedIn; then profileImageTemp else loginButtonTemp">
-  </div>
-</ng-template>
-<ng-template #loginButtonTemp>
-  <div class="log-in-account-container">
-    <div id="gsi_btn"></div>        
-  </div>
-</ng-template>
-<ng-template #profileImageTemp>
-  <div class="log-in-account-container" ngbDropdown #profileDrop="ngbDropdown">
-    <img
-        class="profile-image" [src]="this.loginAPI.imageURL" ngbDropdownAnchor
-        (click)="profileDrop.isOpen() ? profileDrop.close() : profileDrop.open()">
-    <div ngbDropdownMenu aria-labelledby="dropdownManual">
-      <div class="profile-drop-down-item-container">
-        <h3 class="profile-name">{{ this.loginAPI.givenName + " " + this.loginAPI.familyName }}</h3>
+  <div class=" site-header-subcontainer">
+    <div
+      class="log-in-account-container"
+      [style.display]="!loginAPI.isLoggedIn ? 'flex' : 'none'"
+    >
+      <div id="gsi_btn"></div>        
+    </div>
+    <div
+      class="log-in-account-container"
+      [style.display]="loginAPI.isLoggedIn ? 'flex' : 'none'"
+      ngbDropdown
+      #profileDrop="ngbDropdown"
+    >
+      <img
+        class="profile-image"
+        [src]="this.loginAPI.imageURL"
+        ngbDropdownAnchor
+        (click)="profileDrop.isOpen() ? profileDrop.close() : profileDrop.open()"
+      >
+      <div ngbDropdownMenu aria-labelledby="dropdownManual">
+        <div class="profile-drop-down-item-container">
+          <h3 class="profile-name">{{ loginAPI.givenName + " " + loginAPI.familyName }}</h3>
+        </div>
+        <div class="profile-drop-down-item-container">
+          <h3 class="profile-email">{{ loginAPI.email }}</h3>
+        </div>
+        <button
+          ngbDropdownItem
+          (click)="onSignOut()"
+          style="font-weight: bold;"
+        >Sign Out
+        </button>
       </div>
-      <div class="profile-drop-down-item-container">
-        <h3 class="profile-email">{{ this.loginAPI.email }}</h3>
-      </div>
-      <button ngbDropdownItem (click)="onSignOut()" style="font-weight: bold;">Sign Out</button>
     </div>
   </div>
-</ng-template>
+</div>
 
 <!-- Loader Template -->
 <ng-template #loadingSpinner>
