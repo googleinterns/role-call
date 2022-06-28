@@ -9,13 +9,16 @@ export type ErrorEvent = {
   url: string,
   errorMessage: string,
   status: number,
-  statusText: string
+  statusText: string,
 };
 
 @Injectable({providedIn: 'root'})
 export class ResponseStatusHandlerService {
 
-  constructor(public dialog: MatDialog, private loginAPI: LoginApi) {
+  constructor(
+    public dialog: MatDialog,
+    private loginAPI: LoginApi,
+  ) {
   }
 
   pendingErrors:
@@ -38,7 +41,7 @@ export class ResponseStatusHandlerService {
     if (response.status === 401) {
       rej('');
       this.loginAPI.signOut().then(() => {
-        this.loginAPI.login(true);
+        this.loginAPI.login();
       });
       return;
     }
@@ -49,7 +52,7 @@ export class ResponseStatusHandlerService {
         errorMessage: response['error'] ? response['error']['error'] :
             response['message'],
         status: response.status,
-        statusText: response.statusText
+        statusText: response.statusText,
       };
       const userResp = await this.showError(errorEvent);
       rej(userResp);
@@ -58,7 +61,7 @@ export class ResponseStatusHandlerService {
     }
   }
 
-  showError(errorEvent: ErrorEvent): Promise<string> {
+  async showError(errorEvent: ErrorEvent): Promise<string> {
     if (this.pendingErrors.has(errorEvent.url)) {
       // TODO: What should we return here?
       return Promise.resolve('');
@@ -111,7 +114,7 @@ export class ErrorDialog {
       imports: [
         CommonModule,
         MatDialogModule,
-        MatButtonModule
+        MatButtonModule,
       ]
     })
 export class DialogModule {

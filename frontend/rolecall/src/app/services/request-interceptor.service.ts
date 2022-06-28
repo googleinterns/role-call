@@ -14,7 +14,7 @@ export class RequestInterceptorService implements HttpInterceptor {
       req: HttpRequest<any>,
       next: HttpHandler): Observable<HttpEvent<any>> {
     // Ensures fresh Google OAuth token
-    this.loginAPI.login(false);
+    this.loginAPI.login();
     if (environment.logRequests) {
       console.log(req);
     }
