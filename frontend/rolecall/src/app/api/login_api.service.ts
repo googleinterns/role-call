@@ -3,6 +3,7 @@ import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 export type LoginResponse = {
   isSignedIn: boolean,
@@ -126,14 +127,15 @@ export class LoginApi {
       return Promise.resolve();
     } else {
       // Hit the logout endpoint to invalidate session
-      return this.http.get(environment.backendURL + 'logout', {
+      return lastValueFrom(this.http.get(
+        environment.backendURL + 'logout', {
           observe: 'response',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
             'EMAIL': this.email || '',
           }
-        }
-      ).toPromise().then(resp => {
+        })
+      ).then(resp => {
         if (resp.status > 299 || resp.status < 200) {
           return Promise.reject('Sign in failed');
         } else {

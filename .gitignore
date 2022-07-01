@@ -7,3 +7,4 @@ backend/.classpath
 backend/.factorypath
 .idea
 frontend/rolecall/.vscode/settings.json
+frontend/rolecall/.angular/cache/

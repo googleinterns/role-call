@@ -91,6 +91,10 @@
   }
 
   .icon {
+    // needed to add next two lines when moving to ng14
+    height: 5vh;
+    line-height: 5vh;
+    
     font-size: 5vh;
     margin-right: 2vh;
   }

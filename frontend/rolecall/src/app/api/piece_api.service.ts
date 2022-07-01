@@ -2,6 +2,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 import {MockPieceBackend} from '../mocks/mock_piece_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -99,13 +100,12 @@ export class PieceApi {
       return this.mockBackend.requestAllPieces();
     }
     const header = await this.headerUtil.generateHeader();
-    return this.http.get<RawAllPiecesResponse>(
+    return lastValueFrom(this.http.get<RawAllPiecesResponse>(
         environment.backendURL + 'api/section', {
-              headers: header,
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<RawAllPiecesResponse>(
             resp)).then(val => {
@@ -143,7 +143,7 @@ export class PieceApi {
     if (this.pieces.has(piece.uuid)) {
       // Do patch
       const header = await this.headerUtil.generateHeader();
-      return this.http.patch(environment.backendURL + 'api/section', {
+      return lastValueFrom(this.http.patch(environment.backendURL + 'api/section', {
             name: piece.name,
             id: Number(piece.uuid),
             siblingId: piece.siblingId,
@@ -163,14 +163,13 @@ export class PieceApi {
             headers: header,
             observe: 'response',
             withCredentials: true
-          })
-          .toPromise()
+          }))
           .catch(errorResp => errorResp)
           .then(resp => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       const header = await this.headerUtil.generateHeader();
-      return this.http.post(environment.backendURL + 'api/section', {
+      return lastValueFrom(this.http.post(environment.backendURL + 'api/section', {
             name: piece.name,
             siblingId: piece.siblingId,
             type: piece.type ? piece.type : 'BALLET',
@@ -179,8 +178,7 @@ export class PieceApi {
             headers: header,
             observe: 'response',
             withCredentials: true
-          })
-          .toPromise()
+          }))
           .catch(errorResp => errorResp)
           .then(resp => this.respHandler.checkResponse<any>(resp));
     }
@@ -192,13 +190,12 @@ export class PieceApi {
       return this.mockBackend.requestPieceDelete(piece);
     }
     const header = await this.headerUtil.generateHeader();
-    return this.http.delete(
+    return lastValueFrom(this.http.delete(
         environment.backendURL + 'api/section?sectionid=' + piece.uuid, {
-              headers: header,
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
   }
