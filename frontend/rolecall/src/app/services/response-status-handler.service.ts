@@ -4,6 +4,7 @@ import {Component, Inject, Injectable, NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {LoginApi} from '../api/login_api.service';
+import {lastValueFrom} from 'rxjs';
 
 export type ErrorEvent = {
   url: string,
@@ -73,7 +74,7 @@ export class ResponseStatusHandlerService {
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
     const dialogRef = this.dialog.open(ErrorDialog,
         {width: '50%', data: {errorEvent}});
-    return dialogRef.afterClosed().toPromise().then(() => prom);
+    return lastValueFrom(dialogRef.afterClosed()).then(() => prom);
   }
 
   resolveError(errEv: ErrorEvent, userResp: string) {

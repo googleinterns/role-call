@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "pdfmake"
+            ],
             "outputPath": "dist/rolecall",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -141,17 +144,14 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
+
         },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
@@ -168,7 +168,6 @@
       }
     }
   },
-  "defaultProject": "rolecall",
   "cli": {
     "analytics": "69f43049-7ff7-410c-973f-f7edc6d4926f"
   }

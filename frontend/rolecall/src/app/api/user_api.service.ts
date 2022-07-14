@@ -3,6 +3,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import * as moment from 'moment';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 import {MockUserBackend} from '../mocks/mock_user_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -106,13 +107,12 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUsers();
     }
-    return this.http.get<RawAllUsersResponse>(
+    return lastValueFrom(this.http.get<RawAllUsersResponse>(
         environment.backendURL + 'api/user', {
               headers: await this.headerUtil.generateHeader(),
               observe: 'response',
               withCredentials: true
-            })
-        .toPromise()
+            }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
         .then(rawAllUsersResponse => {
@@ -177,91 +177,87 @@ export class UserApi {
     }
     if (this.users.has(user.uuid)) {
       // Do patch
-      return this.http
-          .patch(
-              environment.backendURL + 'api/user', {
-                id: Number(user.uuid),
-                firstName: user.first_name,
-                middleName: user.middle_name,
-                lastName: user.last_name,
-                suffix: user.suffix,
-                pictureFile: user.picture_file,
-                email: user.contact_info.email,
-                notificationEmail: user.contact_info.notification_email,
-                phoneNumber: user.contact_info.phone_number,
-                dateJoined:
-                    moment(user.date_joined).format('MM-DD-YYYY').toString(),
-                // Roles
-                isAdmin: user.has_roles.isAdmin,
-                isChoreographer: user.has_roles.isChoreographer,
-                isDancer: user.has_roles.isDancer,
-                isOther: user.has_roles.isOther,
-                // Permissions
-                canLogin: user.has_permissions.canLogin,
-                canReceiveNotifications:
-                user.has_permissions.canReceiveNotifications,
-                managePerformances: user.has_permissions.managePerformances,
-                manageCasts: user.has_permissions.manageCasts,
-                managePieces: user.has_permissions.manageBallets,
-                manageRoles: user.has_permissions.manageRoles,
-                manageRules: user.has_permissions.manageRules,
-                // Other
-                emergencyContactName: user.contact_info.emergency_contact.name,
-                emergencyContactNumber:
-                user.contact_info.emergency_contact.phone_number,
-                isActive: true
-              },
-              {
-                headers: await this.headerUtil.generateHeader(),
-                observe: 'response',
-                withCredentials: true
-              })
-          .toPromise()
-          .catch(errorResp => errorResp)
-          .then(resp => this.respHandler.checkResponse<any>(resp));
+      return lastValueFrom(this.http.patch(
+          environment.backendURL + 'api/user', {
+            id: Number(user.uuid),
+            firstName: user.first_name,
+            middleName: user.middle_name,
+            lastName: user.last_name,
+            suffix: user.suffix,
+            pictureFile: user.picture_file,
+            email: user.contact_info.email,
+            notificationEmail: user.contact_info.notification_email,
+            phoneNumber: user.contact_info.phone_number,
+            dateJoined:
+                moment(user.date_joined).format('MM-DD-YYYY').toString(),
+            // Roles
+            isAdmin: user.has_roles.isAdmin,
+            isChoreographer: user.has_roles.isChoreographer,
+            isDancer: user.has_roles.isDancer,
+            isOther: user.has_roles.isOther,
+            // Permissions
+            canLogin: user.has_permissions.canLogin,
+            canReceiveNotifications:
+            user.has_permissions.canReceiveNotifications,
+            managePerformances: user.has_permissions.managePerformances,
+            manageCasts: user.has_permissions.manageCasts,
+            managePieces: user.has_permissions.manageBallets,
+            manageRoles: user.has_permissions.manageRoles,
+            manageRules: user.has_permissions.manageRules,
+            // Other
+            emergencyContactName: user.contact_info.emergency_contact.name,
+            emergencyContactNumber:
+            user.contact_info.emergency_contact.phone_number,
+            isActive: true
+          },
+          {
+            headers: await this.headerUtil.generateHeader(),
+            observe: 'response',
+            withCredentials: true
+          }))
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
-      return this.http
-          .post(
-              environment.backendURL + 'api/user', {
-                firstName: user.first_name,
-                middleName: user.middle_name,
-                lastName: user.last_name,
-                suffix: user.suffix,
-                pictureFile: user.picture_file,
-                email: user.contact_info.email,
-                notificationEmail: user.contact_info.notification_email,
-                phoneNumber: user.contact_info.phone_number,
-                dateJoined:
-                    moment(user.date_joined).format('MM-DD-YYYY').toString(),
-                // Roles
-                isAdmin: user.has_roles.isAdmin,
-                isChoreographer: user.has_roles.isChoreographer,
-                isDancer: user.has_roles.isDancer,
-                isOther: user.has_roles.isOther,
-                // Permissions
-                canLogin: user.has_permissions.canLogin,
-                canReceiveNotifications:
-                user.has_permissions.canReceiveNotifications,
-                managePerformances: user.has_permissions.managePerformances,
-                manageCasts: user.has_permissions.manageCasts,
-                managePieces: user.has_permissions.manageBallets,
-                manageRoles: user.has_permissions.manageRoles,
-                manageRules: user.has_permissions.manageRules,
-                // Other
-                emergencyContactName: user.contact_info.emergency_contact.name,
-                emergencyContactNumber:
-                user.contact_info.emergency_contact.phone_number,
-                isActive: true
-              },
-              {
-                observe: 'response',
-                headers: await this.headerUtil.generateHeader(),
-                withCredentials: true
-              })
-          .toPromise()
-          .catch(errorResp => errorResp)
-          .then(resp => this.respHandler.checkResponse<any>(resp));
+      return lastValueFrom(this.http.post(
+          environment.backendURL + 'api/user', {
+            firstName: user.first_name,
+            middleName: user.middle_name,
+            lastName: user.last_name,
+            suffix: user.suffix,
+            pictureFile: user.picture_file,
+            email: user.contact_info.email,
+            notificationEmail: user.contact_info.notification_email,
+            phoneNumber: user.contact_info.phone_number,
+            dateJoined:
+                moment(user.date_joined).format('MM-DD-YYYY').toString(),
+            // Roles
+            isAdmin: user.has_roles.isAdmin,
+            isChoreographer: user.has_roles.isChoreographer,
+            isDancer: user.has_roles.isDancer,
+            isOther: user.has_roles.isOther,
+            // Permissions
+            canLogin: user.has_permissions.canLogin,
+            canReceiveNotifications:
+            user.has_permissions.canReceiveNotifications,
+            managePerformances: user.has_permissions.managePerformances,
+            manageCasts: user.has_permissions.manageCasts,
+            managePieces: user.has_permissions.manageBallets,
+            manageRoles: user.has_permissions.manageRoles,
+            manageRules: user.has_permissions.manageRules,
+            // Other
+            emergencyContactName: user.contact_info.emergency_contact.name,
+            emergencyContactNumber:
+            user.contact_info.emergency_contact.phone_number,
+            isActive: true
+          },
+          {
+            observe: 'response',
+            headers: await this.headerUtil.generateHeader(),
+            withCredentials: true
+          }))
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp));
     }
   }
 
@@ -270,13 +266,12 @@ export class UserApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserDelete(user);
     }
-    return this.http.delete(
+    return lastValueFrom(this.http.delete(
         environment.backendURL + 'api/user?userid=' + user.uuid, {
               observe: 'response',
               headers: await this.headerUtil.generateHeader(),
               withCredentials: true
-            })
-        .toPromise()
+            }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
   }

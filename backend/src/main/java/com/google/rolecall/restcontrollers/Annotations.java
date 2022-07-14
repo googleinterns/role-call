@@ -61,7 +61,6 @@ final class Annotations {
   @RestController
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @interface Endpoint {
-
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String value();
   }

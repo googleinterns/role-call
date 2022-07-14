@@ -2,6 +2,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 import {MockCastBackend} from '../mocks/mock_cast_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -129,13 +130,12 @@ export class CastApi {
     }
     await this.pieceAPI.getAllPieces();
     const header = await this.headerUtil.generateHeader();
-    return this.http.get<AllRawCastsResponse>(
+    return lastValueFrom(this.http.get<AllRawCastsResponse>(
         environment.backendURL + 'api/cast', {
-              headers: header,
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<AllRawCastsResponse>(resp))
         .then(result => {
@@ -242,35 +242,37 @@ export class CastApi {
     if (this.hasCast(cast.uuid)) {
       // Do patch
       const header = await this.headerUtil.generateHeader();
-      return this.http.delete(
+      return lastValueFrom(this.http.delete(
           environment.backendURL + 'api/cast?castid=' + cast.uuid, {
-                headers: header,
-                observe: 'response',
-                withCredentials: true
-              })
-          .toPromise()
+            headers: header,
+            observe: 'response',
+            withCredentials: true
+          }))
           .catch(errorResp => errorResp)
           .then(
               resp => this.respHandler.checkResponse<any>(resp))
           .then(async () => {
             const rawCast = this.patchPostPrep(cast);
-            return this.http.post(environment.backendURL + 'api/cast', rawCast,
-                {
+            return lastValueFrom(this.http.post(
+                environment.backendURL + 'api/cast', rawCast, {
                   headers: header,
                   observe: 'response',
                   withCredentials: true
-                }).toPromise().catch(errorResp => errorResp).then(
-                resp => this.respHandler.checkResponse<any>(resp));
+                }))
+                .catch(errorResp => errorResp).then(
+                  resp => this.respHandler.checkResponse<any>(resp));
           });
     } else {
       // Do post
       const rawCast = this.patchPostPrep(cast);
       const header = await this.headerUtil.generateHeader();
-      return this.http.post(environment.backendURL + 'api/cast', rawCast, {
-        headers: header,
-        observe: 'response',
-        withCredentials: true
-      }).toPromise().catch(errorResp => errorResp).then(
+      return lastValueFrom(this.http.post(
+        environment.backendURL + 'api/cast', rawCast, {
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        }))
+        .catch(errorResp => errorResp).then(
           resp => this.respHandler.checkResponse<any>(resp));
     }
   }
@@ -314,13 +316,12 @@ export class CastApi {
       return this.mockBackend.requestCastDelete(cast);
     }
     const header = await this.headerUtil.generateHeader();
-    return this.http.delete(
+    return lastValueFrom(this.http.delete(
         environment.backendURL + 'api/cast?castid=' + cast.uuid, {
-              headers: header,
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
   }

@@ -1,6 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 import {MockDashboardBackend} from '../mocks/mock_dashboard_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -51,13 +52,12 @@ export class DashboardApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllDashboard();
     }
-    return this.http.get<AllDashResponse>(
+    return lastValueFrom(this.http.get<AllDashResponse>(
         environment.backendURL + 'api/dashboard', {
-              headers: await this.headerUtil.generateHeader(),
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+          headers: await this.headerUtil.generateHeader(),
+          observe: 'response',
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<AllDashResponse>(resp))
         .then(val => {

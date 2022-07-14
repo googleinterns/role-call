@@ -2,6 +2,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 import {MockPerformanceBackend} from '../mocks/mock_performance_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -310,13 +311,12 @@ export class PerformanceApi {
       return this.mockBackend.requestAllPerformances();
     }
     const header = await this.headerUtil.generateHeader();
-    return this.http.get<RawAllPerformancesResponse>(
+    return lastValueFrom(this.http.get<RawAllPerformancesResponse>(
         environment.backendURL + 'api/performance', {
-              headers: header,
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+          headers: header,
+          observe: 'response',
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp =>
             this.respHandler.checkResponse<RawAllPerformancesResponse>(
@@ -347,15 +347,14 @@ export class PerformanceApi {
     }
     if (this.performances.has(performance.uuid)) {
       const header = await this.headerUtil.generateHeader();
-      return this.http.patch<HttpResponse<any>>(
+      return lastValueFrom(this.http.patch<HttpResponse<any>>(
           environment.backendURL + 'api/performance',
           this.deletePreviousGroups(this.convertPerformanceToRaw(performance)),
           {
             headers: header,
             observe: 'response',
             withCredentials: true
-          })
-          .toPromise()
+          }))
           .catch(errorResp => errorResp)
           .then(resp => this.respHandler.checkResponse<HttpResponse<any>>(resp))
           .then(val => {
@@ -363,15 +362,14 @@ export class PerformanceApi {
           });
     } else {
       const header = await this.headerUtil.generateHeader();
-      return this.http.post<HttpResponse<any>>(
+      return lastValueFrom(this.http.post<HttpResponse<any>>(
           environment.backendURL + 'api/performance',
           this.convertPerformanceToRaw(performance),
           {
             headers: header,
             observe: 'response',
             withCredentials: true
-          })
-          .toPromise()
+          }))
           .catch(errorResp => errorResp)
           .then(resp => this.respHandler.checkResponse<HttpResponse<any>>(resp))
           .then(val => {
@@ -387,15 +385,14 @@ export class PerformanceApi {
       return this.mockBackend.requestPerformanceDelete(performance);
     }
     const header = await this.headerUtil.generateHeader();
-    return this.http.delete(
+    return lastValueFrom(this.http.delete(
         environment.backendURL + 'api/performance?performanceid='
         + performance.uuid,
         {
           headers: header,
           observe: 'response',
           withCredentials: true
-        })
-        .toPromise()
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
   }

@@ -2,6 +2,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
+import {lastValueFrom} from 'rxjs';
 
 import {MockUnavailabilityBackend} from '../mocks/mock_unavailability_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
@@ -70,19 +71,19 @@ export class UnavailabilityApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUnavailabilites();
     }
-    return this.http.get<AllUnavailabilitiesResponse>(
-        environment.backendURL + 'api/unavailable?startdate=' + (Date.now()
-                                                                 - SixMonthInMS)
-        + '&enddate=' + (Date.now() + SixMonthInMS), {
-              headers: await this.headerUtil.generateHeader(),
-              observe: 'response',
-              withCredentials: true
-            })
-        .toPromise()
+    return lastValueFrom(this.http.get<AllUnavailabilitiesResponse>(
+        environment.backendURL + 'api/unavailable?startdate=' +
+          (Date.now() - SixMonthInMS) +
+          '&enddate=' +
+          (Date.now() + SixMonthInMS), {
+            headers: await this.headerUtil.generateHeader(),
+            observe: 'response',
+            withCredentials: true
+          })
+        )
         .catch(errorResp => errorResp)
         .then(resp =>
-            this.respHandler.checkResponse<AllUnavailabilitiesResponse>(
-                resp));
+          this.respHandler.checkResponse<AllUnavailabilitiesResponse>(resp));
   }
 
   /** Hits backend with one unavailability GET request. */
@@ -103,23 +104,23 @@ export class UnavailabilityApi {
     // If this is an unavailability from the backend, do a PATCH, else do a POST
     if (this.unavailabilities.has(unav.id)) {
       // Do patch
-      return this.http.patch(environment.backendURL + 'api/unavailable', unav, {
+      return lastValueFrom(this.http.patch(
+          environment.backendURL + 'api/unavailable', unav, {
             headers: await this.headerUtil.generateHeader(),
             observe: 'response',
             withCredentials: true
-          })
-          .toPromise()
+          }))
           .catch(errorResp => errorResp)
           .then(resp => this.respHandler.checkResponse<any>(resp));
     } else {
       // Do post
       unav.id = undefined;
-      return this.http.post(environment.backendURL + 'api/unavailable', unav, {
+      return lastValueFrom(this.http.post(
+          environment.backendURL + 'api/unavailable', unav, {
             observe: 'response',
             headers: await this.headerUtil.generateHeader(),
             withCredentials: true
-          })
-          .toPromise()
+          }))
           .catch(errorResp => errorResp)
           .then(resp => this.respHandler.checkResponse<any>(resp));
     }
@@ -131,13 +132,12 @@ export class UnavailabilityApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestUnavailabilityDelete(unav);
     }
-    return this.http.delete(
+    return lastValueFrom(this.http.delete(
         environment.backendURL + 'api/unavailable?unavailableid=' + unav.id, {
-              observe: 'response',
-              headers: await this.headerUtil.generateHeader(),
-              withCredentials: true
-            })
-        .toPromise()
+          observe: 'response',
+          headers: await this.headerUtil.generateHeader(),
+          withCredentials: true
+        }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
   }
