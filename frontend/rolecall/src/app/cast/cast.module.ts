@@ -8,7 +8,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {CommonComponentsModule} from '../common_components/common_components.module';
+import {CommonComponentsModule,
+} from '../common_components/common_components.module';
 import {CastDragAndDrop} from './cast-drag-and-drop.component';
 import {CastEditorV2} from './cast-editor-v2.component';
 

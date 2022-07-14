@@ -12,6 +12,7 @@ import {AppModule} from './app.module';
 describe('App', () => {
   const fakeDashboardApi = {
     dashPerformanceEmitter: of([]),
+    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
     getAllDashboard() {
     }
   } as DashboardApi;

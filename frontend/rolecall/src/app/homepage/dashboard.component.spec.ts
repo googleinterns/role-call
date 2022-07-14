@@ -11,7 +11,8 @@ describe('DashboardComponent', () => {
   beforeEach(waitForAsync(() => {
     const fakeDashboardApi = {
       dashPerformanceEmitter: of([]),
-      getAllDashboard() {
+      // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+      getAllDashboard(): void {
       }
     } as DashboardApi;
 

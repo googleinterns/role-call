@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import {Location} from '@angular/common';
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
@@ -12,20 +14,42 @@ import {User, UserApi} from '../api/user_api.service';
   templateUrl: './user-editor.component.html',
   styleUrls: ['./user-editor.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class UserEditor implements OnInit {
   permissionsSet: EventEmitter<string[]> = new EventEmitter();
   rolesSet: EventEmitter<string[]> = new EventEmitter();
 
   currentSelectedUser: User;
   renderingUsers: User[];
-  private urlPointingUUID: string;
 
-  private prevWorkingState: User | undefined;
-  private workingUser: User | undefined;
+
+  rolesNamesMap = {
+    isAdmin: 'Is Admin',
+    isChoreographer: 'Is Choreographer',
+    isDancer: 'Is Dancer',
+    isOther: 'Is Other',
+  };
+
+  permissionsNamesMap = {
+    canLogin: 'Can Login',
+    canReceiveNotifications: 'Receives Notifications',
+    managePerformances: 'Manages Performances',
+    manageCasts: 'Manages Casts',
+    manageBallets: 'Manages Ballets',
+    manageRoles: 'Manages Roles',
+    manageRules: 'Manages Rules',
+  };
+
   disableSave = true;
   creatingUser = false;
 
   usersLoaded = false;
+
+  private urlPointingUUID: string;
+
+  private prevWorkingState: User | undefined;
+  private workingUser: User | undefined;
+
   private dataLoaded = false;
 
   private lastSelectedUserEmail: string;
@@ -43,7 +67,7 @@ export class UserEditor implements OnInit {
       key: 'last_name',
       type: 'string'
     },
-    'Suffix': {
+    Suffix: {
       key: 'suffix',
       type: 'string'
     },
@@ -51,11 +75,11 @@ export class UserEditor implements OnInit {
       key: 'contact_info.notification_email',
       type: 'string'
     },
-    'Email': {
+    Email: {
       key: 'contact_info.email',
       type: 'string'
     },
-    'Phone': {
+    Phone: {
       key: 'contact_info.phone_number',
       type: 'string'
     },
@@ -67,40 +91,26 @@ export class UserEditor implements OnInit {
       key: 'date_joined',
       type: 'date'
     },
-    'Roles': {
+    Roles: {
       key: 'has_roles',
       type: 'roles'
     },
-    'Permissions': {
+    Permissions: {
       key: 'has_permissions',
       type: 'permissions'
     },
   };
 
-  rolesNamesMap = {
-    isAdmin: 'Is Admin',
-    isChoreographer: 'Is Choreographer',
-    isDancer: 'Is Dancer',
-    isOther: 'Is Other',
-  };
-  permissionsNamesMap = {
-    canLogin: 'Can Login',
-    canReceiveNotifications: 'Receives Notifications',
-    managePerformances: 'Manages Performances',
-    manageCasts: 'Manages Casts',
-    manageBallets: 'Manages Ballets',
-    manageRoles: 'Manages Roles',
-    manageRules: 'Manages Rules',
-  };
-
   private currentDate = Date.now();
 
   constructor(
-      private readonly route: ActivatedRoute,
-      private readonly userAPI: UserApi,
-      private readonly location: Location) {
+    private readonly route: ActivatedRoute,
+    private readonly userAPI: UserApi,
+    private readonly location: Location,
+  ) {
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     const uuid: string = this.route.snapshot.params.uuid;
     if (uuid) {
@@ -112,65 +122,11 @@ export class UserEditor implements OnInit {
     this.userAPI.getAllUsers();
   }
 
-  private onUserLoad(users: User[]) {
-    if (users.length === 0) {
-      this.renderingUsers = [];
-      return;
-    }
-
-    if (this.renderingUsers) {
-      const prevUserUUIDS = new Set(this.renderingUsers.map(user => user.uuid));
-      const newUsers = [];
-      for (const user of users) {
-        if (!prevUserUUIDS.has(user.uuid)) {
-          newUsers.push(user);
-        }
-      }
-
-      if (newUsers.length > 0) {
-        for (const newUser of newUsers) {
-          if (newUser.contact_info.email === this.lastSelectedUserEmail) {
-            this.urlPointingUUID = newUser.uuid;
-          }
-        }
-      }
-    }
-
-    this.renderingUsers = users;
-    this.usersLoaded = true;
-    this.dataLoaded = this.usersLoaded;
-    if (this.dataLoaded) {
-      this.onDataLoaded();
-    }
-  }
-
-  private onDataLoaded() {
-    if (!this.urlPointingUUID) {
-      this.setCurrentUser({user: this.renderingUsers[0]});
-    } else {
-      const foundUser = this.renderingUsers.find(
-          user => user.uuid === this.urlPointingUUID);
-      if (!foundUser) {
-        this.setCurrentUser({
-          user: this.renderingUsers[0],
-          fromInputChange: false,
-          shouldSetLastUser: true
-        });
-      } else {
-        this.setCurrentUser({
-          user: foundUser,
-          fromInputChange: false,
-          shouldSetLastUser: true
-        });
-      }
-    }
-  }
-
-  setCurrentUser({user, fromInputChange, shouldSetLastUser}: {
-    user: User | undefined,
-    fromInputChange?: boolean,
-    shouldSetLastUser?: boolean,
-  }) {
+  setCurrentUser = ({user, fromInputChange, shouldSetLastUser}: {
+    user: User | undefined;
+    fromInputChange?: boolean;
+    shouldSetLastUser?: boolean;
+  }): void => {
     if (shouldSetLastUser) {
       this.lastSelectedUserEmail = user.contact_info.email;
     }
@@ -211,9 +167,9 @@ export class UserEditor implements OnInit {
     }
     this.urlPointingUUID = user.uuid;
     this.renderingUsers.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
-  }
+  };
 
-  addUser() {
+  addUser = (): void => {
     if (this.creatingUser) {
       return;
     }
@@ -259,9 +215,9 @@ export class UserEditor implements OnInit {
     this.renderingUsers.push(newUser);
     this.workingUser = newUser;
     this.setCurrentUser({user: this.workingUser});
-  }
+  };
 
-  deleteUser() {
+  deleteUser = (): void => {
     this.prevWorkingState = undefined;
     this.renderingUsers = this.renderingUsers.filter(
         user => user.uuid !== this.currentSelectedUser.uuid);
@@ -269,13 +225,14 @@ export class UserEditor implements OnInit {
     if (!this.creatingUser) {
       this.userAPI.deleteUser(this.currentSelectedUser);
     }
+    if (this.renderingUsers.length > 0) {
+      this.setCurrentUser({user: this.renderingUsers[0]});
+    } else {
+      this.setCurrentUser({user: undefined});
+    }
+  };
 
-    this.renderingUsers.length > 0 ?
-        this.setCurrentUser({user: this.renderingUsers[0]}) :
-        this.setCurrentUser({user: undefined});
-  }
-
-  saveUser() {
+  saveUser = (): void => {
     this.lastSelectedUserEmail = this.workingUser.contact_info.email;
 
     this.userAPI.setUser(this.workingUser).then(async result => {
@@ -294,40 +251,30 @@ export class UserEditor implements OnInit {
         }
       }
     });
-  }
-  
-  getCurrentDate(): number {
-    return this.currentDate;
-  }
+  };
 
-  getAllRoles(): string[] {
-    return Object.keys(this.rolesNamesMap);
-  }
+  getCurrentDate = (): number =>
+    this.currentDate;
 
-  private getSelectedRoles(user: User): string[] {
-    if (!user) {
-      return [];
-    }
 
-    return Object.entries(user.has_roles)
-        .filter(([, selected]) => selected)
-        .map(([role]) => role);
-  }
+  getAllRoles = (): string[] =>
+    Object.keys(this.rolesNamesMap);
 
-  getAllPermissions(): string[] {
-    return Object.keys(this.permissionsNamesMap);
-  }
 
-  getSelectedPermissions(user: User): string[] {
+  getAllPermissions = (): string[] =>
+    Object.keys(this.permissionsNamesMap);
+
+
+  getSelectedPermissions = (user: User): string[] => {
     if (!user) {
       return [];
     }
     return Object.entries(user.has_permissions)
         .filter(([, selected]) => selected)
         .map(([permission]) => permission);
-  }
+  };
 
-  onInputChange(change: [string, any]) {
+  onInputChange = (change: [string, any]): void => {
     const valueName = change[0];
     const value = change[1];
 
@@ -341,9 +288,75 @@ export class UserEditor implements OnInit {
     if (this.workingUser) {
       this.setWorkingPropertyByKey(valueName, value);
     }
-  }
+  };
 
-  private setWorkingPropertyByKey(key: string, val: any) {
+  // Private methods
+
+  private onUserLoad = (users: User[]): void => {
+    if (users.length === 0) {
+      this.renderingUsers = [];
+      return;
+    }
+
+    if (this.renderingUsers) {
+      const prevUserUUIDS = new Set(this.renderingUsers.map(user => user.uuid));
+      const newUsers = [];
+      for (const user of users) {
+        if (!prevUserUUIDS.has(user.uuid)) {
+          newUsers.push(user);
+        }
+      }
+
+      if (newUsers.length > 0) {
+        for (const newUser of newUsers) {
+          if (newUser.contact_info.email === this.lastSelectedUserEmail) {
+            this.urlPointingUUID = newUser.uuid;
+          }
+        }
+      }
+    }
+
+    this.renderingUsers = users;
+    this.usersLoaded = true;
+    this.dataLoaded = this.usersLoaded;
+    if (this.dataLoaded) {
+      this.onDataLoaded();
+    }
+  };
+
+  private onDataLoaded = (): void => {
+    if (!this.urlPointingUUID) {
+      this.setCurrentUser({user: this.renderingUsers[0]});
+    } else {
+      const foundUser = this.renderingUsers.find(
+          user => user.uuid === this.urlPointingUUID);
+      if (!foundUser) {
+        this.setCurrentUser({
+          user: this.renderingUsers[0],
+          fromInputChange: false,
+          shouldSetLastUser: true
+        });
+      } else {
+        this.setCurrentUser({
+          user: foundUser,
+          fromInputChange: false,
+          shouldSetLastUser: true
+        });
+      }
+    }
+  };
+
+  private getSelectedRoles = (user: User): string[] => {
+    if (!user) {
+      return [];
+    }
+
+    return Object.entries(user.has_roles)
+        .filter(([, selected]) => selected)
+        .map(([role]) => role);
+  };
+
+  private setWorkingPropertyByKey = (key: string, val: any): void => {
     const info = this.nameToPropertyMap[key];
     const splits = info.key.split('.');
     let objInQuestion = this.workingUser;
@@ -389,5 +402,6 @@ export class UserEditor implements OnInit {
       this.disableSave = false;
     }
     objInQuestion[splits[splits.length - 1]] = val;
-  }
+  };
+
 }

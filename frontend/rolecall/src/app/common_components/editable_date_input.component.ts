@@ -1,10 +1,12 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-date-input',
   templateUrl: './editable_date_input.component.html',
   styleUrls: ['./editable_date_input.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class EditableDateInput implements OnInit, OnChanges {
 
   @Input() valueName: string;
@@ -13,19 +15,21 @@ export class EditableDateInput implements OnInit, OnChanges {
   @Output() valueChange: EventEmitter<[string, string]> = new EventEmitter();
   currentValue: Date;
 
-  ngOnInit() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnInit(): void {
     this.currentValue = new Date(this.initValue);
   }
 
-  ngOnChanges() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnChanges(): void {
     this.currentValue = new Date(this.initValue);
   }
 
-  update() {
+  update = (): void => {
     this.currentValue = new Date(this.initValue);
-  }
+  };
 
-  onDateChange(event: any) {
+  onDateChange = (event: any): void => {
     this.valueChange.emit([this.valueName, event]);
-  }
+  };
 }

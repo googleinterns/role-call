@@ -2,7 +2,8 @@ import {HttpClient} from '@angular/common/http';
 
 import {LoggingService} from '../services/logging.service';
 import {HeaderUtilityService} from '../services/header-utility.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
 
 import {DashboardApi} from './dashboard_api.service';
 

@@ -1,11 +1,12 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 
 import {MockUserBackend} from '../mocks/mock_user_backend';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
 
-import {UserApi} from './user_api.service';
+import {AllUsersResponse, OneUserResponse, UserApi} from './user_api.service';
 
 describe('UserApi', () => {
   const fakeHttpClient = {} as HttpClient;
@@ -19,26 +20,27 @@ describe('UserApi', () => {
       imports: [
         RouterTestingModule,
       ],
-      providers: [
-        {provide: HttpClient, useValue: fakeHttpClient},
-        {
+      providers: [{
+          provide: HttpClient,
+          useValue: fakeHttpClient,
+        }, {
           provide: ResponseStatusHandlerService,
-          useValue: fakeResponseStatusHandlerService
+          useValue: fakeResponseStatusHandlerService,
         },
-      ]
+      ],
     });
     service = TestBed.inject(UserApi);
     mockBackend = new MockUserBackend();
     service.mockBackend = mockBackend;
-    service.requestAllUsers = (() => {
-      return mockBackend.requestAllUsers();
-    });
-    service.requestOneUser = (uuid => {
-      return mockBackend.requestOneUser(uuid);
-    });
-    service.requestUserSet = (user => {
-      return mockBackend.requestUserSet(user);
-    });
+    service.requestAllUsers = ((): Promise<AllUsersResponse> =>
+      mockBackend.requestAllUsers()
+    );
+    service.requestOneUser = ((uuid): Promise<OneUserResponse> =>
+      mockBackend.requestOneUser(uuid)
+    );
+    service.requestUserSet = ((user): Promise<HttpResponse<any>> =>
+      mockBackend.requestUserSet(user)
+    );
   });
 
   it('should be created', () => {

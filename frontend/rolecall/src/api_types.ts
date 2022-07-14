@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 export enum PerformanceStatus {
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED',

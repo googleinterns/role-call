@@ -10,5 +10,6 @@ import {Component} from '@angular/core';
   templateUrl: './homepage_base.component.html',
   styleUrls: ['./homepage_base.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class HomepageBase {
 }

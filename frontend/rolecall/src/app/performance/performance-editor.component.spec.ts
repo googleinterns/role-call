@@ -11,7 +11,8 @@ import {PerformanceApi} from '../api/performance-api.service';
 import {UserApi} from '../api/user_api.service';
 import {PieceApi} from '../api/piece_api.service';
 import {CastApi} from '../api/cast_api.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
 
 import {PerformanceEditor} from './performance-editor.component';
 import {PerformanceModule} from './performance.module';

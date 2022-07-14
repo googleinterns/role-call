@@ -6,7 +6,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
-import {CommonComponentsModule} from '../common_components/common_components.module';
+import {CommonComponentsModule,
+} from '../common_components/common_components.module';
 import {PieceEditor} from './piece_editor.component';
 
 

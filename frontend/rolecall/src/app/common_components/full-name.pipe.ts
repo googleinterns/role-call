@@ -6,14 +6,14 @@ import {User} from '../api/user_api.service';
 })
 export class FullNamePipe implements PipeTransform {
 
-  public transform(user: User|undefined|null): string {
+  public transform = (user: User|undefined|null): string => {
     if (!user) {
-      return "";
+      return '';
     }
-    let fullName = user.first_name ? user.first_name + " ": "";
-    fullName += user.middle_name ? user.middle_name + " " : "";
-    fullName += user.last_name ? user.last_name : "";
-    fullName += user.suffix ? user.suffix : "";
+    let fullName = user.first_name ? user.first_name + ' ': '';
+    fullName += user.middle_name ? user.middle_name + ' ' : '';
+    fullName += user.last_name ? user.last_name : '';
+    fullName += user.suffix ? user.suffix : '';
     return fullName;
-  }
+  };
 }

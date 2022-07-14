@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 /** A mocked GAPI instance for simulating OAuth2 sign-in. */
 export class MockGAPI {
   /** The time at which the GAPI was created */
@@ -9,14 +11,14 @@ export class MockGAPI {
   /** A mocked GAPI user object */
   testUser = {
     Ea: '115743193108649754154',
-    getAuthResponse: () => {
-      return this.testUser.wc;
-    },
-    reloadAuthResponse: () => {
+    getAuthResponse: (): any =>
+      this.testUser.wc,
+    reloadAuthResponse: (): any => {
       this.moment = Date.now();
       this.testUser.wc = {
         token_type: 'Bearer',
         access_token: 'access_token',
+        // eslint-disable-next-line max-len
         scope: 'email profile https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
         login_hint: 'login_hint',
         expires_in: this.expiresTime,
@@ -33,6 +35,7 @@ export class MockGAPI {
     wc: {
       token_type: 'Bearer',
       access_token: 'access_token',
+      // eslint-disable-next-line max-len
       scope: 'email profile https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
       login_hint: 'login_hint',
       expires_in: this.expiresTime,
@@ -49,25 +52,21 @@ export class MockGAPI {
       Cd: 'TestFirst TestLast',
       nW: 'TestFirst',
       nU: 'TestLast',
+      // eslint-disable-next-line max-len
       PK: 'https://lh5.googleusercontent.com/-Pum6kbwXqbM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckIUxE4zd7UrOeWGKpPHNsCYG9fXQ/s96-c/photo.jpg',
       yu: this.testEmail
     },
-    getBasicProfile: () => {
-      return {
-        getEmail: () => {
-          return this.testUser.Ot.yu;
-        },
-        getImageUrl: () => {
-          return this.testUser.Ot.PK;
-        },
-        getGivenName: () => {
-          return this.testUser.Ot.nW;
-        },
-        getFamilyName: () => {
-          return this.testUser.Ot.nU;
-        }
-      };
-    }
+    getBasicProfile: (): any => ({
+        getEmail: (): string =>
+          this.testUser.Ot.yu,
+        getImageUrl: (): string =>
+          this.testUser.Ot.PK,
+        getGivenName: (): string =>
+          this.testUser.Ot.nW,
+        getFamilyName: (): string =>
+          this.testUser.Ot.nU,
+      }
+    )
   };
 
   /** Whether or not the mock GAPI is signed in */
@@ -76,11 +75,10 @@ export class MockGAPI {
   shouldThrowSignInError = false;
 
   /** Returns a mocked GAPI object, complete with mocked OAuth2 object */
-  mock() {
-    return {
+  mock = (): any => ({
       auth2: {
-        init: () => {
-          return Promise.resolve({
+        init: () =>
+          Promise.resolve({
             signIn: () => {
               if (this.shouldThrowSignInError) {
                 return Promise.reject('Reason');
@@ -89,9 +87,8 @@ export class MockGAPI {
               return Promise.resolve(this.testUser);
             },
             isSignedIn: {
-              get: () => {
-                return this.isSignedInVal;
-              },
+              get: () =>
+                this.isSignedInVal,
               listen: () => {
               }
             },
@@ -109,12 +106,12 @@ export class MockGAPI {
             signOut: () => {
               this.isSignedInVal = false;
             }
-          });
-        }
+          })
       },
-      load: (_, callback: Function) => {
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      load: (_, callback: Function): void => {
         callback();
       },
-    };
-  }
+    }
+  );
 }
