@@ -4,7 +4,8 @@ import {of} from 'rxjs';
 import {createSpyObjWithProps} from 'src/test_utils';
 import {Location} from '@angular/common';
 
-import {EmptyStringIfUndefinedPipe} from '../common_components/empty_string_if_undefined.pipe';
+import {EmptyStringIfUndefinedPipe,
+} from '../common_components/empty_string_if_undefined.pipe';
 import {UserApi} from '../api/user_api.service';
 
 import {UserEditor} from './user-editor.component';

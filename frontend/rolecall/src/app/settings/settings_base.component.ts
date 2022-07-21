@@ -11,5 +11,6 @@ import {Component} from '@angular/core';
   templateUrl: './settings_base.component.html',
   styleUrls: ['./settings_base.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class SettingsBase {
 }

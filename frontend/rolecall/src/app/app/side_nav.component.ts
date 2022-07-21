@@ -30,6 +30,7 @@ import {NavBarChild} from 'src/types';
     ])
   ]
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class SideNav {
   /**
    * The static sidenav data from src/constants.ts to use
@@ -41,12 +42,13 @@ export class SideNav {
   isNavOpen = false;
 
   /** Opens the navigation sidebar. */
-  openNav(): void {
+  openNav = (): void => {
     this.isNavOpen = true;
-  }
+  };
 
   /** Closes the navigation sidebar. */
-  closeNav(): void {
+  closeNav = (): void => {
     this.isNavOpen = false;
-  }
+  };
+
 }

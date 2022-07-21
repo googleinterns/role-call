@@ -99,7 +99,7 @@
       </div>
 
       <div
-          *ngIf="currentSelectedPiece && (currentSelectedPiece.type == 'BALLET' || currentSelectedPiece.type == 'SUPER')"
+          *ngIf="currentSelectedPiece && (currentSelectedPiece.type === 'BALLET' || currentSelectedPiece.type === 'SUPER')"
           class="app-card positions-card">
         <div
             cdkDropList
@@ -108,7 +108,7 @@
             id="position-pool">
           <div *ngIf="currentSelectedPiece">
             <div *ngFor="let data of dragAndDropData; let i = index">
-              <div *ngIf="data.type == 'added'; else addingAndEditingPosition">
+              <div *ngIf="data.type === 'added'; else addingAndEditingPosition">
                 <div
                     cdkDrag
                     class="position-container">
@@ -205,7 +205,7 @@
         </div>
       </div>
       <div
-          [class.button-container-no-positions]="currentSelectedPiece && currentSelectedPiece.type == 'SEGMENT'"
+          [class.button-container-no-positions]="currentSelectedPiece && currentSelectedPiece.type === 'SEGMENT'"
           class="button-container">
         <div class="button-wrapper">
           <button

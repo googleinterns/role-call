@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import * as moment from 'moment';
@@ -8,7 +10,8 @@ import {lastValueFrom} from 'rxjs';
 import {MockUserBackend} from '../mocks/mock_user_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
 
 export type User = {
   uuid: APITypes.UserUUID;
@@ -29,8 +32,8 @@ export type User = {
       name: string | undefined;
       phone_number: string | undefined;
       email: string | undefined;
-    }
-  }
+    };
+  };
 };
 
 interface RawUser {
@@ -62,22 +65,22 @@ interface RawUser {
 }
 
 type RawAllUsersResponse = {
-  data: RawUser[],
-  warnings: string[]
+  data: RawUser[];
+  warnings: string[];
 };
 
 export type AllUsersResponse = {
   data: {
-    users: User[]
-  },
-  warnings: string[]
+    users: User[];
+  };
+  warnings: string[];
 };
 
 export type OneUserResponse = {
   data: {
-    user: User
-  },
-  warnings: string[]
+    user: User;
+  };
+  warnings: string[];
 };
 
 /**
@@ -103,7 +106,7 @@ export class UserApi {
   }
 
   /** Hits backend with all users GET request. */
-  async requestAllUsers(): Promise<AllUsersResponse> {
+  requestAllUsers = async (): Promise<AllUsersResponse> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllUsers();
     }
@@ -115,11 +118,9 @@ export class UserApi {
             }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<RawAllUsersResponse>(resp))
-        .then(rawAllUsersResponse => {
-          return {
+        .then(rawAllUsersResponse => ({
             data: {
-              users: rawAllUsersResponse.data.map(rawUser => {
-                return {
+              users: rawAllUsersResponse.data.map(rawUser => ({
                   uuid: String(rawUser.id),
                   has_roles: {
                     isAdmin: rawUser.isAdmin,
@@ -154,24 +155,26 @@ export class UserApi {
                       email: 'N/A'
                     }
                   }
-                };
-              })
+                })
+              )
             },
             warnings: rawAllUsersResponse.warnings
-          };
-        });
-  }
+          })
+        );
+  };
 
   /** Hits backend with one user GET request. */
-  requestOneUser(uuid: APITypes.UserUUID): Promise<OneUserResponse> {
+  requestOneUser = async (
+    uuid: APITypes.UserUUID,
+  ): Promise<OneUserResponse> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestOneUser(uuid);
     }
     return this.mockBackend.requestOneUser(uuid);
-  }
+  };
 
   /** Hits backend with create/edit user POST request. */
-  async requestUserSet(user: User): Promise<HttpResponse<any>> {
+  requestUserSet = async (user: User): Promise<HttpResponse<any>> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserSet(user);
     }
@@ -259,10 +262,10 @@ export class UserApi {
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
     }
-  }
+  };
 
   /** Hits backend with delete user POST request. */
-  async requestUserDelete(user: User): Promise<HttpResponse<any>> {
+  requestUserDelete = async (user: User): Promise<HttpResponse<any>> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestUserDelete(user);
     }
@@ -274,113 +277,128 @@ export class UserApi {
             }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<any>(resp));
-  }
-
-  /** Takes backend response, updates data structures for all users. */
-  private getAllUsersResponse(): Promise<AllUsersResponse> {
-    return this.requestAllUsers().then(val => {
-      // Update the users map
-      this.users.clear();
-      for (const user of val.data.users) {
-        this.users.set(user.uuid, user);
-      }
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-  }
-
-  /** Takes backend response, updates data structure for one user. */
-  private getOneUserResponse(uuid: APITypes.UserUUID):
-      Promise<OneUserResponse> {
-    return this.requestOneUser(uuid).then(val => {
-      // Update user in map
-      this.users.set(val.data.user.uuid, val.data.user);
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-  }
-
-  /** Sends backend request and awaits response. */
-  private setUserResponse(user: User): Promise<HttpResponse<any>> {
-    return this.requestUserSet(user);
-  }
-
-  /** Sends backend request and awaits response. */
-  private deleteUserResponse(user: User): Promise<HttpResponse<any>> {
-    return this.requestUserDelete(user);
-  }
+  };
 
   /** Gets all the users from the backend and returns them. */
-  getAllUsers(): Promise<User[]> {
-    return this.getAllUsersResponse().then(val => {
-          this.userEmitter.emit(Array.from(this.users.values()));
-          return val;
-        })
-        .then(val => val.data.users)
-        .catch(() => []);
-  }
+  getAllUsers = async (): Promise<User[]> =>
+    this.getAllUsersResponse().then(val => {
+        this.userEmitter.emit(Array.from(this.users.values()));
+        return val;
+      })
+      .then(val => val.data.users)
+      .catch(() => []);
+
 
   /** Gets a specific user from the backend by UUID and returns it. */
-  getUser(uuid: APITypes.UserUUID): Promise<User> {
-    return this.getOneUserResponse(uuid).then(val => {
-          this.userEmitter.emit(Array.from(this.users.values()));
-          return val;
-        })
-        .then(val => val.data.user);
-  }
+  getUser = async (
+    uuid: APITypes.UserUUID,
+  ): Promise<User> =>
+    this.getOneUserResponse(uuid).then(val => {
+        this.userEmitter.emit(Array.from(this.users.values()));
+        return val;
+      })
+      .then(val => val.data.user);
+
 
   /**
    * Requests an update to the backend which may or may not be successful,
    * depending on whether or not the user is valid, as well as if the backend
    * request fails for some other reason.
    */
-  setUser(user: User): Promise<APITypes.SuccessIndicator> {
-    return this.setUserResponse(user).then(() => {
-          this.getAllUsers();
-          return {
-            successful: true
-          };
+  setUser = async (
+    user: User,
+  ): Promise<APITypes.SuccessIndicator> =>
+    this.setUserResponse(user).then(() => {
+        this.getAllUsers();
+        return {
+          successful: true
+        };
+      })
+      .catch(reason =>
+        Promise.resolve({
+          successful: false,
+          error: reason
         })
-        .catch(reason => {
-          return Promise.resolve({
-            successful: false,
-            error: reason
-          });
-        });
-  }
+      );
+
 
   /** Requests for the backend to delete the user. */
-  deleteUser(user: User): Promise<APITypes.SuccessIndicator> {
-    return this.deleteUserResponse(user).then(() => {
-          this.getAllUsers();
-          return {
-            successful: true
-          };
+  deleteUser = async (
+    user: User,
+  ): Promise<APITypes.SuccessIndicator> =>
+    this.deleteUserResponse(user).then(() => {
+        this.getAllUsers();
+        return {
+          successful: true
+        };
+      })
+      .catch(reason => ({
+          successful: false,
+          error: reason
         })
-        .catch(reason => {
-          return {
-            successful: false,
-            error: reason
-          };
-        });
-  }
+      );
+
 
   /**
    * Determines if the user object provided is valid for storage in the
    * database.
    */
-  public isValidUser(user: User): boolean {
-    return !!user
-           && !!user.uuid
-           && !!user.contact_info.email
-           && !!user.first_name
-           && !!user.last_name
-           && !!user.has_permissions;
-  }
+  public isValidUser = (user: User): boolean =>
+    !!user
+      && !!user.uuid
+      && !!user.contact_info.email
+      && !!user.first_name
+      && !!user.last_name
+      && !!user.has_permissions;
+
+
+  // Private methods
+
+  /** Takes backend response, updates data structures for all users. */
+  private getAllUsersResponse = async (
+    ): Promise<AllUsersResponse> =>
+      this.requestAllUsers().then(val => {
+        // Update the users map
+        this.users.clear();
+        for (const user of val.data.users) {
+          this.users.set(user.uuid, user);
+        }
+        // Log any warnings
+        for (const warning of val.warnings) {
+          this.loggingService.logWarn(warning);
+        }
+        return val;
+      });
+
+
+    /** Takes backend response, updates data structure for one user. */
+    private getOneUserResponse = async (
+      uuid: APITypes.UserUUID,
+    ): Promise<OneUserResponse> =>
+      this.requestOneUser(uuid).then(val => {
+        // Update user in map
+        this.users.set(val.data.user.uuid, val.data.user);
+        // Log any warnings
+        for (const warning of val.warnings) {
+          this.loggingService.logWarn(warning);
+        }
+        return val;
+      });
+
+
+    /** Sends backend request and awaits response. */
+    private setUserResponse = async (
+      user: User,
+    ): Promise<HttpResponse<any>> =>
+      this.requestUserSet(user);
+
+
+    /** Sends backend request and awaits response. */
+    private deleteUserResponse = async (
+      user: User,
+    ): Promise<HttpResponse<any>> =>
+      this.requestUserDelete(user);
+
+
+
 }

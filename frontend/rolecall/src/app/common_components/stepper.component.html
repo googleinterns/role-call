@@ -11,13 +11,13 @@
           <div class="circle-name-pair">
             <div class="circle-line-container">
               <div class="line-container">
-                <div class="line" [ngStyle]="i == 0 ? { background: 'none' } : {}"></div>
+                <div class="line" [ngStyle]="i === 0 ? { background: 'none' } : {}"></div>
               </div>
-              <h2 [ngClass]="i == currentStepIndex ? 'selected-circle' : 'circle'">{{i + 1}}</h2>
+              <h2 [ngClass]="i === currentStepIndex ? 'selected-circle' : 'circle'">{{i + 1}}</h2>
               <div class="line-container">
                 <div
                     class="line"
-                    [ngStyle]="i == stepperOptions.length - 1 ? { background: 'none' } : {}"></div>
+                    [ngStyle]="i === stepperOptions.length - 1 ? { background: 'none' } : {}"></div>
               </div>
             </div>
             <h3 class="step-name">{{ option }}</h3>

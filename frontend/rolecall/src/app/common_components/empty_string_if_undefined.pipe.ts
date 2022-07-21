@@ -5,11 +5,11 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class EmptyStringIfUndefinedPipe implements PipeTransform {
 
-  public transform(value: unknown): unknown {
+  public transform = (value: unknown): unknown => {
     if (!value) {
       return '';
     } else {
       return value;
     }
-  }
+  };
 }

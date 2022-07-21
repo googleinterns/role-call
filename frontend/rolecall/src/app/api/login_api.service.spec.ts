@@ -1,16 +1,18 @@
+/* eslint-disable max-len */
+
 import {HttpClient} from '@angular/common/http';
 import {NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {MockGAPI} from '../mocks/mock_gapi';
-//import {LoggingService} from '../services/logging.service';
+// import {LoggingService} from '../services/logging.service';
 
 import {LoginApi} from './login_api.service';
 import {of} from 'rxjs';
 
 describe('LoginApi', () => {
   let mockZone: jasmine.SpyObj<NgZone>;
-  //let mockLoggingService: jasmine.SpyObj<LoggingService>;
+  // let mockLoggingService: jasmine.SpyObj<LoggingService>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockHttpClient: jasmine.SpyObj<HttpClient>;
   let mockObj = new MockGAPI();

@@ -5,7 +5,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class NumberToPlacePipe implements PipeTransform {
 
-  public transform(value: number): string {
+  public transform = (value: number): string => {
     let end;
     if (String(value).endsWith('1')) {
       end = 'st';
@@ -17,5 +17,6 @@ export class NumberToPlacePipe implements PipeTransform {
       end = 'th';
     }
     return value + end;
-  }
+  };
+
 }

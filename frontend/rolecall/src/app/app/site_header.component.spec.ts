@@ -37,7 +37,7 @@ describe('SiteHeader', () => {
     });
     mockLoginApi.login.and.callFake(async () => {
       mockLoginApi.isLoggedIn = true;
-      //return Promise.resolve({} as LoginResponse);
+      // return Promise.resolve({} as LoginResponse);
     });
     mockLoginApi.signOut.and.callFake(async () => {
       mockLoginApi.isLoggedIn = false;
@@ -70,7 +70,7 @@ describe('SiteHeader', () => {
       router.initialNavigation();
     });
     // @ts-ignore
-    window['gapi'] = new MockGAPI().mock();
+    window.gapi = new MockGAPI().mock();
   });
 
   // it('should create', () => {
