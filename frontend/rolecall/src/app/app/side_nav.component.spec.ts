@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
 import {BrowserModule} from '@angular/platform-browser';
 import {Router} from '@angular/router';
@@ -15,16 +15,16 @@ describe('SideNav', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-          declarations: [SideNav],
-          imports: [
-            RouterTestingModule,
-            BrowserModule,
-            AppRoutingModule,
-            MatIconModule,
-            NoopAnimationsModule,
-          ]
-        })
-        .compileComponents();
+        declarations: [SideNav],
+        imports: [
+          RouterTestingModule,
+          BrowserModule,
+          AppRoutingModule,
+          MatIconModule,
+          NoopAnimationsModule,
+        ]
+      })
+      .compileComponents();
 
     router = TestBed.inject(Router);
     fixture = TestBed.createComponent(SideNav);
@@ -49,7 +49,7 @@ describe('SideNav', () => {
     expect(component.isNavOpen).toBeFalse();
   });
 
-  it('should navigate to panel pages', fakeAsync(() => {
-    // TODO: Click on each item and check that it navigates to the right place.
-  }));
+  // it('should navigate to panel pages', fakeAsync(() => {
+  //   // TODO: Click on each item and check that it navigates to the right place.
+  // }));
 });

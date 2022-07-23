@@ -1,4 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {FormsModule} from "@angular/forms";
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+
 import {of} from 'rxjs';
 import {createSpyObjWithProps} from 'src/test_utils';
 
@@ -24,7 +33,18 @@ describe('UnavailabilityEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [UnavailabilityEditor],
+          declarations: [
+            UnavailabilityEditor,
+          ],
+          imports: [
+            FormsModule,
+            MatFormFieldModule,
+            MatInputModule,
+            MatSelectModule,
+            MatDatepickerModule,
+            MatNativeDateModule,
+            NoopAnimationsModule,
+          ],
           providers: [
             {provide: UnavailabilityApi, useValue: mockUnavailabilityApi},
             {provide: UserApi, useValue: mockUserApi},

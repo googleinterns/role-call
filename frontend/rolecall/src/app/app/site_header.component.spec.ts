@@ -9,7 +9,7 @@ import {createSpyObjWithProps} from 'src/test_utils';
 import {Subject} from 'rxjs';
 
 import {MockGAPI} from '../mocks/mock_gapi';
-import {LoginApi} from '../api/login_api.service';
+import {LoginApi, LoginResponse} from '../api/login_api.service';
 
 import {AppRoutingModule} from './app_routing.module';
 import {SideNav} from './side_nav.component';
@@ -28,7 +28,7 @@ describe('SiteHeader', () => {
     mockLoginApi = createSpyObjWithProps<LoginApi>({
       baseName: 'mockLoginApi',
       methods: {
-        login: Promise.resolve(),
+        login: Promise.resolve({} as LoginResponse),
         signOut: Promise.resolve(),
       },
       props: {
@@ -37,7 +37,7 @@ describe('SiteHeader', () => {
     });
     mockLoginApi.login.and.callFake(async () => {
       mockLoginApi.isLoggedIn = true;
-      // return Promise.resolve({} as LoginResponse);
+      return Promise.resolve({} as LoginResponse);
     });
     mockLoginApi.signOut.and.callFake(async () => {
       mockLoginApi.isLoggedIn = false;

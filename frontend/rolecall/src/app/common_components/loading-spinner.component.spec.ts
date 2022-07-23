@@ -1,4 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import {LoadingSpinnerComponent} from './loading-spinner.component';
 
@@ -8,7 +11,13 @@ describe('LoadingSpinnerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [LoadingSpinnerComponent]
+          declarations: [
+            LoadingSpinnerComponent,
+          ],
+          imports: [
+            MatFormFieldModule,
+            NoopAnimationsModule,
+          ]
         })
         .compileComponents();
   }));

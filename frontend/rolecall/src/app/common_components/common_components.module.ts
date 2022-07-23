@@ -8,6 +8,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+
 import {EditableDateInput} from './editable_date_input.component';
 import {EditableMultiSelectInput} from './editable_multiselect_input.component';
 import {EditableTextInput} from './editable_text_input.component';
@@ -19,9 +20,16 @@ import {Stepper} from './stepper.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
-  declarations: [EditableTextInput, EditableDateInput, EditableMultiSelectInput,
-    EmptyStringIfUndefinedPipe, FullNamePipe, NumberToPlacePipe, Stepper,
-    LoadingSpinnerComponent],
+  declarations: [
+    EditableTextInput,
+    EditableDateInput,
+    EditableMultiSelectInput,
+    EmptyStringIfUndefinedPipe,
+    FullNamePipe,
+    NumberToPlacePipe,
+    Stepper,
+    LoadingSpinnerComponent,
+  ],
   imports: [
     CommonModule,
     MatInputModule,
@@ -32,11 +40,18 @@ import {ClickOutsideModule} from 'ng-click-outside';
     FormsModule,
     MatAutocompleteModule,
     MatIconModule,
-    ClickOutsideModule
+    ClickOutsideModule,
   ],
-  exports: [EditableTextInput, EditableDateInput, EditableMultiSelectInput,
-    EmptyStringIfUndefinedPipe, FullNamePipe, NumberToPlacePipe, Stepper,
-    LoadingSpinnerComponent]
+  exports: [
+    EditableTextInput,
+    EditableDateInput,
+    EditableMultiSelectInput,
+    EmptyStringIfUndefinedPipe,
+    FullNamePipe,
+    NumberToPlacePipe,
+    Stepper,
+    LoadingSpinnerComponent,
+  ]
 })
 export class CommonComponentsModule {
 }

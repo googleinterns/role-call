@@ -3,12 +3,13 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, lastValueFrom, timer,
+} from 'rxjs';
 import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+
 
 export type LoginResponse = {
-  isSignedIn: boolean;
+  isLoggedIn: boolean;
   user: google.accounts.id.Credential;
 };
 
@@ -17,13 +18,19 @@ export type LoginResponse = {
 export class LoginApi {
   /** Whether the user has been loaded already. */
   isLoggedIn = false;
-  isLoggedIn$;
+  isLoggedIn$: Observable<boolean>;
 
   /** The current user. */
   user: google.accounts.id.Credential;
 
   /** If the google OAuth2 api is loaded. */
   isAuthLoaded = false;
+  isAuthLoaded$: Observable<boolean>;
+
+  /** Startup timer */
+  seconds = timer(1000, 1000);
+  ticks: Subscription;
+
 
   /** Google login button */
   loginBtn?: HTMLElement;
@@ -41,6 +48,7 @@ export class LoginApi {
   familyName: string;
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn);
+  private isAuthLoadedSubject = new BehaviorSubject<boolean>(this.isLoggedIn);
 
   constructor(
     private ngZone: NgZone,
@@ -48,34 +56,57 @@ export class LoginApi {
     private router: Router,
   ) {
     this.isLoggedIn$ = this.isLoggedInSubject.asObservable();
+    this.isAuthLoaded$ = this.isAuthLoadedSubject.asObservable();
+
+    this.ticks = this.seconds.subscribe(() => this.loginWrapper());
+
+    // this code guarantees that the login button is shown
+    this.isAuthLoaded$.subscribe((isAuthLoaded: boolean) => {
+      if (isAuthLoaded) {
+        this.showLoginButton();
+      }
+      this.refresh();
+    });
   }
 
   /** Initialize OAuth2. */
-  public initGoogleAuth = async (): Promise<void> =>
-    new Promise(resolve => {
-      google.accounts.id.initialize({
-        client_id: environment.oauthClientID,
-        auto_select: true,
-        cancel_on_tap_outside: false,
-        callback: (res) => {
-          this.isAuthLoaded = true;
-          this.user = JSON.parse(atob(res.credential.split('.')[1]));
-          resolve();
-          this.getLoginResponse(true, this.user);
-        },
-      });
-      this.showLoginButton();
-      google.accounts.id.prompt((notif) => {
-        console.log(notif);
-      });
+  public async initGoogleAuth(): Promise<void> {
+    return new Promise(resolve => {
+      if (typeof google === 'object' && typeof google.accounts === 'object') {
+        google.accounts.id.initialize({
+          client_id: environment.oauthClientID,
+          auto_select: true,
+          cancel_on_tap_outside: false,
+          callback: (res) => {
+            this.user = JSON.parse(atob(res.credential.split('.')[1]));
+            resolve();
+            this.saveLoginParams(true, this.user);
+          },
+        });
+        this.isAuthLoaded = true;
+        google.accounts.id.prompt((/* notif */) => {
+          // console.log(notif);
+        });        
+      }
     });
-
+  }
 
   /** Determine whether or not login is needed and return. */
-  public login = async (): Promise<void> => {
-    if (!this.isAuthLoaded) {
-      await this.initGoogleAuth();
+  public login = async (): Promise<LoginResponse> => {
+    let resp: LoginResponse = { isLoggedIn: false, user: undefined };
+    if (environment.mockBackend) {
+      this.isAuthLoaded = true;
+      this.isLoggedIn = true;
+      resp.isLoggedIn = this.isLoggedIn;
+      resp.user = this.user;
+    } else {
+      if (!this.isAuthLoaded) {
+        await this.initGoogleAuth();
+        resp.isLoggedIn = this.isLoggedIn;
+        resp.user = this.user;
+      }
     }
+    return resp;
   };
 
   public updateSigninStatus = (isLoggedIn: boolean): void => {
@@ -124,6 +155,7 @@ export class LoginApi {
           google.accounts.id.disableAutoSelect();
         }
         this.isLoggedIn = false;
+        this.user = undefined;
         this.loginPromise = new Promise(res => {
           this.resolveLogin = res;
         });
@@ -143,23 +175,33 @@ export class LoginApi {
   };
 
   /** Display google login button */
-  public showLoginButton = (): void => {
-    if (this.loginBtn) {
+  public showLoginButton = async (): Promise<void> => {
+    if (this.loginBtn && this.isAuthLoaded) {
       google.accounts.id.renderButton(this.loginBtn, {
         type: 'standard',
         size: 'large',
         theme: 'outline',
-      });
+      });  
     }
-  };
+  }
 
   // Private methods
 
+  /** Calls login. If login successfule, ends login loop */
+  private loginWrapper = (
+  ): void => {
+    this.login();
+    if (this.isAuthLoaded) {
+      this.ticks.unsubscribe();
+    }
+    // console.log('Login Delay', time);
+  }
+
   /** Constructs a login response and updates appropriate state. */
-  private getLoginResponse = (
+  private saveLoginParams = (
     isLoggedIn: boolean,
     user: google.accounts.id.Credential,
-  ): LoginResponse => {
+  ): void => {
     let resolveLogin = false;
     if (!this.isLoggedIn && isLoggedIn) {
       resolveLogin = true;
@@ -177,10 +219,6 @@ export class LoginApi {
       }
     }
     this.updateSigninStatus(isLoggedIn);
-    return {
-      isSignedIn: isLoggedIn,
-      user: this.user
-    };
   };
 
 }

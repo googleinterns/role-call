@@ -1,4 +1,8 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 import {of} from 'rxjs';
 
 import {DashboardApi} from '../api/dashboard_api.service';
@@ -7,6 +11,19 @@ import {Dashboard} from './dashboard.component';
 
 describe('DashboardComponent', () => {
   let component: Dashboard;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+        declarations: [
+          Dashboard,
+        ],
+        imports: [
+          MatFormFieldModule,
+          NoopAnimationsModule,
+        ]
+      })
+      .compileComponents();
+    }));
 
   beforeEach(waitForAsync(() => {
     const fakeDashboardApi = {

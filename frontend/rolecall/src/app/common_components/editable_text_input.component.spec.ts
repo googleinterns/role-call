@@ -1,5 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import {EditableTextInput} from './editable_text_input.component';
 import {CommonComponentsModule} from './common_components.module';
@@ -10,8 +12,11 @@ describe('EditableTextInput', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [EditableTextInput],
+          declarations: [
+            EditableTextInput,
+          ],
           imports: [
+            MatFormFieldModule,
             CommonComponentsModule,
             NoopAnimationsModule,
           ]
