@@ -1,4 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {of} from 'rxjs';
@@ -33,8 +37,11 @@ describe('PieceEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-        declarations: [PieceEditor],
+        declarations: [
+          PieceEditor],
         imports: [
+          MatFormFieldModule,
+          NoopAnimationsModule,
           PieceModule,
         ],
         providers: [

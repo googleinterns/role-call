@@ -1,4 +1,7 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
+
+import {MatSelectModule} from '@angular/material/select';
+
 import {RouterTestingModule} from '@angular/router/testing';
 import {FakePage} from 'src/test_utils';
 
@@ -13,8 +16,11 @@ describe('WelcomePageComponent', () => {
     const fakeLoginApi = {loginPromise: Promise.resolve()} as LoginApi;
 
     TestBed.configureTestingModule({
-          declarations: [WelcomePage],
+          declarations: [
+            WelcomePage,
+          ],
           imports: [
+            MatSelectModule,
             RouterTestingModule.withRoutes([
               {path: `dashboard`, component: FakePage},
             ]),

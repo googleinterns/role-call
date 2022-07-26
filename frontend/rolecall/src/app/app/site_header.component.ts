@@ -30,8 +30,6 @@ export class SiteHeader implements OnInit, AfterViewInit {
     this.loginAPI.login().then(() => {
       this.configureHeaderForLogin();
     });
-  console.log('LOGIN_API', this.loginAPI);
-  console.log('IS_LOGGENDIN', this.loginAPI.isLoggedIn$);
     this.loginAPI.isLoggedIn$.subscribe((isLoggedIn: boolean | undefined) => {
       if (!isLoggedIn) {
         this.loginAPI.signOut();
@@ -44,7 +42,6 @@ export class SiteHeader implements OnInit, AfterViewInit {
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngAfterViewInit(): void {
     this.loginAPI.loginBtn = document.getElementById('gsi_btn');
-    this.loginAPI.showLoginButton();
   }
 
   /**

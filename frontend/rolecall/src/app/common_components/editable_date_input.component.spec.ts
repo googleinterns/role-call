@@ -1,4 +1,11 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {FormsModule} from "@angular/forms";
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 import {EditableDateInput} from './editable_date_input.component';
 
 
@@ -8,7 +15,17 @@ describe('EditableDateInput', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [EditableDateInput]
+          declarations: [
+            EditableDateInput,
+          ],
+          imports: [
+            FormsModule,
+            MatDatepickerModule,
+            MatFormFieldModule,
+            MatInputModule,
+            MatNativeDateModule,
+            NoopAnimationsModule,
+          ]
         })
         .compileComponents();
   }));

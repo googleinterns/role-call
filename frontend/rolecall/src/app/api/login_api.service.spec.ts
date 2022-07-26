@@ -1,11 +1,16 @@
 /* eslint-disable max-len */
 
+import {TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 import {HttpClient} from '@angular/common/http';
 import {NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {MockGAPI} from '../mocks/mock_gapi';
 // import {LoggingService} from '../services/logging.service';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import {LoginApi} from './login_api.service';
 import {of} from 'rxjs';
@@ -19,44 +24,59 @@ describe('LoginApi', () => {
   let mockGAPI = mockObj.mock();
   let service: LoginApi;
 
+  console.log(mockZone);
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+        declarations: [
+          LoginApi,
+        ],
+        imports: [
+          MatFormFieldModule,
+          NoopAnimationsModule,
+        ]
+      })
+      .compileComponents();
+    }));
+
   beforeEach(() => {
     const successResponse = {status: 200};
     mockHttpClient =
         jasmine.createSpyObj('mockHttpClient', {get: of(successResponse)});
     mockRouter = jasmine.createSpyObj('mockRouter', ['navigateByUrl']);
-    mockZone =
-        jasmine.createSpyObj('mockZone', ['xx']);
+    mockZone = jasmine.createSpyObj('mockZone', ['xx']);
 
     service = new LoginApi(mockZone, mockHttpClient, mockRouter);
     mockObj = new MockGAPI();
     mockGAPI = mockObj.mock();
-    // @ts-ignore
-    window.gapi = mockGAPI;
+    // // @ts-ignore
+    // window.gapi = mockGAPI;
+    console.log(service, mockObj, mockGAPI);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  // it('should be created', () => {
+  //   expect(service).toBeTruthy();
+  // });
 
   // it('should login', async () => {
   //   service.login();
-  //   //const loginResp = await loginRespProm;
+  //   // const loginRespProm = service.login();
+  //   // const loginResp = await loginRespProm;
 
-  //   //expect(loginResp.authenticated).toBeTrue();
+  //   // expect(loginResp.isLoggedIn).toBeTrue();
   //   expect(service.isAuthLoaded).toBeTrue();
   //   expect(service.isLoggedIn).toBeTrue();
   // });
 
-  // it('should login successfully without popup enabled if signed in',
-  //     async () => {
-  //       mockObj.isSignedInVal = true;
-  //       //const loginRespProm = service.login();
-  //       //const loginResp = await loginRespProm;
+  // it('should login successfully', async () => {
+  //   mockObj.isSignedInVal = true;
+  //   const loginRespProm = service.login();
+  //   const loginResp = await loginRespProm;
 
-  //       //expect(loginResp.authenticated).toBeTrue();
-  //       expect(service.isAuthLoaded).toBeTrue();
-  //       expect(service.isLoggedIn).toBeTrue();
-  //     });
+  //   expect(loginResp.isLoggedIn).toBeTrue();
+  //   expect(service.isAuthLoaded).toBeTrue();
+  //   expect(service.isLoggedIn).toBeTrue();
+  // });
 
   // it('should login automatically with popup enabled if signed in', async () => {
   //   mockObj.isSignedInVal = true;
