@@ -11,6 +11,7 @@ import {SideNav} from './side_nav.component';
   templateUrl: './site_header.component.html',
   styleUrls: ['./site_header.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class SiteHeader implements OnInit, AfterViewInit {
 
   /** Reference to the nav bar */
@@ -24,11 +25,12 @@ export class SiteHeader implements OnInit, AfterViewInit {
   ) {
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     this.loginAPI.login().then(() => {
       this.configureHeaderForLogin();
     });
-    this.loginAPI.isLoggedIn$.subscribe(isLoggedIn => {
+    this.loginAPI.isLoggedIn$.subscribe((isLoggedIn: boolean | undefined) => {
       if (!isLoggedIn) {
         this.loginAPI.signOut();
       }
@@ -37,27 +39,34 @@ export class SiteHeader implements OnInit, AfterViewInit {
     });
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngAfterViewInit(): void {
     this.loginAPI.loginBtn = document.getElementById('gsi_btn');
-    this.loginAPI.showLoginButton();
   }
 
   /**
    * Toggles the open state of the nav side bar
    * when the menu button is clicked
    */
-  onNavButtonClick(): void {
-    this.navBar.isNavOpen ? this.navBar.closeNav() : this.navBar.openNav();
-  }
+  onNavButtonClick = (): void => {
+    if (this.navBar.isNavOpen) {
+      this.navBar.closeNav();
+    } else {
+      this.navBar.openNav();
+    }
+  };
 
   /** Sign out of google OAuth2 */
-  onSignOut() {
+  onSignOut = (): void => {
     this.loginAPI.signOut();
     this.configureHeaderForLogin();
-  }
+  };
+
+  // Private methods
 
   /** Set state and render page header depending on login state */
-  private configureHeaderForLogin() {
+  private configureHeaderForLogin = (): void => {
     this.responseReceived = true;
-  }
+  };
+
 }

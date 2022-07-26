@@ -10,13 +10,13 @@ export class MockDashboardBackend {
   mockDashPerformanceDB: DashPerformance[] = [];
 
   /** Mocks backend response */
-  requestAllDashboard(): Promise<AllDashResponse> {
-    return Promise.resolve({
+  requestAllDashboard = (): Promise<AllDashResponse> =>
+    Promise.resolve({
       data: {
         performances: this.mockDashPerformanceDB
       },
       warnings: []
     });
-  }
+
 
 }

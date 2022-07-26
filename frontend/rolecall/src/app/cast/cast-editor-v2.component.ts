@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import {Location} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
@@ -7,8 +9,10 @@ import {CAST_COUNT} from 'src/constants';
 import {Cast, CastApi} from '../api/cast_api.service';
 import {Piece, PieceApi} from '../api/piece_api.service';
 import {CastDragAndDrop} from './cast-drag-and-drop.component';
-import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
-import {SegmentDisplayListService} from '../services/segment-display-list.service';
+import {SuperBalletDisplayService,
+} from '../services/super-ballet-display.service';
+import {SegmentDisplayListService,
+} from '../services/segment-display-list.service';
 
 
 @Component({
@@ -16,24 +20,26 @@ import {SegmentDisplayListService} from '../services/segment-display-list.servic
   templateUrl: './cast-editor-v2.component.html',
   styleUrls: ['./cast-editor-v2.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class CastEditorV2 implements OnInit {
+
+  @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
   selectedCast: Cast;
   selectedPiece: Piece;
   urlUUID: APITypes.CastUUID;
   allCasts: Cast[] = [];
   selectedPieceCasts: Cast[] = [];
-  expandedCode: number = 0;
+  expandedCode= 0;
 
   lastSelectedCastIndex: number;
   lastSelectedCast: Cast;
   dataLoaded = false;
   piecesLoaded = false;
   castsLoaded = false;
-  @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
   private allPieces: Piece[] = [];
- 
+
   constructor(
       private castAPI: CastApi,
       private pieceAPI: PieceApi,
@@ -43,7 +49,8 @@ export class CastEditorV2 implements OnInit {
       public leftList: SegmentDisplayListService,
   ) { }
 
-  ngOnInit() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnInit(): void {
     const uuid = this.route.snapshot.params.uuid;
     if (uuid) {
       this.urlUUID = uuid;
@@ -58,30 +65,92 @@ export class CastEditorV2 implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
-  private checkDataLoaded(): boolean {
+  // Select from screen
+  selectSegment = (pieceIndex: number): void => {
+    // add extra screen logic here
+    this.selectPiece(pieceIndex);
+  };
+
+  selectPiece = (pieceIndex: number): void => {
+    this.setPiece(this.leftList.topLevelSegments[pieceIndex]);
+  };
+
+  onEditCast = (cast: Cast): void => {
+    this.lastSelectedCast = cast;
+  };
+
+  setCurrentCast = ({cast, index}: {
+    cast: Cast | undefined;
+    index?: number;
+  }): void => {
+    if (index === undefined && cast) {
+      index = this.selectedPieceCasts.findIndex(
+          findCast => cast.uuid === findCast.uuid);
+    }
+    if (index >= 0) {
+      this.lastSelectedCastIndex = index;
+    } else {
+      this.lastSelectedCastIndex = undefined;
+    }
+    this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
+    this.selectedCast = cast;
+    this.dragAndDrop.selectCast({uuid: cast ? cast.uuid : undefined});
+    this.urlUUID = cast ? cast.uuid : '';
+    this.setCastURL();
+  };
+
+  addCast = async (): Promise<void> => {
+    const newCast: Cast = {
+      uuid: 'cast:' + Date.now(),
+      name: 'New Cast',
+      segment: this.selectedPiece.uuid,
+      castCount: CAST_COUNT,
+      filled_positions: this.selectedPiece.positions.map(pos => ({
+          position_uuid: pos.uuid,
+          groups: [{
+            group_index: 0,
+            members: []
+          }],
+        }),
+      )
+    };
+    this.allCasts.push(newCast);
+    this.selectedPieceCasts.push(newCast);
+    await this.castAPI.setCast(newCast, true);
+    this.setCurrentCast({cast: newCast});
+    await this.castAPI.getAllCasts();
+  };
+
+  toggleExpanded = (): void => {
+    this.expandedCode += (this.expandedCode === 2) ? -2 : 1;
+  };
+
+  toggleOpen = (index: number): void => {
+    const superBallet = this.leftList.topLevelSegments[index];
+    if (superBallet.type === 'SUPER') {
+      superBallet.isOpen = !superBallet.isOpen;
+      this.superBalletDisplay.setOpenState(
+          superBallet.uuid, superBallet.isOpen);
+    }
+    this.buildLeftList();
+  };
+
+  // Private functions
+
+  private checkDataLoaded = (): boolean => {
     this.dataLoaded = this.piecesLoaded && this.castsLoaded;
     return this.dataLoaded;
-  }
+  };
 
-  private updateFilteredCasts() {
+  private updateFilteredCasts = (): void => {
     if (this.selectedPiece) {
       this.selectedPieceCasts = this.allCasts.filter(
           cast => cast.segment === this.selectedPiece.uuid);
       this.selectedPieceCasts.sort((a, b) => a.name < b.name ? -1 : 1);
     }
-  }
+  };
 
-  // Select from screen
-  selectSegment(pieceIndex: number) {
-    // add extra screen logic here
-    this.selectPiece(pieceIndex);
-  }
-
-  selectPiece(pieceIndex: number) {
-    this.setPiece(this.leftList.topLevelSegments[pieceIndex]);
-  }
-
-  private setPiece(piece: Piece) {
+  private setPiece = (piece: Piece): void => {
     if (this.selectedPiece && piece.uuid === this.selectedPiece.uuid) {
       return;
     }
@@ -94,9 +163,9 @@ export class CastEditorV2 implements OnInit {
     if (autoSelectFirst) {
       this.setCurrentCast({cast: this.selectedPieceCasts[0]});
     }
-  }
+  };
 
-  private checkForUrlCompliance() {
+  private checkForUrlCompliance = (): void => {
     if (this.selectedPiece) {
       this.updateFilteredCasts();
     }
@@ -116,7 +185,7 @@ export class CastEditorV2 implements OnInit {
         this.setCurrentCast({cast: this.selectedPieceCasts[0]});
       }
     }
-  }
+  };
 
   private starTest = (segment: Piece): boolean => {
     if (segment.type !== 'BALLET') {
@@ -125,13 +194,13 @@ export class CastEditorV2 implements OnInit {
     const existingCasts = this.allCasts.filter(
       cast => cast.segment === segment.uuid);
     return existingCasts.length === 0;
-  }
+  };
 
-  private buildLeftList() {
+  private buildLeftList = (): void => {
     this.leftList.buildDisplayList(this.allPieces, this.starTest);
-  }
+  };
 
-  private onPieceLoad(pieces: Piece[]) {
+  private onPieceLoad = (pieces: Piece[]): void => {
     this.allPieces = pieces.filter(piece => piece.type !== 'SEGMENT');
     this.buildLeftList();
     if (!this.selectedPiece && this.allPieces.length > 0) {
@@ -140,9 +209,9 @@ export class CastEditorV2 implements OnInit {
     this.checkForUrlCompliance();
     this.piecesLoaded = true;
     this.checkDataLoaded();
-  }
+  };
 
-  private onCastLoad(casts: Cast[]) {
+  private onCastLoad = (casts: Cast[]): void => {
     if (this.castAPI.hasCast(this.urlUUID)) {
       this.dragAndDrop.selectCast({uuid: this.urlUUID});
       this.setCastURL();
@@ -191,73 +260,13 @@ export class CastEditorV2 implements OnInit {
     this.checkForUrlCompliance();
     this.castsLoaded = true;
     this.checkDataLoaded();
-  }
+  };
 
-  private setCastURL() {
+  private setCastURL = (): void => {
     if (this.location.path().startsWith('/cast') ||
         this.location.path().startsWith('/cast/')) {
       this.location.replaceState('/cast/' + this.urlUUID);
     }
-  }
+  };
 
-  onEditCast(cast: Cast) {
-    this.lastSelectedCast = cast;
-  }
-
-  setCurrentCast({cast, index}: {
-    cast: Cast | undefined,
-    index?: number,
-  }) {
-    if (index === undefined && cast) {
-      index = this.selectedPieceCasts.findIndex(
-          findCast => cast.uuid === findCast.uuid);
-    }
-    if (index >= 0) {
-      this.lastSelectedCastIndex = index;
-    } else {
-      this.lastSelectedCastIndex = undefined;
-    }
-    this.lastSelectedCast = cast ? cast : this.lastSelectedCast;
-    this.selectedCast = cast;
-    this.dragAndDrop.selectCast({uuid: cast ? cast.uuid : undefined});
-    this.urlUUID = cast ? cast.uuid : '';
-    this.setCastURL();
-  }
-
-  async addCast() {
-    const newCast: Cast = {
-      uuid: 'cast:' + Date.now(),
-      name: 'New Cast',
-      segment: this.selectedPiece.uuid,
-      castCount: CAST_COUNT,
-      filled_positions: this.selectedPiece.positions.map(pos => {
-        return {
-          position_uuid: pos.uuid,
-          groups: [{
-            group_index: 0,
-            members: []
-          }],
-        };
-      })
-    };
-    this.allCasts.push(newCast);
-    this.selectedPieceCasts.push(newCast);
-    await this.castAPI.setCast(newCast, true);
-    this.setCurrentCast({cast: newCast});
-    await this.castAPI.getAllCasts();
-  }
-
-  toggleExpanded() {
-    this.expandedCode += (this.expandedCode == 2) ? -2 : 1;
-  }
-
-  toggleOpen(index: number) {
-    const superBallet = this.leftList.topLevelSegments[index];
-    if (superBallet.type === 'SUPER') {
-      superBallet.isOpen = !superBallet.isOpen;
-      this.superBalletDisplay.setOpenState(
-          superBallet.uuid, superBallet.isOpen);
-    }
-    this.buildLeftList();
-  }
 }

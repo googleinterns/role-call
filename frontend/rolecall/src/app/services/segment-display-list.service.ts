@@ -13,7 +13,7 @@ export type DisplayItem = {
   siblingId: number;
   type: PieceType;
   isOpen: boolean;
-  uuid: string
+  uuid: string;
 };
 
 @Injectable({providedIn: 'root'})
@@ -25,8 +25,10 @@ export class SegmentDisplayListService {
     private superBalletDisplay: SuperBalletDisplayService,
   ) { }
 
-  public buildDisplayList(allSegments: Piece[],
-        starTest: (segment: Piece) => boolean): void {
+  public buildDisplayList = (
+    allSegments: Piece[],
+    starTest: (segment: Piece) => boolean,
+  ): void => {
     // Remove Super Ballet children
     this.topLevelSegments = allSegments.filter(segment => !segment.siblingId);
     this.topLevelSegments.sort((a, b) => a.name < b.name ? -1 : 1);
@@ -49,13 +51,13 @@ export class SegmentDisplayListService {
     this.visibleItems = this.topLevelSegments.map(
         (displayPiece, displayPieceIndex) =>
             this.buildDisplayItem(displayPiece, displayPieceIndex, starTest));
-  }
+  };
 
-  private buildDisplayItem(
+  private buildDisplayItem = (
       segment: Piece,
       segmentIndex: number,
       starTest: (segment: Piece) => boolean,
-  ): DisplayItem {
+  ): DisplayItem => {
     const name = starTest(segment) ? '*' + segment.name : segment.name;
     return {
       name,
@@ -65,5 +67,5 @@ export class SegmentDisplayListService {
       isOpen: segment.isOpen,
       uuid: segment.uuid,
     } as DisplayItem;
-  }
+  };
 }

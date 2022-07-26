@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import {Injectable} from '@angular/core';
 import {saveAs} from 'file-saver-es';
 import {Cast} from '../api/cast_api.service';
@@ -11,15 +13,15 @@ export class CsvGenerator {
   constructor(private userAPI: UserApi, private pieceAPI: PieceApi) {
   }
 
-  async generateCSVFromCast(cast: Cast) {
+  generateCSVFromCast = async (cast: Cast): Promise<void> => {
     await this.userAPI.getAllUsers();
     await this.pieceAPI.getAllPieces();
     const headers = ['Cast Name', 'Piece', 'Position', 'Cast Number',
       'Dancer Number',
       'Dancer First', 'Dancer Last'];
-    const objs: any[][][] = cast.filled_positions.map(filledPos => {
-      return filledPos.groups.map(g => {
-        return g.members.sort(
+    const objs: any[][][] = cast.filled_positions.map(filledPos =>
+      filledPos.groups.map(g =>
+        g.members.sort(
             (a, b) => a.position_number < b.position_number ? -1 : 1).map(m => {
           const piece = this.pieceAPI.pieces.get(cast.segment);
           const position = piece.positions.find(
@@ -27,16 +29,16 @@ export class CsvGenerator {
           const dancer = this.userAPI.users.get(m.uuid);
           return {
             'Cast Name': cast.name,
-            'Piece': piece.name,
-            'Position': position.name,
+            Piece: piece.name,
+            Position: position.name,
             'Cast Number': g.group_index + 1,
             'Dancer Number': m.position_number + 1,
             'Dancer First': dancer.first_name,
             'Dancer Last': dancer.last_name
           };
-        });
-      });
-    });
+        })
+      )
+    );
     const allVals = [];
     for (const iObjs of objs) {
       for (const nObjs of iObjs) {
@@ -49,19 +51,19 @@ export class CsvGenerator {
         allVals.sort((a, b) => a['Cast Number'] < b['Cast Number'] ? -1 : 1),
         headers,
         cast.name + ' Cast');
-  }
+  };
 
-  async generateCSVFromPerformance(perf: Performance) {
+  generateCSVFromPerformance = async (perf: Performance): Promise<void> => {
     await this.userAPI.getAllUsers();
     await this.pieceAPI.getAllPieces();
     const headers = ['Performance', 'Ballet', 'Length', 'Position',
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
-    const objs: any[][][][] = perf.step_3.segments.filter(
-        s => this.pieceAPI.pieces.get(s.segment).type === 'BALLET').map(seg => {
-      return seg.custom_groups.map(filledPos => {
-        return filledPos.groups.map(g => {
-          return g.members.sort(
+    const objs: any[][][][] = perf.step_3.segments.filter(s =>
+      this.pieceAPI.pieces.get(s.segment).type === 'BALLET').map(seg =>
+        seg.custom_groups.map(filledPos =>
+          filledPos.groups.map(g =>
+            g.members.sort(
               (a, b) => a.position_number < b.position_number ? -1 : 1)
               .map(m => {
                 const piece = this.pieceAPI.pieces.get(seg.segment);
@@ -69,20 +71,20 @@ export class CsvGenerator {
                     pos => pos.uuid === filledPos.position_uuid);
                 const dancer = this.userAPI.users.get(m.uuid);
                 return {
-                  'Performance': perf.step_1.title,
-                  'Ballet': piece.name,
-                  'Length': seg.length,
-                  'Position': position.name,
+                  Performance: perf.step_1.title,
+                  Ballet: piece.name,
+                  Length: seg.length,
+                  Position: position.name,
                   'Selected Cast': seg.selected_group + 1,
                   'Cast Number': g.group_index + 1,
                   'Dancer Number': m.position_number + 1,
                   'Dancer First': dancer.first_name,
                   'Dancer Last': dancer.last_name
                 };
-              });
-        });
-      });
-    });
+              })
+        )
+      )
+    );
     const allVals = [];
     for (const iObjs of objs) {
       for (const nObjs of iObjs) {
@@ -95,18 +97,18 @@ export class CsvGenerator {
     }
     this.downloadFile(
         allVals.sort((a, b) => a['Cast Number'] < b['Cast Number'] ? -1 : 1)
-            .sort((a, b) => a['Ballet'] < b['Ballet'] ? -1 : 1),
+            .sort((a, b) => a.Ballet < b.Ballet ? -1 : 1),
         headers,
         perf.step_1.city + ', ' + perf.step_1.state + ' ' + perf.step_1.country
         + ' - ' + perf.step_1.venue + ' - ' +
         (new Date(perf.step_1.date)).toLocaleDateString().replace(/\//g, '-')
         + ' - ' +
         perf.step_1.title + ' Performance Casting');
-  }
+  };
 
-  downloadFile(data: any, headers: string[], fileName: string) {
-    const replacer = (_, value) => (value === null || value === undefined) ?
-        '' : value;
+  downloadFile = (data: any, headers: string[], fileName: string): void => {
+    const replacer = (_, value): string =>
+      (value === null || value === undefined) ? '' : value;
     const csv = data.map(row => headers.map(
         fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
     csv.unshift(headers.join(','));
@@ -114,5 +116,5 @@ export class CsvGenerator {
 
     const blob = new Blob([csvArray], {type: 'text/csv'});
     saveAs(blob, fileName + '.csv');
-  }
+  };
 }

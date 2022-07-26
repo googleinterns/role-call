@@ -10,6 +10,7 @@ export class LoadingSpinnerComponent implements OnInit {
   constructor() {
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
   }
 

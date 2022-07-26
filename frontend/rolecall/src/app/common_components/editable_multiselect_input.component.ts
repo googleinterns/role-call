@@ -5,6 +5,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   templateUrl: './editable_multiselect_input.component.html',
   styleUrls: ['./editable_multiselect_input.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class EditableMultiSelectInput implements OnInit {
 
   @Input() valueName: string;
@@ -15,17 +16,18 @@ export class EditableMultiSelectInput implements OnInit {
   @Output() valueChange: EventEmitter<[string, string[]]> = new EventEmitter();
   currentlySelected: string[] = [];
 
-  ngOnInit() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnInit(): void {
     this.setValues.subscribe(val => {
       this.update(val);
     });
   }
 
-  update(values: string[]) {
+  update = (values: string[]): void => {
     this.currentlySelected = values;
-  }
+  };
 
-  onChangeSelection(selectedString: string, event: any) {
+  onChangeSelection = (selectedString: string, event: any): void => {
     if (!event.isUserInput) {
       return;
     }
@@ -36,5 +38,5 @@ export class EditableMultiSelectInput implements OnInit {
       this.valueChange.emit([this.valueName,
         this.currentlySelected.filter(val => val !== selectedString)]);
     }
-  }
+  };
 }

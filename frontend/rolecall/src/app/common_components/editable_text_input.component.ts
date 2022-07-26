@@ -5,6 +5,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   templateUrl: './editable_text_input.component.html',
   styleUrls: ['./editable_text_input.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class EditableTextInput implements OnInit {
 
   @Input() initValue: string;
@@ -16,11 +17,12 @@ export class EditableTextInput implements OnInit {
   @Output() valueChange: EventEmitter<[string, string]> = new EventEmitter();
   currentValue: string;
 
-  ngOnInit() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnInit(): void {
     this.currentValue = this.initValue;
   }
 
-  onValueChange(event: any) {
+  onValueChange = (event: any): void => {
     this.valueChange.emit([this.valueName, event]);
-  }
+  };
 }

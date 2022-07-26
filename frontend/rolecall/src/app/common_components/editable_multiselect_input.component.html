@@ -1,7 +1,7 @@
 <div class="app-card">
   <mat-form-field appearance="fill" class="input-margins fit-form">
     <mat-label>{{valueName}}</mat-label>
-    <mat-select multiple [(ngModel)]="currentlySelected">
+    <mat-select multiple ngDefaultControl [(ngModel)]="currentlySelected">
       <mat-option
           *ngFor="let item of selectFrom"
           [value]="item"

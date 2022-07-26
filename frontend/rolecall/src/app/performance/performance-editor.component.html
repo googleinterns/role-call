@@ -3,7 +3,7 @@
   <div *ngIf="performanceSelected; else selectPerformanceView">
     <app-stepper
         #stepper
-        [ngStyle]="stepper.currentStepIndex == 3 && submitted ? { 'display': 'none' } : {}"
+        [ngStyle]="stepper.currentStepIndex === 3 && submitted ? { 'display': 'none' } : {}"
         [stepperOptions]="stepperOpts"
         (stepChange)="onStepChange()"></app-stepper>
 
@@ -25,7 +25,7 @@
     </div>
 
     <div class="button-overall-container">
-      <ng-container *ngIf="stepper.currentStepIndex != 3; else finalButtons">
+      <ng-container *ngIf="stepper.currentStepIndex !== 3; else finalButtons">
         <button
             mat-flat-button
             class="button"
@@ -104,7 +104,7 @@
             <div class="child-container">
               <div
                   *ngFor="let perf of publishedPerfs" class="child app-card"
-                  [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
+                  [ngClass]="this.selectedPerformance && perf.uuid === this.selectedPerformance.uuid ? 'child-selected' : ''"
                   (click)="onSelectRecentPerformance(perf)">
                 <h3 class="performance-title">
                   {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
@@ -133,7 +133,7 @@
             <div class="child-container">
               <div
                   *ngFor="let perf of draftPerfs" class="child app-card"
-                  [ngClass]="this.selectedPerformance && perf.uuid == this.selectedPerformance.uuid ? 'child-selected' : ''"
+                  [ngClass]="this.selectedPerformance && perf.uuid === this.selectedPerformance.uuid ? 'child-selected' : ''"
                   (click)="onSelectRecentPerformance(perf)">
                 <h3 class="performance-title">
                   {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
@@ -179,7 +179,7 @@
           aria-label="Cancel Performance"
           class="button"
           (click)="onCancelPerformance()">
-        {{ selectedPerformance ? (selectedPerformance.status == "PUBLISHED" ? "cancel" : "delete")
+        {{ selectedPerformance ? (selectedPerformance.status === "PUBLISHED" ? "cancel" : "delete")
           : "cancel" }}
       </button>
     </div>
@@ -280,7 +280,7 @@
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                        *ngIf="group.group_index == segment.selected_group"
+                        *ngIf="group.group_index === segment.selected_group"
                         class="dancer-list">
                       <p class="names">
                         {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
@@ -377,7 +377,7 @@
             <div
                 *ngFor="let segment of step2Data; let i = index"
                 class="child app-card"
-                [class.child-selected]="segment.uuid == this.selectedSegment.uuid && selectedIndex == i"
+                [class.child-selected]="segment.uuid === this.selectedSegment.uuid && selectedIndex === i"
                 [style.margin-left.rem]="segment.siblingId > 0 ? 2 : 0"
                 (click)="onSelectStep3Segment(segment, i)">
               <h3 class="segment-title">{{ segment.name }}</h3>
@@ -388,15 +388,15 @@
     </div>
     <div class="right-card-container">
       <div
-          *ngIf="selectedSegment != undefined"
+          *ngIf="selectedSegment !== undefined"
           class="app-card right-card">
         <div class="toolbar-drag-and-drop-container">
           <div
               class="cast-tool-container"
-              [class.cast-tool-container-solo]="selectedSegment.type == 'SEGMENT'">
+              [class.cast-tool-container-solo]="selectedSegment.type === 'SEGMENT'">
             <mat-form-field
                 appearance="fill" class="tool"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
+                [ngStyle]="selectedSegment.type === 'SEGMENT' || selectedSegment.type === 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Dancing Cast</mat-label>
               <mat-select
                   [(value)]="this.primaryGroupNum"
@@ -411,7 +411,7 @@
             <mat-form-field
                 class="tool"
                 appearance="fill"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
+                [ngStyle]="selectedSegment.type === 'SEGMENT' || selectedSegment.type === 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
               <mat-label>Autofill Cast</mat-label>
               <mat-select>
                 <mat-option
@@ -425,7 +425,7 @@
             <mat-form-field
                 class="tool"
                 appearance="fill"
-                [class.tool-solo]="selectedSegment.type == 'SEGMENT'">
+                [class.tool-solo]="selectedSegment.type === 'SEGMENT'">
               <mat-label>Length (min)</mat-label>
               <input
                   matInput
@@ -437,7 +437,7 @@
             <app-cast-drag-and-drop
                 #castDnD
                 (castChangeEmitter)="onChangeCast($event)"
-                [ngStyle]="selectedSegment.type == 'SEGMENT' || selectedSegment.type == 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
+                [ngStyle]="selectedSegment.type === 'SEGMENT' || selectedSegment.type === 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }">
             </app-cast-drag-and-drop>
           </div>
         </div>
@@ -487,7 +487,7 @@
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                        *ngIf="group.group_index == segment.selected_group"
+                        *ngIf="group.group_index === segment.selected_group"
                         class="dancer-list">
                       <p class="names">
                         {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
@@ -518,7 +518,7 @@
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                        *ngIf="group.group_index == segment.selected_group"
+                        *ngIf="group.group_index === segment.selected_group"
                         class="dancer-list">
                       <p class="names">{{group['memberNames'].join(", ")}}</p>
                     </div>

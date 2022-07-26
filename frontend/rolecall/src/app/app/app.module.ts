@@ -9,10 +9,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CastRoutingModule} from '../cast/cast-routing.module';
 import {LoginModule} from '../login/login.module';
-import {PerformanceRoutingModule} from '../performance/performance-routing.module';
+import {PerformanceRoutingModule,
+} from '../performance/performance-routing.module';
 import {PieceRoutingModule} from '../piece/piece-routing.module';
-import {RequestInterceptorService} from '../services/request-interceptor.service';
-import {UnavailabilityRoutingModule} from '../unavailability/unavailability-routing.module';
+import {RequestInterceptorService,
+} from '../services/request-interceptor.service';
+import {UnavailabilityRoutingModule,
+} from '../unavailability/unavailability-routing.module';
 import {UserRoutingModule} from '../user/user-routing.module';
 import {App} from './app.component';
 import {AppRoutingModule} from './app_routing.module';
@@ -51,7 +54,7 @@ const LOGGING_INTERCEPTOR_PROVIDER: ClassProvider = {
     AppRoutingModule,
   ],
   providers: [
-    LOGGING_INTERCEPTOR_PROVIDER
+    LOGGING_INTERCEPTOR_PROVIDER,
   ],
   bootstrap: [App]
 })

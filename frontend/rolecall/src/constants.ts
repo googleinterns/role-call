@@ -4,7 +4,7 @@ import {NavBarChild} from 'src/types';
  * The nav bar data structures to build out the
  * navigation panels that link to other views.
  */
-export let constNavBarEntries: NavBarChild[] = [
+export const constNavBarEntries: NavBarChild[] = [
   {
     name: 'Dashboard',
     routerLinkUrl: '/dashboard',
@@ -42,7 +42,7 @@ export const COLORS = {
   white: 'white',
   offWhite: '#f4f4f4',
   offoffWhite: '#d9d9d9',
-  AAOrange: '#ffae00'
+  aaOrange: '#ffae00'
 };
 
 /** # casts for the standard ballet. */

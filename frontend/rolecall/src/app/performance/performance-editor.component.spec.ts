@@ -1,4 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 import {of} from 'rxjs';
 import {RouterTestingModule} from '@angular/router/testing';
 import {createSpyObjWithProps} from 'src/test_utils';
@@ -11,7 +15,8 @@ import {PerformanceApi} from '../api/performance-api.service';
 import {UserApi} from '../api/user_api.service';
 import {PieceApi} from '../api/piece_api.service';
 import {CastApi} from '../api/cast_api.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
 
 import {PerformanceEditor} from './performance-editor.component';
 import {PerformanceModule} from './performance.module';
@@ -49,28 +54,32 @@ describe('PerformanceEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [PerformanceEditor],
-          imports: [
-            PerformanceModule,
-            RouterTestingModule,
-          ],
-          providers: [
-            {provide: PerformanceApi, useValue: mockPerformanceApi},
-            {provide: UserApi, useValue: mockUserApi},
-            {provide: PieceApi, useValue: mockPieceApi},
-            {provide: CastApi, useValue: mockCastApi},
-            {
-              provide: ResponseStatusHandlerService,
-              useValue: fakeResponseStatusHandlerService
-            },
-            {provide: ChangeDetectorRef, useValue: fakeChangeDetectorRef},
-            {provide: ActivatedRoute, useValue: fakeActivatedRoute},
-            {provide: Location, useValue: mockLocation},
-            {provide: CsvGenerator, useValue: fakeCsvGenerator},
-          ]
-        })
-        .compileComponents();
-  }));
+        declarations: [
+          PerformanceEditor,
+        ],
+        imports: [
+          MatFormFieldModule,
+          NoopAnimationsModule,
+          PerformanceModule,
+          RouterTestingModule,
+        ],
+        providers: [
+          {provide: PerformanceApi, useValue: mockPerformanceApi},
+          {provide: UserApi, useValue: mockUserApi},
+          {provide: PieceApi, useValue: mockPieceApi},
+          {provide: CastApi, useValue: mockCastApi},
+          {
+            provide: ResponseStatusHandlerService,
+            useValue: fakeResponseStatusHandlerService
+          },
+          {provide: ChangeDetectorRef, useValue: fakeChangeDetectorRef},
+          {provide: ActivatedRoute, useValue: fakeActivatedRoute},
+          {provide: Location, useValue: mockLocation},
+          {provide: CsvGenerator, useValue: fakeCsvGenerator},
+        ]
+      })
+      .compileComponents();
+    }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PerformanceEditor);

@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, lastValueFrom, timer,
+} from 'rxjs';
 import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+
 
 export type LoginResponse = {
-  isSignedIn: boolean,
-  user: google.accounts.id.Credential,
+  isLoggedIn: boolean;
+  user: google.accounts.id.Credential;
 };
 
 /** Service that handles logging in and obtaining the session token. */
@@ -15,14 +18,19 @@ export type LoginResponse = {
 export class LoginApi {
   /** Whether the user has been loaded already. */
   isLoggedIn = false;
-  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn);
-  isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  isLoggedIn$: Observable<boolean>;
 
   /** The current user. */
   user: google.accounts.id.Credential;
 
   /** If the google OAuth2 api is loaded. */
   isAuthLoaded = false;
+  isAuthLoaded$: Observable<boolean>;
+
+  /** Startup timer */
+  seconds = timer(1000, 1000);
+  ticks: Subscription;
+
 
   /** Google login button */
   loginBtn?: HTMLElement;
@@ -39,46 +47,161 @@ export class LoginApi {
   givenName: string;
   familyName: string;
 
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn);
+  private isAuthLoadedSubject = new BehaviorSubject<boolean>(this.isLoggedIn);
+
   constructor(
     private ngZone: NgZone,
     private http: HttpClient,
     private router: Router,
   ) {
+    this.isLoggedIn$ = this.isLoggedInSubject.asObservable();
+    this.isAuthLoaded$ = this.isAuthLoadedSubject.asObservable();
+
+    this.ticks = this.seconds.subscribe(() => this.loginWrapper());
+
+    // this code guarantees that the login button is shown
+    this.isAuthLoaded$.subscribe((isAuthLoaded: boolean) => {
+      if (isAuthLoaded) {
+        this.showLoginButton();
+      }
+      this.refresh();
+    });
   }
 
   /** Initialize OAuth2. */
   public async initGoogleAuth(): Promise<void> {
     return new Promise(resolve => {
-      google.accounts.id.initialize({
-        client_id: environment.oauthClientID,
-        auto_select: true,
-        cancel_on_tap_outside: false,
-        callback: (res) => {
-          this.isAuthLoaded = true;
-          this.user = JSON.parse(atob(res.credential.split('.')[1]));
-          resolve();
-          this.getLoginResponse(true, this.user);
-        },
-      });
-      this.showLoginButton();
-      google.accounts.id.prompt((notif) => {
-        console.log(notif);
-      });
+      if (typeof google === 'object' && typeof google.accounts === 'object') {
+        google.accounts.id.initialize({
+          client_id: environment.oauthClientID,
+          auto_select: true,
+          cancel_on_tap_outside: false,
+          callback: (res) => {
+            this.user = JSON.parse(atob(res.credential.split('.')[1]));
+            resolve();
+            this.saveLoginParams(true, this.user);
+          },
+        });
+        this.isAuthLoaded = true;
+        google.accounts.id.prompt((/* notif */) => {
+          // console.log(notif);
+        });        
+      }
     });
   }
 
   /** Determine whether or not login is needed and return. */
-  public async login(): Promise<void> {
-    if (!this.isAuthLoaded) {
-      await this.initGoogleAuth();
+  public login = async (): Promise<LoginResponse> => {
+    let resp: LoginResponse = { isLoggedIn: false, user: undefined };
+    if (environment.mockBackend) {
+      this.isAuthLoaded = true;
+      this.isLoggedIn = true;
+      resp.isLoggedIn = this.isLoggedIn;
+      resp.user = this.user;
+    } else {
+      if (!this.isAuthLoaded) {
+        await this.initGoogleAuth();
+        resp.isLoggedIn = this.isLoggedIn;
+        resp.user = this.user;
+      }
+    }
+    return resp;
+  };
+
+  public updateSigninStatus = (isLoggedIn: boolean): void => {
+    this.isLoggedInSubject.next(isLoggedIn || false);
+  };
+
+  /** Get the current user object if logged in or force a login. */
+  public getCurrentUser = async (
+  ): Promise<google.accounts.id.Credential> => {
+    if (this.isLoggedIn) {
+      return Promise.resolve(this.user);
+    } else {
+      await this.login();
+      return this.user;
+    }
+  };
+
+  /** Sign out of Google OAuth2. */
+  public signOut = async (): Promise<void> => {
+    if (environment.mockBackend) {
+      if (this.isLoggedIn) {
+        // this.authInstance.signOut();
+      }
+      this.isLoggedIn = false;
+      this.refresh();
+      return Promise.resolve();
+    } else {
+      // Hit the logout endpoint to invalidate session
+      return lastValueFrom(this.http.get(
+        environment.backendURL + 'logout', {
+          observe: 'response',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            EMAIL: this.email || '',
+          }
+        })
+      ).then(resp => {
+        if (resp.status > 299 || resp.status < 200) {
+          return Promise.reject('Sign in failed');
+        } else {
+          return resp;
+        }
+      }).then(() => {
+        // If session invalid, go ahead and log out of OAuth
+        if (this.isLoggedIn) {
+          google.accounts.id.disableAutoSelect();
+        }
+        this.isLoggedIn = false;
+        this.user = undefined;
+        this.loginPromise = new Promise(res => {
+          this.resolveLogin = res;
+        });
+        this.refresh();
+      }).catch(e => {
+        // alert('Sign out failed!');  it makes no sense to pop this to user.
+        // they cannot do anything anyway.
+        google.accounts.id.disableAutoSelect();
+        console.log(e);
+        this.refresh();
+      });
+    }
+  };
+
+  public refresh = (): void => {
+    this.ngZone.run(() => this.router.navigateByUrl('/'));
+  };
+
+  /** Display google login button */
+  public showLoginButton = async (): Promise<void> => {
+    if (this.loginBtn && this.isAuthLoaded) {
+      google.accounts.id.renderButton(this.loginBtn, {
+        type: 'standard',
+        size: 'large',
+        theme: 'outline',
+      });  
     }
   }
 
+  // Private methods
+
+  /** Calls login. If login successfule, ends login loop */
+  private loginWrapper = (
+  ): void => {
+    this.login();
+    if (this.isAuthLoaded) {
+      this.ticks.unsubscribe();
+    }
+    // console.log('Login Delay', time);
+  }
+
   /** Constructs a login response and updates appropriate state. */
-  private getLoginResponse(
+  private saveLoginParams = (
     isLoggedIn: boolean,
     user: google.accounts.id.Credential,
-  ): LoginResponse {
+  ): void => {
     let resolveLogin = false;
     if (!this.isLoggedIn && isLoggedIn) {
       resolveLogin = true;
@@ -96,84 +219,6 @@ export class LoginApi {
       }
     }
     this.updateSigninStatus(isLoggedIn);
-    return {
-      isSignedIn: isLoggedIn,
-      user: this.user
-    };
-  }
-
-  public updateSigninStatus = (isLoggedIn) => {
-    this.isLoggedInSubject.next(isLoggedIn || false);
-  }
-
-  /** Get the current user object if logged in or force a login. */
-  public async getCurrentUser(): Promise<google.accounts.id.Credential> {
-    if (this.isLoggedIn) {
-      return Promise.resolve(this.user);
-    } else {
-      await this.login();
-      return this.user;
-    }
-  }
-
-  /** Sign out of Google OAuth2. */
-  public async signOut(): Promise<void> {
-    if (environment.mockBackend) {
-      if (this.isLoggedIn) {
-        // this.authInstance.signOut();
-      }
-      this.isLoggedIn = false;
-      this.refresh();
-      return Promise.resolve();
-    } else {
-      // Hit the logout endpoint to invalidate session
-      return lastValueFrom(this.http.get(
-        environment.backendURL + 'logout', {
-          observe: 'response',
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'EMAIL': this.email || '',
-          }
-        })
-      ).then(resp => {
-        if (resp.status > 299 || resp.status < 200) {
-          return Promise.reject('Sign in failed');
-        } else {
-          return resp;
-        }
-      }).then(() => {
-        // If session invalid, go ahead and log out of OAuth
-        if (this.isLoggedIn) {
-          google.accounts.id.disableAutoSelect();
-        }
-        this.isLoggedIn = false;
-        this.loginPromise = new Promise(res => {
-          this.resolveLogin = res;
-        });
-        this.refresh();
-      }).catch(e => {
-        //alert('Sign out failed!');  it makes no sense to pop this to user.
-        // they cannot do anything anyway.
-        google.accounts.id.disableAutoSelect();
-        console.log(e);
-        this.refresh();
-      });
-    }
-  }
-
-  public refresh = (): void => {
-    this.ngZone.run(() => this.router.navigateByUrl('/'));
   };
-
-  /** Display google login button */
-  public showLoginButton(): void {
-    if (this.loginBtn) {
-      google.accounts.id.renderButton(this.loginBtn, {
-        type: 'standard',
-        size: 'large',
-        theme: 'outline',
-      });  
-    }
-  }
 
 }

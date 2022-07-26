@@ -1,43 +1,47 @@
 import {HttpResponse} from '@angular/common/http';
 import * as APITypes from 'src/api_types';
 
-import {AllUnavailabilitiesResponse, OneUnavailabilityResponse, Unavailability} from '../api/unavailability-api.service';
+import {AllUnavailabilitiesResponse, OneUnavailabilityResponse, Unavailability,
+} from '../api/unavailability-api.service';
 
 /** Mocks the unavailability backend responses. */
 export class MockUnavailabilityBackend {
 
   /** Mock unavailability database. */
-  mockUnavailabilityDB: Unavailability[] = [
-    {
+  mockUnavailabilityDB: Unavailability[] = [{
       id: 1,
       description: 'example desc',
       userId: 206,
       startDate: 1,
       endDate: 999999
-    }
+    },
   ];
 
   /** Mocks backend response. */
-  requestAllUnavailabilites(): Promise<AllUnavailabilitiesResponse> {
-    return Promise.resolve({
+  requestAllUnavailabilites = (
+  ): Promise<AllUnavailabilitiesResponse> =>
+    Promise.resolve({
       data: this.mockUnavailabilityDB,
-      warnings: []
+      warnings: [],
     });
-  }
+
 
   /** Mocks backend response. */
-  requestOneUnavailability(uuid: APITypes.UnavailabilityUUID):
-      Promise<OneUnavailabilityResponse> {
-    return Promise.resolve({
-      data: this.mockUnavailabilityDB.find(val => {
-        return val.id === uuid || val.id === uuid;
-      }),
-      warnings: []
+  requestOneUnavailability = (
+    uuid: APITypes.UnavailabilityUUID,
+  ): Promise<OneUnavailabilityResponse> =>
+    Promise.resolve({
+      data: this.mockUnavailabilityDB.find(val =>
+        val.id === uuid || val.id === uuid
+      ),
+      warnings: [],
     });
-  }
+
 
   /** Mock setting the unavailability. */
-  requestUnavailabilitySet(unav: Unavailability): Promise<HttpResponse<any>> {
+  requestUnavailabilitySet = (
+    unav: Unavailability,
+  ): Promise<HttpResponse<any>> => {
     const userInd = this.mockUnavailabilityDB.findIndex(
         val => val.id === unav.id);
     if (userInd === -1) {
@@ -48,15 +52,16 @@ export class MockUnavailabilityBackend {
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);
-  }
+  };
 
   /** Mocks unavailability delete response. */
-  requestUnavailabilityDelete(unav: Unavailability):
-      Promise<HttpResponse<any>> {
+  requestUnavailabilityDelete = (
+    unav: Unavailability,
+  ): Promise<HttpResponse<any>> => {
     this.mockUnavailabilityDB =
         this.mockUnavailabilityDB.filter(val => val.id !== unav.id);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);
-  }
+  };
 }

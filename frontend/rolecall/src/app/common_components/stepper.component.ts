@@ -1,5 +1,7 @@
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {animate, state, style, transition, trigger,
+} from '@angular/animations';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-stepper',
@@ -50,6 +52,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
     ]),
   ]
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Stepper implements OnInit, OnChanges {
 
   @Input() stepperOptions: string[];
@@ -58,33 +61,35 @@ export class Stepper implements OnInit, OnChanges {
   showOptions = false;
   isStepperOpen = true;
 
-  ngOnInit() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnInit(): void {
     this.updateShow();
   }
 
-  ngOnChanges() {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnChanges(): void {
     this.updateShow();
   }
 
-  updateShow() {
+  updateShow = (): void => {
     this.showOptions = this.stepperOptions && this.stepperOptions.length > 0;
-  }
+  };
 
-  toggleStepper(e) {
+  toggleStepper = (e: Event): void => {
     e.preventDefault();
     this.isStepperOpen = !this.isStepperOpen;
-  }
+  };
 
-  closeStepper() {
+  closeStepper = (): void => {
     this.isStepperOpen = false;
-  }
+  };
 
-  navigate(index: number) {
+  navigate = (index: number): void => {
     this.currentStepIndex = index;
     this.emitStep();
-  }
+  };
 
-  nextStep(): boolean {
+  nextStep = (): boolean => {
     if (!this.stepperOptions || this.stepperOptions.length === 0
         || this.currentStepIndex === this.stepperOptions.length - 1) {
       return false;
@@ -92,9 +97,9 @@ export class Stepper implements OnInit, OnChanges {
     this.currentStepIndex++;
     this.emitStep();
     return true;
-  }
+  };
 
-  prevStep(): boolean {
+  prevStep = (): boolean => {
     if (!this.stepperOptions || this.stepperOptions.length === 0
         || this.currentStepIndex === 0) {
       return false;
@@ -102,11 +107,11 @@ export class Stepper implements OnInit, OnChanges {
     this.currentStepIndex--;
     this.emitStep();
     return true;
-  }
+  };
 
-  emitStep() {
+  emitStep = (): void => {
     this.stepChange.emit(
         [this.currentStepIndex, this.stepperOptions[this.currentStepIndex]]);
-  }
+  };
 
 }

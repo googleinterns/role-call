@@ -7,9 +7,12 @@ import {COLORS} from 'src/constants';
 import * as APITypes from 'src/api_types';
 
 import {Piece, PieceApi, PieceType, Position} from '../api/piece_api.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
-import {SuperBalletDisplayService} from '../services/super-ballet-display.service';
-import {SegmentDisplayListService} from '../services/segment-display-list.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
+import {SuperBalletDisplayService,
+} from '../services/super-ballet-display.service';
+import {SegmentDisplayListService,
+} from '../services/segment-display-list.service';
 
 export type WorkingPiece = Piece & {
   addingPositions: DraggablePosition[];
@@ -38,6 +41,7 @@ type DraggablePosition = {
   templateUrl: './piece_editor.component.html',
   styleUrls: ['./piece_editor.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class PieceEditor implements OnInit {
   dragAndDropData: DraggablePosition[] = [];
   currentSelectedPiece: WorkingPiece;
@@ -74,6 +78,7 @@ export class PieceEditor implements OnInit {
       public leftList: SegmentDisplayListService,
   ) { }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     const uuid = this.route.snapshot.params.uuid;
     if (uuid) {
@@ -86,15 +91,7 @@ export class PieceEditor implements OnInit {
     this.pieceAPI.getAllPieces();
   }
 
-  private starTest = (segment: Piece): boolean => {
-    return segment.type === 'SEGMENT' ? false : segment.positions.length === 0;
-  }
-
-  private buildLeftList() {
-    this.leftList.buildDisplayList(this.workingPieces, this.starTest);
-  }
-
-  onPieceLoad(pieces: Piece[]) {
+  onPieceLoad = (pieces: Piece[]): void => {
     if (pieces.length === 0) {
       this.workingPieces = [];
       this.piecesLoaded = true;
@@ -116,7 +113,7 @@ export class PieceEditor implements OnInit {
           }
         }
       }
-    }
+    };
 
     const workPieces = pieces.map(piece => {
       if (piece.type === 'SUPER' &&
@@ -145,17 +142,17 @@ export class PieceEditor implements OnInit {
     }
     this.piecesLoaded = true;
     this.buildLeftList();
-  }
+  };
 
-  setCurrentPieceFromIndex(pieceIndex: number) {
+  setCurrentPieceFromIndex = (pieceIndex: number): void => {
     const selectedWorking = this.workingPieces.find(piece =>
       piece.uuid === this.leftList.topLevelSegments[pieceIndex].uuid);
     if (selectedWorking) {
       this.setCurrentPiece(selectedWorking);
     }
-  }
+  };
 
-  setCurrentPiece(piece: WorkingPiece) {
+  setCurrentPiece = (piece: WorkingPiece): void => {
     if (piece && this.currentSelectedPiece &&
         piece.uuid !== this.currentSelectedPiece.uuid) {
       if (!this.pieceSaved) {
@@ -187,25 +184,9 @@ export class PieceEditor implements OnInit {
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedPiece
         ? this.currentSelectedPiece.type : 'SEGMENT';
-  }
+  };
 
-  private calcNameDisplay({createPosition, name}: {
-    createPosition: boolean,
-    name: string,
-  }) {
-    // TODO: Remove this once the customer confirms it is not needed.
-    // You can prefix a ballet by adding text here
-    return (createPosition ? '' : '') + name;
-  }
-
-  private calcSizeDisplay({createPosition, dancerCount}: {
-    createPosition: boolean,
-    dancerCount: number,
-  }) {
-    return (createPosition ? `# Dancers = ${dancerCount}` : '');
-  }
-
-  addPiece(pieceTpCd: number) {
+  addPiece = (pieceTpCd: number): void => {
     if (this.creatingPiece) {
       return;
     }
@@ -255,9 +236,9 @@ export class PieceEditor implements OnInit {
     this.dragAndDropData = [];
     this.setCurrentPiece(this.workingPiece);
     this.buildLeftList();
-  }
+  };
 
-  onSavePiece() {
+  onSavePiece = (): void => {
     if (this.currentSelectedPiece && (!this.currentSelectedPiece.name ||
                                       this.currentSelectedPiece.name === '')) {
       this.respHandler.showError({
@@ -310,9 +291,9 @@ export class PieceEditor implements OnInit {
         }
       }
     });
-  }
+  };
 
-  async deletePiece() {
+  deletePiece = async (): Promise<void> => {
     let successIndicator: APITypes.SuccessIndicator = {successful: false};
     if (!this.creatingPiece) {
       this.superBalletDisplay.removeFromDisplayList(
@@ -324,16 +305,18 @@ export class PieceEditor implements OnInit {
       this.workingPieces = this.workingPieces.filter(
           piece => piece.uuid !== this.currentSelectedPiece.uuid);
       this.buildLeftList();
-      this.workingPieces.length > 0
-          ? this.setCurrentPiece(this.workingPieces[0])
-          : this.setCurrentPiece(undefined);
+      if (this.workingPieces.length > 0) {
+        this.setCurrentPiece(this.workingPieces[0]);
+      } else {
+        this.setCurrentPiece(undefined);
+      }
     }
     this.prevWorkingState = undefined;
     this.pieceSaved = true;
     this.creatingPiece = false;
-  }
+  };
 
-  addPosition() {
+  addPosition = (): void => {
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
@@ -362,17 +345,16 @@ export class PieceEditor implements OnInit {
       shouldBeDeleted: false,
     });
     this.updateDragAndDropData();
-  }
+  };
 
-  deleteAddingPosition(index: number) {
-    // 
+  deleteAddingPosition = (index: number): void => {
     this.dragAndDropData = this.dragAndDropData.filter(
-        position => position.index !== index);
+      position => position.index !== index);
     this.pieceSaved = false;
     this.updateDragAndDropData();
-  }
+  };
 
-  deletePosition(index: number) {
+  deletePosition = (index: number): void => {
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
@@ -387,9 +369,9 @@ export class PieceEditor implements OnInit {
         position => position.index !== index);
     this.pieceSaved = false;
     this.updateDragAndDropData();
-  }
+  };
 
-  editPosition(index: number) {
+  editPosition = (index: number): void => {
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
@@ -401,23 +383,24 @@ export class PieceEditor implements OnInit {
       foundPos.type = 'editing';
     }
     this.pieceSaved = false;
-  }
+  };
 
-  onTitleInput(event) {
+  onTitleInput = (event: Event): void => {
     this.pieceSaved = false;
-    this.currentSelectedPiece.name = event.target.value;
-  }
+    this.currentSelectedPiece.name =
+      ( event.target as HTMLInputElement ).value;
+  };
 
-  onSelectSegmentType(event: MatSelectChange) {
+  onSelectSegmentType = (event: MatSelectChange): void => {
     this.selectedSegmentType = event.value;
     this.currentSelectedPiece.type = event.value;
     this.pieceSaved = false;
-  }
+  };
 
-  onInputChange({change: [valueName, value], data}: {
-    change: [string, any],
-    data?: any,
-  }) {
+  onInputChange = ({change: [valueName, value], data}: {
+    change: [string, any];
+    data?: any;
+  }): void => {
     if (!this.workingPiece) {
       this.prevWorkingState = this.currentSelectedPiece;
       this.workingPiece = this.currentSelectedPiece;
@@ -426,13 +409,13 @@ export class PieceEditor implements OnInit {
     if (this.workingPiece) {
       this.setWorkingPropertyByKey({key: valueName, name: value, data});
     }
-  }
+  };
 
-  setWorkingPropertyByKey({key, name, data}: {
-    key: string,
-    name: string,
-    data?: any,
-  }) {
+  setWorkingPropertyByKey = ({key, name, data}: {
+    key: string;
+    name: string;
+    data?: any;
+  }): void => {
     if (key === 'New Position' || key === 'New Ballet') {
       const found = this.currentSelectedPiece.addingPositions.find(
           draggablePosition => draggablePosition.index === data.index);
@@ -461,9 +444,9 @@ export class PieceEditor implements OnInit {
     } else if (key === 'New Ballet Name') {
       this.currentSelectedPiece.name = name;
     }
-  }
+  };
 
-  updateDragAndDropData(writeThru?: boolean) {
+  updateDragAndDropData = (writeThru?: boolean): void => {
     if (!this.currentSelectedPiece) {
       return;
     }
@@ -471,8 +454,7 @@ export class PieceEditor implements OnInit {
     if (this.pieceSaved) {
       // after deletePiece()
       this.dragAndDropData = this.currentSelectedPiece.positions
-          .map((position, positionIndex) => {
-            return {
+          .map((position, positionIndex) => ({
               index: positionIndex,
               pos: position,
               valueName: createPosition ? 'Existing Position' :
@@ -483,8 +465,8 @@ export class PieceEditor implements OnInit {
               sizeDisplay: this.calcSizeDisplay(
                   {createPosition, dancerCount: position.size}),
               shouldBeDeleted: false, // Verify 'after deletePiece()'
-            };
-          });
+            }
+          ));
       return;
     }
     const newDDData = [];
@@ -528,9 +510,9 @@ export class PieceEditor implements OnInit {
           (a, b) => a.index - b.index).map(val => val.pos);
       this.currentSelectedPiece.addingPositions = [];
     }
-  }
+  };
 
-  drop(event: CdkDragDrop<any>) {
+  drop = (event: CdkDragDrop<any>): void => {
     const largerInd = event.previousIndex > event.currentIndex
         ? event.previousIndex : event.currentIndex;
     const smallerInd = event.previousIndex <= event.currentIndex
@@ -552,9 +534,9 @@ export class PieceEditor implements OnInit {
     transferArrayItem(this.dragAndDropData, this.dragAndDropData,
         event.previousIndex, event.currentIndex);
     this.pieceSaved = false;
-  }
+  };
 
-  getCurrentTypeCode(type: PieceType): number {
+  getCurrentTypeCode = (type: PieceType): number => {
     let code = 0;
     if (type === 'BALLET') {
       code = 2;
@@ -564,9 +546,9 @@ export class PieceEditor implements OnInit {
       code = 1;
     }
     return code;
-  }
+  };
 
-  toggleOpen(index: number) {
+  toggleOpen = (index: number): void => {
     const superBallet = this.leftList.topLevelSegments[index];
     if (superBallet.type === 'SUPER') {
       superBallet.isOpen = !superBallet.isOpen;
@@ -574,5 +556,31 @@ export class PieceEditor implements OnInit {
           superBallet.uuid, superBallet.isOpen);
     }
     this.buildLeftList();
-  }
+  };
+
+  // Private methods
+
+  private starTest = (segment: Piece): boolean =>
+    segment.type === 'SEGMENT' ? false : segment.positions.length === 0;
+
+
+  private buildLeftList = (): void => {
+    this.leftList.buildDisplayList(this.workingPieces, this.starTest);
+  };
+
+  private calcNameDisplay = ({createPosition, name}: {
+    createPosition: boolean;
+    name: string;
+  }): string =>
+    // TODO: Remove this once the customer confirms it is not needed.
+    // You can prefix a ballet by adding text here
+    (createPosition ? '' : '') + name;
+
+
+  private calcSizeDisplay = ({createPosition, dancerCount}: {
+    createPosition: boolean;
+    dancerCount: number;
+  }): string =>
+    (createPosition ? `# Dancers = ${dancerCount}` : '');
+
 }

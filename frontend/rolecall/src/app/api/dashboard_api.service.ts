@@ -6,22 +6,23 @@ import {lastValueFrom} from 'rxjs';
 import {MockDashboardBackend} from '../mocks/mock_dashboard_backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import {ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
 
 export type DashPerformance = {
-  id: number,
-  title: string,
-  description: string,
-  location: string,
-  dateTime: number,
-  status: 'CANCELED'
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  dateTime: number;
+  status: 'CANCELED';
 };
 
 export type AllDashResponse = {
   data: {
-    performances: DashPerformance[]
-  },
-  warnings: string[]
+    performances: DashPerformance[];
+  };
+  warnings: string[];
 };
 
 /**
@@ -44,11 +45,12 @@ export class DashboardApi {
       private loggingService: LoggingService,
       private http: HttpClient,
       private headerUtil: HeaderUtilityService,
-      private respHandler: ResponseStatusHandlerService) {
+      private respHandler: ResponseStatusHandlerService,
+  ) {
   }
 
   /** Hits backend with all dash GET request. */
-  async requestAllDashboard(): Promise<AllDashResponse> {
+  requestAllDashboard = async (): Promise<AllDashResponse> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllDashboard();
     }
@@ -60,16 +62,29 @@ export class DashboardApi {
         }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<AllDashResponse>(resp))
-        .then(val => {
-          return val;
-        });
-  }
+        .then(val =>
+          val
+        );
+  };
+
+  /** Gets all the dash performances from the backend and returns them. */
+  getAllDashboard = async (): Promise<DashPerformance[]> =>
+    this.getAllDashResponse().then(val => {
+      this.dashPerformanceEmitter.emit(
+          Array.from(this.dashPerformances.values()));
+      return val;
+    }).then(val => val.data.performances).catch(() =>
+      []
+    );
+
+
+  // Private methods
 
   /**
    * Takes backend response, updates data structures for all dash performances.
    */
-  private getAllDashResponse(): Promise<AllDashResponse> {
-    return this.requestAllDashboard().then(val => {
+   private getAllDashResponse = async (): Promise<AllDashResponse> =>
+    this.requestAllDashboard().then(val => {
       // Update the dashboard performance map
       this.dashPerformances.clear();
       for (const dashPerf of val.data.performances) {
@@ -81,16 +96,6 @@ export class DashboardApi {
       }
       return val;
     });
-  }
 
-  /** Gets all the dash performances from the backend and returns them. */
-  getAllDashboard(): Promise<DashPerformance[]> {
-    return this.getAllDashResponse().then(val => {
-      this.dashPerformanceEmitter.emit(
-          Array.from(this.dashPerformances.values()));
-      return val;
-    }).then(val => val.data.performances).catch(() => {
-      return [];
-    });
-  }
+
 }
