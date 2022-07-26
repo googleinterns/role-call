@@ -11,11 +11,14 @@ import com.google.rolecall.models.PerformanceCastMember;
 import com.google.rolecall.models.PerformanceSection;
 import com.google.rolecall.models.Position;
 import com.google.rolecall.models.Section;
+import com.google.rolecall.models.Unavailability;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.PerformanceRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.util.CPSNotification;
+
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -32,6 +35,7 @@ public class PerformanceServices {
   private final PerformanceRepository performanceRepo;
   private final SectionServices sectionService;
   private final UserServices userService;
+  private final UnavailabilityServices unavailabilityService;
 
   public Performance getPerformance(Integer id)
       throws EntityNotFoundException, InvalidParameterException {
@@ -50,8 +54,21 @@ public class PerformanceServices {
   public List<Performance> getAllPerformances() {
     List<Performance> allPerformances = new ArrayList<>();
     performanceRepo.findAll().forEach(allPerformances::add);
-
+    allPerformances.forEach(p -> p.setHasAbsence(this.checkAbs(p)));
     return allPerformances;
+  }
+
+  public boolean checkAbs(Performance p) {    
+    List<Unavailability> uList = new ArrayList<>();
+    p.getProgram().forEach( program -> {      
+      program.getPerformanceCastMembers().forEach(member -> {        
+         Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser().getId(), new Date(p.getDate().getTime()));
+         if (unavailability != null) {
+          uList.add(unavailability);      
+         }
+      });
+    });    
+    return uList.size() > 0;
   }
 
   public ServiceResult<Performance> createPerformance(PerformanceInfo newPerformance)
@@ -432,9 +449,11 @@ public class PerformanceServices {
   public PerformanceServices(
       PerformanceRepository performanceRepo,
       SectionServices sectionService,
-      UserServices userService) {
+      UserServices userService,
+      UnavailabilityServices unavailabilityService) {
     this.performanceRepo = performanceRepo;
     this.sectionService = sectionService;
     this.userService = userService;
+    this.unavailabilityService = unavailabilityService;
   }
 }

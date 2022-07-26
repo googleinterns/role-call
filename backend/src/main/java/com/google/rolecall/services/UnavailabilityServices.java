@@ -46,6 +46,12 @@ public class UnavailabilityServices {
     return allUnavailabilities;
   }
 
+  
+  public Unavailability getUnavailabilityByUserAndDate(Integer userId, Date date){
+    return unavailabilityRepo.getUnavailabilityByUserAndDate(userId,date);
+  };
+
+
   private boolean overlapsDateRange(Unavailability u, Date startDate, Date endDate) {
     boolean uStartDateIsAfterStartDate = u.getStartDate().compareTo(startDate) >= 0;
     boolean uStartDateIsBeforeEndDate = u.getStartDate().compareTo(endDate) <= 0;
