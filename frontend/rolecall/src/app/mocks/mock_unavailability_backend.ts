@@ -13,7 +13,9 @@ export class MockUnavailabilityBackend {
       description: 'example desc',
       userId: 206,
       startDate: 1,
-      endDate: 999999
+      endDate: 999999,
+      status: true,
+      reason: "UNDEF",
     },
   ];
 

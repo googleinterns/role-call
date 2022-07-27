@@ -1,4 +1,6 @@
 package com.google.rolecall.models;
+import com.google.rolecall.Constants;
+import com.google.rolecall.Constants.UnavailabilityReasons;
 
 import java.sql.Date;
 
@@ -32,10 +34,24 @@ public class Unavailability {
   private Date endDate;
 
   @Column(nullable = false)
+  private String reason;
+
+  @Column(nullable = false)
   private String description;
+
+  @Column(nullable = false)
+  private Boolean status;
 
   public Integer getId() {
     return id;
+  }
+
+  public Boolean getStatus(){
+    return status;
+  }
+
+  public String getReason(){
+    return reason;
   }
 
   public String getDescription() {
@@ -65,10 +81,13 @@ public class Unavailability {
   public UnavailabilityInfo toUnavailabilityInfo() {
     return UnavailabilityInfo.newBuilder()
         .setId(getId())
-        .setDescription(getDescription())
         .setUserId(getUser().getId())
+        .setDescription(getDescription())
+        .setStatus(getStatus())
+        .setReason(getReason())
         .setStartDate(getStartDate().getTime())
         .setEndDate(getEndDate().getTime())
+        
         .build();
   }
 
@@ -81,13 +100,32 @@ public class Unavailability {
 
   public static class Builder {
     private Unavailability unavailabile;
+    private String reason;
     private String description;
     private Date startDate;
     private Date endDate;
+    private Boolean status;
+
 
     public Builder setDescription(String description) {
       if(description != null) {
         this.description = description;
+      }
+
+      return this;
+    }
+
+    public Builder setReason(String reason) {
+      if(reason != null) {
+        this.reason = reason;
+      }
+
+      return this;
+    }
+
+    public Builder setStatus(Boolean status) {
+      if(status != null) {
+        this.status = status;
       }
 
       return this;
@@ -109,6 +147,8 @@ public class Unavailability {
       return this;
     }
 
+    
+
     public Unavailability build() throws InvalidParameterException {
       if(startDate == null || endDate == null ) {
         throw new InvalidParameterException("Unavailability must have start and end date.");
@@ -117,7 +157,8 @@ public class Unavailability {
       unavailabile.description = this.description;
       unavailabile.endDate = this.endDate;
       unavailabile.startDate = this.startDate;
-
+      unavailabile.reason = this.reason;
+      unavailabile.status = this.status;
       return unavailabile;
     }
 
@@ -126,10 +167,13 @@ public class Unavailability {
       this.description = unavailable.getDescription();
       this.startDate = unavailable.getStartDate();
       this.endDate = unavailable.getEndDate();
+      this.status = unavailable.getStatus();
+      this.reason = unavailable.getReason();
     }
 
     public Builder() {
       this.unavailabile = new Unavailability();
+      this.reason = UnavailabilityReasons.UNDEF;
       this.description = "";
     }
   }

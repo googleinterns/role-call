@@ -10,7 +10,8 @@
               <div class="child-content">
                 <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
                 <h4 class="date">{{"From " + procUnav.fromDateStr + " to "
-                + procUnav.toDateStr }}</h4>
+                + procUnav.toDateStr}}</h4>
+                <h4 class="reason">{{"Reason: " + procUnav.unav.reason}}</h4>
                 <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
                   Edit
                 </button>
@@ -56,6 +57,16 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <div class="reason-select-container">
+        <mat-form-field appearance="fill" class="reason-select">
+          <mat-label>Unavailability Reason</mat-label>
+          <mat-select [(value)]="selectedReason" (selectionChange)="onSelectReason($event)">
+            <mat-option *ngFor="let reason of reasonList; let k = index" [value]="reason">
+              {{reason}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <div class="datepickers-container">
         <mat-form-field appearance="fill" class="date-select">
           <mat-label>From Date</mat-label>
@@ -85,6 +96,7 @@
             [(ngModel)]="state.description"
             (input)="onDescChange($event)"></textarea>
       </div>
+      
       <button
           mat-flat-button class="action-button" [ngStyle]="!canSave ? { 'background': 'none' } : {}"
           [disabled]="!canSave" (click)="onSaveUnav()">
