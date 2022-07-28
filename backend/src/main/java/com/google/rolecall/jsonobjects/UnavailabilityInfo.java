@@ -14,10 +14,6 @@ public abstract class UnavailabilityInfo {
   public abstract Integer id();
 
   @Nullable
-  @JsonProperty("status")
-  public abstract Boolean status();
-
-  @Nullable
   @JsonProperty("userId")
   public abstract Integer userId();
 
@@ -72,11 +68,6 @@ public abstract class UnavailabilityInfo {
 
     @JsonProperty("endDate")
     public abstract Builder setEndDate(Long endDate);
-
-    @JsonProperty("status")
-    public abstract Builder setStatus(Boolean status);
-
-
 
     public abstract UnavailabilityInfo build();
   }

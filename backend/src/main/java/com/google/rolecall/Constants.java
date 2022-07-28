@@ -54,15 +54,12 @@ public class Constants {
     };
   }
 
-
   public static class UnavailabilityReasons {
     public static final String UNDEF = "UNDEF";
     public static final String INJURY = "INJURY";
     public static final String VACATION = "VACATION";
     public static final String OTHER = "OTHER";
-
   }
-
 
   public static class Notifications {
     public static final String PROJECT_ID = "absolute-water-286821";

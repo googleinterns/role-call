@@ -66,7 +66,6 @@ public class UnavailabilityServices {
         .setDescription(info.description())
         .setStartDate(info.startDate())
         .setEndDate(info.endDate())
-        .setStatus(info.status())
         .build();
 
     User user = userService.getUser(info.userId());
@@ -83,7 +82,6 @@ public class UnavailabilityServices {
         .setDescription(info.description())
         .setStartDate(info.startDate())
         .setEndDate(info.endDate())
-        .setStatus(info.status())
         .build();
 
     return unavailabilityRepo.save(unavailable);
