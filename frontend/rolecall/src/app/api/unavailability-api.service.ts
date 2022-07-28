@@ -21,7 +21,6 @@ export type Unavailability = {
   description: string;
   startDate: number;
   endDate: number;
-  status: boolean;
 };
 
 export type AllUnavailabilitiesResponse = {

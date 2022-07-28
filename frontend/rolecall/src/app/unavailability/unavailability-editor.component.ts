@@ -116,7 +116,6 @@ export class UnavailabilityEditor implements OnInit {
       userId: undefined,
       startDate: Date.now(),
       endDate: Date.now(),
-      status: true,
       reason: 'UNDEF'
 
     });
