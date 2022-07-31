@@ -2,6 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -17,6 +18,7 @@ import {UnavailabilityEditor} from './unavailability-editor.component';
     CommonModule,
     CommonComponentsModule,
     MatButtonModule,
+    MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
     MatDatepickerModule,

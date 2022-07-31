@@ -50,6 +50,6 @@ describe('SideNav', () => {
   });
 
   // it('should navigate to panel pages', fakeAsync(() => {
-  //   // TODO: Click on each item and check that it navigates to the right place.
+  // TODO: Click on each item and check that it navigates to the right place.
   // }));
 });
