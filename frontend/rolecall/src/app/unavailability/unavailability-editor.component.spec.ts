@@ -1,9 +1,10 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {FormsModule} from "@angular/forms";
+import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -40,6 +41,7 @@ describe('UnavailabilityEditorComponent', () => {
             FormsModule,
             MatFormFieldModule,
             MatInputModule,
+            MatIconModule,
             MatSelectModule,
             MatDatepickerModule,
             MatNativeDateModule,

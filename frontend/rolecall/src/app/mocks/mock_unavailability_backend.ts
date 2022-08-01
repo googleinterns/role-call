@@ -10,8 +10,9 @@ export class MockUnavailabilityBackend {
   /** Mock unavailability database. */
   mockUnavailabilityDB: Unavailability[] = [{
       id: 1,
-      description: 'example desc',
       userId: 206,
+      reason: 'INJURY',
+      description: 'example desc',
       startDate: 1,
       endDate: 999999
     },

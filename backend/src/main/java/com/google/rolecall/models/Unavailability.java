@@ -13,17 +13,24 @@ import javax.persistence.Table;
 
 import com.google.rolecall.jsonobjects.UnavailabilityInfo;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+import com.google.rolecall.Constants;
 
 @Entity
 @Table
 public class Unavailability {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private User user;
+
+  @Column(nullable = false)
+  private String reason;
+
+  @Column(nullable = false)
+  private String description;
 
   @Column(nullable = false)
   private Date startDate;
@@ -31,19 +38,20 @@ public class Unavailability {
   @Column(nullable = false)
   private Date endDate;
 
-  @Column(nullable = false)
-  private String description;
-
   public Integer getId() {
     return id;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
   public User getUser() {
     return user;
+  }
+
+  public String getReason() {
+    return reason;
+  }
+
+  public String getDescription() {
+    return description;
   }
 
   public Date getStartDate() {
@@ -65,8 +73,9 @@ public class Unavailability {
   public UnavailabilityInfo toUnavailabilityInfo() {
     return UnavailabilityInfo.newBuilder()
         .setId(getId())
-        .setDescription(getDescription())
         .setUserId(getUser().getId())
+        .setReason(getReason())
+        .setDescription(getDescription())
         .setStartDate(getStartDate().getTime())
         .setEndDate(getEndDate().getTime())
         .build();
@@ -81,9 +90,18 @@ public class Unavailability {
 
   public static class Builder {
     private Unavailability unavailabile;
+    private String reason;
     private String description;
     private Date startDate;
     private Date endDate;
+
+    public Builder setReason(String reason) {
+      if(reason != null) {
+        this.reason = reason;
+      }
+
+      return this;
+    }
 
     public Builder setDescription(String description) {
       if(description != null) {
@@ -114,6 +132,7 @@ public class Unavailability {
         throw new InvalidParameterException("Unavailability must have start and end date.");
       }
 
+      unavailabile.reason = this.reason;
       unavailabile.description = this.description;
       unavailabile.endDate = this.endDate;
       unavailabile.startDate = this.startDate;
@@ -123,6 +142,7 @@ public class Unavailability {
 
     public Builder(Unavailability unavailable) {
       this.unavailabile = unavailable;
+      this.reason = unavailable.getReason();
       this.description = unavailable.getDescription();
       this.startDate = unavailable.getStartDate();
       this.endDate = unavailable.getEndDate();
@@ -130,6 +150,7 @@ public class Unavailability {
 
     public Builder() {
       this.unavailabile = new Unavailability();
+      this.reason = Constants.UnavailabilityReasons.UNDEF;
       this.description = "";
     }
   }

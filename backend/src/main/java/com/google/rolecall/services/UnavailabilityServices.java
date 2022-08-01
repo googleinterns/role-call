@@ -68,6 +68,7 @@ public class UnavailabilityServices {
   public Unavailability createUnavailability(UnavailabilityInfo info)
       throws InvalidParameterException, EntityNotFoundException {
     Unavailability unavailable = Unavailability.newBuilder()
+        .setReason(info.reason())
         .setDescription(info.description())
         .setStartDate(info.startDate())
         .setEndDate(info.endDate())
@@ -83,6 +84,7 @@ public class UnavailabilityServices {
       throws InvalidParameterException, EntityNotFoundException {
     Unavailability unavailable = getUnavailability(info.id())
         .toBuilder()
+        .setReason(info.reason())
         .setDescription(info.description())
         .setStartDate(info.startDate())
         .setEndDate(info.endDate())

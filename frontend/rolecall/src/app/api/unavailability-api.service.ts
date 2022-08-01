@@ -12,36 +12,25 @@ import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
+export type UnavailbilityReason = 'UNDEF' | 'INJURY' | 'VACATION' | 'OTHER';
+
 export type Unavailability = {
-  'id': number;
-  'userId': number;
-  'description': string;
-  'startDate': number;
-  'endDate': number;
+  id: number;
+  userId: number;
+  reason: UnavailbilityReason;
+  description: string;
+  startDate: number;
+  endDate: number;
 };
 
 export type AllUnavailabilitiesResponse = {
-  'data':
-      {
-        'id': number;
-        'userId': number;
-        'description': string;
-        'startDate': number;
-        'endDate': number;
-      }[];
-  'warnings': [];
+  data: Unavailability[];
+  warnings: [];
 };
 
 export type OneUnavailabilityResponse = {
-  'data':
-      {
-        'id': number;
-        'userId': number;
-        'description': string;
-        'startDate': number;
-        'endDate': number;
-      };
-  'warnings': [];
+  data: Unavailability;
+  warnings: [];
 };
 
 const SixMonthInMS = 6 * 2629800000;
@@ -213,6 +202,9 @@ export class UnavailabilityApi {
         // Update the unavailabilities map
         this.unavailabilities.clear();
         for (const unav of val.data) {
+          if (!unav.reason) {
+            unav.reason = 'UNDEF';
+          }
           this.unavailabilities.set(unav.id, unav);
         }
         // Log any warnings

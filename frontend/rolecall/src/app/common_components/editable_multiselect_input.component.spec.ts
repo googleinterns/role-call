@@ -2,7 +2,7 @@ import {EventEmitter} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {FormsModule} from "@angular/forms";
+import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {EditableMultiSelectInput} from './editable_multiselect_input.component';

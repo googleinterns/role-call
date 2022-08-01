@@ -75,6 +75,14 @@
                   padding-left: 1rem;
                 }
 
+                .reason {
+                  color: $gray;
+                  font-size: 1rem;
+                  // font-weight: bold;
+                  margin-bottom: 0;
+                  padding-left: 1rem;
+                }
+
                 .time {
                   color: $gray;
                   font-size: 1rem;
@@ -131,7 +139,7 @@
 
         &-left {
           background: $aaOrangeGradient;
-          right: 0;
+          right: 10rem;
           left: 1rem;
         }
       }
@@ -156,6 +164,19 @@
         width: calc(100% - 4rem);
 
         .user-select {
+          width: 100%;
+        }
+      }
+
+      .status-radio-button {
+        margin: 5px;
+      }
+
+      .reason-select-container {
+        margin-left: 2rem;
+        width: calc(100% - 4rem);
+
+        .reason-select {
           width: 100%;
         }
       }

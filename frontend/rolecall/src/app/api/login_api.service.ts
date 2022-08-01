@@ -70,8 +70,8 @@ export class LoginApi {
   }
 
   /** Initialize OAuth2. */
-  public async initGoogleAuth(): Promise<void> {
-    return new Promise(resolve => {
+  public initGoogleAuth = async (): Promise<void> =>
+    new Promise(resolve => {
       if (typeof google === 'object' && typeof google.accounts === 'object') {
         google.accounts.id.initialize({
           client_id: environment.oauthClientID,
@@ -86,14 +86,14 @@ export class LoginApi {
         this.isAuthLoaded = true;
         google.accounts.id.prompt((/* notif */) => {
           // console.log(notif);
-        });        
+        });
       }
     });
-  }
+
 
   /** Determine whether or not login is needed and return. */
   public login = async (): Promise<LoginResponse> => {
-    let resp: LoginResponse = { isLoggedIn: false, user: undefined };
+    const resp: LoginResponse = { isLoggedIn: false, user: undefined };
     if (environment.mockBackend) {
       this.isAuthLoaded = true;
       this.isLoggedIn = true;
@@ -181,9 +181,9 @@ export class LoginApi {
         type: 'standard',
         size: 'large',
         theme: 'outline',
-      });  
+      });
     }
-  }
+  };
 
   // Private methods
 
@@ -195,7 +195,7 @@ export class LoginApi {
       this.ticks.unsubscribe();
     }
     // console.log('Login Delay', time);
-  }
+  };
 
   /** Constructs a login response and updates appropriate state. */
   private saveLoginParams = (
