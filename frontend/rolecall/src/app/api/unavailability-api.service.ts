@@ -12,12 +12,11 @@ import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-export type UnavailbilityReason = 'UNDEF' | 'INJURY' | 'VACATION' | 'OTHER';
 
 export type Unavailability = {
   id: number;
   userId: number;
-  reason: UnavailbilityReason;
+  reason: UnavailabilityReason;
   description: string;
   startDate: number;
   endDate: number;
@@ -35,12 +34,21 @@ export type OneUnavailabilityResponse = {
 
 const SixMonthInMS = 6 * 2629800000;
 
+export type UnavailabilityReason = 'UNDEF' | 'INJURY' | 'VACATION' | 'OTHER';
+
 /**
  * A service responsible for interfacing with the Unavailability APIs
  * and keeping track of unavailability data.
  */
 @Injectable({providedIn: 'root'})
 export class UnavailabilityApi {
+  /** Should match UnavailabilityReason except for UNDEF */
+  reasonList = [
+    'Injury',
+    'Vacation',
+    'Other',
+  ];
+
   /** Mock backend. */
   mockBackend: MockUnavailabilityBackend = new MockUnavailabilityBackend();
 
@@ -55,7 +63,8 @@ export class UnavailabilityApi {
       private loggingService: LoggingService,
       private http: HttpClient,
       private headerUtil: HeaderUtilityService,
-      private respHandler: ResponseStatusHandlerService) {
+      private respHandler: ResponseStatusHandlerService,
+  ) {
   }
 
   /** Hits backend with all unavailabilities GET request. */
@@ -79,6 +88,7 @@ export class UnavailabilityApi {
           this.respHandler.checkResponse<AllUnavailabilitiesResponse>(resp));
   };
 
+  // Never called (and only calls mock)
   /** Hits backend with one unavailability GET request. */
   requestOneUnavailability = async (
     uuid: APITypes.UnavailabilityUUID,
@@ -95,6 +105,9 @@ export class UnavailabilityApi {
   ): Promise<HttpResponse<any>> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestUnavailabilitySet(unav);
+    }
+    if (!unav.reason) {
+      unav.reason = 'UNDEF';
     }
     // If this is an unavailability from the backend, do a PATCH, else do a POST
     if (this.unavailabilities.has(unav.id)) {

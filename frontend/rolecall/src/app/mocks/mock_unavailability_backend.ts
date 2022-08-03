@@ -14,7 +14,7 @@ export class MockUnavailabilityBackend {
       reason: 'INJURY',
       description: 'example desc',
       startDate: 1,
-      endDate: 999999
+      endDate: 999999,
     },
   ];
 

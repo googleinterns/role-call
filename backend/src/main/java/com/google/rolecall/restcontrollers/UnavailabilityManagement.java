@@ -4,6 +4,7 @@ import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.ResponseSchema;
 import com.google.rolecall.jsonobjects.UnavailabilityInfo;
 import com.google.rolecall.models.Unavailability;
+import com.google.rolecall.models.User;
 import com.google.rolecall.restcontrollers.Annotations.Delete;
 import com.google.rolecall.restcontrollers.Annotations.Endpoint;
 import com.google.rolecall.restcontrollers.Annotations.Get;
@@ -12,7 +13,9 @@ import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.UnavailabilityServices;
+//import com.google.rolecall.services.UserServices;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UnavailabilityManagement extends AsyncRestEndpoint {
 
   private final UnavailabilityServices unavailabilityService;
+  //private final UserServices userService;
 
   /**
    * Gets all {@link Unavailability} objects that overlap the provided date.
@@ -61,8 +65,12 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
    */  
   @Post
   public CompletableFuture<ResponseSchema<UnavailabilityInfo>> createNewUnvailability(
-      @RequestBody UnavailabilityInfo info) {
+    Principal principal, @RequestBody UnavailabilityInfo info) {
 
+    if(info.userId() != getUser(principal).getId() && !getUser(principal).isAdmin()) {
+      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+    }
+  
     Unavailability unavailable;
     try {
       unavailable = unavailabilityService.createUnavailability(info);
@@ -88,7 +96,14 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
    */  
   @Patch
   public CompletableFuture<ResponseSchema<UnavailabilityInfo>> editUnvailability(
-      @RequestBody UnavailabilityInfo info) {
+      Principal principal, @RequestBody UnavailabilityInfo info) {
+
+System.out.println(principal);
+System.out.println(getUser(principal));
+
+    if(info.userId() != getUser(principal).getId() && !getUser(principal).isAdmin()) {
+      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+    }
 
     Unavailability unavailable;
     try {
@@ -113,8 +128,26 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
    * @throws EntityNotFoundException if id has no coresponding entity
    */  
   @Delete(Constants.RequestParameters.UNAVAILABLE_ID)
-  public CompletableFuture<Void> deleteSection(@RequestParam(value=Constants.RequestParameters.UNAVAILABLE_ID, required=true) 
+  public CompletableFuture<Void> deleteUnavailability(
+      Principal principal, 
+      @RequestParam(value=Constants.RequestParameters.UNAVAILABLE_ID, required=true) 
       int id) {
+
+    User user = getUser(principal);
+    if(!user.isAdmin()) {
+      Unavailability unav;
+      try {
+        unav = unavailabilityService.getUnavailability(id);
+      } catch(EntityNotFoundException e) {
+        return CompletableFuture.failedFuture(e);
+      } catch(InvalidParameterException e) {
+        return CompletableFuture.failedFuture(e);
+      }
+      if (unav.getUser().getId() != user.getId()) {
+        return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+      }
+    }
+    
     try {
       unavailabilityService.deleteUnavailability(id);
     } catch(EntityNotFoundException e) {
@@ -129,4 +162,5 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
   public UnavailabilityManagement(UnavailabilityServices unavailabilityService) {
     this.unavailabilityService = unavailabilityService;
   }
+
 }
