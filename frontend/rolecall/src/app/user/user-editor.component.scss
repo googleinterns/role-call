@@ -20,14 +20,14 @@
   background: $offWhite;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin: 1em;
   max-height: 86vh;
 }
 
 .user-select-container {
   overflow-y: scroll;
-  height: 100%;
+  height: calc(100% - 5rem);
   width: 100%;
 }
 
@@ -177,47 +177,9 @@
 }
 
 .right-card-title {
-  margin: 1em;
+  margin: 1rem;
   font-weight: 800;
   font-size: xx-large;
-}
-
-.button-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.button-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.save-button {
-  background: $aaOrangeGradient;
-  color: white;
-  font-size: x-large;
-  font-weight: bold;
-  margin-right: 0.6em;
-  margin-bottom: 0.6em;
-  padding: 0.5em 1em;
-}
-
-.delete-button {
-  background: $white;
-  color: black;
-  font-size: x-large;
-  margin-left: 0.6em;
-  margin-bottom: 0.6em;
-  padding: 0.5em 1em;
-
-  &:hover {
-    background: red;
-    color: $white;
-    font-weight: bold;
-  }
 }
 
 // Panels styling
@@ -228,4 +190,39 @@
 
 .right-panel {
   width: 75%;
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  width: calc(100% - 10rem);
+  margin: 1rem 5rem 1rem 5rem;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100%;
+
+  .action-button {
+    height: 3.5rem;
+    width: 3.5rem;
+  }
+  
+  .action-button-icon {
+    color: $gray;
+    background: $aaOrangeGradient;
+    //background-clip: border-box;
+    font-size: 3.5rem;
+    height: 3.5rem;
+    line-height: 3.5rem;
+    vertical-align: middle;
+    width: 3.5rem;
+  }
+
+  .action-button-icon-nobg {
+    @extend .action-button-icon;
+    background: $lightLightGray;
+  }
+
+  .bgon {
+    background: $aaOrangeGradient;
+  }
 }
