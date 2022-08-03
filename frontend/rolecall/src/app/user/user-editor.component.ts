@@ -40,7 +40,10 @@ export class UserEditor implements OnInit {
     manageRules: 'Manages Rules',
   };
 
-  disableSave = true;
+
+  canDelete = false;
+  canSave = false;
+
   creatingUser = false;
 
   usersLoaded = false;
@@ -134,7 +137,8 @@ export class UserEditor implements OnInit {
     if (user && this.currentSelectedUser && user.uuid
         !== this.currentSelectedUser.uuid) {
       this.creatingUser = false;
-      this.disableSave = true;
+      this.canDelete = true;
+      this.canSave = false;
     }
 
     if (this.workingUser && user.uuid !== this.workingUser.uuid) {
@@ -174,7 +178,7 @@ export class UserEditor implements OnInit {
       return;
     }
     this.creatingUser = true;
-    this.disableSave = false;
+    this.canSave = true;
     this.prevWorkingState = undefined;
     const newUser: User = {
       first_name: undefined,
@@ -238,7 +242,8 @@ export class UserEditor implements OnInit {
     this.userAPI.setUser(this.workingUser).then(async result => {
       if (result.successful) {
         this.creatingUser = false;
-        this.disableSave = true;
+        this.canDelete = true;
+        this.canSave = false;
         const prevUUID = this.workingUser.uuid;
         this.prevWorkingState = undefined;
         this.workingUser = undefined;
@@ -365,18 +370,18 @@ export class UserEditor implements OnInit {
     }
     if (info.type === 'date') {
       val = Date.parse(val.value);
-      this.disableSave = false;
+      this.canSave = true;
     } else if (info.type === 'permissions') {
       const permissions = this.workingUser.has_permissions;
       for (const permission of Object.keys(permissions)) {
         if (val.includes(permission)) {
           if (!permissions[permission]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           permissions[permission] = true;
         } else {
           if (permissions[permission]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           permissions[permission] = false;
         }
@@ -387,19 +392,19 @@ export class UserEditor implements OnInit {
       for (const role of Object.keys(roles)) {
         if (val.includes(role)) {
           if (!roles[role]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           roles[role] = true;
         } else {
           if (roles[role]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           roles[role] = false;
         }
       }
       val = roles;
     } else {
-      this.disableSave = false;
+      this.canSave = true;
     }
     objInQuestion[splits[splits.length - 1]] = val;
   };
