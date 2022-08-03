@@ -16,19 +16,6 @@
           </h2>
         </div>
       </div>
-      <div class="add-user-button-width-container">
-        <div class="add-user-button-height-container">
-          <button
-              class="add-user-button"
-              mat-icon-button
-              aria-label="Add User Button"
-              (click)="addUser()">
-            <mat-icon [inline]="true" class="add-user-button-icon">
-              add
-            </mat-icon>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -137,26 +124,55 @@
             (valueChange)="onInputChange($event)">
         </app-multi-select-input>
       </div>
-      <div class="button-container">
-        <div class="button-wrapper">
-          <button
-              class="delete-button"
-              mat-flat-button
-              aria-label="Delete User"
-              (click)="deleteUser()">
+      
+      <div class="actions-container">
+
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="Delete User"
+          matTooltip="Delete User"
+          [disabled]="!canDelete"
+
+          (click)="deleteUser()"
+        >
+          <mat-icon
+            class="action-button-icon-nobg"
+            [ngClass]="canDelete ? 'bgon' : ''"
+          >
             delete
-          </button>
-        </div>
-        <div class="button-wrapper">
-          <button
-              class="save-button"
-              mat-flat-button
-              aria-label="Save User"
-              [disabled]="disableSave"
-              (click)="saveUser()">
+          </mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="New User"
+          matTooltip="New User"
+          (click)="addUser()"
+        >
+          <mat-icon class="action-button-icon">
+            add
+          </mat-icon>
+        </button> 
+
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="Save User"
+          matTooltip="Save User"
+          [disabled]="!canSave"
+
+          (click)="saveUser()"
+        >
+          <mat-icon
+            class="action-button-icon-nobg"
+            [ngClass]="canSave ? 'bgon' : ''"
+          >
             save
-          </button>
-        </div>
+          </mat-icon>
+        </button>
+
       </div>
     </div>
   </div>

@@ -1,5 +1,6 @@
 @import "../../styles/colors";
 
+
 .page-container {
   display: flex;
   height: 100%;
@@ -22,8 +23,8 @@
       width: calc(50% - 2rem);
 
       .left-card {
-        // background: $offWhite;
-        height: calc(50% - 2rem);
+        background: $offWhite;
+        height: calc(100% - 2rem);
         margin: 1rem;
 
         .content {
@@ -43,42 +44,53 @@
             padding-bottom: 1rem;
             width: 100%;
 
+            .selected-ua {
+              background: $offoffWhite;
+            }
+
             .child {
-              background: $offWhite;
               margin-left: 1rem;
               margin-right: 1rem;
               min-height: 5rem;
               margin-top: 1rem;
-              position: relative;
 
               .child-content {
-                .title {
-                  font-size: 1.5rem;
-                  font-weight: bold;
-                  height: fit-content;
-                  margin-bottom: 0;
-                  padding-left: 1rem;
-                  padding-right: 1rem;
-                  padding-top: 1rem;
-                  text-overflow: ellipsis;
-                  overflow-x: hidden;
-                  overflow-y: hidden;
-                  white-space: nowrap;
+
+                .child-content-first-line {
                   width: 100%;
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+
+                  .title {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin-bottom: 0;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    padding-top: 1rem;
+                    text-overflow: ellipsis;
+                    overflow-x: hidden;
+                    overflow-y: hidden;
+                    white-space: nowrap;
+                  }
+
+                  .reason {
+                    font-size: 1.2rem;
+                    margin-bottom: 0;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    padding-top: 1.2rem;
+                    text-overflow: ellipsis;
+                    overflow-x: hidden;
+                    overflow-y: hidden;
+                    white-space: nowrap;
+                  }
                 }
 
                 .date {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
-                  margin-bottom: 0;
-                  padding-left: 1rem;
-                }
-
-                .reason {
-                  color: $gray;
-                  font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -86,7 +98,6 @@
                 .time {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -94,23 +105,8 @@
                 .location {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
-                }
-
-                .action-button {
-                  bottom: 1rem;
-                  background: $aaOrangeGradient;
-                  color: white;
-                  font-size: 1.2rem;
-                  font-weight: bold;
-                  position: absolute;
-                  right: 1rem;
-
-                  &-delete {
-                    right: 6rem;
-                  }
                 }
               }
             }
@@ -125,24 +121,7 @@
       height: calc(100% - 2rem);
       justify-content: flex-start;
       margin: 1rem;
-      position: relative;
       width: calc(50% - 2rem);
-
-      .action-button {
-        bottom: 1rem;
-        background: $aaOrangeGradient;
-        color: white;
-        font-size: 1.4rem;
-        font-weight: bold;
-        position: absolute;
-        right: 1rem;
-
-        &-left {
-          background: $aaOrangeGradient;
-          right: 10rem;
-          left: 1rem;
-        }
-      }
 
       .title-container {
         .title {
@@ -151,7 +130,8 @@
           font-weight: bold;
           margin-left: 1rem;
           margin-right: 1em;
-          margin-top: 0.5em;
+          // adjust below so titles line up
+          margin-top: 0.2em;
           padding-bottom: 0.5rem;
           padding-left: 1rem;
           padding-top: 0.5rem;
@@ -159,24 +139,11 @@
         }
       }
 
-      .user-select-container {
+      .dropdown-select-container {
         margin-left: 2rem;
         width: calc(100% - 4rem);
 
-        .user-select {
-          width: 100%;
-        }
-      }
-
-      .status-radio-button {
-        margin: 5px;
-      }
-
-      .reason-select-container {
-        margin-left: 2rem;
-        width: calc(100% - 4rem);
-
-        .reason-select {
+        .dropdown-select {
           width: 100%;
         }
       }
@@ -193,7 +160,7 @@
       .description-container {
         background: $offWhite;
         height: 100%;
-        margin-bottom: 4.4rem;
+        margin-bottom: .3rem;
         margin-left: 2rem;
         width: calc(100% - 4rem);
 
@@ -209,10 +176,44 @@
         .description-input {
           background: $offWhite;
           border: none;
-          height: calc(100% - 4rem);
+          height: calc(100% - 3.3rem);
           padding: 0.5rem 1rem 0;
           resize: none;
           width: 100%;
+
+        }
+      }
+
+      .actions-container {
+        display: flex;
+        flex-direction: row;
+        width: calc(100% - 10rem);
+        margin: 1rem 5rem 1rem 5rem;
+        justify-content: space-between;
+
+        .action-button {
+          height: 3.5rem;
+          width: 3.5rem;
+        }
+        
+        .action-button-icon {
+          color: $gray;
+          background: $aaOrangeGradient;
+          //background-clip: border-box;
+          font-size: 3.5rem;
+          height: 3.5rem;
+          line-height: 3.5rem;
+          vertical-align: middle;
+          width: 3.5rem;
+        }
+
+        .action-button-icon-nobg {
+          @extend .action-button-icon;
+          background: $lightLightGray;
+        }
+
+        .bgon {
+          background: $aaOrangeGradient;
         }
       }
     }

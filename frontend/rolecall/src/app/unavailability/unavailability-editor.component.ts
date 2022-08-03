@@ -1,18 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatSelectChange} from '@angular/material/select';
-import {Unavailability, UnavailabilityApi, UnavailbilityReason,
+import {Unavailability, UnavailabilityApi, UnavailabilityReason,
 } from '../api/unavailability-api.service';
 import {User, UserApi} from '../api/user_api.service';
 import * as APITypes from 'src/api_types';
-// import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
+
 
 type ProcessedUnav = {
   unav: Unavailability;
   user: User;
   fromDateStr: string;
   toDateStr: string;
-  
 };
 
 @Component({
@@ -23,29 +22,28 @@ type ProcessedUnav = {
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class UnavailabilityEditor implements OnInit {
 
-  currentUnavailabilities: Unavailability[] = [];
-  pastUnavailabilities: Unavailability[] = [];
-  processedCurrUnavs: ProcessedUnav[] = [];
-  processedPastUnavs: ProcessedUnav[] = [];
-  isEditingPrevious = false;
+  unavs: Unavailability[] = [];
+  processedUnavs: ProcessedUnav[] = [];
   state: Unavailability;
 
-  selectedReason : UnavailbilityReason;
   selectedUser: User;
+  selectedReason: UnavailabilityReason;
   startDate: Date;
   endDate: Date;
   canSave = false;
-  status: Boolean;
+  canDelete = false;
+
+  initialSelectedReason = '';
 
   allUsers: User[];
   dataLoaded = false;
   unavsLoaded = false;
   usersLoaded = false;
-  reasonList: UnavailbilityReason[];
 
   constructor(
-    private unavAPI: UnavailabilityApi,
     private userAPI: UserApi,
+
+    public unavAPI: UnavailabilityApi,
   ) {
   }
 
@@ -56,31 +54,21 @@ export class UnavailabilityEditor implements OnInit {
     this.userAPI.userEmitter.subscribe(val => this.onUsersLoad(val));
     this.unavAPI.getAllUnavailabilities();
     this.userAPI.getAllUsers();
-    this.reasonList = ['INJURY','VACATION','OTHER']
-
   }
 
-  onUnavsLoad = (unavs: Unavailability[]): void => {
-
-    const dateOldToNewComp = (
-      a: Unavailability, b: Unavailability): number =>
-      a.startDate - b.startDate;
-
-    const dateNewToOldComp = (
-      a: Unavailability, b: Unavailability): number =>
-      b.startDate - a.startDate;
-
-    const now = Date.now();
-    this.currentUnavailabilities =
-        unavs.filter(ua => ua.endDate > now).sort(dateOldToNewComp);
-    this.pastUnavailabilities =
-        unavs.filter(ua => ua.endDate <= now).sort(dateNewToOldComp);
+  onUnavsLoad = (
+    unavs: Unavailability[],
+  ): void => {
+    this.unavs = Array.from(unavs).sort((ua, ub) => ua.endDate - ub.endDate)
     this.unavsLoaded = true;
     this.checkDataLoaded();
   };
 
-  onUsersLoad = (users: User[]): void => {
-    this.allUsers = users.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
+  onUsersLoad = (
+    users: User[],
+  ): void => {
+    this.allUsers = users.sort((a, b) =>
+      a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
     this.usersLoaded = true;
     this.checkDataLoaded();
   };
@@ -94,14 +82,7 @@ export class UnavailabilityEditor implements OnInit {
   };
 
   afterAllDataLoaded = (): void => {
-    this.processedCurrUnavs = this.currentUnavailabilities.map(ua => ({
-        unav: ua,
-        user: this.userAPI.users.get(String(ua.userId)),
-        fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
-        toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
-      })
-    );
-    this.processedPastUnavs = this.pastUnavailabilities.map(ua => ({
+    this.processedUnavs = this.unavs.map(ua => ({
         unav: ua,
         user: this.userAPI.users.get(String(ua.userId)),
         fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
@@ -110,73 +91,90 @@ export class UnavailabilityEditor implements OnInit {
     );
   };
 
-  createNewUnavailability = (): Unavailability => ({
+  createNewUnavailability = (): Unavailability => {
+    this.canDelete = false;
+    return {
       id: Date.now(),
+      reason: 'UNDEF',
       description: '',
-      userId: undefined,
+      userId: 0,
       startDate: Date.now(),
       endDate: Date.now(),
-      reason: 'UNDEF'
-
-    });
-
+    };
+  };
 
   updateCanSave = (): void => {
-    this.canSave = (!!this.startDate
+    this.canSave = (
+      !!this.startDate
       && !!this.endDate
-      && !!this.selectedUser);
+      && !!this.selectedUser
+      && (!!this.selectedReason && this.selectedReason !== 'UNDEF')
+    );
   };
 
   resetCompState = (): void => {
     this.selectedUser = undefined;
+    this.selectedReason = 'UNDEF';
     this.startDate = undefined;
     this.endDate = undefined;
-    this.selectedReason = undefined;
     this.updateCanSave();
   };
 
-  onSelectUser = (event: MatSelectChange): void => {
+  onSelectUser = (
+    event: MatSelectChange,
+  ): void => {
     this.state.userId = Number(event.value.uuid);
     this.selectedUser = event.value;
-    
     this.updateCanSave();
   };
 
-  onSelectReason = (event: MatSelectChange): void => {
-    this.state.reason = event.value;
+  onSelectReason = (
+    event: MatSelectChange,
+  ): void => {
+    this.selectedReason =
+      ( event.value as string ).toUpperCase() as UnavailabilityReason;
+    this.state.reason = this.selectedReason;
     this.updateCanSave();
   };
 
-  onFromDateChange = (event: MatDatepickerInputEvent<Date>): void => {
+  onFromDateChange = (
+    event: MatDatepickerInputEvent<Date>,
+  ): void => {
     this.state.startDate = event.value.getTime();
     this.updateCanSave();
   };
 
-  onToDateChange = (event: MatDatepickerInputEvent<Date>): void => {
+  onToDateChange = (
+    event: MatDatepickerInputEvent<Date>,
+  ): void => {
     this.state.endDate = event.value.getTime();
     this.updateCanSave();
   };
 
-  onDescChange = (event: Event): void => {
+  onDescChange = (
+    event: Event,
+  ): void => {
     this.state.description = ( event.target as HTMLInputElement ).value;
   };
 
   onNewUnav = (): void => {
-    this.isEditingPrevious = false;
     this.state = this.createNewUnavailability();
+    this.initialSelectedReason = '';
     this.resetCompState();
-
   };
 
-  onEditUnav = (unav: Unavailability): void => {
+  onEditUnav = (
+    unav: Unavailability,
+  ): void => {
     this.resetCompState();
-    this.isEditingPrevious = true;
     this.state = JSON.parse(JSON.stringify(unav));
     this.selectedUser = this.userAPI.users.get(String(this.state.userId));
     this.selectedReason = unav.reason;
+    this.initialSelectedReason = this.makeTypePretty(this.selectedReason);
     this.startDate = new Date(unav.startDate);
     this.endDate = new Date(unav.endDate);
     this.updateCanSave();
+    this.canDelete = true;
   };
 
   onSaveUnav = (): void => {
@@ -185,8 +183,8 @@ export class UnavailabilityEditor implements OnInit {
     });
   };
 
-  onDeleteUnav = (ua: Unavailability): void => {
-    this.doDeleteUnav(ua);
+  onDeleteUnav = (): void => {
+    this.doDeleteUnav(this.state);
   };
 
   doSetUnav = async (): Promise<APITypes.SuccessIndicator> =>
@@ -195,8 +193,15 @@ export class UnavailabilityEditor implements OnInit {
 
   doDeleteUnav = async (
     ua: Unavailability,
-  ): Promise<APITypes.SuccessIndicator> =>
-    this.unavAPI.deleteUnavailability(ua);
+  ): Promise<APITypes.SuccessIndicator> => {
+    const success = this.unavAPI.deleteUnavailability(ua);
+    this.onNewUnav();
+    return success;
+  };
+
+
+  makeTypePretty = (type: UnavailabilityReason): string =>
+    !!type ? type.slice(0, 1) + type.slice(1).toLowerCase() : '';
 
 
 }

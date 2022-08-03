@@ -8,3 +8,5 @@ backend/.factorypath
 .idea
 frontend/rolecall/.vscode/settings.json
 frontend/rolecall/.angular/cache/
+.DS_Store
+**/.DS_Store
