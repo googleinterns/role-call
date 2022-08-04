@@ -1,0 +1,249 @@
+<app-loading-spinner *ngIf="!segmentsLoaded"></app-loading-spinner>
+<div class="std-panel-container">
+  <div class="left-panel">
+    <div class="app-card std-card-margins std-left-card">
+      <h1 class="std-left-card-title">
+        Segments
+      </h1>
+      <div class="item-select-container">
+        <div
+            *ngFor="let item of leftList.visibleItems"
+            class="app-card item-select"
+            [class.selected-item]="currentSelectedSegment && item.uuid === currentSelectedSegment.uuid "
+            [style.marginLeft.rem]="item.siblingId > 0 ? 3 : .9"
+            (click)="setCurrentSegmentFromIndex(item.segmentIndex)">
+          <div
+              *ngIf="item.type === 'SUPER'; else otherSegments"
+              class="parent-container">
+            <h2 class="item-name parent-name">
+              {{item.name}}
+            </h2>
+            <button
+                mat-icon-button
+                aria-label="Toggle Super Ballet"
+                class="child-button"
+                (click)="toggleOpen(item.segmentIndex)">
+              <mat-icon
+                  [inline]="true"
+                  class="child-button-icon">
+                {{item.isOpen ? 'expand_less' : "expand_more"}}
+              </mat-icon>
+            </button>
+          </div>
+          <ng-template #otherSegments>
+            <h2
+                class="item-name"
+                [class.std-italic-font]="item.siblingId > 0">
+              {{item.name}}
+            </h2>
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="app-card std-card-margins right-card">
+      <div *ngIf="currentSelectedSegment; else noSelectedSegment">
+        <div class="right-title-edit">
+          <input
+            type="text"
+            class="title-input app-card"
+            (input)="onTitleInput($event)"
+            [size]="(((currentSelectedSegment | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length'] < 15)
+              ? 15 : ((currentSelectedSegment | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)['length']"
+            [value]="((currentSelectedSegment | emptyStringIfUndefined)['name'] | emptyStringIfUndefined)"
+          />
+        </div>
+        <div class="right-top-comment">
+          <h2>{{ segmentPrettyNames[currentTypeOffset] }}</h2>
+        </div>
+      </div>
+      <ng-template #noSelectedSegment>
+        <div></div>
+      </ng-template>
+
+      <div
+          *ngIf="haveContent()"
+          class="app-card positions-card">
+        <div
+            cdkDropList
+            cdkDropListOrientation="vertical"
+            (cdkDropListDropped)="drop($event)"
+            id="position-pool">
+          <div *ngIf="currentSelectedSegment">
+            <div *ngFor="let data of dragAndDropData; let i = index">
+              <div *ngIf="data.type === 'added'; else addingAndEditingPosition">
+                <div
+                    cdkDrag
+                    class="position-container">
+                  <div class="app-card position-name-card">
+                    <h2
+                        class="position-name"
+                        [class.std-italic-font]="data.pos.siblingId > 0">
+                      {{ data.nameDisplay }}
+                    </h2>
+                    <h2 class="position-size">{{ data.sizeDisplay }}</h2>
+                  </div>
+                  <div class="add-button-height-container">
+                    <button
+                        mat-icon-button
+                        aria-label="Edit Position Button"
+                        class="narrow-button"
+                        (click)="editPosition(data.index)">
+                      <mat-icon
+                          [inline]="true"
+                          class="narrow-button-icon">
+                        create
+                      </mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        aria-label="Delete Position Button"
+                        class="narrow-button"
+                        (click)="deletePosition(data.index)">
+                      <mat-icon
+                          [inline]="true"
+                          class="narrow-button-icon">
+                        delete
+                      </mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #addingAndEditingPosition>
+                <div
+                    cdkDrag
+                    class="adding-position-container">
+                  <div
+                      class="adding-position-name-container"
+                      [style.width.%]="currentSelectedSegment.type === 'BALLET' ? 70 : 100">
+                    <app-text-input
+                        (valueChange)="onInputChange({change: $event, data: data})"
+                        [bgColor]="offWhite"
+                        [valueName]="data.valueName"
+                        [initValue]="data.pos.name">
+                    </app-text-input>
+                  </div>
+                  <div
+                      *ngIf="currentSelectedSegment.type === 'BALLET'"
+                      class="adding-position-size-container">
+                    <app-text-input
+                        (valueChange)="onInputChange({change: $event, data: data})"
+                        [bgColor]="offWhite"
+                        [valueName]="sizeValueName"
+                        [initValue]="data.pos.size">
+                    </app-text-input>
+                  </div>
+                  <div class="add-button-height-container">
+                    <button
+                        mat-icon-button
+                        aria-label="Delete Position Button"
+                        class="narrow-button"
+                        (click)="deleteAddingPosition(data.index)">
+                      <mat-icon
+                          [inline]="true"
+                          class="narrow-button-icon">
+                        delete
+                      </mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="add-button-width-container-right">
+          <div class="add-button-height-container">
+            <button
+                mat-icon-button
+                aria-label="Add Position Button"
+                class="narrow-button"
+                (click)="addPosition()">
+              <mat-icon
+                  [inline]="true"
+                  class="narrow-button-icon">
+                add
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        [class.actions-container-no-positions]="!currentSelectedSegment ||
+          (currentSelectedSegment && currentSelectedSegment.type === 'SEGMENT')"
+        class="actions-container"
+      >
+
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="Delete Segment"
+          matTooltip="Delete Segment"
+          [disabled]="!canDelete"
+          (click)="deleteSegment()"
+        >
+          <mat-icon
+            class="action-button-icon-nobg"
+            [ngClass]="canDelete ? 'bgon' : ''"
+          >
+            delete
+          </mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="New Segment"
+          matTooltip="New Segment"
+          [matMenuTriggerFor]="addMenu"
+        >
+          <mat-icon class="action-button-icon">
+            add
+          </mat-icon>
+        </button>
+        <mat-menu #addMenu="matMenu">
+          <button
+              mat-menu-item
+              class="create-segment-menu-item"
+              (click)="addSegment(1)">
+            Create Segment
+          </button>
+          <button
+              mat-menu-item
+              class="create-segment-menu-item"
+              (click)="addSegment(2)">
+            Create Ballet
+          </button>
+          <button
+              mat-menu-item
+              class="create-segment-menu-item"
+              (click)="addSegment(3)">
+            Create Super Ballet
+          </button>
+        </mat-menu>
+
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="Save Segment"
+          matTooltip="Save Segment"
+          [disabled]="!canSave"
+
+          (click)="onSaveSegment()"
+        >
+          <mat-icon
+            class="action-button-icon-nobg"
+            [ngClass]="canSave ? 'bgon' : ''"
+          >
+            save
+          </mat-icon>
+        </button>
+
+      </div>
+    
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import {RequestInterceptorService} from './request-interceptor.service';
-import {LoginApi} from '../api/login_api.service';
+import {LoginApi} from '../api/login-api.service';
 
 describe('RequestInterceptorService', () => {
   let service: RequestInterceptorService;

@@ -306,16 +306,16 @@
         </div>
         <div
             cdkDropList
-            id="piece-list"
+            id="segment-list"
             [cdkDropListData]="step2PickFrom">
           <div *ngFor="let data of step2PickFrom; let i = index">
             <div
                 cdkDrag
-                class="piece-name-container"
+                class="segment-name-container"
                 [cdkDragData]="data">
-              <div class="app-card piece-name-card"
+              <div class="app-card segment-name-card"
                 [class.std-underlined-font]="data.type === 'SUPER'">
-                <h2 class="piece-name">{{data.name}}</h2>
+                <h2 class="segment-name">{{data.name}}</h2>
               </div>
             </div>
           </div>
@@ -334,12 +334,12 @@
             <div *ngFor="let data of step2Data; let i = index">
               <div
                   cdkDrag
-                  class="piece-container"
+                  class="segment-container"
                   [cdkDragData]="data">
                 <div
-                    class="app-card piece-name-card"
+                    class="app-card segment-name-card"
                     [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0">
-                  <h2 class="piece-name-delete"
+                  <h2 class="segment-name-delete"
                   [class.std-italic-font]="data.siblingId > 0"
                   [class.std-underlined-font]="data.type === 'SUPER'">
                     {{data.name}}</h2>
@@ -348,8 +348,8 @@
                   <button
                       mat-icon-button
                       class="delete-button"
-                      aria-label="Delete Piece Button"
-                      (click)="deletePiece(data, i)">
+                      aria-label="Delete Segment Button"
+                      (click)="deleteSegment(data, i)">
                     <mat-icon
                         [inline]="true"
                         class="delete-button-icon">

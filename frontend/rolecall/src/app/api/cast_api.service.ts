@@ -2,17 +2,17 @@
 
 import {HttpClient, HttpResponse, HttpParams} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import * as APITypes from 'src/api_types';
+import * as APITypes from 'src/api-types';
 import {environment} from 'src/environments/environment';
 import {lastValueFrom} from 'rxjs';
 
-import {MockCastBackend} from '../mocks/mock_cast_backend';
+import {MockCastBackend} from '../mocks/mock-cast-backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-import {PieceApi, Position} from './piece_api.service';
+import {SegmentApi, Position} from './segment-api.service';
 
 type RawCastMember = {
   id: number;
@@ -124,7 +124,7 @@ export class CastApi {
   constructor(
       private loggingService: LoggingService,
       private http: HttpClient,
-      private pieceAPI: PieceApi,
+      private segmentApi: SegmentApi,
       private headerUtil: HeaderUtilityService,
       private respHandler: ResponseStatusHandlerService,
   ) {
@@ -135,7 +135,7 @@ export class CastApi {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllCasts();
     }
-    await this.pieceAPI.getAllPieces();
+    await this.segmentApi.getAllSegments();
     const header = await this.headerUtil.generateHeader();
     const params = new HttpParams().append('perfdate', '' + perfDate);
     return lastValueFrom(this.http.get<AllRawCastsResponse>(
@@ -150,8 +150,8 @@ export class CastApi {
         .then(result => {
           this.rawCasts = result.data;
           const allPositions: Position[] = [];
-          Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
-            allPositions.push(...piece.positions);
+          Array.from(this.segmentApi.segments.values()).forEach(segment => {
+            allPositions.push(...segment.positions);
           });
           return {
             data: {
@@ -403,8 +403,8 @@ export class CastApi {
   private patchPostPrep = (cast: Cast): RawCast => {
     const allSubCasts: RawSubCast[] = [];
     const allPositions: Position[] = [];
-    Array.from(this.pieceAPI.pieces.values()).forEach(piece => {
-      allPositions.push(...piece.positions);
+    Array.from(this.segmentApi.segments.values()).forEach(segment => {
+      allPositions.push(...segment.positions);
     });
     for (const filledPos of cast.filled_positions) {
       for (const group of filledPos.groups) {

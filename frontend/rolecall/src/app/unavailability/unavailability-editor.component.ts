@@ -3,8 +3,8 @@ import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatSelectChange} from '@angular/material/select';
 import {Unavailability, UnavailabilityApi, UnavailabilityReason,
 } from '../api/unavailability-api.service';
-import {User, UserApi} from '../api/user_api.service';
-import * as APITypes from 'src/api_types';
+import {User, UserApi} from '../api/user-api.service';
+import * as APITypes from 'src/api-types';
 
 
 type ProcessedUnav = {

@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatInputModule} from '@angular/material/input';
 import {CommonComponentsModule,
-} from '../common_components/common_components.module';
+} from '../common-components/common-components.module';
 import {UserEditor} from './user-editor.component';
 
 @NgModule({

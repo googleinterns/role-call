@@ -2,11 +2,11 @@
 
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import * as APITypes from 'src/api_types';
+import * as APITypes from 'src/api-types';
 import {environment} from 'src/environments/environment';
 import {lastValueFrom} from 'rxjs';
 
-import {MockUnavailabilityBackend} from '../mocks/mock_unavailability_backend';
+import {MockUnavailabilityBackend} from '../mocks/mock-unavailability-backend';
 import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService,

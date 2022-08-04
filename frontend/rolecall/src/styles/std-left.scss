@@ -1,0 +1,115 @@
+
+// Overall container for panels styling
+.std-panel-container {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 90vh;
+  width: 100%;
+}
+
+// Margins on the panel cards
+.std-card-margins {
+  height: 96vh;
+  margin: 2vh;
+}
+
+// Start of left side SCSS
+
+// Left card arrangement and styling
+.std-left-card {
+  background: $offWhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 1em;
+  max-height: 86vh;
+}
+
+.std-left-card-double {
+  @extend .std-left-card;
+  justify-content: space-between;
+
+}
+
+// Title styling
+.std-left-card-title {
+  margin: 1rem;
+  font-weight: 800;
+  font-size: xx-large;
+}
+
+.item-select-container {
+  overflow-y: scroll;
+  height: calc(100% - 5rem);
+  width: 100%;
+}
+
+.item-select {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.item-name {
+  margin: auto 1em;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.selected-item {
+  background-color: $offoffWhite;
+}
+
+.parent-container {
+  display: flex;
+}
+
+.parent-name {
+  width: 80%;
+  text-decoration: underline;
+}
+
+.child-button {
+  margin-top: .6rem;
+  border-radius: $borderRadius;
+  height: 5vh;
+  width: 5vh;
+}
+
+.child-button-icon {
+  font-size: 3.5vh;
+}
+
+.add-button-width-container-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  min-height: 7.5vh;
+  width: 96.5%;
+}
+
+.add-button-height-container-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 5vh;
+}
+
+.add-button {
+  background: $white;
+  border-radius: $borderRadius;
+  height: 5vh;
+  margin-right: 1em;
+  width: 5vh;
+}
+
+.add-button-icon {
+  font-size: 4vh;
+}
+
+
+// End of left side SCSS

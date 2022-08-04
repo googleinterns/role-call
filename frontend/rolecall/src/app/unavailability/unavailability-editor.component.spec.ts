@@ -10,10 +10,10 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 
 import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test_utils';
+import {createSpyObjWithProps} from 'src/test-utils';
 
 import {UnavailabilityApi} from '../api/unavailability-api.service';
-import {UserApi} from '../api/user_api.service';
+import {UserApi} from '../api/user-api.service';
 
 import {UnavailabilityEditor} from './unavailability-editor.component';
 

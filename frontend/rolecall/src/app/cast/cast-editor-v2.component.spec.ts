@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
-import {createSpyObjWithProps} from 'src/test_utils';
+import {createSpyObjWithProps} from 'src/test-utils';
 
 import {CastApi} from '../api/cast_api.service';
-import {PieceApi} from '../api/piece_api.service';
-import {UserApi} from '../api/user_api.service';
+import {SegmentApi} from '../api/segment-api.service';
+import {UserApi} from '../api/user-api.service';
 import {LoggingService} from '../services/logging.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 
@@ -32,10 +32,10 @@ describe('CastEditorV2Component', () => {
     },
     props: {castEmitter: of([])},
   });
-  const mockPieceApi = createSpyObjWithProps<PieceApi>({
-    baseName: 'mockPieceApi',
-    methods: {getAllPieces: Promise.resolve([])},
-    props: {pieceEmitter: of([])},
+  const mockSegmentApi = createSpyObjWithProps<SegmentApi>({
+    baseName: 'mockSegmentApi',
+    methods: {getAllSegments: Promise.resolve([])},
+    props: {segmentEmitter: of([])},
   });
   const mockUserApi = createSpyObjWithProps<UserApi>({
     baseName: 'mockUserApi',
@@ -56,7 +56,7 @@ describe('CastEditorV2Component', () => {
           ],
           providers: [
             {provide: CastApi, useValue: mockCastApi},
-            {provide: PieceApi, useValue: mockPieceApi},
+            {provide: SegmentApi, useValue: mockSegmentApi},
             {provide: ActivatedRoute, useValue: fakeActivatedRoute},
             {provide: Location, useValue: fakeLocation},
             {provide: UserApi, useValue: mockUserApi},
