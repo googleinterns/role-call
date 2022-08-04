@@ -219,7 +219,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // All Steps ----------------------------------------------------
 
   createNewPerformance = (): Performance => ({
-      uuid: 'performance' + Date.now(),
+      uuid: 'performance' + Date.now(),      
       status: PerformanceStatus.DRAFT,
       step_1: {
         title: 'New Performance',
@@ -532,7 +532,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    this.castDnD?.selectCast({uuid: castUUID, saveDeleteEnabled: false});
+    this.castDnD?.selectCast({uuid: castUUID, saveDeleteEnabled: false, perfDate: this.state.dateTime});
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];

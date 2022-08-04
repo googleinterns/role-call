@@ -106,10 +106,11 @@
                   *ngFor="let perf of publishedPerfs" class="child app-card"
                   [ngClass]="this.selectedPerformance && perf.uuid === this.selectedPerformance.uuid ? 'child-selected' : ''"
                   (click)="onSelectRecentPerformance(perf)">
-                <h3 class="performance-title">
-                  {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
-                + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - "
-                + perf.step_1.title }}
+                <h3 class="performance-title" >
+                  <div [ngClass]="perf.hasAbsence ? 'child-absence' : ''" >{{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
+                      + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - "
+                      + perf.step_1.title }}
+                  </div>
                 </h3>
               </div>
             </div>

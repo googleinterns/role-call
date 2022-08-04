@@ -22,6 +22,7 @@ public class Constants {
     public static final String UNAVAILABLE_ID = "unavailableid";
     public static final String START_DATE = "startdate";
     public static final String END_DATE = "enddate";
+    public static final String PERF_DATE = "perfdate";
   }
 
   public static class Headers {

@@ -39,6 +39,8 @@ export type PerformanceSegment = {
 
 export type Performance = {
   uuid: string;
+  dateTime?: number;
+  hasAbsence?: boolean;
   status: APITypes.PerformanceStatus.DRAFT |
       APITypes.PerformanceStatus.PUBLISHED |
       APITypes.PerformanceStatus.CANCELED;
@@ -74,6 +76,7 @@ export type RawPerformance = {
   venue: string;
   dateTime: number;
   status: string;
+  hasAbsence?: boolean;
   performanceSections: {
     id?: number;
     // may not exist. Only set on way to server
@@ -91,6 +94,7 @@ export type RawPerformance = {
           order: number;
           userId: number;
           performing: boolean;
+          hasAbsence?: boolean;
         }[];
       }[];
     }[];
@@ -143,6 +147,8 @@ export class PerformanceApi {
    */
   convertRawToPerformance = (raw: RawPerformance): Performance => ({
       uuid: String(raw.id),
+      dateTime: raw.dateTime,
+      hasAbsence: raw.hasAbsence,
       status: (raw.status === 'DRAFT' || raw.status === 'PUBLISHED'
                || raw.status
                === 'CANCELED')
@@ -175,7 +181,8 @@ export class PerformanceApi {
                     group_index: sumCast.castNumber,
                     members: sumCast.members.map(mem => ({
                         uuid: String(mem.userId),
-                        position_number: mem.order
+                        position_number: mem.order,
+                        hasAbsence: mem.hasAbsence
                       })
                     )
                   })

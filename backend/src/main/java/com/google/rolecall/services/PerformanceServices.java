@@ -64,6 +64,7 @@ public class PerformanceServices {
       program.getPerformanceCastMembers().forEach(member -> {        
          Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser().getId(), new Date(p.getDate().getTime()));
          if (unavailability != null) {
+          member.setHasAbsence(true);
           uList.add(unavailability);      
          }
       });
