@@ -1,6 +1,6 @@
 import {MatDialog} from '@angular/material/dialog';
 
-import {LoginApi} from '../api/login_api.service';
+import {LoginApi} from '../api/login-api.service';
 
 import {ResponseStatusHandlerService} from './response-status-handler.service';
 

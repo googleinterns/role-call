@@ -6,13 +6,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {EditableTextInput,
-} from '../common_components/editable_text_input.component';
+} from '../common-components/editable-text-input.component';
 import {EditableDateInput,
-} from '../common_components/editable_date_input.component';
+} from '../common-components/editable-date-input.component';
 import {EditableMultiSelectInput,
-} from '../common_components/editable_multiselect_input.component';
+} from '../common-components/editable-multiselect-input.component';
 import {LoadingSpinnerComponent,
-} from '../common_components/loading-spinner.component';
+} from '../common-components/loading-spinner.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -20,12 +20,12 @@ import {MatSelectModule} from '@angular/material/select';
 
 import {ActivatedRoute} from '@angular/router';
 import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test_utils';
+import {createSpyObjWithProps} from 'src/test-utils';
 import {Location} from '@angular/common';
 
 import {EmptyStringIfUndefinedPipe,
-} from '../common_components/empty_string_if_undefined.pipe';
-import {UserApi} from '../api/user_api.service';
+} from '../common-components/empty-string-if-undefined.pipe';
+import {UserApi} from '../api/user-api.service';
 
 import {UserEditor} from './user-editor.component';
 

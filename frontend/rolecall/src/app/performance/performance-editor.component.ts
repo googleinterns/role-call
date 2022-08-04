@@ -9,14 +9,14 @@ import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy,
 } from '@angular/core';
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
-import {PerformanceStatus} from 'src/api_types';
-import {Cast, CastApi} from '../api/cast_api.service';
+import {PerformanceStatus} from 'src/api-types';
+import {Cast, CastApi} from '../api/cast-api.service';
 import {Performance, PerformanceApi, PerformanceSegment,
 } from '../api/performance-api.service';
-import {Piece, PieceApi} from '../api/piece_api.service';
-import {UserApi} from '../api/user_api.service';
+import {Segment, SegmentApi} from '../api/segment-api.service';
+import {UserApi} from '../api/user-api.service';
 import {CastDragAndDrop} from '../cast/cast-drag-and-drop.component';
-import {Stepper} from '../common_components/stepper.component';
+import {Stepper} from '../common-components/stepper.component';
 import {CsvGenerator} from '../services/csv-generator.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
@@ -33,7 +33,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('stepper') stepper: Stepper;
   @ViewChild('castDnD') castDnD?: CastDragAndDrop;
 
-  stepperOpts = ['Performance Details', 'Pieces & Intermissions', 'Fill Casts',
+  stepperOpts = ['Performance Details', 'Segments & Intermissions', 'Fill Casts',
     'Finalize'];
 
   state: Performance;
@@ -42,7 +42,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   performancesLoaded = false;
   usersLoaded = false;
-  piecesLoaded = false;
+  segmentsLoaded = false;
   castsLoaded = false;
   dataLoaded = false;
 
@@ -66,13 +66,13 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // Step 2 -------------------------------------------------------
 
   hasSuper: boolean;
-  step2AllSegments: Piece[];
-  step2Data: Piece[];
-  step2PickFrom: Piece[];
+  step2AllSegments: Segment[];
+  step2Data: Segment[];
+  step2PickFrom: Segment[];
 
   // Step 3 -------------------------------------------------------
 
-  selectedSegment: Piece;
+  selectedSegment: Segment;
   selectedIndex: number;
 
   // segment uuid to cast, primary cast, and length
@@ -98,7 +98,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   constructor(
       private performanceAPI: PerformanceApi,
-      private piecesAPI: PieceApi,
+      private segmentApi: SegmentApi,
       private castAPI: CastApi,
       private respHandler: ResponseStatusHandlerService,
       private userAPI: UserApi,
@@ -115,11 +115,11 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.state = this.createNewPerformance();
     this.performanceAPI.performanceEmitter.subscribe(
         val => this.onPerformanceLoad(val));
-    this.piecesAPI.pieceEmitter.subscribe(val => this.onPieceLoad(val));
+    this.segmentApi.segmentEmitter.subscribe(val => this.onSegmentLoad(val));
     this.castAPI.castEmitter.subscribe(val => this.onCastLoad(val));
     this.userAPI.userEmitter.subscribe(() => this.onUserLoad());
     this.performanceAPI.getAllPerformances();
-    this.piecesAPI.getAllPieces();
+    this.segmentApi.getAllSegments();
     this.castAPI.getAllCasts();
     this.userAPI.getAllUsers();
     this.initPDFMake();
@@ -164,17 +164,17 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.checkDataLoaded();
   };
 
-  onPieceLoad = (pieces: Piece[]): void => {
+  onSegmentLoad = (segments: Segment[]): void => {
     this.step2AllSegments = [];
-    this.step2AllSegments.push(...pieces.map(val => val));
+    this.step2AllSegments.push(...segments.map(val => val));
     // Make sure pick list only includes top level segments and excludes
     // children of Super Ballets
     this.step2PickFrom = this.step2AllSegments.filter(
-        (segment: Piece) => !segment.siblingId);
+        (segment: Segment) => !segment.siblingId);
     this.step2PickFrom.sort((a, b) => a.name < b.name ? -1 : 1);
     this.step2Data = [];
     this.initStep2Data();
-    this.piecesLoaded = true;
+    this.segmentsLoaded = true;
     this.checkDataLoaded();
   };
 
@@ -185,7 +185,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   };
 
   checkDataLoaded = (): boolean => {
-    this.dataLoaded = this.performancesLoaded && this.piecesLoaded &&
+    this.dataLoaded = this.performancesLoaded && this.segmentsLoaded &&
                       this.castsLoaded && this.usersLoaded;
     if (this.dataLoaded && this.urlUUID && !this.performanceSelected) {
       this.startAtPerformance(this.urlUUID);
@@ -423,9 +423,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // Step 2 -------------------------------------------------------
 
-  deletePiece = (piece: Piece, index: number): void => {
+  deleteSegment = (segment: Segment, index: number): void => {
     this.step2Data = this.step2Data.filter(
-        (val, ind) => val.uuid !== piece.uuid || ind !== index);
+        (val, ind) => val.uuid !== segment.uuid || ind !== index);
     this.updateStep2State();
   };
 
@@ -441,14 +441,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.hasSuper = !!this.step2Data.find(segment => segment.type === 'SUPER');
   };
 
-  step2Drop = (event: CdkDragDrop<Piece[]>): void => {
+  step2Drop = (event: CdkDragDrop<Segment[]>): void => {
     let draggedSegment;
     if (event.container.id === 'program-list' &&
         event.previousContainer.id === 'program-list') {
       draggedSegment = event.previousContainer.data[event.previousIndex];
       transferArrayItem(event.previousContainer.data, event.container.data,
           event.previousIndex, event.currentIndex);
-    } else if (event.previousContainer.id === 'piece-list' &&
+    } else if (event.previousContainer.id === 'segment-list' &&
                event.container.id === 'program-list') {
       draggedSegment = event.item.data;
       copyArrayItem([draggedSegment], event.container.data, 0,
@@ -493,7 +493,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
   };
 
-  onSelectStep3Segment = (segment: Piece, segmentIx: number): void => {
+  onSelectStep3Segment = (segment: Segment, segmentIx: number): void => {
     this.saveCastChanges();
     this.selectedSegment = segment;
     this.selectedIndex = segmentIx;
@@ -592,7 +592,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       }
       for (const [i, seg] of this.state.step_3.segments.entries()) {
         const castUUID = this.state.uuid + 'cast' + seg.segment;
-        if (this.piecesAPI.pieces.get(seg.segment).type === 'SEGMENT') {
+        if (this.segmentApi.segments.get(seg.segment).type === 'SEGMENT') {
           this.intermissions.set(i, seg.length ? seg.length : 0);
           this.segmentToPerfSectionID.set(castUUID, seg.id);
         } else {
@@ -872,7 +872,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // Removes the Super Ballet children so every Super Ballet drag just inserts
   // its children right below it, regardless of where the dragging originated
-  private removeSuperChildren = (draggedSegment: Piece): void => {
+  private removeSuperChildren = (draggedSegment: Segment): void => {
     for (const segment of this.step2Data) {
       if (segment.uuid === draggedSegment.uuid) {
         for (const position of segment.positions) {
@@ -887,12 +887,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // A Super Ballet has children that need to be placed right below the Super
   // Ballet
-  private addSuperChildren = (draggedSegment: Piece): void => {
+  private addSuperChildren = (draggedSegment: Segment): void => {
     for (let segmentIndex = 0; segmentIndex < this.step2Data.length;
          segmentIndex++) {
       const segment = this.step2Data[segmentIndex];
       if (segment.uuid === draggedSegment.uuid) {
-        const childArr: Piece[] = [];
+        const childArr: Segment[] = [];
         for (const position of segment.positions) {
           if (position.siblingId) {
             const sibling = this.step2AllSegments.find(

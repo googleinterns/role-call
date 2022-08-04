@@ -3,7 +3,7 @@
 import {Location} from '@angular/common';
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {User, UserApi} from '../api/user_api.service';
+import {User, UserApi} from '../api/user-api.service';
 
 /**
  * The view for the User Editor, allowing users to create other users
@@ -170,7 +170,8 @@ export class UserEditor implements OnInit {
       this.location.replaceState('/user/' + user.uuid);
     }
     this.urlPointingUUID = user.uuid;
-    this.renderingUsers.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
+    this.renderingUsers.sort((a, b) =>
+      a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
   };
 
   addUser = (): void => {
@@ -181,10 +182,10 @@ export class UserEditor implements OnInit {
     this.canSave = true;
     this.prevWorkingState = undefined;
     const newUser: User = {
-      first_name: undefined,
-      middle_name: undefined,
-      last_name: undefined,
-      suffix: undefined,
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      suffix: '',
       picture_file: undefined,
       has_roles: {
         isAdmin: false,
@@ -203,13 +204,13 @@ export class UserEditor implements OnInit {
       },
       date_joined: Date.now(),
       contact_info: {
-        phone_number: undefined,
-        email: undefined,
-        notification_email: undefined,
+        phone_number: '',
+        email: '',
+        notification_email: '',
         emergency_contact: {
-          name: undefined,
-          phone_number: undefined,
-          email: undefined
+          name: '',
+          phone_number: '',
+          email: ''
         }
       },
       knows_positions: [],

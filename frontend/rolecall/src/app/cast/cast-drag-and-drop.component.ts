@@ -2,12 +2,12 @@
 
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import * as APITypes from 'src/api_types';
+import * as APITypes from 'src/api-types';
 import {CAST_COUNT} from 'src/constants';
 
-import {Cast, CastApi, CastGroup} from '../api/cast_api.service';
-import {PieceApi, Position} from '../api/piece_api.service';
-import {User, UserApi} from '../api/user_api.service';
+import {Cast, CastApi, CastGroup} from '../api/cast-api.service';
+import {SegmentApi, Position} from '../api/segment-api.service';
+import {User, UserApi} from '../api/user-api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 
 type UICastDancer = {
@@ -69,7 +69,7 @@ export class CastDragAndDrop implements OnInit {
   constructor(
       private userAPI: UserApi,
       private castAPI: CastApi,
-      private pieceAPI: PieceApi,
+      private segmentApi: SegmentApi,
       private csvGenerator: CsvGenerator
   ) {
     this.buildSubCastHeader();
@@ -296,7 +296,7 @@ export class CastDragAndDrop implements OnInit {
   };
 
   private getPosIndex = (cast: Cast, uuid: string): number => {
-    const positions = this.pieceAPI.pieces.get(cast.segment).positions;
+    const positions = this.segmentApi.segments.get(cast.segment).positions;
     for (let i = 0; i < positions.length; i++) {
       if (positions[i].uuid === uuid) {
         return i;
@@ -321,7 +321,7 @@ export class CastDragAndDrop implements OnInit {
     this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
     this.castCount = this.cast.castCount;
     this.buildSubCastHeader();
-    const positions = this.pieceAPI.pieces.get(this.cast.segment).positions;
+    const positions = this.segmentApi.segments.get(this.cast.segment).positions;
     const dancerCounts = new Array(positions.length);
     for (const filledPosition of this.cast.filled_positions) {
       let dancerCount = 0;

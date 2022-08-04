@@ -4,7 +4,7 @@ import {Component, Inject, Injectable, NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef,
 } from '@angular/material/dialog';
-import {LoginApi} from '../api/login_api.service';
+import {LoginApi} from '../api/login-api.service';
 import {lastValueFrom} from 'rxjs';
 
 export type ErrorEvent = {

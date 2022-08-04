@@ -9,7 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {CommonComponentsModule,
-} from '../common_components/common_components.module';
+} from '../common-components/common-components.module';
 import {UnavailabilityEditor} from './unavailability-editor.component';
 
 

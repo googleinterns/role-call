@@ -439,7 +439,7 @@ $buttonRowHeight: 5rem;
   }
 }
 
-.piece-container {
+.segment-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -470,11 +470,11 @@ $buttonRowHeight: 5rem;
   }
 }
 
-.piece-name-card {
+.segment-name-card {
   margin-left: 1em;
   width: calc(100% - 2em);
 
-  .piece-name {
+  .segment-name {
     font-size: x-large;
     font-weight: bold;
     margin-left: 1em;
@@ -492,7 +492,7 @@ $buttonRowHeight: 5rem;
   }
 }
 
-#piece-list {
+#segment-list {
   overflow-y: scroll;
 }
 

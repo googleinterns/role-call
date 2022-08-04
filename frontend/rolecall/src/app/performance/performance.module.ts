@@ -11,7 +11,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {CastModule} from '../cast/cast.module';
 import {CommonComponentsModule,
-} from '../common_components/common_components.module';
+} from '../common-components/common-components.module';
 import {PerformanceEditor} from './performance-editor.component';
 
 

@@ -5,16 +5,16 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 
 import {of} from 'rxjs';
 import {RouterTestingModule} from '@angular/router/testing';
-import {createSpyObjWithProps} from 'src/test_utils';
+import {createSpyObjWithProps} from 'src/test-utils';
 import {Location} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
 import {ChangeDetectorRef} from '@angular/core';
 
 import {CsvGenerator} from '../services/csv-generator.service';
 import {PerformanceApi} from '../api/performance-api.service';
-import {UserApi} from '../api/user_api.service';
-import {PieceApi} from '../api/piece_api.service';
-import {CastApi} from '../api/cast_api.service';
+import {UserApi} from '../api/user-api.service';
+import {SegmentApi} from '../api/segment-api.service';
+import {CastApi} from '../api/cast-api.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
@@ -36,10 +36,10 @@ describe('PerformanceEditorComponent', () => {
     methods: {getAllUsers: Promise.resolve([])},
     props: {userEmitter: of([])},
   });
-  const mockPieceApi = createSpyObjWithProps<PieceApi>({
-    baseName: 'mockPieceApi',
-    methods: {getAllPieces: Promise.resolve([])},
-    props: {pieceEmitter: of([])},
+  const mockSegmentApi = createSpyObjWithProps<SegmentApi>({
+    baseName: 'mockSegmentApi',
+    methods: {getAllSegments: Promise.resolve([])},
+    props: {segmentEmitter: of([])},
   });
   const mockCastApi = createSpyObjWithProps<CastApi>({
     baseName: 'mockCastApi',
@@ -66,7 +66,7 @@ describe('PerformanceEditorComponent', () => {
         providers: [
           {provide: PerformanceApi, useValue: mockPerformanceApi},
           {provide: UserApi, useValue: mockUserApi},
-          {provide: PieceApi, useValue: mockPieceApi},
+          {provide: SegmentApi, useValue: mockSegmentApi},
           {provide: CastApi, useValue: mockCastApi},
           {
             provide: ResponseStatusHandlerService,

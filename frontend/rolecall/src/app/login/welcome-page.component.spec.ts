@@ -3,9 +3,9 @@ import {TestBed, waitForAsync} from '@angular/core/testing';
 import {MatSelectModule} from '@angular/material/select';
 
 import {RouterTestingModule} from '@angular/router/testing';
-import {FakePage} from 'src/test_utils';
+import {FakePage} from 'src/test-utils';
 
-import {LoginApi} from '../api/login_api.service';
+import {LoginApi} from '../api/login-api.service';
 
 import {WelcomePage} from './welcome-page.component';
 

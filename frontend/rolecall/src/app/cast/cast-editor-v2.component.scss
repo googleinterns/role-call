@@ -1,6 +1,6 @@
 @import "../../styles/colors";
 @import "../../styles/constants";
-@import "../../styles/segment-left";
+@import "../../styles/std-left";
 
 .root-container {
   display: flex;
@@ -55,7 +55,7 @@
   height: 10.5rem;
 }
 
-.segment-select-container {
+.item-select-container {
   overflow: scroll;
 }
 
