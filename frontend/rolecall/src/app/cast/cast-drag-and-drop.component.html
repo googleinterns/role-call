@@ -125,11 +125,12 @@
               cdkDrag
               [cdkDragData]="dancer"
               [ngStyle]="i4 === boldedCast ? {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}">
-            <div *ngIf="dancer !== undefined">
+            <div *ngIf="dancer !== undefined" class="user-cell">
               <img
                   class="user-image"
                   [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase">
-              {{dancer.user | fullName}}
+              <div [ngClass]="dancer.hasAbsence ? 'child-absence' : ''">{{dancer.user | fullName}}</div>
+              
             </div>
           </div>
         </div>

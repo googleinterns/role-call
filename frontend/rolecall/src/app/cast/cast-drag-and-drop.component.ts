@@ -14,6 +14,7 @@ type UICastDancer = {
   uuid: string;
   user: User;
   pictureFile: string;
+  hasAbsence?: boolean;
 };
 
 type UICastRow = {
@@ -65,6 +66,7 @@ export class CastDragAndDrop implements OnInit {
   castsLoaded = false;
   dataLoaded = false;
   castSelected = false;
+  perfDate = 0;
 
   constructor(
       private userAPI: UserApi,
@@ -83,7 +85,12 @@ export class CastDragAndDrop implements OnInit {
     this.castAPI.castEmitter.subscribe(() => {
       this.onCastLoad();
     });
-    this.castAPI.getAllCasts();
+    if (this.perfDate) {
+      this.castAPI.getAllCasts(this.perfDate);
+    } else {
+      this.castAPI.getAllCasts(0);
+    }
+    
     this.userAPI.getAllUsers();
   }
 
@@ -103,14 +110,19 @@ export class CastDragAndDrop implements OnInit {
    * Selects the current cast from the Cast API to copy and render
    * in the drag and drop.
    */
-  selectCast = ({uuid, saveDeleteEnabled = true}: {
+  selectCast = ({uuid, saveDeleteEnabled = true, perfDate = 0}: {
     uuid: APITypes.CastUUID | undefined;
     saveDeleteEnabled?: boolean;
+    perfDate?: number;
   }): void => {
+    if (perfDate > 0) {
+      this.perfDate = perfDate;
+      this.castAPI.getAllCasts(this.perfDate);
+    }
     if (uuid) {
       this.buttonsEnabled = saveDeleteEnabled;
       this.castSelected = true;
-      this.selectedCastUUID = uuid;
+      this.selectedCastUUID = uuid;      
       if (this.dataLoaded) {
         this.setupData();
       }
@@ -389,6 +401,7 @@ export class CastDragAndDrop implements OnInit {
               uuid: dancer.uuid,
               user: dancer,
               pictureFile: dancer.picture_file,
+              hasAbsence: member.hasAbsence,
             };
           }
         }

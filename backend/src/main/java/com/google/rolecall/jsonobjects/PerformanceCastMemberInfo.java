@@ -26,6 +26,10 @@ public abstract class PerformanceCastMemberInfo {
   public abstract Boolean performing();
 
   @Nullable
+  @JsonProperty("hasAbsence")
+  public abstract Boolean hasAbsence(); 
+
+  @Nullable
   public abstract Boolean delete();
 
   /* Every PositionInfo should be unique unless it's being comapred to itself */
@@ -61,6 +65,9 @@ public abstract class PerformanceCastMemberInfo {
     @JsonProperty("delete")
     public abstract Builder setDelete(Boolean delete);
 
+    @JsonProperty("hasAbsence")
+    public abstract Builder setHasAbsence(Boolean hasAbsence);    
+    
     public abstract PerformanceCastMemberInfo build();
   }
 }

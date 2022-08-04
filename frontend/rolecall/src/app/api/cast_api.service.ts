@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse, HttpParams} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
 import * as APITypes from 'src/api_types';
 import {environment} from 'src/environments/environment';
@@ -18,6 +18,7 @@ type RawCastMember = {
   id: number;
   userId: number;
   order: number;
+  hasAbsence?: boolean;
 };
 
 type RawSubCast = {
@@ -50,6 +51,7 @@ type OneRawCastsResponse = {
 export type CastMember = {
   uuid: string;
   position_number: number;
+  hasAbsence?: boolean;
 };
 
 export type CastGroup = {
@@ -61,6 +63,7 @@ export type CastGroup = {
 export type CastPosition = {
   position_uuid: string;
   groups: CastGroup[];
+  hasAbsence?: boolean;
 };
 
 export type Cast = {
@@ -128,17 +131,19 @@ export class CastApi {
   }
 
   /** Hits backend with all casts GET request. */
-  requestAllCasts = async (): Promise<AllCastsResponse> => {
+  requestAllCasts = async (perfDate: Number = 0): Promise<AllCastsResponse> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllCasts();
     }
     await this.pieceAPI.getAllPieces();
     const header = await this.headerUtil.generateHeader();
+    const params = new HttpParams().append('perfdate', '' + perfDate);
     return lastValueFrom(this.http.get<AllRawCastsResponse>(
         environment.backendURL + 'api/cast', {
           headers: header,
           observe: 'response',
-          withCredentials: true
+          withCredentials: true,
+          params,
         }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<AllRawCastsResponse>(resp))
@@ -168,7 +173,8 @@ export class CastApi {
                       foundGroupIndex.members = foundGroupIndex.members.concat(
                           rawSubCast.members.map(rawMem => ({
                               uuid: String(rawMem.userId),
-                              position_number: rawMem.order
+                              position_number: rawMem.order,
+                              hasAbsence: rawMem.hasAbsence,
                             })
                           ));
                     } else {
@@ -180,7 +186,8 @@ export class CastApi {
                         group_index: rawSubCast.castNumber,
                         members: rawSubCast.members.map(rawMem => ({
                             uuid: String(rawMem.userId),
-                            position_number: rawMem.order
+                            position_number: rawMem.order,
+                            hasAbsence: rawMem.hasAbsence,
                           })
                         )
                       });
@@ -194,7 +201,8 @@ export class CastApi {
                       group_index: rawSubCast.castNumber,
                       members: rawSubCast.members.map(rawMem => ({
                           uuid: String(rawMem.userId),
-                          position_number: rawMem.order
+                          position_number: rawMem.order,
+                          hasAbsence: rawMem.hasAbsence,
                         })
                       )
                     });
@@ -296,8 +304,8 @@ export class CastApi {
   };
 
   /** Gets all the casts from the backend and returns them. */
-  getAllCasts = async (): Promise<Cast[]> =>
-    this.getAllCastsResponse().then(() => {
+  getAllCasts = async (perfDate: Number = 0): Promise<Cast[]> =>
+    this.getAllCastsResponse(perfDate).then(() => {
       const allCasts = Array.from(this.casts.values())
           .concat(...this.workingCasts.values());
       this.castEmitter.emit(allCasts);
@@ -425,8 +433,8 @@ export class CastApi {
   };
 
   /** Takes backend response, updates data structures for all users. */
-  private getAllCastsResponse = async (): Promise<AllCastsResponse> =>
-    this.requestAllCasts().then(val => {
+  private getAllCastsResponse = async (perfDate: Number): Promise<AllCastsResponse> =>
+    this.requestAllCasts(perfDate).then(val => {
       // Update the casts map
       this.casts.clear();
       for (const cast of val.data.casts) {
