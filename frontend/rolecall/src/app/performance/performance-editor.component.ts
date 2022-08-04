@@ -219,7 +219,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // All Steps ----------------------------------------------------
 
   createNewPerformance = (): Performance => ({
-      uuid: 'performance' + Date.now(),      
+      uuid: 'performance' + Date.now(),
       status: PerformanceStatus.DRAFT,
       step_1: {
         title: 'New Performance',

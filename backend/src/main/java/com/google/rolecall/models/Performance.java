@@ -177,7 +177,7 @@ public class Performance {
         .setCountry(getCountry())
         .setVenue(getVenue())
         .setDateTime(getDate().getTime())
-        .setStatus(getStatus())        
+        .setStatus(getStatus())
         .setPerformanceSections(sections)
         .setHasAbsence(getHasAbsence())
         .build();

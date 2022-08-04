@@ -137,7 +137,7 @@ export class CastApi {
     }
     await this.pieceAPI.getAllPieces();
     const header = await this.headerUtil.generateHeader();
-    const params = new HttpParams().append('perfdate', ''+ perfDate);
+    const params = new HttpParams().append('perfdate', '' + perfDate);
     return lastValueFrom(this.http.get<AllRawCastsResponse>(
         environment.backendURL + 'api/cast', {
           headers: header,
@@ -304,7 +304,7 @@ export class CastApi {
   };
 
   /** Gets all the casts from the backend and returns them. */
-  getAllCasts = async (perfDate: Number =0 ): Promise<Cast[]> =>
+  getAllCasts = async (perfDate: Number = 0): Promise<Cast[]> =>
     this.getAllCastsResponse(perfDate).then(() => {
       const allCasts = Array.from(this.casts.values())
           .concat(...this.workingCasts.values());

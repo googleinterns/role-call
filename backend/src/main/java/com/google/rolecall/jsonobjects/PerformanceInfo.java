@@ -67,7 +67,7 @@ public abstract class PerformanceInfo {
   public int hashCode() {
     return super.hashCode();
   }
-  
+
   public static Builder newBuilder() {
     return new AutoValue_PerformanceInfo.Builder();
   }

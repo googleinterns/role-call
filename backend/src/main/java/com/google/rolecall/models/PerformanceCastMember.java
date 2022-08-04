@@ -104,7 +104,7 @@ public class PerformanceCastMember {
   void setPosition(Position position) {
     this.position = position;
   }
-  
+
   public PerformanceCastMemberInfo toPerformanceCastMemberInfo() {
     return PerformanceCastMemberInfo.newBuilder()
         .setId(id)

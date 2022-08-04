@@ -153,7 +153,7 @@ export class CastDragAndDrop implements OnInit {
                   if (dancer) {
                     subCasts[subCastIndex].members.push({
                       uuid: dancer.uuid,
-                      position_number: dancerIndex,                      
+                      position_number: dancerIndex,
                     });
                   }
                 }
@@ -161,7 +161,7 @@ export class CastDragAndDrop implements OnInit {
             }
             return {
               position_uuid: uiPos.pos.uuid,
-              groups: subCasts,              
+              groups: subCasts,
             };
           })
     });
