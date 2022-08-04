@@ -10,7 +10,7 @@ import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy,
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {PerformanceStatus} from 'src/api-types';
-import {Cast, CastApi} from '../api/cast-api.service';
+import {Cast, CastApi} from '../api/cast_api.service';
 import {Performance, PerformanceApi, PerformanceSegment,
 } from '../api/performance-api.service';
 import {Segment, SegmentApi} from '../api/segment-api.service';

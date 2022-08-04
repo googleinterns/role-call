@@ -4,7 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {createSpyObjWithProps} from 'src/test-utils';
 
-import {CastApi} from '../api/cast-api.service';
+import {CastApi} from '../api/cast_api.service';
 import {SegmentApi} from '../api/segment-api.service';
 import {UserApi} from '../api/user-api.service';
 import {LoggingService} from '../services/logging.service';

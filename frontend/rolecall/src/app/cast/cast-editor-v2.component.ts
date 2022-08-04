@@ -6,7 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import * as APITypes from 'src/api-types';
 import {CAST_COUNT} from 'src/constants';
 
-import {Cast, CastApi} from '../api/cast-api.service';
+import {Cast, CastApi} from '../api/cast_api.service';
 import {Segment, SegmentApi} from '../api/segment-api.service';
 import {CastDragAndDrop} from './cast-drag-and-drop.component';
 import {SuperBalletDisplayService,

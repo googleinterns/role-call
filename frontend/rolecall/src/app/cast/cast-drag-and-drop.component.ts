@@ -5,7 +5,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import * as APITypes from 'src/api-types';
 import {CAST_COUNT} from 'src/constants';
 
-import {Cast, CastApi, CastGroup} from '../api/cast-api.service';
+import {Cast, CastApi, CastGroup} from '../api/cast_api.service';
 import {SegmentApi, Position} from '../api/segment-api.service';
 import {User, UserApi} from '../api/user-api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
