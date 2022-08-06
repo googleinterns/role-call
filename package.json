@@ -22,7 +22,7 @@
     "url": "https://github.com/RoleCallGoogle/RoleCall/issues"
   },
   "engines": {
-    "node": ">=10.13"
+    "node": ">=16.10"
   },
   "homepage": "https://github.com/RoleCallGoogle/RoleCall#readme",
   "dependencies": {
@@ -34,6 +34,6 @@
     "tslib": "^1.10.0",
     "typescript": "^3.9.5",
     "zone.js": "~0.10.2",
-    "node": "^10.13"
+    "node": "^16.10"
   }
 }
