@@ -59,7 +59,7 @@ export class UnavailabilityEditor implements OnInit {
   onUnavsLoad = (
     unavs: Unavailability[],
   ): void => {
-    this.unavs = Array.from(unavs).sort((ua, ub) => ua.endDate - ub.endDate)
+    this.unavs = Array.from(unavs).sort((ua, ub) => ua.endDate - ub.endDate);
     this.unavsLoaded = true;
     this.checkDataLoaded();
   };

@@ -10,7 +10,7 @@ import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy,
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {PerformanceStatus} from 'src/api-types';
-import {Cast, CastApi} from '../api/cast_api.service';
+import {Cast, CastApi} from '../api/cast-api.service';
 import {Performance, PerformanceApi, PerformanceSegment,
 } from '../api/performance-api.service';
 import {Segment, SegmentApi} from '../api/segment-api.service';
@@ -33,8 +33,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('stepper') stepper: Stepper;
   @ViewChild('castDnD') castDnD?: CastDragAndDrop;
 
-  stepperOpts = ['Performance Details', 'Segments & Intermissions', 'Fill Casts',
-    'Finalize'];
+  stepperOpts = [
+    'Performance Details',
+    'Segments & Intermissions',
+    'Fill Casts',
+    'Finalize',
+  ];
 
   state: Performance;
 
@@ -45,6 +49,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   segmentsLoaded = false;
   castsLoaded = false;
   dataLoaded = false;
+
+  canGoPrior = false;
+  canGoNext = false;
+
+  canSave = false;
+  canDelete = false;
 
   // Step 0 -------------------------------------------------------
 
@@ -62,6 +72,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   selectedPerformance: Performance;
   dateStr: string;
   date: Date;
+  statusList = [
+    'Draft',
+    'Published',
+    'Cancelled',
+  ];
+  statusVal = '';
 
   // Step 2 -------------------------------------------------------
 
@@ -325,6 +341,24 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.initStep3Data();
     this.initStep4();
     this.updateUrl(this.state);
+
+    this.statusVal = this.statusToPretty(this.state.status);
+  };
+
+  statusToPretty = (status: PerformanceStatus): string => {
+    switch (status) {
+      case PerformanceStatus.PUBLISHED: return 'Published';
+      case PerformanceStatus.CANCELED: return 'Cancelled';
+      default: return 'Draft';
+    }
+  };
+
+  statusFromPretty = (pretty: string): PerformanceStatus => {
+    switch (pretty) {
+      case 'Published': return PerformanceStatus.PUBLISHED;
+      case 'Cancelled': return PerformanceStatus.CANCELED;
+      default: return PerformanceStatus.DRAFT;
+    }
   };
 
   onDuplicatePerformance = (perf: Performance): void => {
@@ -390,6 +424,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     const iso = this.date.toISOString();
     const isoSplits = iso.slice(0, iso.length - 1).split(':');
     this.dateStr = isoSplits[0] + ':' + isoSplits[1];
+  };
+
+  onSelectStatus = (
+    event: MatSelectChange,
+  ): void => {
+    this.statusVal = event.value;
+    this.state.status = this.statusFromPretty(this.statusVal);
+    this.canSave = true;
   };
 
   onStep1Input = (field: string, event: InputEvent): void => {
@@ -532,7 +574,11 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    this.castDnD?.selectCast({uuid: castUUID, saveDeleteEnabled: false, perfDate: this.state.dateTime});
+    this.castDnD?.selectCast({
+      uuid: castUUID,
+      saveDeleteEnabled: false,
+      perfDate: this.state.dateTime,
+    });
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];

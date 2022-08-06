@@ -212,7 +212,8 @@ export class MockSegmentBackend {
 
   /** Mocks segment delete response */
   requestSegmentDelete = (segment: Segment): Promise<HttpResponse<any>> => {
-    this.mockSegmentDB = this.mockSegmentDB.filter(val => val.uuid !== segment.uuid);
+    this.mockSegmentDB = this.mockSegmentDB.filter(val =>
+        val.uuid !== segment.uuid);
     return Promise.resolve({
       status: 200
     } as HttpResponse<any>);

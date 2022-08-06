@@ -5,7 +5,7 @@ import {HeaderUtilityService} from '../services/header-utility.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-import {CastApi} from './cast_api.service';
+import {CastApi} from './cast-api.service';
 import {SegmentApi} from './segment-api.service';
 
 describe('CastApiService', () => {
