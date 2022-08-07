@@ -30,11 +30,12 @@ export class HeaderUtilityService {
         });
       } else {
         this.sentToken = true;
+console.log('USER AUTH', this.loginAPI.credential);
         return new HttpHeaders({
           'Content-Type': 'application/json; charset=utf-8',
           EMAIL: environment.useDevEmail ? environment.devEmail :
               this.loginAPI.email,
-          AUTHORIZATION: 'Bearer ' + this.loginAPI.user,
+          AUTHORIZATION: 'Bearer ' + this.loginAPI.credential,
         });
       }
     });
