@@ -10,7 +10,7 @@ import {environment} from 'src/environments/environment';
 
 export type LoginResponse = {
   isLoggedIn: boolean;
-  user: google.accounts.id.Credential;
+  user: any;
 };
 
 /** Service that handles logging in and obtaining the session token. */
@@ -21,7 +21,8 @@ export class LoginApi {
   isLoggedIn$: Observable<boolean>;
 
   /** The current user. */
-  user: google.accounts.id.Credential;
+  credential: string;
+  user: any;
 
   /** If the google OAuth2 api is loaded. */
   isAuthLoaded = false;
@@ -78,7 +79,15 @@ export class LoginApi {
           auto_select: true,
           cancel_on_tap_outside: false,
           callback: (res) => {
+            this.credential = res.credential;
+console.log('AA', res);
+console.log('BB', res.credential);
+const tt = res.credential.split('.');
+console.log('CC', tt);
             this.user = JSON.parse(atob(res.credential.split('.')[1]));
+console.log('USER', this.user);
+            const cid = JSON.parse(atob(res.credential.split('.')[0]));
+console.log('CID', cid);
             resolve();
             this.saveLoginParams(true, this.user);
           },
@@ -115,7 +124,7 @@ export class LoginApi {
 
   /** Get the current user object if logged in or force a login. */
   public getCurrentUser = async (
-  ): Promise<google.accounts.id.Credential> => {
+  ): Promise<any> => {
     if (this.isLoggedIn) {
       return Promise.resolve(this.user);
     } else {
@@ -200,7 +209,7 @@ export class LoginApi {
   /** Constructs a login response and updates appropriate state. */
   private saveLoginParams = (
     isLoggedIn: boolean,
-    user: google.accounts.id.Credential,
+    user: any,
   ): void => {
     let resolveLogin = false;
     if (!this.isLoggedIn && isLoggedIn) {
@@ -209,11 +218,10 @@ export class LoginApi {
     this.isLoggedIn = isLoggedIn;
     this.user = user;
     if (isLoggedIn) {
-      const credential = this.user as any;
-      this.email = credential.email;
-      this.imageURL = credential.picture;
-      this.givenName = credential.given_name;
-      this.familyName = credential.family_name;
+      this.email = this.user.email;
+      this.imageURL = this.user.picture;
+      this.givenName = this.user.given_name;
+      this.familyName = this.user.family_name;
       if (resolveLogin) {
         this.resolveLogin();
       }
