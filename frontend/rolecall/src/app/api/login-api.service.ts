@@ -80,14 +80,7 @@ export class LoginApi {
           cancel_on_tap_outside: false,
           callback: (res) => {
             this.credential = res.credential;
-console.log('AA', res);
-console.log('BB', res.credential);
-const tt = res.credential.split('.');
-console.log('CC', tt);
             this.user = JSON.parse(atob(res.credential.split('.')[1]));
-console.log('USER', this.user);
-            const cid = JSON.parse(atob(res.credential.split('.')[0]));
-console.log('CID', cid);
             resolve();
             this.saveLoginParams(true, this.user);
           },
