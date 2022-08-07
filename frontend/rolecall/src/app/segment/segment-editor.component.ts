@@ -152,8 +152,6 @@ export class SegmentEditor implements OnInit {
 
 
   setCurrentSegmentFromIndex = (segmentIndex: number): void => {
-console.log('WORKING SEGMENTS', this.workingSegments);
-console.log('INDEX', segmentIndex);
     const selectedWorking = this.workingSegments.find(segment =>
       segment.uuid === this.leftList.topLevelSegments[segmentIndex].uuid);
     if (selectedWorking) {

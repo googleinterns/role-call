@@ -37,7 +37,6 @@ public class GoogleAuthServices {
    * @throws IOException When unable to make a request to the Google Oauth API.
    */
   public boolean isValidAccessToken(String email, String encodedToken) throws IOException {
-System.out.printf("!!!!!2 email=%s token=%s\n", email, encodedToken);
     if (encodedToken == "") {
       return false;
     }
