@@ -2,7 +2,7 @@
 
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import * as moment from 'moment';
+//import * as moment from 'moment';
 import * as APITypes from 'src/api-types';
 import {environment} from 'src/environments/environment';
 import {lastValueFrom} from 'rxjs';
@@ -143,8 +143,9 @@ export class UserApi {
                   last_name: rawUser.lastName,
                   suffix: rawUser.suffix,
                   picture_file: rawUser.pictureFile,
-                  date_joined: moment(rawUser.dateJoined, 'MM-DD-YYYY')
-                      .valueOf(),
+                  date_joined: Date.parse(rawUser.dateJoined),
+                  // date_joined: moment(rawUser.dateJoined, 'YYYY-MM-DD')
+                  //     .valueOf(),
                   contact_info: {
                     phone_number: rawUser.phoneNumber,
                     email: rawUser.email,
@@ -191,8 +192,9 @@ export class UserApi {
             email: user.contact_info.email,
             notificationEmail: user.contact_info.notification_email,
             phoneNumber: user.contact_info.phone_number,
-            dateJoined:
-                moment(user.date_joined).format('MM-DD-YYYY').toString(),
+            dateJoined: new Date(user.date_joined).toISOString(),
+            // dateJoined:
+            //     moment(user.date_joined).format('YYYY-MM-DD').toString(),
             // Roles
             isAdmin: user.has_roles.isAdmin,
             isChoreographer: user.has_roles.isChoreographer,
@@ -232,8 +234,9 @@ export class UserApi {
             email: user.contact_info.email,
             notificationEmail: user.contact_info.notification_email,
             phoneNumber: user.contact_info.phone_number,
-            dateJoined:
-                moment(user.date_joined).format('MM-DD-YYYY').toString(),
+            dateJoined: new Date(user.date_joined).toISOString(),
+            // dateJoined:
+            //     moment(user.date_joined).format('YYYY-MM-DD').toString(),
             // Roles
             isAdmin: user.has_roles.isAdmin,
             isChoreographer: user.has_roles.isChoreographer,
