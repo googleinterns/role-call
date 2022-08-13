@@ -3,7 +3,7 @@
 import {HttpResponse} from '@angular/common/http';
 import * as APITypes from 'src/api-types';
 
-import {AllCastsResponse, Cast, OneCastResponse} from '../api/cast_api.service';
+import {AllCastsResponse, Cast, OneCastResponse} from '../api/cast-api.service';
 
 /**
  * Mocks the cast backend responses

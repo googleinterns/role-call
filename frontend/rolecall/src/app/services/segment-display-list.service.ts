@@ -49,7 +49,8 @@ export class SegmentDisplayListService {
     }
     this.visibleItems = this.topLevelSegments.map(
         (displaySegment, displaySegmentIndex) =>
-            this.buildDisplayItem(displaySegment, displaySegmentIndex, starTest));
+            this.buildDisplayItem(displaySegment, displaySegmentIndex,
+              starTest));
   };
 
   private buildDisplayItem = (
@@ -60,7 +61,7 @@ export class SegmentDisplayListService {
     const name = starTest(segment) ? '*' + segment.name : segment.name;
     return {
       name,
-      segmentIndex: segmentIndex,
+      segmentIndex,
       siblingId: segment.siblingId,
       type: segment.type,
       isOpen: segment.isOpen,

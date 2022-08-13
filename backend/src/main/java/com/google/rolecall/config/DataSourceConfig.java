@@ -42,7 +42,7 @@ public class DataSourceConfig {
     String userName = env.getProperty("spring.datasource.username");
     String password = env.getProperty("spring.datasource.password");
 
-    DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+    DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
 
     dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
     dataSourceBuilder.url(url);

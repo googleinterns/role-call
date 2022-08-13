@@ -6,7 +6,8 @@ import {ActivatedRoute} from '@angular/router';
 import {COLORS} from 'src/constants';
 import * as APITypes from 'src/api-types';
 
-import {Segment, SegmentApi, SegmentType, Position} from '../api/segment-api.service';
+import {Segment, SegmentApi, SegmentType, Position,
+} from '../api/segment-api.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 import {SuperBalletDisplayService,
@@ -163,14 +164,16 @@ export class SegmentEditor implements OnInit {
     if (segment && this.currentSelectedSegment &&
       segment.uuid !== this.currentSelectedSegment.uuid) {
       if (this.canSave) {
-        this.currentSelectedSegment.name = this.currentSelectedSegment.originalName;
+        this.currentSelectedSegment.name =
+            this.currentSelectedSegment.originalName;
       }
       this.canSave = false;
       this.canDelete = true;
       this.creatingSegment = false;
       this.currentSelectedSegment.addingPositions = [];
     }
-    if ((this.workingSegment && segment && segment.uuid !== this.workingSegment.uuid)) {
+    if ((this.workingSegment && segment
+        && segment.uuid !== this.workingSegment.uuid)) {
       this.workingSegments = this.workingSegments.filter(
           renderSegment => renderSegment.uuid !== this.workingSegment.uuid);
       if (this.prevWorkingState !== undefined) {
@@ -182,7 +185,8 @@ export class SegmentEditor implements OnInit {
     }
     this.currentSelectedSegment = segment;
     this.urlPointingUUID = segment ? segment.uuid : '';
-    this.currentTypeOffset = segment ? this.getCurrentTypeCode(segment.type) : 0;
+    this.currentTypeOffset =
+        segment ? this.getCurrentTypeCode(segment.type) : 0;
     if (this.location.path().startsWith('/segment')) {
         // || this.location.path().startsWith('/piece/')) {
       if (segment) {
@@ -249,7 +253,7 @@ export class SegmentEditor implements OnInit {
 
   onSaveSegment = (): void => {
     if (this.currentSelectedSegment && (!this.currentSelectedSegment.name ||
-                                      this.currentSelectedSegment.name === '')) {
+        this.currentSelectedSegment.name === '')) {
       this.respHandler.showError({
         url: 'Error occurred while saving ballet',
         status: 400,
@@ -260,7 +264,8 @@ export class SegmentEditor implements OnInit {
     }
     this.lastSelectedSegmentName = this.currentSelectedSegment.name;
     this.updateDragAndDropData(true);
-    this.segmentApi.setSegment(this.currentSelectedSegment).then(async result => {
+    this.segmentApi.setSegment(this.currentSelectedSegment)
+        .then(async result => {
       if (result.successful) {
         this.currentSelectedSegment.addingPositions = [];
         this.canSave = false;

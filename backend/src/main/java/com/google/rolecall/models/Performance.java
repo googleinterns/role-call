@@ -117,6 +117,10 @@ public class Performance {
     return new ArrayList<>(performanceSections);
   }
 
+  public void makeDraft() {
+    this.status = Status.DRAFT;
+  }
+
   public void publish() {
     if(status == Status.DRAFT) {
       this.status = Status.PUBLISHED;

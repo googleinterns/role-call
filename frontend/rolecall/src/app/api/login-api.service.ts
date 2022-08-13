@@ -20,8 +20,10 @@ export class LoginApi {
   isLoggedIn = false;
   isLoggedIn$: Observable<boolean>;
 
+  /** The current credential */
+  credential = '';
+
   /** The current user. */
-  credential: string;
   user: any;
 
   /** If the google OAuth2 api is loaded. */

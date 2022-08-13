@@ -80,7 +80,8 @@ export class SegmentApi {
   mockBackend: MockSegmentBackend = new MockSegmentBackend();
 
   /** All the loaded segments mapped by UUID. */
-  segments: Map<APITypes.SegmentUUID, Segment> = new Map<APITypes.SegmentUUID, Segment>();
+  segments: Map<APITypes.SegmentUUID, Segment> =
+      new Map<APITypes.SegmentUUID, Segment>();
 
   /** The raw segment structures given by the backend. */
   rawSegments: RawSegment[] = [];

@@ -350,7 +350,9 @@ public class PerformanceServices {
             .setDateTime(info.dateTime())
             .build();
 
-    if (info.status() == Status.PUBLISHED) {
+    if (info.status() == Status.DRAFT) {
+      performance.makeDraft();
+    } else if (info.status() == Status.PUBLISHED) {
       performance.publish();
     } else if (info.status() == Status.CANCELED) {
       performance.cancel();

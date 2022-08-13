@@ -131,7 +131,7 @@ export class CastApi {
   }
 
   /** Hits backend with all casts GET request. */
-  requestAllCasts = async (perfDate: Number = 0): Promise<AllCastsResponse> => {
+  requestAllCasts = async (perfDate: number = 0): Promise<AllCastsResponse> => {
     if (environment.mockBackend) {
       return this.mockBackend.requestAllCasts();
     }
@@ -304,7 +304,7 @@ export class CastApi {
   };
 
   /** Gets all the casts from the backend and returns them. */
-  getAllCasts = async (perfDate: Number = 0): Promise<Cast[]> =>
+  getAllCasts = async (perfDate: number = 0): Promise<Cast[]> =>
     this.getAllCastsResponse(perfDate).then(() => {
       const allCasts = Array.from(this.casts.values())
           .concat(...this.workingCasts.values());
@@ -433,7 +433,9 @@ export class CastApi {
   };
 
   /** Takes backend response, updates data structures for all users. */
-  private getAllCastsResponse = async (perfDate: Number): Promise<AllCastsResponse> =>
+  private getAllCastsResponse = async (
+    perfDate: number,
+  ): Promise<AllCastsResponse> =>
     this.requestAllCasts(perfDate).then(val => {
       // Update the casts map
       this.casts.clear();
