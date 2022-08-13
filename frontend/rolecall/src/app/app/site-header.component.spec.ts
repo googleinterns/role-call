@@ -1,3 +1,8 @@
+// Commented out because this file generates a deprecation error:
+// describe with no children (describe() or it()) is deprecated and will be
+// removed in a future version of Jasmine.
+// Basically test setup without any testing will be unallowed in the future.
+
 // import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 // import {MatIconModule} from '@angular/material/icon';
 // import {BrowserModule} from '@angular/platform-browser';

@@ -1,12 +1,15 @@
 /* eslint-disable max-len */
 
+// Commented out because this file generates a deprecation error:
+// describe with no children (describe() or it()) is deprecated and will be
+// removed in a future version of Jasmine.
+// Basically test setup without any testing will be unallowed in the future.
+
 // import {TestBed, waitForAsync} from '@angular/core/testing';
 // import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-
 // import {HttpClient} from '@angular/common/http';
 // import {NgZone} from '@angular/core';
 // import {Router} from '@angular/router';
-
 // import {MockGAPI} from '../mocks/mock-gapi';
 // // import {LoggingService} from '../services/logging.service';
 
