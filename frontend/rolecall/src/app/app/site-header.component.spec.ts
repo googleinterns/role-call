@@ -1,126 +1,131 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {MatIconModule} from '@angular/material/icon';
-import {BrowserModule} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Router} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
-import {HttpClient} from '@angular/common/http';
-import {createSpyObjWithProps} from 'src/test-utils';
-import {Subject} from 'rxjs';
+// Commented out because this file generates a deprecation error:
+// describe with no children (describe() or it()) is deprecated and will be
+// removed in a future version of Jasmine.
+// Basically test setup without any testing will be unallowed in the future.
 
-import {MockGAPI} from '../mocks/mock-gapi';
-import {LoginApi, LoginResponse} from '../api/login-api.service';
+// import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+// import {MatIconModule} from '@angular/material/icon';
+// import {BrowserModule} from '@angular/platform-browser';
+// import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+// import {Router} from '@angular/router';
+// import {RouterTestingModule} from '@angular/router/testing';
+// import {HttpClient} from '@angular/common/http';
+// import {createSpyObjWithProps} from 'src/test-utils';
+// import {Subject} from 'rxjs';
 
-import {AppRoutingModule} from './app-routing.module';
-import {SideNav} from './side-nav.component';
-import {SiteHeader} from './site-header.component';
+// import {MockGAPI} from '../mocks/mock-gapi';
+// import {LoginApi, LoginResponse} from '../api/login-api.service';
 
-describe('SiteHeader', () => {
-  const fakeHttpClient = {} as HttpClient;
-  const isLoggedIn$ = new Subject<boolean>();
+// import {AppRoutingModule} from './app-routing.module';
+// import {SideNav} from './side-nav.component';
+// import {SiteHeader} from './site-header.component';
 
-  let mockLoginApi: jasmine.SpyObj<LoginApi>;
-  let component: SiteHeader;
-  let fixture: ComponentFixture<SiteHeader>;
-  let router: Router;
+// describe('SiteHeader', () => {
+//   const fakeHttpClient = {} as HttpClient;
+//   const isLoggedIn$ = new Subject<boolean>();
 
-  beforeEach(waitForAsync(() => {
-    mockLoginApi = createSpyObjWithProps<LoginApi>({
-      baseName: 'mockLoginApi',
-      methods: {
-        login: Promise.resolve({} as LoginResponse),
-        signOut: Promise.resolve(),
-      },
-      props: {
-        isLoggedIn$
-      }
-    });
-    mockLoginApi.login.and.callFake(async () => {
-      mockLoginApi.isLoggedIn = true;
-      return Promise.resolve({} as LoginResponse);
-    });
-    mockLoginApi.signOut.and.callFake(async () => {
-      mockLoginApi.isLoggedIn = false;
-    });
+//   let mockLoginApi: jasmine.SpyObj<LoginApi>;
+//   let component: SiteHeader;
+//   let fixture: ComponentFixture<SiteHeader>;
+//   let router: Router;
 
-    TestBed.configureTestingModule({
-          declarations: [SiteHeader],
-          imports: [
-            BrowserModule,
-            AppRoutingModule,
-            RouterTestingModule,
-            MatIconModule,
-            NoopAnimationsModule,
-          ],
-          providers: [
-            {provide: LoginApi, useValue: mockLoginApi},
-            {provide: HttpClient, useValue: fakeHttpClient},
-          ]
-        })
-        .compileComponents();
-  }));
+//   beforeEach(waitForAsync(() => {
+//     mockLoginApi = createSpyObjWithProps<LoginApi>({
+//       baseName: 'mockLoginApi',
+//       methods: {
+//         login: Promise.resolve({} as LoginResponse),
+//         signOut: Promise.resolve(),
+//       },
+//       props: {
+//         isLoggedIn$
+//       }
+//     });
+//     mockLoginApi.login.and.callFake(async () => {
+//       mockLoginApi.isLoggedIn = true;
+//       return Promise.resolve({} as LoginResponse);
+//     });
+//     mockLoginApi.signOut.and.callFake(async () => {
+//       mockLoginApi.isLoggedIn = false;
+//     });
 
-  beforeEach(() => {
-    router = TestBed.inject(Router);
-    fixture = TestBed.createComponent(SiteHeader);
-    component = fixture.componentInstance;
-    component.navBar = TestBed.createComponent(SideNav).componentInstance;
-    fixture.detectChanges();
-    fixture.ngZone.run(() => {
-      router.initialNavigation();
-    });
-    // @ts-ignore
-    window.gapi = new MockGAPI().mock();
-  });
+//     TestBed.configureTestingModule({
+//           declarations: [SiteHeader],
+//           imports: [
+//             BrowserModule,
+//             AppRoutingModule,
+//             RouterTestingModule,
+//             MatIconModule,
+//             NoopAnimationsModule,
+//           ],
+//           providers: [
+//             {provide: LoginApi, useValue: mockLoginApi},
+//             {provide: HttpClient, useValue: fakeHttpClient},
+//           ]
+//         })
+//         .compileComponents();
+//   }));
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+//   beforeEach(() => {
+//     router = TestBed.inject(Router);
+//     fixture = TestBed.createComponent(SiteHeader);
+//     component = fixture.componentInstance;
+//     component.navBar = TestBed.createComponent(SideNav).componentInstance;
+//     fixture.detectChanges();
+//     fixture.ngZone.run(() => {
+//       router.initialNavigation();
+//     });
+//     // @ts-ignore
+//     window.gapi = new MockGAPI().mock();
+//   });
 
-  // it('should toggle the nav bar when menu is clicked', () => {
-  //   expect(component.navBar.isNavOpen).toBeFalse();
+//   // it('should create', () => {
+//   //   expect(component).toBeTruthy();
+//   // });
 
-  //   component.onNavButtonClick();
+//   // it('should toggle the nav bar when menu is clicked', () => {
+//   //   expect(component.navBar.isNavOpen).toBeFalse();
 
-  //   expect(component.navBar.isNavOpen).toBeTrue();
+//   //   component.onNavButtonClick();
 
-  //   component.onNavButtonClick();
+//   //   expect(component.navBar.isNavOpen).toBeTrue();
 
-  //   expect(component.navBar.isNavOpen).toBeFalse();
-  // });
+//   //   component.onNavButtonClick();
 
-  // it('should trigger login on login button click', async () => {
-  //   expect(component.responseReceived).toBeFalse();
+//   //   expect(component.navBar.isNavOpen).toBeFalse();
+//   // });
 
-  //   await component.onLoginButtonClick();
+//   // it('should trigger login on login button click', async () => {
+//   //   expect(component.responseReceived).toBeFalse();
 
-  //   expect(component.responseReceived).toBeTrue();
-  //   expect(component.userIsLoggedIn).toBeTrue();
-  // });
+//   //   await component.onLoginButtonClick();
 
-  // it(
-  //     'should unload auth then trigger login if auth instance is not '
-  //     + 'null or undefined to reset auth',
-  //     async () => {
-  //       expect(component.responseReceived).toBeFalse();
+//   //   expect(component.responseReceived).toBeTrue();
+//   //   expect(component.userIsLoggedIn).toBeTrue();
+//   // });
 
-  //       await component.onLoginButtonClick();
+//   // it(
+//   //     'should unload auth then trigger login if auth instance is not '
+//   //     + 'null or undefined to reset auth',
+//   //     async () => {
+//   //       expect(component.responseReceived).toBeFalse();
 
-  //       expect(component.responseReceived).toBeTrue();
-  //       expect(component.userIsLoggedIn).toBeTrue();
-  //     });
+//   //       await component.onLoginButtonClick();
 
-  // it('should sign out on sign out click', async () => {
-  //   expect(component.responseReceived).toBeFalse();
+//   //       expect(component.responseReceived).toBeTrue();
+//   //       expect(component.userIsLoggedIn).toBeTrue();
+//   //     });
 
-  //   await component.onLoginButtonClick();
+//   // it('should sign out on sign out click', async () => {
+//   //   expect(component.responseReceived).toBeFalse();
 
-  //   expect(component.responseReceived).toBeTrue();
-  //   expect(component.userIsLoggedIn).toBeTrue();
+//   //   await component.onLoginButtonClick();
 
-  //   component.onSignOut();
+//   //   expect(component.responseReceived).toBeTrue();
+//   //   expect(component.userIsLoggedIn).toBeTrue();
 
-  //   expect(component.userIsLoggedIn).toBeFalse();
-  //   expect(component.responseReceived).toBeTrue();
-  // });
-});
+//   //   component.onSignOut();
+
+//   //   expect(component.userIsLoggedIn).toBeFalse();
+//   //   expect(component.responseReceived).toBeTrue();
+//   // });
+// });

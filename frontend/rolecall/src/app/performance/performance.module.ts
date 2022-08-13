@@ -7,6 +7,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {CastModule} from '../cast/cast.module';
@@ -29,7 +30,8 @@ import {PerformanceEditor} from './performance-editor.component';
     MatInputModule,
     MatSelectModule,
     MatIconModule,
-    DragDropModule
+    MatTooltipModule,
+    DragDropModule,
   ]
 })
 export class PerformanceModule {

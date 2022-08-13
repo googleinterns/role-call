@@ -1,14 +1,10 @@
 import {TestBed, waitForAsync} from '@angular/core/testing';
-
 import {MatIconModule} from '@angular/material/icon';
-
 import {RouterTestingModule} from '@angular/router/testing';
 import {of} from 'rxjs';
 import {FakePage} from 'src/test-utils';
-
 import {LoginApi} from '../api/login-api.service';
 import {DashboardApi} from '../api/dashboard-api.service';
-
 
 import {App} from './app.component';
 import {AppModule} from './app.module';

@@ -6,6 +6,16 @@
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
 
+// $white: white;
+// $offWhite: #f4f4f4;
+// $offoffWhite: #d9d9d9;
+// $gray: #6d6d6d;
+// $lightGray: #9c9c9c;
+// $lightLightGray: #b1b1b1;
+// $black: black;
+// $aaOrange: #ff6666;
+// $aaOrangeGradient: linear-gradient(to right, #f7690a, #ff5927);
+
 // div styling to make a card
 .app-card {
   background: white;
@@ -41,3 +51,35 @@ $custom-typography: mat.define-typography-config(
     $font-family: "Source Sans Pro, sans-serif",
 );
 @include mat.core($custom-typography);
+
+.mat-tooltip {
+  background-color: white;
+  color: black !important;
+  font-size: 1rem;
+}
+
+// .std-action-button {
+//   height: 3.5rem;
+//   width: 3.5rem;
+// }
+
+// .std-action-button-icon {
+//   color: $gray;
+//   background: $aaOrangeGradient;
+//   border-radius: 6px;
+//   //background-clip: border-box;
+//   font-size: 3.5rem;
+//   height: 3.5rem;
+//   line-height: 3.5rem;
+//   vertical-align: middle;
+//   width: 3.5rem;
+// }
+
+// .std-action-button-icon-nobg {
+//   @extend .std-action-button-icon;
+//   background: $lightLightGray;
+// }
+
+// .bgon {
+//   background: $aaOrangeGradient;
+// }

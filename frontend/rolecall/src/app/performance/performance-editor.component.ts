@@ -10,7 +10,7 @@ import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy,
 import {MatSelectChange} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {PerformanceStatus} from 'src/api-types';
-import {Cast, CastApi} from '../api/cast_api.service';
+import {Cast, CastApi} from '../api/cast-api.service';
 import {Performance, PerformanceApi, PerformanceSegment,
 } from '../api/performance-api.service';
 import {Segment, SegmentApi} from '../api/segment-api.service';
@@ -18,9 +18,10 @@ import {UserApi} from '../api/user-api.service';
 import {CastDragAndDrop} from '../cast/cast-drag-and-drop.component';
 import {Stepper} from '../common-components/stepper.component';
 import {CsvGenerator} from '../services/csv-generator.service';
-import {ResponseStatusHandlerService,
-} from '../services/response-status-handler.service';
+//import {ResponseStatusHandlerService,
+//} from '../services/response-status-handler.service';
 import {CAST_COUNT} from 'src/constants';
+
 
 @Component({
   selector: 'app-performance-editor',
@@ -33,8 +34,12 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('stepper') stepper: Stepper;
   @ViewChild('castDnD') castDnD?: CastDragAndDrop;
 
-  stepperOpts = ['Performance Details', 'Segments & Intermissions', 'Fill Casts',
-    'Finalize'];
+  stepperOpts = [
+    'Performance Details',
+    'Segments & Intermissions',
+    'Fill Casts',
+    'Finalize',
+  ];
 
   state: Performance;
 
@@ -45,6 +50,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   segmentsLoaded = false;
   castsLoaded = false;
   dataLoaded = false;
+
+  canSave = true;
+  canDelete = false;
 
   // Step 0 -------------------------------------------------------
 
@@ -62,6 +70,13 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   selectedPerformance: Performance;
   dateStr: string;
   date: Date;
+  statusOpts = [
+    'Draft',
+    'Published',
+    'Canceled',
+  ];
+  currentStatusOpts: string[];
+  selectedStatus: string;
 
   // Step 2 -------------------------------------------------------
 
@@ -100,7 +115,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       private performanceAPI: PerformanceApi,
       private segmentApi: SegmentApi,
       private castAPI: CastApi,
-      private respHandler: ResponseStatusHandlerService,
+      //private respHandler: ResponseStatusHandlerService,
       private userAPI: UserApi,
       private changeDetectorRef: ChangeDetectorRef,
       private activatedRoute: ActivatedRoute,
@@ -186,7 +201,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   checkDataLoaded = (): boolean => {
     this.dataLoaded = this.performancesLoaded && this.segmentsLoaded &&
-                      this.castsLoaded && this.usersLoaded;
+        this.castsLoaded && this.usersLoaded;
     if (this.dataLoaded && this.urlUUID && !this.performanceSelected) {
       this.startAtPerformance(this.urlUUID);
     }
@@ -216,6 +231,26 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
   };
 
+  canGoNext = (): boolean => {
+    if (this.stepper) {
+      return this.stepper.hasNextStep();
+    }
+    // To avoid ExpressionChangedAfterItHasBeenCheckedError
+    // Set to true below
+    return true;
+  };
+
+  canGoPrev = (): boolean => {
+    if (this.stepper) {
+      return this.stepper.hasPrevStep();
+    }
+    return false;
+  };
+
+  canPublish = (): boolean => {
+    return true;
+  };
+
   // All Steps ----------------------------------------------------
 
   createNewPerformance = (): Performance => ({
@@ -239,10 +274,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
   );
 
-  onSaveDraft = async (): Promise<void> => {
+  onSavePerformance = async (): Promise<void> => {
     this.initStep3Data();
     this.initStep4();
-    this.state.status = PerformanceStatus.DRAFT;
     // Saving casts results in an immediate cast load.
     // Clear a key parameter to prevent deadly embrace
     if (this.castDnD) {
@@ -307,43 +341,51 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // Step 0 -------------------------------------------------------
 
   onEditPerformance = (): void => {
-    if (!this.selectedPerformance) {
-      this.respHandler.showError({
-        errorMessage: 'Must select a performance to edit!',
-        url: 'Error occurred while selecting performance.',
-        status: 400,
-        statusText: 'Performance not selected!'
-      });
-      return;
-    }
+    // if (!this.selectedPerformance) {
+    //   this.respHandler.showError({
+    //     errorMessage: 'Must select a performance to edit!',
+    //     url: 'Error occurred while selecting performance.',
+    //     status: 400,
+    //     statusText: 'Performance not selected!'
+    //   });
+    //   return;
+    // }
     this.isEditing = true;
     this.state = JSON.parse(JSON.stringify(this.selectedPerformance));
     this.updateDateString();
     this.initStep2Data();
     this.updateStep2State();
     this.performanceSelected = true;
+    this.canDelete = true;
     this.initStep3Data();
     this.initStep4();
     this.updateUrl(this.state);
+    this.selectedStatus = this.statusToString(this.state.status);
+    this.currentStatusOpts = this.statusOpts.slice(0,
+      this.state.status === PerformanceStatus.DRAFT ? 1
+      : this.state.status === PerformanceStatus.PUBLISHED ? 2 : 3);
   };
 
-  onDuplicatePerformance = (perf: Performance): void => {
-    if (!this.selectedPerformance) {
-      this.respHandler.showError({
-        errorMessage: 'Must select a performance to duplicate!',
-        url: 'Error occurred while selecting performance.',
-        status: 400,
-        statusText: 'Performance not selected!'
-      });
-      return;
-    }
-    this.state = JSON.parse(JSON.stringify(perf));
+  onDuplicatePerformance = (): void => {
+    // if (!this.selectedPerformance) {
+    //   this.respHandler.showError({
+    //     errorMessage: 'Must select a performance to duplicate!',
+    //     url: 'Error occurred while selecting performance.',
+    //     status: 400,
+    //     statusText: 'Performance not selected!'
+    //   });
+    //   return;
+    // }
+    this.state = JSON.parse(JSON.stringify(this.selectedPerformance));
     this.state.uuid = 'performance' + Date.now();
     this.state.step_1.title = this.state.step_1.title + ' copy';
     this.updateDateString();
     this.initStep2Data();
     this.performanceSelected = true;
+    this.canDelete = true;
+    this.initCastsLoaded = false;
     this.initStep3Data();
+    this.initStep4();
     this.updateUrl(this.state);
   };
 
@@ -351,28 +393,30 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onNewPerformance = (): void => {
     this.resetPerformance();
     this.performanceSelected = true;
+    this.canDelete = false;
     this.updateUrl(this.state);
   };
 
-  onCancelPerformance = (): void => {
-    if (!this.selectedPerformance) {
-      this.respHandler.showError({
-        errorMessage: 'Must select a performance to cancel!',
-        url: 'Error occurred while selecting performance.',
-        status: 400,
-        statusText: 'Performance not selected!'
-      });
-      return;
-    }
-    if (this.selectedPerformance.status === PerformanceStatus.DRAFT) {
+  onDeletePerformance = (): void => {
+    // if (!this.selectedPerformance) {
+    //   this.respHandler.showError({
+    //     errorMessage: 'Must select a performance to cancel!',
+    //     url: 'Error occurred while selecting performance.',
+    //     status: 400,
+    //     statusText: 'Performance not selected!'
+    //   });
+    //   return;
+    // }
+    // if (this.selectedPerformance.status === PerformanceStatus.DRAFT) {
       this.performanceAPI.deletePerformance(this.selectedPerformance);
-    } else if (this.selectedPerformance.status ===
-               PerformanceStatus.PUBLISHED) {
-      this.selectedPerformance.status = PerformanceStatus.CANCELED;
-      this.selectedPerformance.step_3.segments = [];
-      this.selectedPerformance.step_2.segments = [];
-      this.performanceAPI.setPerformance(this.selectedPerformance);
-    };
+    // } else if (this.selectedPerformance.status ===
+    //            PerformanceStatus.PUBLISHED) {
+    //   this.selectedPerformance.status = PerformanceStatus.CANCELED;
+    //   this.selectedPerformance.step_3.segments = [];
+    //   this.selectedPerformance.step_2.segments = [];
+    //   this.performanceAPI.setPerformance(this.selectedPerformance);
+    // };
+    this.resetState();
   };
 
   // --------------------------------------------------------------
@@ -382,6 +426,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onSelectRecentPerformance = (perf: Performance): void => {
     this.selectedPerformance = perf;
     this.updateDateString();
+    this.onEditPerformance();
   };
 
   updateDateString = (): void => {
@@ -390,6 +435,29 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     const iso = this.date.toISOString();
     const isoSplits = iso.slice(0, iso.length - 1).split(':');
     this.dateStr = isoSplits[0] + ':' + isoSplits[1];
+  };
+
+  statusFromString = (statusStr: string): PerformanceStatus => {
+    switch (statusStr) {
+      case 'Published': return PerformanceStatus.PUBLISHED;
+      case 'Canceled': return PerformanceStatus.CANCELED;
+      default: return PerformanceStatus.DRAFT;
+    }
+  };
+
+  statusToString = (status: PerformanceStatus): string => {
+    switch (status) {
+      case PerformanceStatus.PUBLISHED: return 'Published';
+      case PerformanceStatus.CANCELED: return 'Canceled';
+      default: return 'Draft';
+    }
+  };
+
+  onSelectStatus = (
+    event: MatSelectChange,
+  ): void => {
+    this.selectedStatus = event.value;
+    this.state.status = this.statusFromString(this.selectedStatus);
   };
 
   onStep1Input = (field: string, event: InputEvent): void => {
@@ -532,7 +600,11 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
-    this.castDnD?.selectCast({uuid: castUUID, saveDeleteEnabled: false, perfDate: this.state.dateTime});
+    this.castDnD?.selectCast({
+      uuid: castUUID,
+      saveDeleteEnabled: false,
+      perfDate: this.state.dateTime,
+    });
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
@@ -646,13 +718,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // Step 4 -------------------------------------------------------
 
-  onSubmit = async (): Promise<void> => {
+  onPublishPerformance = async (): Promise<void> => {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
     this.performanceAPI.setPerformance(finishedPerf).then(() => {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
+      this.resetState();
     }).catch(err => {
       alert('Unable to save performance: ' + err.error.status + ' ' +
             err.error.error);

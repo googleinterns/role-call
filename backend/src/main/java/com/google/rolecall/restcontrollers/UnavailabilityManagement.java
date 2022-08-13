@@ -98,9 +98,6 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
   public CompletableFuture<ResponseSchema<UnavailabilityInfo>> editUnvailability(
       Principal principal, @RequestBody UnavailabilityInfo info) {
 
-System.out.println(principal);
-System.out.println(getUser(principal));
-
     if(info.userId() != getUser(principal).getId() && !getUser(principal).isAdmin()) {
       return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
     }
