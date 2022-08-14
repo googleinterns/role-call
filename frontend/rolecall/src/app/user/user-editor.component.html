@@ -126,52 +126,17 @@
       </div>
       
       <div class="actions-container">
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="Delete User"
-          matTooltip="Delete User"
-          [disabled]="!canDelete"
-
-          (click)="deleteUser()"
-        >
-          <mat-icon
-            class="action-button-icon-nobg"
-            [ngClass]="canDelete ? 'bgon' : ''"
-          >delete
-          </mat-icon>
-        </button>
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="New User"
-          matTooltip="New User"
-          (click)="addUser()"
-        >
-          <mat-icon class="action-button-icon">
-            add
-          </mat-icon>
-        </button> 
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="Save User"
-          matTooltip="Save User"
-          [disabled]="!canSave"
-
-          (click)="saveUser()"
-        >
-          <mat-icon
-            class="action-button-icon-nobg"
-            [ngClass]="canSave ? 'bgon' : ''"
-          >save
-          </mat-icon>
-        </button>
-
+        <app-action-buttons
+          name="User"
+          [aActivator]="canDelete"
+          [aHandler]="deleteUser"
+          [bActivator]="canAdd"
+          [bHandler]="addUser"
+          [cActivator]="canSave"
+          [cHandler]="saveUser"
+        ></app-action-buttons>          
       </div>
+      
     </div>
   </div>
 </div>

@@ -1,0 +1,49 @@
+
+<div class="actions-container">
+
+  <button
+    mat-icon-button
+    class="action-button"
+    [attr.aria-label]="aAria"
+    [matTooltip]="aTip"
+    [disabled]="!aActivate()"
+    (click)="aHandle()"
+  >
+    <mat-icon
+      class="action-button-icon-nobg"
+      [ngClass]="aActivate() ? 'std-bgon' : ''"
+    >{{ aIcon }}
+    </mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    class="action-button"
+    [attr.aria-label]="bAria"
+    [matTooltip]="bTip"
+    [disabled]="!bActivate()"
+    (click)="bHandle()"
+  >
+    <mat-icon
+      class="action-button-icon-nobg"
+      [ngClass]="bActivate() ? 'bgon' : ''"
+    >{{ bIcon }}
+    </mat-icon>
+  </button> 
+
+  <button
+    mat-icon-button
+    class="action-button"
+    [attr.aria-label]="cAria"
+    [matTooltip]="cTip"
+    [disabled]="!cActivate()"
+    (click)="cHandle()"
+  >
+    <mat-icon
+      class="action-button-icon-nobg"
+      [ngClass]="cActivate() ? 'bgon' : ''"
+    >{{ cIcon }}
+    </mat-icon>
+  </button>
+
+</div>
