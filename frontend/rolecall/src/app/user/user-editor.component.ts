@@ -41,8 +41,9 @@ export class UserEditor implements OnInit {
   };
 
 
-  canDelete = false;
-  canSave = false;
+  canDeleteVar = false;
+  canSaveVar = false;
+  always = true;
 
   creatingUser = false;
 
@@ -137,8 +138,8 @@ export class UserEditor implements OnInit {
     if (user && this.currentSelectedUser && user.uuid
         !== this.currentSelectedUser.uuid) {
       this.creatingUser = false;
-      this.canDelete = true;
-      this.canSave = false;
+      this.canDeleteVar = true;
+      this.canSaveVar = false;
     }
 
     if (this.workingUser && user.uuid !== this.workingUser.uuid) {
@@ -174,12 +175,16 @@ export class UserEditor implements OnInit {
       a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
   };
 
+  canAdd = (): boolean =>
+    true;
+
+
   addUser = (): void => {
     if (this.creatingUser) {
       return;
     }
     this.creatingUser = true;
-    this.canSave = true;
+    this.canSaveVar = true;
     this.prevWorkingState = undefined;
     const newUser: User = {
       first_name: '',
@@ -222,6 +227,10 @@ export class UserEditor implements OnInit {
     this.setCurrentUser({user: this.workingUser});
   };
 
+  canDelete = (): boolean =>
+   this.canDeleteVar;
+
+
   deleteUser = (): void => {
     this.prevWorkingState = undefined;
     this.renderingUsers = this.renderingUsers.filter(
@@ -237,14 +246,18 @@ export class UserEditor implements OnInit {
     }
   };
 
+  canSave = (): boolean =>
+    this.canSaveVar;
+
+
   saveUser = (): void => {
     this.lastSelectedUserEmail = this.workingUser.contact_info.email;
 
     this.userAPI.setUser(this.workingUser).then(async result => {
       if (result.successful) {
         this.creatingUser = false;
-        this.canDelete = true;
-        this.canSave = false;
+        this.canDeleteVar = true;
+        this.canSaveVar = false;
         const prevUUID = this.workingUser.uuid;
         this.prevWorkingState = undefined;
         this.workingUser = undefined;
@@ -371,18 +384,18 @@ export class UserEditor implements OnInit {
     }
     if (info.type === 'date') {
       val = Date.parse(val.value);
-      this.canSave = true;
+      this.canSaveVar = true;
     } else if (info.type === 'permissions') {
       const permissions = this.workingUser.has_permissions;
       for (const permission of Object.keys(permissions)) {
         if (val.includes(permission)) {
           if (!permissions[permission]) {
-            this.canSave = true;
+            this.canSaveVar = true;
           }
           permissions[permission] = true;
         } else {
           if (permissions[permission]) {
-            this.canSave = true;
+            this.canSaveVar = true;
           }
           permissions[permission] = false;
         }
@@ -393,19 +406,19 @@ export class UserEditor implements OnInit {
       for (const role of Object.keys(roles)) {
         if (val.includes(role)) {
           if (!roles[role]) {
-            this.canSave = true;
+            this.canSaveVar = true;
           }
           roles[role] = true;
         } else {
           if (roles[role]) {
-            this.canSave = true;
+            this.canSaveVar = true;
           }
           roles[role] = false;
         }
       }
       val = roles;
     } else {
-      this.canSave = true;
+      this.canSaveVar = true;
     }
     objInQuestion[splits[splits.length - 1]] = val;
   };

@@ -157,6 +157,10 @@ export class UnavailabilityEditor implements OnInit {
     this.state.description = ( event.target as HTMLInputElement ).value;
   };
 
+  canAddUnav = (): boolean =>
+    true;
+
+
   onNewUnav = (): void => {
     this.state = this.createNewUnavailability();
     this.initialSelectedReason = '';
@@ -183,9 +187,17 @@ export class UnavailabilityEditor implements OnInit {
     });
   };
 
+  canDeleteUnav = (): boolean =>
+    this.canDelete;
+
+
   onDeleteUnav = (): void => {
     this.doDeleteUnav(this.state);
   };
+
+  canSaveUnav = (): boolean =>
+    this.canSave;
+
 
   doSetUnav = async (): Promise<APITypes.SuccessIndicator> =>
     this.unavAPI.setUnavailability(this.state);

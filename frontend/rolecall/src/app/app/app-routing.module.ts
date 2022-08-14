@@ -19,7 +19,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
     HomepageModule,
     SettingsModule,
-    UserModule
+    UserModule,
   ],
   exports: [RouterModule],
   providers: []

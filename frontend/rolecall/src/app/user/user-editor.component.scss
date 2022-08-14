@@ -110,37 +110,7 @@
 }
 
 .actions-container {
-  display: flex;
-  flex-direction: row;
+  height: 100%;
   width: calc(100% - 10rem);
   margin: 1rem 5rem 1rem 5rem;
-  justify-content: space-between;
-  align-items: flex-end;
-  height: 100%;
-
-  .action-button {
-    height: 3.5rem;
-    width: 3.5rem;
-  }
-  
-  .action-button-icon {
-    color: $gray;
-    background: $aaOrangeGradient;
-    border-radius: 6px;
-    //background-clip: border-box;
-    font-size: 3.5rem;
-    height: 3.5rem;
-    line-height: 3.5rem;
-    vertical-align: middle;
-    width: 3.5rem;
-  }
-
-  .action-button-icon-nobg {
-    @extend .action-button-icon;
-    background: $lightLightGray;
-  }
-
-  .bgon {
-    background: $aaOrangeGradient;
-  }
 }

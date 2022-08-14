@@ -95,50 +95,17 @@
       </div>
 
       <div class="actions-container">
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="Delete Unavailability"
-          matTooltip="Delete Unavailability"
-          [disabled]="!canDelete"
-          (click)="onDeleteUnav()"
-        >
-          <mat-icon
-            class="action-button-icon-nobg"
-            [ngClass]="canDelete ? 'bgon' : ''"
-          >delete
-          </mat-icon>
-        </button>
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="New Unavailability"
-          matTooltip="New Unavailability"
-          (click)="onNewUnav()"
-        >
-          <mat-icon class="action-button-icon">
-            add
-          </mat-icon>
-        </button> 
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="Save Unavailability"
-          matTooltip="Save Unavailability"
-          [disabled]="!canSave"
-          (click)="onSaveUnav()"
-        >
-          <mat-icon
-            class="action-button-icon-nobg"
-            [ngClass]="canSave ? 'bgon' : ''"
-          >save
-          </mat-icon>
-        </button>
-
+        <app-action-buttons
+          name="Unavailability"
+          [aActivator]="canDeleteUnav"
+          [aHandler]="onDeleteUnav"
+          [bActivator]="canAddUnav"
+          [bHandler]="onNewUnav"
+          [cActivator]="canSaveUnav"
+          [cHandler]="onSaveUnav"
+        ></app-action-buttons>          
       </div>
+
     </div>
   </div>
 </div>

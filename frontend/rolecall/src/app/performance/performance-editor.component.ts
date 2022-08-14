@@ -341,15 +341,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   // Step 0 -------------------------------------------------------
 
   onEditPerformance = (): void => {
-    // if (!this.selectedPerformance) {
-    //   this.respHandler.showError({
-    //     errorMessage: 'Must select a performance to edit!',
-    //     url: 'Error occurred while selecting performance.',
-    //     status: 400,
-    //     statusText: 'Performance not selected!'
-    //   });
-    //   return;
-    // }
     this.isEditing = true;
     this.state = JSON.parse(JSON.stringify(this.selectedPerformance));
     this.updateDateString();
@@ -367,15 +358,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   };
 
   onDuplicatePerformance = (): void => {
-    // if (!this.selectedPerformance) {
-    //   this.respHandler.showError({
-    //     errorMessage: 'Must select a performance to duplicate!',
-    //     url: 'Error occurred while selecting performance.',
-    //     status: 400,
-    //     statusText: 'Performance not selected!'
-    //   });
-    //   return;
-    // }
     this.state = JSON.parse(JSON.stringify(this.selectedPerformance));
     this.state.uuid = 'performance' + Date.now();
     this.state.step_1.title = this.state.step_1.title + ' copy';
@@ -398,24 +380,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   };
 
   onDeletePerformance = (): void => {
-    // if (!this.selectedPerformance) {
-    //   this.respHandler.showError({
-    //     errorMessage: 'Must select a performance to cancel!',
-    //     url: 'Error occurred while selecting performance.',
-    //     status: 400,
-    //     statusText: 'Performance not selected!'
-    //   });
-    //   return;
-    // }
-    // if (this.selectedPerformance.status === PerformanceStatus.DRAFT) {
-      this.performanceAPI.deletePerformance(this.selectedPerformance);
-    // } else if (this.selectedPerformance.status ===
-    //            PerformanceStatus.PUBLISHED) {
-    //   this.selectedPerformance.status = PerformanceStatus.CANCELED;
-    //   this.selectedPerformance.step_3.segments = [];
-    //   this.selectedPerformance.step_2.segments = [];
-    //   this.performanceAPI.setPerformance(this.selectedPerformance);
-    // };
+    this.performanceAPI.deletePerformance(this.selectedPerformance);
     this.resetState();
   };
 
@@ -712,7 +677,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.saveCastChanges();
   };
-
 
   // --------------------------------------------------------------
 
