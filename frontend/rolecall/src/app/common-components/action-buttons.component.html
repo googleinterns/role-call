@@ -16,20 +16,47 @@
     </mat-icon>
   </button>
 
-  <button
-    mat-icon-button
-    class="action-button"
-    [attr.aria-label]="bAria"
-    [matTooltip]="bTip"
-    [disabled]="!bActivate()"
-    (click)="bHandle()"
-  >
-    <mat-icon
-      class="action-button-icon-nobg"
-      [ngClass]="bActivate() ? 'bgon' : ''"
-    >{{ bIcon }}
-    </mat-icon>
-  </button> 
+  <ng-container *ngIf="bMenuItems.length === 0; else withDropDown">
+    <button
+      mat-icon-button
+      class="action-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      (click)="bHandle()"
+    >
+      <mat-icon
+        class="action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+
+  <ng-template #withDropDown>
+    <button
+      mat-icon-button
+      class="action-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      [matMenuTriggerFor]="bMenu"
+    >
+      <mat-icon
+        class="action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+    <mat-menu #bMenu="matMenu">
+      <button *ngFor="let segType of bMenuItems; let k = index"
+        mat-menu-item
+        class="menu-item"
+        (click)="bMenuHandler(k)"
+      >{{ segType }}
+      </button>
+    </mat-menu>
+  </ng-template>
 
   <button
     mat-icon-button
