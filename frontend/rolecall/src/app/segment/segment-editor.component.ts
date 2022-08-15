@@ -69,7 +69,8 @@ export class SegmentEditor implements OnInit {
 
   segmentTypes = ['SEGMENT', 'BALLET', 'SUPER'];
   selectedSegmentType: SegmentType;
-  segmentPrettyNames = ['', 'Segment', 'Ballet', 'Super Ballet'];
+  segmentPrettyTypes = ['Segment', 'Ballet', 'Super Ballet'];
+  segmentPrettyNames: string[];
 
   constructor(
       private route: ActivatedRoute,
@@ -78,7 +79,9 @@ export class SegmentEditor implements OnInit {
       private respHandler: ResponseStatusHandlerService,
       private superBalletDisplay: SuperBalletDisplayService,
       public leftList: SegmentDisplayListService,
-  ) { }
+  ) {
+    this.segmentPrettyNames = ['', ...this.segmentPrettyTypes];
+  }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
@@ -198,10 +201,15 @@ export class SegmentEditor implements OnInit {
         ? this.currentSelectedSegment.type : 'SEGMENT';
   };
 
-  addSegment = (segmentTpCd: number): void => {
+  canAddSegment = (): boolean =>
+    true;
+
+
+  addSegment = (ix: number): void => {
     if (this.creatingSegment) {
       return;
     }
+    const segmentTpCd = ix + 1;
     let name = 'TEST';
     let type: SegmentType = 'BALLET';
     let originalName = 'TEST';
@@ -250,6 +258,10 @@ export class SegmentEditor implements OnInit {
     this.setCurrentSegment(this.workingSegment);
     this.buildLeftList();
   };
+
+  canSaveSegment = (): boolean =>
+    this.canSave;
+
 
   onSaveSegment = (): void => {
     if (this.currentSelectedSegment && (!this.currentSelectedSegment.name ||
@@ -307,6 +319,10 @@ export class SegmentEditor implements OnInit {
       }
     });
   };
+
+  canDeleteSegment = (): boolean =>
+    this.canDelete;
+
 
   deleteSegment = async (): Promise<void> => {
     let successIndicator: APITypes.SuccessIndicator = {successful: false};

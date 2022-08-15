@@ -176,69 +176,19 @@
           (currentSelectedSegment && currentSelectedSegment.type === 'SEGMENT')"
         class="actions-container"
       >
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="Delete Segment"
-          matTooltip="Delete Segment"
-          [disabled]="!canDelete"
-          (click)="deleteSegment()"
-        >
-          <mat-icon
-            class="action-button-icon-nobg"
-            [ngClass]="canDelete ? 'bgon' : ''"
-          >delete
-          </mat-icon>
-        </button>
 
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="New Segment"
-          matTooltip="New Segment"
-          [matMenuTriggerFor]="addMenu"
-        >
-          <mat-icon class="action-button-icon">
-            add
-          </mat-icon>
-        </button>
-        <mat-menu #addMenu="matMenu">
-          <button
-              mat-menu-item
-              class="create-segment-menu-item"
-              (click)="addSegment(1)">
-            Create Segment
-          </button>
-          <button
-              mat-menu-item
-              class="create-segment-menu-item"
-              (click)="addSegment(2)">
-            Create Ballet
-          </button>
-          <button
-              mat-menu-item
-              class="create-segment-menu-item"
-              (click)="addSegment(3)">
-            Create Super Ballet
-          </button>
-        </mat-menu>
-
-        <button
-          mat-icon-button
-          class="action-button"
-          aria-label="Save Segment"
-          matTooltip="Save Segment"
-          [disabled]="!canSave"
-
-          (click)="onSaveSegment()"
-        >
-          <mat-icon
-            class="action-button-icon-nobg"
-            [ngClass]="canSave ? 'bgon' : ''"
-          >save
-          </mat-icon>
-        </button>
-
+        <app-action-buttons
+          name="Segment"
+          [aActivator]="canDeleteSegment"
+          [aHandler]="deleteSegment"
+          [bActivator]="canAddSegment"
+          [bHandler]="addSegment"
+          [bMenuItems]="segmentPrettyTypes"
+          [bMenuHandler]="addSegment"
+          [cActivator]="canSaveSegment"
+          [cHandler]="onSaveSegment"
+        ></app-action-buttons>
+       
       </div>  
     </div>
   </div>

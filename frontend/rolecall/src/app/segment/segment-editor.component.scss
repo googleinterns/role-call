@@ -171,42 +171,21 @@
   width: 99%;
 }
 
-.actions-container {
+// Space below the Positions
+.add-button-width-container-right {
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
+  min-height: 8vh;
+  width: 99%;
+}
+
+.actions-container {
   width: calc(100% - 10rem);
-  margin: 1rem 5rem 1rem 5rem;
-  justify-content: space-between;
-  align-items: flex-end;
+  margin: .5rem 5rem 1rem 5rem;
 
   &-no-positions {
     height: 100%;
-  }
-
-  .action-button {
-    height: 3.5rem;
-    width: 3.5rem;
-  }
-  
-  .action-button-icon {
-    color: $gray;
-    background: $aaOrangeGradient;
-    border-radius: 6px;
-    //background-clip: border-box;
-    font-size: 3.5rem;
-    height: 3.5rem;
-    line-height: 3.5rem;
-    vertical-align: middle;
-    width: 3.5rem;
-  }
-
-  .action-button-icon-nobg {
-    @extend .action-button-icon;
-    background: $lightLightGray;
-  }
-
-  .bgon {
-    background: $aaOrangeGradient;
   }
 }
 
@@ -230,18 +209,4 @@
 
 #position-pool.cdk-drop-list-dragging .position-container:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.create-segment-menu-item {
-  font-size: 1.3rem;
-}
-
-
-// Space below the Positions
-.add-button-width-container-right {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  min-height: 8vh;
-  width: 99%;
 }

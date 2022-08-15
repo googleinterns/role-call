@@ -3,6 +3,7 @@ import {Component, Input, OnInit,
 
 export type Activator = () => boolean;
 export type Handler = () => void;
+export type ItemHandler = (ix: number) => void;
 
 @Component({
   selector: 'app-action-buttons',
@@ -27,6 +28,8 @@ export class ActionButtonsComponent implements OnInit/*, OnChanges*/ {
   @Input() bTip = '';
   @Input() bActivator?: Activator;
   @Input() bHandler?: Handler;
+  @Input() bMenuItems = [];
+  @Input() bMenuHandler?: ItemHandler;
 
   @Input() cIcon = 'save';
   @Input() cName = 'Save';
@@ -60,6 +63,10 @@ console.log('ABC INIT name =', this.name);
 
   bHandle = (): void => {
     if (this.bHandler) { this.bHandler(); }
+  }
+
+  bMenuHandle = (ix: number): void => {
+    if (this.bMenuHandler) { this.bMenuHandler(ix); }
   }
 
   cActivate = (): boolean =>
