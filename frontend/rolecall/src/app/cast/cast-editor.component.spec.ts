@@ -10,7 +10,7 @@ import {UserApi} from '../api/user-api.service';
 import {LoggingService} from '../services/logging.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 
-import {CastEditorV2} from './cast-editor-v2.component';
+import {CastEditor} from './cast-editor.component';
 import {CastModule} from './cast.module';
 
 import {SuperBalletDisplayService,
@@ -18,7 +18,7 @@ import {SuperBalletDisplayService,
 import {SegmentDisplayListService,
 } from '../services/segment-display-list.service';
 
-describe('CastEditorV2Component', () => {
+describe('CastEditorComponent', () => {
   const fakeLoggingService = {} as LoggingService;
   const fakeCsvGenerator = {} as CsvGenerator;
   const fakeActivatedRoute = {snapshot: {params: {uuid: 'testUUID'}}};
@@ -45,12 +45,12 @@ describe('CastEditorV2Component', () => {
   const mockSegmentDisplayList =
   jasmine.createSpyObj('mockSegmentDisplayList', ['buildDisplayList']);
 
-  let component: CastEditorV2;
-  let fixture: ComponentFixture<CastEditorV2>;
+  let component: CastEditor;
+  let fixture: ComponentFixture<CastEditor>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [CastEditorV2],
+          declarations: [CastEditor],
           imports: [
             CastModule,
           ],
@@ -76,7 +76,7 @@ describe('CastEditorV2Component', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CastEditorV2);
+    fixture = TestBed.createComponent(CastEditor);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

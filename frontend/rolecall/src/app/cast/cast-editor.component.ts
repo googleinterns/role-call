@@ -16,12 +16,12 @@ import {SegmentDisplayListService,
 
 
 @Component({
-  selector: 'app-cast-editor-v2',
-  templateUrl: './cast-editor-v2.component.html',
-  styleUrls: ['./cast-editor-v2.component.scss']
+  selector: 'app-cast-editor',
+  templateUrl: './cast-editor.component.html',
+  styleUrls: ['./cast-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class CastEditorV2 implements OnInit {
+export class CastEditor implements OnInit {
 
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
@@ -37,6 +37,7 @@ export class CastEditorV2 implements OnInit {
   dataLoaded = false;
   segmentsLoaded = false;
   castsLoaded = false;
+  canDelete = false;
 
   private allSegments: Segment[] = [];
 
@@ -77,7 +78,13 @@ export class CastEditorV2 implements OnInit {
 
   onEditCast = (cast: Cast): void => {
     this.lastSelectedCast = cast;
+    this.canDelete = !!this.lastSelectedCast;
   };
+
+  doSetCurrentCast = (cast: Cast): void => {
+    this.setCurrentCast({cast});
+    this.canDelete = true;
+  }
 
   setCurrentCast = ({cast, index}: {
     cast: Cast | undefined;
@@ -99,6 +106,8 @@ export class CastEditorV2 implements OnInit {
     this.setCastURL();
   };
 
+  
+
   addCast = async (): Promise<void> => {
     if (!this.selectedSegment) {
       return;
@@ -117,6 +126,7 @@ export class CastEditorV2 implements OnInit {
         }),
       )
     };
+    this.canDelete = false;
     this.allCasts.push(newCast);
     this.selectedSegmentCasts.push(newCast);
     await this.castAPI.setCast(newCast, true);

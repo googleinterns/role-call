@@ -1,180 +1,228 @@
+<!--
+  *ngIf="dataLoaded && castSelected"  
+-->
+
 <div
-    *ngIf="dataLoaded && castSelected"
-    class="drop-group-container"
-    cdkDropListGroup>
+  *ngIf="dataLoaded && selectedSegment"
+  class="drop-group-container"
+  cdkDropListGroup
+>
   <div class="position-pool">
-    <div
+    <ng-container *ngIf="castSelected; else nocast">
+      <div
         *ngIf="buttonsEnabled"
-        class="name-export-container">
-      <input
+        class="name-export-container"
+      >
+        <input
           type="text"
           class="name-input"
           (input)="onTitleInput($event)"
           [value]="this.cast.name"
-          [size]="this.cast.name.length < 15 ? 15 : this.cast.name.length"/>
-      <button
+          [size]="this.cast.name.length < 15 ? 15 : this.cast.name.length"
+        />
+        <button
           mat-icon-button
           aria-label="Export Cast Button"
           class="export-button"
-          (click)="exportCast()">
-        <mat-icon
+          (click)="exportCast()"
+        >
+          <mat-icon
             [inline]="true"
-            class="export-button-icon">
-          save_alt
-        </mat-icon>
-      </button>
-    </div>
-    <div
+            class="export-button-icon"
+          >save_alt
+          </mat-icon>
+        </button>
+      </div>
+      <div
         *ngFor="let position of castPositions; let i1 = index"
-        class="position-container">
-      <div class="table-container">
-        <div
+        class="position-container"
+      >
+        <div class="table-container">
+          <div
             class="horizontal-list"
-            id="col-headers">
-          <div class="cell cellBothHeader">
-            <div class="double-header-cell">
-              <div class="double-header-text">
-                {{ castPositions[i1].pos.name }}
-              </div>
-              <div class="double-header-buttons">
-                <div class="button-v-wrapper">
-                  <div class="button-v-container">
-                    <button
+            id="col-headers"
+          >
+            <div class="cell cellBothHeader">
+              <div class="double-header-cell">
+                <div class="double-header-text">
+                  {{ castPositions[i1].pos.name }}
+                </div>
+                <div class="double-header-buttons">
+                  <div class="button-v-wrapper">
+                    <div class="button-v-container">
+                      <button
                         mat-icon-button
                         aria-label="Decrement Dancer Count Button"
                         class="count-button1"
                         [disabled]="position.dancerCount < 2"
-                        (click)="decrementDancerCount(i1)">
-                      <mat-icon
+                        (click)="decrementDancerCount(i1)"
+                      >
+                        <mat-icon
                           [inline]="true"
-                          class="count-icon1">
-                        remove_circle_outline
-                      </mat-icon>
-                    </button>
-                    <button
+                          class="count-icon1"
+                        >remove_circle_outline
+                        </mat-icon>
+                      </button>
+                      <button
                         mat-icon-button
                         aria-label="Increment Dancer Count Button"
                         class="count-button2"
-                        (click)="incrementDancerCount(i1)">
-                      <mat-icon
+                        (click)="incrementDancerCount(i1)"
+                      >
+                        <mat-icon
                           [inline]="true"
-                          class="count-icon2">
-                        add_circle_outline
-                      </mat-icon>
-                    </button>
+                          class="count-icon2"
+                        >add_circle_outline
+                        </mat-icon>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
+            <div
               *ngFor="let header of subCastHeaders; let i2 = index"
               class="cell cellColHeader"
-              [class.adjust-last-cast-cell]="i2 === subCastHeaders.length - 1">
-            <ng-container *ngIf="i2 < subCastHeaders.length - 1; else lastCast">
-              <p>{{ header }}</p>
-            </ng-container>
-            <ng-template #lastCast>
-              <div class="last-cast-cell">
-                <div class="last-cast-text">
-                  <p>{{ header }}</p>
-                </div>
-                <div class="button-h-container">
-                  <button
+              [class.adjust-last-cast-cell]="i2 === subCastHeaders.length - 1"
+            >
+              <ng-container *ngIf="i2 < subCastHeaders.length - 1; else lastCast">
+                <p>{{ header }}</p>
+              </ng-container>
+              <ng-template #lastCast>
+                <div class="last-cast-cell">
+                  <div class="last-cast-text">
+                    <p>{{ header }}</p>
+                  </div>
+                  <div class="button-h-container">
+                    <button
                       mat-icon-button
                       aria-label="Decrement Dancer Count Button"
                       class="count-button1"
                       [disabled]="subCastHeaders.length < 2"
-                      (click)="decrementCastCount()">
-                    <mat-icon
+                      (click)="decrementCastCount()"
+                    >
+                      <mat-icon
                         [inline]="true"
-                        class="count-icon1">
-                      remove_circle_outline
-                    </mat-icon>
-                  </button>
-                  <button
+                        class="count-icon1"
+                      >remove_circle_outline
+                      </mat-icon>
+                    </button>
+                    <button
                       mat-icon-button
                       aria-label="Increment Dancer Count Button"
                       class="count-button2"
-                      (click)="incrementCastCount()">
-                    <mat-icon
+                      (click)="incrementCastCount()"
+                    >
+                      <mat-icon
                         [inline]="true"
-                        class="count-icon2">
-                      add_circle_outline
-                    </mat-icon>
-                  </button>
+                        class="count-icon2"
+                      >add_circle_outline
+                      </mat-icon>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </ng-template>
+              </ng-template>
+            </div>
           </div>
-        </div>
-        <div
+          <div
             *ngFor="let row of position.castRows; let i3 = index"
             cdkDropList
             cdkDropListOrientation="horizontal"
             class="horizontal-list"
             [cdkDropListData]="row"
             (cdkDropListDropped)="drop($event)"
-            [id]="i1 + ':' + i3">
-          <div class="cell cellRowHeader">
-            {{ "Dancer" + (position.dancerCount > 1 ? " #" + (i3 + 1) : "") }}
-          </div>
-          <div
+            [id]="i1 + ':' + i3"
+          >
+            <div class="cell cellRowHeader">
+              {{ "Dancer" + (position.dancerCount > 1 ? " #" + (i3 + 1) : "") }}
+            </div>
+            <div
               *ngFor="let dancer of position.castRows[i3].subCastDancers; let i4 = index"
               class="cell"
               cdkDrag
               [cdkDragData]="dancer"
-              [ngStyle]="i4 === boldedCast ? {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}">
-            <div *ngIf="dancer !== undefined" class="user-cell">
-              <img
+              [ngStyle]="i4 === boldedCast ? {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}"
+            >
+              <div *ngIf="dancer !== undefined" class="user-cell">
+                <img
                   class="user-image"
-                  [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase">
-              <div [ngClass]="dancer.hasAbsence ? 'child-absence' : ''">{{dancer.user | fullName}}</div>
-              
+                  [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase"
+                >
+                <div [ngClass]="dancer.hasAbsence ? 'child-absence' : ''">{{dancer.user | fullName}}</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+    <ng-template #nocast>
+      <div></div>
+    </ng-template>
   </div>
-  <div class="user-container">
-    <div
+  <div>
+    <div class="user-container">
+      <div
         class="horizontal-list user-pool"
         cdkDropList
         cdkDropListOrientation="horizontal"
         [cdkDropListData]="allUsers"
         (cdkDropListDropped)="drop($event)"
-        id="user-pool">
-      <div
+        id="user-pool"
+      >
+        <div
           *ngFor="let user of allUsers"
           class="cell user-cell"
           cdkDrag
-          [cdkDragData]="user">
-        <img
+          [cdkDragData]="user"
+        >
+          <img
             class="user-image"
-            [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase">
-        {{user | fullName}}
+            [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase"
+          >
+          {{user | fullName}}
+        </div>
       </div>
+  
+      <!--
+      <div
+        *ngIf="buttonsEnabled"
+        class="buttons-container"
+      >
+        <button
+          mat-icon-button
+          class="save-delete-button"
+          (click)="deleteCast()"
+        >
+          <mat-icon class="save-delete-button-icon">
+            delete
+          </mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="save-delete-button"
+          (click)="saveCast()"
+        >
+          <mat-icon class="save-delete-button-icon">
+            save
+          </mat-icon>
+        </button>
+      </div>
+      -->
+  
     </div>
     <div
-        *ngIf="buttonsEnabled"
-        class="buttons-container">
-      <button
-          mat-icon-button
-          class="save-delete-button"
-          (click)="deleteCast()">
-        <mat-icon class="save-delete-button-icon">
-          delete
-        </mat-icon>
-      </button>
-      <button
-          mat-icon-button
-          class="save-delete-button"
-          (click)="saveCast()">
-        <mat-icon class="save-delete-button-icon">
-          save
-        </mat-icon>
-      </button>
+      *ngIf="buttonsEnabled"
+      class="actions-container"
+    >
+      <app-action-buttons
+        name="Cast"
+        [aActivator]="canDeleteCast"
+        [aHandler]="deleteCast"
+        [bActivator]="canAddCast"
+        [bHandler]="addCast"
+        [cActivator]="canSaveCast"
+        [cHandler]="saveCast"
+      ></app-action-buttons>         
     </div>
   </div>
 </div>

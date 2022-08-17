@@ -11,11 +11,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CommonComponentsModule,
 } from '../common-components/common-components.module';
 import {CastDragAndDrop} from './cast-drag-and-drop.component';
-import {CastEditorV2} from './cast-editor-v2.component';
+import {CastEditor} from './cast-editor.component';
 
 
 @NgModule({
-  declarations: [CastDragAndDrop, CastEditorV2],
+  declarations: [CastDragAndDrop, CastEditor],
   imports: [
     CommonModule,
     MatButtonModule,

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as APITypes from 'src/api-types';
 import {CAST_COUNT} from 'src/constants';
 
 import {Cast, CastApi, CastGroup} from '../api/cast-api.service';
-import {SegmentApi, Position} from '../api/segment-api.service';
+import {SegmentApi, Segment, Position} from '../api/segment-api.service';
 import {User, UserApi} from '../api/user-api.service';
 import {CsvGenerator} from '../services/csv-generator.service';
 
@@ -35,8 +35,16 @@ type UICastPosition = {
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class CastDragAndDrop implements OnInit {
 
+  @Input() selectedSegment: Segment;
+
+  @Input() canDelete: boolean;
+
+  /** Output by which parent components can launch add cast. */
+  @Output() addCastEmitter: EventEmitter<void> = new EventEmitter();
+
   /** Output by which other components can listen to cast changes. */
   @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
+
 
   /** Base URL of images in cloud storage. */
   // eslint-disable-next-line max-len
@@ -67,6 +75,8 @@ export class CastDragAndDrop implements OnInit {
   dataLoaded = false;
   castSelected = false;
   perfDate = 0;
+
+  canSave = false;
 
   constructor(
       private userAPI: UserApi,
@@ -103,6 +113,7 @@ export class CastDragAndDrop implements OnInit {
     // typescript doesn't know all InputEvent.target fields
     this.cast.name = (inputEvent.target as any).value;
     this.castChangeEmitter.emit(this.cast);
+    this.canSave = true;
   };
 
   /**
@@ -179,6 +190,7 @@ export class CastDragAndDrop implements OnInit {
       return;
     }
 
+    this.canSave = true;
     if (!event.isPointerOverContainer || toContainer === 'user-pool') {
       // Dropped over no table or over User table
       if (fromIndexs[1]) {
@@ -221,6 +233,19 @@ export class CastDragAndDrop implements OnInit {
     }
   };
 
+  canAddCast = (): boolean =>
+    !!this.selectedSegment;
+
+
+  addCast = (): void => {
+    this.addCastEmitter.emit();
+    this.canSave = true;  
+  }
+
+  canSaveCast = (): boolean =>
+    this.canSave;
+
+
   saveCast = async (): Promise<void> => {
     this.cast = this.dataToCast();
     return this.castAPI.setCast(this.cast).then(result => {
@@ -228,11 +253,15 @@ export class CastDragAndDrop implements OnInit {
         alert(result.error);
       }
       this.selectedCastUUID = String(this.castAPI.lastSavedCastId);
+      this.canSave = false;
     });
   };
 
   exportCast = async (): Promise<void> =>
     this.csvGenerator.generateCSVFromCast(this.cast);
+
+  canDeleteCast = (): boolean =>
+    this.canDelete;
 
 
   deleteCast = async (): Promise<void> => {
@@ -241,11 +270,13 @@ export class CastDragAndDrop implements OnInit {
     this.castSelected = false;
     this.selectedCastUUID = undefined;
     this.castAPI.deleteCast(this.cast);
+    this.canDelete = false;
   };
 
   decrementDancerCount = (positionIndex: number): void => {
     this.castPositions[positionIndex].castRows.pop();
     this.castPositions[positionIndex].dancerCount -= 1;
+    this.canSave = true;
   };
 
   incrementDancerCount = (positionIndex: number): void => {
@@ -253,6 +284,7 @@ export class CastDragAndDrop implements OnInit {
       subCastDancers: new Array(this.castCount),
     });
     this.castPositions[positionIndex].dancerCount += 1;
+    this.canSave = true;
   };
 
   decrementCastCount = (): void => {
