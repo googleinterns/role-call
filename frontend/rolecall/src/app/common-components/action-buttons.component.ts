@@ -41,7 +41,6 @@ export class ActionButtonsComponent implements OnInit/*, OnChanges*/ {
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-console.log('ABC INIT name =', this.name);
     this.aAria = this.aAria || `${this.aName} ${this.name}`;
     this.aTip = this.aTip || `${this.aName} ${this.name}`;
     this.bAria = this.bAria || `${this.bName} ${this.name}`;
@@ -52,6 +51,7 @@ console.log('ABC INIT name =', this.name);
 
   aActivate = (): boolean =>
     this.aActivator ? this.aActivator() : true;
+
 
   aHandle = (): void => {
     if (this.aHandler) { this.aHandler(); }
