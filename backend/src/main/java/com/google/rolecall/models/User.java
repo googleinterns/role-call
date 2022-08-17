@@ -9,11 +9,16 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -96,6 +101,17 @@ public class User {
 
   @Column(nullable = false)
   private boolean isActive;
+
+  @Basic
+  private Integer currentProfilePictureId;
+
+  @Enumerated(EnumType.STRING)
+  private UserAsset.FileType currentProfilePictureFileType;
+
+  @OneToMany(mappedBy = "owner", 
+             cascade = CascadeType.REMOVE,
+             fetch = FetchType.LAZY)
+  private List<UserAsset> profilePictures;
 
   public Integer getId() {
     return id;
@@ -200,6 +216,14 @@ public class User {
     return isActive;
   }
 
+  public Integer getCurrentProfilePictureId() {
+    return currentProfilePictureId;
+  }
+
+  public UserAsset.FileType getCurrentProfilePictureFileType() {
+    return currentProfilePictureFileType;
+  }
+
   public void addPerformanceCastMember(PerformanceCastMember member) {
     member.setUser(this);
   }
@@ -214,6 +238,21 @@ public class User {
 
   public void removeUnavailability(Unavailability unavailable) {
     unavailable.setUser(null);
+  }
+
+  public void addProfilePicture(UserAsset asset) {
+    asset.setOwner(this);
+    profilePictures.add(asset);
+  }
+
+  public void removeProfilePicture(UserAsset asset) {
+    if (asset.getOwner().getId() == this.id) {
+      if (this.currentProfilePictureId == asset.getId()) {
+        this.currentProfilePictureId = null;
+      }
+      asset.delete();
+      profilePictures.remove(asset);
+    }
   }
 
   public String[] getRoles() {
@@ -322,6 +361,8 @@ public class User {
     private String emergencyContactNumber;
     private String comments;
     private Boolean isActive = true;
+    private Integer currentProfilePictureId;
+    private UserAsset.FileType currentProfilePictureFileType;
 
     public Builder setFirstName(String name) {
       if(name != null) {
@@ -491,6 +532,12 @@ public class User {
       return this;
     }
 
+    public Builder setCurrentProfilePicture(UserAsset asset) {
+      this.currentProfilePictureId = asset.getId();
+      this.currentProfilePictureFileType = asset.getFileType();
+      return this;
+    }
+
     public User build() throws InvalidParameterException {
       if(firstName == null || lastName == null || email == null) {
         throw new InvalidParameterException(
@@ -521,6 +568,8 @@ public class User {
       user.emergencyContactNumber = this.emergencyContactNumber;
       user.comments = this.comments;
       user.isActive = this.isActive;
+      user.currentProfilePictureId = this.currentProfilePictureId;
+      user.currentProfilePictureFileType = this.currentProfilePictureFileType;
       return user;
     }
 
@@ -551,6 +600,8 @@ public class User {
       this.emergencyContactNumber = user.emergencyContactNumber;
       this.comments = user.comments;
       this.isActive = user.isActive;
+      this.currentProfilePictureId = user.currentProfilePictureId;
+      this.currentProfilePictureFileType = user.currentProfilePictureFileType;
     }
 
     public Builder() {
