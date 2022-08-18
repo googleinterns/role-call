@@ -1,6 +1,3 @@
-<!--
-  *ngIf="dataLoaded && castSelected"  
--->
 
 <div
   *ngIf="dataLoaded && selectedSegment"
@@ -182,33 +179,6 @@
           {{user | fullName}}
         </div>
       </div>
-  
-      <!--
-      <div
-        *ngIf="buttonsEnabled"
-        class="buttons-container"
-      >
-        <button
-          mat-icon-button
-          class="save-delete-button"
-          (click)="deleteCast()"
-        >
-          <mat-icon class="save-delete-button-icon">
-            delete
-          </mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          class="save-delete-button"
-          (click)="saveCast()"
-        >
-          <mat-icon class="save-delete-button-icon">
-            save
-          </mat-icon>
-        </button>
-      </div>
-      -->
-  
     </div>
     <div
       *ngIf="buttonsEnabled"

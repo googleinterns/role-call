@@ -585,6 +585,7 @@
           <div class="cast-drag-and-drop-container">
             <app-cast-drag-and-drop
               #castDnD
+              [selectedSegment]="selectedSegment"
               (castChangeEmitter)="onChangeCast($event)"
               [ngStyle]="selectedSegment.type === 'SEGMENT' || selectedSegment.type === 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }"
             >
