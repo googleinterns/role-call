@@ -19,6 +19,7 @@ import {EmptyStringIfUndefinedPipe} from './empty-string-if-undefined.pipe';
 import {FullNamePipe} from './full-name.pipe';
 import {LoadingSpinnerComponent} from './loading-spinner.component';
 import {NumberToPlacePipe} from './number-to-place.pipe';
+import {PerfButtonsComponent} from './perf-buttons.component';
 import {Stepper} from './stepper.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 
@@ -31,6 +32,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     EmptyStringIfUndefinedPipe,
     FullNamePipe,
     NumberToPlacePipe,
+    PerfButtonsComponent,
     Stepper,
     LoadingSpinnerComponent,
   ],
@@ -56,6 +58,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     EmptyStringIfUndefinedPipe,
     FullNamePipe,
     NumberToPlacePipe,
+    PerfButtonsComponent,
     Stepper,
     LoadingSpinnerComponent,
   ]

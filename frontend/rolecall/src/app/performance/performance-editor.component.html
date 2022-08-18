@@ -30,171 +30,42 @@
 
     <div class="button-overall-container">
       <ng-container *ngIf="stepper.currentStepIndex !== 3; else finalButtons">
-
         <div class="actions-container">
-
-          <div class="nav-div">
-            <button
-              mat-icon-button
-              class="action-button"
-              aria-label="Go to Previous Step"
-              matTooltip="Go to Previous Step"
-              [disabled]="!canGoPrev()"
-              (click)="onPrevClick()"
-            >
-              <mat-icon
-                class="action-button-icon-nobg"
-                [ngClass]="canGoPrev() ? 'bgon' : ''"
-              >arrow_back
-              </mat-icon>
-            </button>
-
-            <button
-              mat-icon-button
-              class="action-button sep"
-              aria-label="Go to Next Step"
-              matTooltip="Go to Next Step"
-              [disabled]="!canGoNext()"
-              (click)="onNextClick()"
-            >
-              <mat-icon
-                class="action-button-icon-nobg"
-                [ngClass]="canGoNext() ? 'bgon' : ''"
-              >arrow_forward
-              </mat-icon>
-            </button>
-
-          </div>
-
-          <div class="sep1"></div>
-
-          <button
-            mat-icon-button
-            class="action-button"
-            aria-label="Delete Performance"
-            matTooltip="Delete Performance"
-            [disabled]="!canDelete"
-            (click)="onDeletePerformance()"
-          >
-            <mat-icon
-              class="action-button-icon-nobg"
-              [ngClass]="canDelete ? 'bgon' : ''"
-            >delete
-            </mat-icon>
-          </button>
-
-          <div class="sep2"></div>
-
-          <button
-            mat-icon-button
-            class="action-button"
-            aria-label="Duplicate Performance"
-            matTooltip="Duplicate Performance"
-            [disabled]="!canDelete"
-            (click)="onDuplicatePerformance()"
-          >
-            <mat-icon
-              class="action-button-icon-nobg"
-              [ngClass]="canDelete ? 'bgon' : ''"
-            >content_copy
-            </mat-icon>
-          </button>
-
-          <div class="sep2"></div>
-          <button
-            mat-icon-button
-            class="action-button"
-            aria-label="Save Performance"
-            matTooltip="Save Performance"
-            [disabled]="!canSave"
-            (click)="onSavePerformance()"
-          >
-            <mat-icon
-              class="action-button-icon-nobg"
-              [ngClass]="canSave ? 'bgon' : ''"
-            >save
-            </mat-icon>
-          </button>
-
+          <app-perf-buttons
+            name="Performance"
+            [backActivator]="canGoPrev"
+            [backHandler]="onPrevClick"
+            [forwardActivator]="canGoNext"
+            [forwardHandler]="onNextClick"
+            [aActivator]="canDeletePerformance"
+            [aHandler]="onDeletePerformance"
+            bIcon="content_copy"
+            [bActivator]="canDeletePerformance"
+            [bHandler]="onDuplicatePerformance"
+            [cActivator]="canSavePerformance"
+            [cHandler]="onSavePerformance"
+          ></app-perf-buttons>      
         </div>
-  
       </ng-container>
       <ng-template #finalButtons>
-
-          <div class="actions-container">
-
-            <div class="nav-div">
-              <button
-                mat-icon-button
-                class="action-button"
-                aria-label="Go to Previous Step"
-                matTooltip="Go to Previous Step"
-                [disabled]="!canGoPrev()"
-                (click)="onPrevClick()"
-              >
-                <mat-icon
-                  class="action-button-icon-nobg"
-                  [ngClass]="canGoPrev() ? 'bgon' : ''"
-                >arrow_back
-                </mat-icon>
-              </button>
-  
-              <button
-                mat-icon-button
-                class="action-button sep"
-                aria-label="Go to Next Step"
-                matTooltip="Go to Next Step"
-                [disabled]="!canGoNext()"
-                (click)="onNextClick()"
-              >
-                <mat-icon
-                  class="action-button-icon-nobg"
-                  [ngClass]="canGoNext() ? 'bgon' : ''"
-                >arrow_forward
-                </mat-icon>
-              </button>
-  
-            </div>
-  
-            <div class="sep1"></div>
-
-            <div class="place-holder"></div>
-  
-            <div class="sep2"></div>
-  
-            <button
-              mat-icon-button
-              class="action-button"
-              aria-label="Publish Performance"
-              matTooltip="Publish Performance"
-              [disabled]="!canPublish()"
-              (click)="onPublishPerformance()"
-            >
-              <mat-icon
-                class="action-button-icon-nobg"
-                [ngClass]="canPublish() ? 'bgon' : ''"
-              >publish
-              </mat-icon>
-            </button>
-  
-            <div class="sep2"></div>
-            <button
-              mat-icon-button
-              class="action-button"
-              aria-label="Save Performance"
-              matTooltip="Save Performance"
-              [disabled]="!canSave"
-              (click)="onSavePerformance()"
-            >
-              <mat-icon
-                class="action-button-icon-nobg"
-                [ngClass]="canSave ? 'bgon' : ''"
-              >save
-              </mat-icon>
-            </button>
-  
-          </div>
- 
+        <div class="actions-container">
+          <app-perf-buttons
+            name="Performance"
+            [backActivator]="canGoPrev"
+            [backHandler]="onPrevClick"
+            [forwardActivator]="canGoNext"
+            [forwardHandler]="onNextClick"
+            aIcon="unpublished"
+            aAria="Cancel Performance"
+            [aActivator]="canCancel"
+            [aHandler]="onCancelPerformance"
+            bIcon="check_circle"
+            [bActivator]="canPublish"
+            [bHandler]="onPublishPerformance"
+            [cActivator]="canSavePerformance"
+            [cHandler]="onSavePerformance"
+          ></app-perf-buttons>
+        </div>
       </ng-template>
     </div>
   </div>
@@ -252,17 +123,19 @@
     </div>
 
     <div class="actions-container">
-      <button
-        mat-icon-button
-        class="action-button"
-        aria-label="New Performance"
-        matTooltip="New Performance"
-        (click)="onNewPerformance()"
-      >
-        <mat-icon class="action-button-icon">
-          add
-        </mat-icon>
-      </button> 
+      <div class="center-button">
+        <button
+          mat-icon-button
+          class="action-button"
+          aria-label="New Performance"
+          matTooltip="New Performance"
+          (click)="onNewPerformance()"
+        >
+          <mat-icon class="action-button-icon">
+            add
+          </mat-icon>
+        </button>
+      </div>
     </div>
 
   </div>

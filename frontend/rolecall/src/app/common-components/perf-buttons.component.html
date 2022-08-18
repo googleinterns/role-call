@@ -1,0 +1,267 @@
+
+<div class="perf-container">
+
+  <div class="nav-div">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="backAria"
+      [matTooltip]="backTip"
+      [disabled]="!backActivate()"
+      (click)="backHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="backActivate() ? 'bgon' : ''"
+      >{{ backIcon }}
+      </mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      class="perf-button nav-sep"
+      [attr.aria-label]="forwardAria"
+      [matTooltip]="forwardTip"
+      [disabled]="!forwardActivate()"
+      (click)="forwardHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="forwardActivate() ? 'bgon' : ''"
+      >{{ forwardIcon }}
+      </mat-icon>
+    </button>
+
+  </div>
+
+  <div class="sep1"></div>
+
+  <ng-container *ngIf="aIcon; else noAbutton">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="aAria"
+      [matTooltip]="aTip"
+      [disabled]="!aActivate()"
+      (click)="aHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="aActivate() ? 'bgon' : ''"
+      >{{ aIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noAbutton>
+    <div class="place-holder"></div>      
+  </ng-template>
+
+
+  <div class="sep2"></div>
+
+  <ng-container *ngIf="bIcon; else noBbutton">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      (click)="bHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="bActivate() ? 'bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noBbutton>
+    <div class="place-holder"></div>      
+  </ng-template>
+
+
+  <div class="sep2"></div>
+
+  <ng-container *ngIf="cIcon; else noCbutton">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="cAria"
+      [matTooltip]="cTip"
+      [disabled]="!cActivate()"
+      (click)="cHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="cActivate() ? 'bgon' : ''"
+      >{{ cIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noCbutton>
+    <div class="place-holder"></div>      
+  </ng-template>
+
+</div>
+
+<!--
+  
+      </ng-container>
+      <ng-template #finalButtons>
+
+          <div class="actions-container">
+
+            <div class="nav-div">
+              <button
+                mat-icon-button
+                class="action-button"
+                aria-label="Go to Previous Step"
+                matTooltip="Go to Previous Step"
+                [disabled]="!canGoPrev()"
+                (click)="onPrevClick()"
+              >
+                <mat-icon
+                  class="action-button-icon-nobg"
+                  [ngClass]="canGoPrev() ? 'bgon' : ''"
+                >arrow_back
+                </mat-icon>
+              </button>
+  
+              <button
+                mat-icon-button
+                class="action-button sep"
+                aria-label="Go to Next Step"
+                matTooltip="Go to Next Step"
+                [disabled]="!canGoNext()"
+                (click)="onNextClick()"
+              >
+                <mat-icon
+                  class="action-button-icon-nobg"
+                  [ngClass]="canGoNext() ? 'bgon' : ''"
+                >arrow_forward
+                </mat-icon>
+              </button>
+  
+            </div>
+  
+            <div class="sep1"></div>
+
+            <div class="place-holder"></div>
+  
+            <div class="sep2"></div>
+  
+            <button
+              mat-icon-button
+              class="action-button"
+              aria-label="Publish Performance"
+              matTooltip="Publish Performance"
+              [disabled]="!canPublish()"
+              (click)="onPublishPerformance()"
+            >
+              <mat-icon
+                class="action-button-icon-nobg"
+                [ngClass]="canPublish() ? 'bgon' : ''"
+              >publish
+              </mat-icon>
+            </button>
+  
+            <div class="sep2"></div>
+            <button
+              mat-icon-button
+              class="action-button"
+              aria-label="Save Performance"
+              matTooltip="Save Performance"
+              [disabled]="!canSave"
+              (click)="onSavePerformance()"
+            >
+              <mat-icon
+                class="action-button-icon-nobg"
+                [ngClass]="canSave ? 'bgon' : ''"
+              >save
+              </mat-icon>
+            </button>
+  
+          </div>
+ 
+      </ng-template>
+    </div>
+
+
+
+<div class="actions-container">
+
+  <button
+    mat-icon-button
+    class="action-button"
+    [attr.aria-label]="aAria"
+    [matTooltip]="aTip"
+    [disabled]="!aActivate()"
+    (click)="aHandle()"
+  >
+    <mat-icon
+      class="action-button-icon-nobg"
+      [ngClass]="aActivate() ? 'bgon' : ''"
+    >{{ aIcon }}
+    </mat-icon>
+  </button>
+
+  <ng-container *ngIf="bMenuItems.length === 0; else withDropDown">
+    <button
+      mat-icon-button
+      class="action-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      (click)="bHandle()"
+    >
+      <mat-icon
+        class="action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+
+  <ng-template #withDropDown>
+    <button
+      mat-icon-button
+      class="action-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      [matMenuTriggerFor]="bMenu"
+    >
+      <mat-icon
+        class="action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+    <mat-menu #bMenu="matMenu">
+      <button *ngFor="let segType of bMenuItems; let k = index"
+        mat-menu-item
+        class="menu-item"
+        (click)="bMenuHandler(k)"
+      >{{ segType }}
+      </button>
+    </mat-menu>
+  </ng-template>
+
+  <button
+    mat-icon-button
+    class="action-button"
+    [attr.aria-label]="cAria"
+    [matTooltip]="cTip"
+    [disabled]="!cActivate()"
+    (click)="cHandle()"
+  >
+    <mat-icon
+      class="action-button-icon-nobg"
+      [ngClass]="cActivate() ? 'bgon' : ''"
+    >{{ cIcon }}
+    </mat-icon>
+  </button>
+
+</div>
+
+-->

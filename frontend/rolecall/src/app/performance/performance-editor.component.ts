@@ -248,7 +248,21 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   };
 
   canPublish = (): boolean => {
-    return true;
+    // put in more logic to make sure that performance is
+    // properly specified (or at least filled in)
+    if (this.selectedPerformance &&
+        this.selectedPerformance.status !== PerformanceStatus.PUBLISHED) {
+      return true;
+    }
+    return false;
+  };
+
+  canCancel = (): boolean => {
+    if (this.selectedPerformance &&
+        this.selectedPerformance.status === PerformanceStatus.PUBLISHED) {
+      return true;
+    }
+    return false;
   };
 
   // All Steps ----------------------------------------------------
@@ -273,6 +287,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
   );
+
+  canSavePerformance = (): boolean =>
+    this.canSave;
+
 
   onSavePerformance = async (): Promise<void> => {
     this.initStep3Data();
@@ -378,6 +396,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.canDelete = false;
     this.updateUrl(this.state);
   };
+
+  canDeletePerformance = (): boolean =>
+    this.canDelete;
+
 
   onDeletePerformance = (): void => {
     this.performanceAPI.deletePerformance(this.selectedPerformance);
@@ -695,6 +717,21 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
             err.error.error);
     });
   };
+
+  onCancelPerformance = async (): Promise<void> => {
+    const finishedPerf = this.dataToPerformance();
+    finishedPerf.status = PerformanceStatus.CANCELED;
+    this.performanceAPI.setPerformance(finishedPerf).then(() => {
+      this.submitted = true;
+      this.initCastsLoaded = false;
+      this.deleteWorkingCasts();
+      this.resetState();
+    }).catch(err => {
+      alert('Unable to save performance: ' + err.error.status + ' ' +
+            err.error.error);
+    });
+  };
+
 
   deleteWorkingCasts = (): void => {
     for (const entry of this.segmentToCast.entries()) {
