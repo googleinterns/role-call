@@ -1,0 +1,105 @@
+
+<div class="perf-container">
+
+  <div class="nav-div">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="backAria"
+      [matTooltip]="backTip"
+      [disabled]="!backActivate()"
+      (click)="backHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="backActivate() ? 'bgon' : ''"
+      >{{ backIcon }}
+      </mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      class="perf-button nav-sep"
+      [attr.aria-label]="forwardAria"
+      [matTooltip]="forwardTip"
+      [disabled]="!forwardActivate()"
+      (click)="forwardHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="forwardActivate() ? 'bgon' : ''"
+      >{{ forwardIcon }}
+      </mat-icon>
+    </button>
+
+  </div>
+
+  <div class="sep1"></div>
+
+  <ng-container *ngIf="aIcon; else noAbutton">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="aAria"
+      [matTooltip]="aTip"
+      [disabled]="!aActivate()"
+      (click)="aHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="aActivate() ? 'bgon' : ''"
+      >{{ aIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noAbutton>
+    <div class="place-holder"></div>      
+  </ng-template>
+
+
+  <div class="sep2"></div>
+
+  <ng-container *ngIf="bIcon; else noBbutton">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      (click)="bHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="bActivate() ? 'bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noBbutton>
+    <div class="place-holder"></div>      
+  </ng-template>
+
+
+  <div class="sep2"></div>
+
+  <ng-container *ngIf="cIcon; else noCbutton">
+    <button
+      mat-icon-button
+      class="perf-button"
+      [attr.aria-label]="cAria"
+      [matTooltip]="cTip"
+      [disabled]="!cActivate()"
+      (click)="cHandle()"
+    >
+      <mat-icon
+        class="perf-button-icon-nobg"
+        [ngClass]="cActivate() ? 'bgon' : ''"
+      >{{ cIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noCbutton>
+    <div class="place-holder"></div>      
+  </ng-template>
+
+</div>
