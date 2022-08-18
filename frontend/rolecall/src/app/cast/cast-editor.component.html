@@ -22,7 +22,7 @@
               *ngFor="let cast of selectedSegmentCasts"
               class="app-card cast-select"
               [class.selected-cast]="cast.uuid === castDragAndDrop.selectedCastUUID"
-              (click)="doSetCurrentCast(cast)">
+              (click)="onSetCurrentCast(cast)">
             <h2
                 class="cast-name"
                 [class.std-italic-font]="selectedSegment && selectedSegment.siblingId > 0">

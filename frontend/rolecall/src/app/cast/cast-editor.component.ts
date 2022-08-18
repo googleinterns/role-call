@@ -78,10 +78,9 @@ export class CastEditor implements OnInit {
 
   onEditCast = (cast: Cast): void => {
     this.lastSelectedCast = cast;
-    this.canDelete = !!this.lastSelectedCast;
   };
 
-  doSetCurrentCast = (cast: Cast): void => {
+  onSetCurrentCast = (cast: Cast): void => {
     this.setCurrentCast({cast});
     this.canDelete = true;
   }
@@ -105,8 +104,6 @@ export class CastEditor implements OnInit {
     this.urlUUID = cast ? cast.uuid : '';
     this.setCastURL();
   };
-
-  
 
   addCast = async (): Promise<void> => {
     if (!this.selectedSegment) {
