@@ -171,7 +171,7 @@ export class CastEditor implements OnInit {
       autoSelectFirst = this.selectedSegmentCasts.length > 0;
     }
     if (autoSelectFirst) {
-      this.setCurrentCast({cast: this.selectedSegmentCasts[0]});
+      this.onSetCurrentCast(this.selectedSegmentCasts[0]);
     }
   };
 
@@ -192,7 +192,7 @@ export class CastEditor implements OnInit {
     if (this.selectedSegment && !this.selectedSegmentCasts.find(
         cast => cast.uuid === this.urlUUID)) {
       if (this.selectedSegmentCasts.length > 0) {
-        this.setCurrentCast({cast: this.selectedSegmentCasts[0]});
+        this.onSetCurrentCast(this.selectedSegmentCasts[0]);
       }
     }
   };
@@ -262,7 +262,7 @@ export class CastEditor implements OnInit {
           this.selectedCast = casts[0];
         }
       }
-      this.setCurrentCast({cast: this.selectedCast});
+      this.onSetCurrentCast(this.selectedCast);
     } else {
       this.urlUUID = this.dragAndDrop.selectedCastUUID;
       this.setCurrentCast({cast: this.castAPI.castFromUUID(this.urlUUID)});

@@ -1,17 +1,17 @@
 
-<div class="actions-container">
+<div class="std-action-container">
 
   <button
     mat-icon-button
-    class="action-button"
+    class="std-action-button"
     [attr.aria-label]="aAria"
     [matTooltip]="aTip"
     [disabled]="!aActivate()"
     (click)="aHandle()"
   >
     <mat-icon
-      class="action-button-icon-nobg"
-      [ngClass]="aActivate() ? 'bgon' : ''"
+      class="std-action-button-icon-nobg"
+      [ngClass]="aActivate() ? 'std-action-bgon' : ''"
     >{{ aIcon }}
     </mat-icon>
   </button>
@@ -19,15 +19,15 @@
   <ng-container *ngIf="bMenuItems.length === 0; else withDropDown">
     <button
       mat-icon-button
-      class="action-button"
+      class="std-action-button"
       [attr.aria-label]="bAria"
       [matTooltip]="bTip"
       [disabled]="!bActivate()"
       (click)="bHandle()"
     >
       <mat-icon
-        class="action-button-icon-nobg"
-        [ngClass]="bActivate() ? 'bgon' : ''"
+        class="std-action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'std-action-bgon' : ''"
       >{{ bIcon }}
       </mat-icon>
     </button>
@@ -36,22 +36,22 @@
   <ng-template #withDropDown>
     <button
       mat-icon-button
-      class="action-button"
+      class="std-action-button"
       [attr.aria-label]="bAria"
       [matTooltip]="bTip"
       [disabled]="!bActivate()"
       [matMenuTriggerFor]="bMenu"
     >
       <mat-icon
-        class="action-button-icon-nobg"
-        [ngClass]="bActivate() ? 'bgon' : ''"
+        class="std-action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'std-action-bgon' : ''"
       >{{ bIcon }}
       </mat-icon>
     </button>
     <mat-menu #bMenu="matMenu">
       <button *ngFor="let segType of bMenuItems; let k = index"
         mat-menu-item
-        class="menu-item"
+        class="std-action-menu-item"
         (click)="bMenuHandler(k)"
       >{{ segType }}
       </button>
@@ -60,15 +60,15 @@
 
   <button
     mat-icon-button
-    class="action-button"
+    class="std-action-button"
     [attr.aria-label]="cAria"
     [matTooltip]="cTip"
     [disabled]="!cActivate()"
     (click)="cHandle()"
   >
     <mat-icon
-      class="action-button-icon-nobg"
-      [ngClass]="cActivate() ? 'bgon' : ''"
+      class="std-action-button-icon-nobg"
+      [ngClass]="cActivate() ? 'std-action-bgon' : ''"
     >{{ cIcon }}
     </mat-icon>
   </button>
