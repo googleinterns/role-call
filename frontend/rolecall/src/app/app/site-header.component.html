@@ -1,10 +1,10 @@
 <div class="site-header-container">
   <button
     [disabled]="!loginAPI.isLoggedIn"
+    class="nav-trigger-button"
     [ngStyle]="!loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }"
     mat-icon-button
     aria-label="Toggle Navigation Button"
-    class="nav-trigger-button"
     (click)="onNavButtonClick()"
   >
     <mat-icon class="icon" [inline]="true">
