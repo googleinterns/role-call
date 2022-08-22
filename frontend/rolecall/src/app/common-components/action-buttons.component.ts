@@ -10,8 +10,7 @@ export type ItemHandler = (ix: number) => void;
   templateUrl: './action-buttons.component.html',
   styleUrls: ['./action-buttons.component.scss']
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
-export class ActionButtonsComponent implements OnInit/*, OnChanges*/ {
+export class ActionButtonsComponent implements OnInit {
 
   @Input() name = 'Object';
 
@@ -55,7 +54,7 @@ export class ActionButtonsComponent implements OnInit/*, OnChanges*/ {
 
   aHandle = (): void => {
     if (this.aHandler) { this.aHandler(); }
-  }
+  };
 
   bActivate = (): boolean =>
     this.bActivator ? this.bActivator() : true;
@@ -63,18 +62,18 @@ export class ActionButtonsComponent implements OnInit/*, OnChanges*/ {
 
   bHandle = (): void => {
     if (this.bHandler) { this.bHandler(); }
-  }
+  };
 
   bMenuHandle = (ix: number): void => {
     if (this.bMenuHandler) { this.bMenuHandler(ix); }
-  }
+  };
 
   cActivate = (): boolean =>
     this.cActivator ? this.cActivator() : true;
 
 
   cHandle = (): void => {
-  if (this.cHandler) { this.cHandler(); }
-  }
+    if (this.cHandler) { this.cHandler(); }
+  };
 
 }

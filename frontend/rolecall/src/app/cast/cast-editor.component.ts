@@ -83,7 +83,7 @@ export class CastEditor implements OnInit {
   onSetCurrentCast = (cast: Cast): void => {
     this.setCurrentCast({cast});
     this.canDelete = true;
-  }
+  };
 
   setCurrentCast = ({cast, index}: {
     cast: Cast | undefined;
