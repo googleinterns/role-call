@@ -10,8 +10,7 @@ export type ItemHandler = (ix: number) => void;
   templateUrl: './perf-buttons.component.html',
   styleUrls: ['./perf-buttons.component.scss']
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
-export class PerfButtonsComponent implements OnInit/*, OnChanges*/ {
+export class PerfButtonsComponent implements OnInit {
 
   @Input() name = 'Object';
 
@@ -72,7 +71,7 @@ export class PerfButtonsComponent implements OnInit/*, OnChanges*/ {
 
   backHandle = (): void => {
     if (this.backHandler) { this.backHandler(); }
-  }
+  };
 
   forwardActivate = (): boolean =>
     this.forwardActivator ? this.forwardActivator() : true;
@@ -80,7 +79,7 @@ export class PerfButtonsComponent implements OnInit/*, OnChanges*/ {
 
   forwardHandle = (): void => {
     if (this.forwardHandler) { this.forwardHandler(); }
-  }
+  };
 
   aActivate = (): boolean =>
     this.aActivator ? this.aActivator() : true;
@@ -88,7 +87,7 @@ export class PerfButtonsComponent implements OnInit/*, OnChanges*/ {
 
   aHandle = (): void => {
     if (this.aHandler) { this.aHandler(); }
-  }
+  };
 
   bActivate = (): boolean =>
     this.bActivator ? this.bActivator() : true;
@@ -96,7 +95,7 @@ export class PerfButtonsComponent implements OnInit/*, OnChanges*/ {
 
   bHandle = (): void => {
     if (this.bHandler) { this.bHandler(); }
-  }
+  };
 
   cActivate = (): boolean =>
   this.cActivator ? this.cActivator() : true;
@@ -104,6 +103,6 @@ export class PerfButtonsComponent implements OnInit/*, OnChanges*/ {
 
   cHandle = (): void => {
   if (this.cHandler) { this.cHandler(); }
-  }
+  };
 
 }

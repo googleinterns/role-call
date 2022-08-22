@@ -239,8 +239,8 @@ export class CastDragAndDrop implements OnInit {
 
   addCast = (): void => {
     this.addCastEmitter.emit();
-    this.canSave = true;  
-  }
+    this.canSave = true;
+  };
 
   canSaveCast = (): boolean =>
     this.canSave;
