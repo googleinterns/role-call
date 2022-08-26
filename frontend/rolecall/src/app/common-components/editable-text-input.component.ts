@@ -11,6 +11,7 @@ export class EditableTextInput implements OnInit {
   @Input() initValue: string;
   @Input() valueName: string;
   @Input() bgColor: string;
+  @Input() appearance: string;
   @Input() type: string;
   @Input() autoCompleteOptions: string[];
   @Input() isDisabled: boolean;

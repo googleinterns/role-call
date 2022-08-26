@@ -1,5 +1,6 @@
-@import "src/styles/colors";
+//@import "src/styles/colors";
 @import "src/styles/constants";
+@import "src/styles/buttons";
 
 
 $buttonRowHeight: 5rem;
@@ -49,34 +50,17 @@ $buttonRowHeight: 5rem;
         justify-content: flex-start;
         margin: 0.5rem;
 
-        .dup-button-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-end;
-
-          .dup-button {
-            background: $white;
-            border-radius: $borderRadius;
-            height: 6vh;
-            margin: 1em;
-            width: 6vh;
-          }
-
-          .dup-button-icon {
-            font-size: 2.5em;
-            vertical-align: middle;
-          }
-        }
-
         .title-container {
-          .title {
-            font-size: xx-large;
-            font-weight: bold;
-            margin-left: 0.5em;
-            margin-right: 0.5em;
-            padding-top: 0.5em;
-          }
+          // for margin em
+          font-size: 1.6rem;
+          margin: .5em .5em .5em .5em;
+          width: calc(100% - 1em);
         }
+
+        // .word-break {
+        //   white-space: pre-wrap;
+        // }
+
 
         .children-container {
           overflow-y: scroll;
@@ -112,32 +96,15 @@ $buttonRowHeight: 5rem;
         justify-content: flex-start;
         margin: 0.5rem;
 
-        .dup-button-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-end;
-
-          .dup-button {
-            background: $white;
-            border-radius: $borderRadius;
-            height: 6vh;
-            margin: 1em;
-            width: 6vh;
-          }
-
-          .dup-button-icon {
-            font-size: 2.5em;
-            vertical-align: middle;
-          }
-        }
-
         .title-container {
+
           .title {
-            font-size: xx-large;
+            //font-size: xx-large;
+            font-size: 1.6rem;
             font-weight: bold;
-            margin-left: 0.5em;
-            margin-right: 0.5em;
-            padding-top: 0.5em;
+            line-height: 1.1em;
+            margin: .5em .5em .5em .5em;
+            text-align: center;
           }
         }
 
@@ -712,7 +679,7 @@ table {
 }
 
 .label {
-  padding: 0.9rem 0.5rem 0rem 1rem;
+  padding: 1rem 0.5rem 0rem 1rem;
   font-size: 1.4rem;
   font-weight: 800;
   vertical-align: top;
@@ -769,11 +736,15 @@ table {
     justify-content: center;
   }
 
+  // had to add this scss because the program refused to pick up
+  // .std-action-button and .std-action-button-icon.
+  // I don't know why.
   .action-button {
     height: 3.5rem;
     width: 3.5rem;
   }
   
+
   .action-button-icon {
     color: $gray;
     background: $aaOrangeGradient;
@@ -786,14 +757,14 @@ table {
     width: 3.5rem;
   }
 
-  .action-button-icon-nobg {
-    @extend .action-button-icon;
-    background: $lightLightGray;
-  }
+  // .action-button-icon-nobg {
+  //   @extend .action-button-icon;
+  //   background: $lightLightGray;
+  // }
 
-  .bgon {
-    background: $aaOrangeGradient;
-  }
+  // .bgon {
+  //   background: $aaOrangeGradient;
+  // }
 
 }
 

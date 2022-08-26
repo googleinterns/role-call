@@ -1,3 +1,4 @@
+@import "./_constants";
 @import "./_colors";
 
 
@@ -25,8 +26,9 @@
 
   .std-action-button-icon {
     color: $gray;
-    background: $aaOrangeGradient;
-    border-radius: 6px;
+    //background: $aaOrangeGradient;
+    background: darkorange;
+    border-radius: $borderRadius;
     //background-clip: border-box;
     font-size: 3.5rem;
     height: 3.5rem;

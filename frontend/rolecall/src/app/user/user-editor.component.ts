@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {Location} from '@angular/common';
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnInit, ViewChild,
+} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {User, UserApi} from '../api/user-api.service';
 
@@ -16,12 +17,13 @@ import {User, UserApi} from '../api/user-api.service';
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class UserEditor implements OnInit {
+  @ViewChild('inputPicture') inputPicture: ElementRef;
+
   permissionsSet: EventEmitter<string[]> = new EventEmitter();
   rolesSet: EventEmitter<string[]> = new EventEmitter();
 
   currentSelectedUser: User;
   renderingUsers: User[];
-
 
   rolesNamesMap = {
     isAdmin: 'Is Admin',
@@ -40,10 +42,11 @@ export class UserEditor implements OnInit {
     manageRules: 'Manages Rules',
   };
 
+  image?: string | ArrayBuffer;
 
-  canDeleteVar = false;
-  canSaveVar = false;
-  always = true;
+  canDelete = false;
+  canSave = false;
+  hasNewPicture = false;
 
   creatingUser = false;
 
@@ -138,8 +141,8 @@ export class UserEditor implements OnInit {
     if (user && this.currentSelectedUser && user.uuid
         !== this.currentSelectedUser.uuid) {
       this.creatingUser = false;
-      this.canDeleteVar = true;
-      this.canSaveVar = false;
+      this.canDelete = true;
+      this.canSave = false;
     }
 
     if (this.workingUser && user.uuid !== this.workingUser.uuid) {
@@ -154,6 +157,8 @@ export class UserEditor implements OnInit {
       this.workingUser = undefined;
     }
 
+    this.image = undefined;
+    this.hasNewPicture = false;
     this.currentSelectedUser = user;
     if (!fromInputChange) {
       if (!this.currentSelectedUser) {
@@ -175,7 +180,7 @@ export class UserEditor implements OnInit {
       a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
   };
 
-  canAdd = (): boolean =>
+  canAddUser = (): boolean =>
     true;
 
 
@@ -184,8 +189,10 @@ export class UserEditor implements OnInit {
       return;
     }
     this.creatingUser = true;
-    this.canSaveVar = true;
+    this.canSave = true;
     this.prevWorkingState = undefined;
+    this.image = undefined;
+    this.hasNewPicture = false;
     const newUser: User = {
       first_name: '',
       middle_name: '',
@@ -227,8 +234,8 @@ export class UserEditor implements OnInit {
     this.setCurrentUser({user: this.workingUser});
   };
 
-  canDelete = (): boolean =>
-   this.canDeleteVar;
+  canDeleteUser = (): boolean =>
+   this.canDelete;
 
 
   deleteUser = (): void => {
@@ -246,30 +253,33 @@ export class UserEditor implements OnInit {
     }
   };
 
-  canSave = (): boolean =>
-    this.canSaveVar;
+  canSaveUser = (): boolean =>
+    this.canSave || this.hasNewPicture;
 
 
   saveUser = (): void => {
-    this.lastSelectedUserEmail = this.workingUser.contact_info.email;
-
-    this.userAPI.setUser(this.workingUser).then(async result => {
-      if (result.successful) {
-        this.creatingUser = false;
-        this.canDeleteVar = true;
-        this.canSaveVar = false;
-        const prevUUID = this.workingUser.uuid;
-        this.prevWorkingState = undefined;
-        this.workingUser = undefined;
-        await this.userAPI.getAllUsers();
-        const foundSame = this.renderingUsers.find(
-            user => user.uuid === prevUUID);
-
-        if (foundSame && this.location.path().startsWith('user')) {
-          this.setCurrentUser({user: foundSame});
+    if (this.hasNewPicture) {
+console.log('SAVE PICTURE');
+    }
+    if (this.canSave) {
+      this.lastSelectedUserEmail = this.workingUser.contact_info.email;
+      this.userAPI.setUser(this.workingUser).then(async result => {
+        if (result.successful) {
+          this.creatingUser = false;
+          this.canDelete = true;
+          this.canSave = false;
+          const prevUUID = this.workingUser.uuid;
+          this.prevWorkingState = undefined;
+          this.workingUser = undefined;
+          await this.userAPI.getAllUsers();
+          const foundSame = this.renderingUsers.find(
+              user => user.uuid === prevUUID);
+          if (foundSame && this.location.path().startsWith('user')) {
+            this.setCurrentUser({user: foundSame});
+          }
         }
-      }
-    });
+      });
+    }
   };
 
   getCurrentDate = (): number =>
@@ -307,6 +317,29 @@ export class UserEditor implements OnInit {
     if (this.workingUser) {
       this.setWorkingPropertyByKey(valueName, value);
     }
+  };
+
+  onPictureLoad = (event: Event): void => {
+    const file = (event.target as HTMLInputElement).files[0];
+    if (!file) {
+      return;
+    }
+    if (!file.type.match('image.*')) {
+      alert('Only images are supported');
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = ((): void => {
+      this.image = reader.result;
+      this.hasNewPicture = true;
+      this.currentSelectedUser.picture_file = file.name;
+      this.canSave = true;
+    });
+  };
+
+  getPicture = (): void => {
+    this.inputPicture.nativeElement.click();
   };
 
   // Private methods
@@ -384,18 +417,18 @@ export class UserEditor implements OnInit {
     }
     if (info.type === 'date') {
       val = Date.parse(val.value);
-      this.canSaveVar = true;
+      this.canSave = true;
     } else if (info.type === 'permissions') {
       const permissions = this.workingUser.has_permissions;
       for (const permission of Object.keys(permissions)) {
         if (val.includes(permission)) {
           if (!permissions[permission]) {
-            this.canSaveVar = true;
+            this.canSave = true;
           }
           permissions[permission] = true;
         } else {
           if (permissions[permission]) {
-            this.canSaveVar = true;
+            this.canSave = true;
           }
           permissions[permission] = false;
         }
@@ -406,19 +439,19 @@ export class UserEditor implements OnInit {
       for (const role of Object.keys(roles)) {
         if (val.includes(role)) {
           if (!roles[role]) {
-            this.canSaveVar = true;
+            this.canSave = true;
           }
           roles[role] = true;
         } else {
           if (roles[role]) {
-            this.canSaveVar = true;
+            this.canSave = true;
           }
           roles[role] = false;
         }
       }
       val = roles;
     } else {
-      this.canSaveVar = true;
+      this.canSave = true;
     }
     objInQuestion[splits[splits.length - 1]] = val;
   };

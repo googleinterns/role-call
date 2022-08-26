@@ -77,12 +77,15 @@
       <div class="left-card-container">
         <div class="left-card app-card">
           <div class="title-container">
-            <h2 class="title">Recently Published Performances</h2>
+            <app-date-header
+              [date]="listStartDate"
+              [changeDate]="changeListStartDate"
+            ></app-date-header>
           </div>
           <div class="children-container">
             <div class="child-container">
               <div
-                *ngFor="let perf of publishedPerfs" class="child app-card"
+                *ngFor="let perf of displayedPerfs" class="child app-card"
                 [ngClass]="this.selectedPerformance && perf.uuid === this.selectedPerformance.uuid ? 'child-selected' : ''"
                 (click)="onSelectRecentPerformance(perf)"
               >
@@ -131,8 +134,10 @@
           matTooltip="New Performance"
           (click)="onNewPerformance()"
         >
-          <mat-icon class="action-button-icon">
-            add
+          <mat-icon
+            [inline]="true"
+            class="action-button-icon"
+          >add
           </mat-icon>
         </button>
       </div>

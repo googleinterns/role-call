@@ -24,7 +24,11 @@ export class UnavailabilityEditor implements OnInit {
 
   unavs: Unavailability[] = [];
   processedUnavs: ProcessedUnav[] = [];
+  displayedUnavs: ProcessedUnav[] = [];
   state: Unavailability;
+
+  listStartDate: Date = new Date();
+  listStart: number;
 
   selectedUser: User;
   selectedReason: UnavailabilityReason;
@@ -45,6 +49,7 @@ export class UnavailabilityEditor implements OnInit {
 
     public unavAPI: UnavailabilityApi,
   ) {
+    this.listStart = this.listStartDate.getTime();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -55,6 +60,13 @@ export class UnavailabilityEditor implements OnInit {
     this.unavAPI.getAllUnavailabilities();
     this.userAPI.getAllUsers();
   }
+
+  changeListStartDate = (newDate: Date): string => {
+    this.listStartDate = newDate;
+    this.listStart = this.listStartDate.getTime();
+    this.filterOnDate();
+    return `Unavailabilites After ${this.listStartDate.toLocaleDateString()}`;
+  };
 
   onUnavsLoad = (
     unavs: Unavailability[],
@@ -89,6 +101,12 @@ export class UnavailabilityEditor implements OnInit {
         toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
       })
     );
+    this.filterOnDate();
+  };
+
+  filterOnDate = (): void => {
+    this.displayedUnavs = this.processedUnavs.filter(ua =>
+      ua.unav.endDate > this.listStart);
   };
 
   createNewUnavailability = (): Unavailability => {

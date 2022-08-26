@@ -79,7 +79,7 @@ export type RawPerformance = {
   hasAbsence?: boolean;
   performanceSections: {
     id?: number;
-    // may not exist. Only set on way to server
+    // may not exist. Only set on way to server.
     delete?: boolean;
     sectionPosition: number;
     primaryCast: number;

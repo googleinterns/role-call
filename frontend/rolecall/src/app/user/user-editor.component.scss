@@ -14,84 +14,101 @@
   max-height: 87.5vh;
 }
 
-.name-container {
+.line-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.notification-email-email-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.phone-picture-file-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.date-priv-class-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.name-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
   margin-right: 1em;
-  width: calc(30% - 2em);
+}
+
+.bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.bottom-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 60%;
+}
+
+.bottom-right {
+  // .4rem below to aligh with raised cards
+  margin: 0em 1em 1em .4em;
+  width: calc(40% - 1.4em);
+}
+
+.short-line-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  //width: calc(100% - .5em);
+  width: calc(100% - .5em);
+}
+
+.std-left {
+  margin: 0em 0em 1em 1em;
+  width: calc(30% - 1em);
+}
+
+.std {
+  margin: 0em 0em 1em 1em;
+  width: calc(30% - 1em);
+}
+
+.short-left {
+  margin: 0em 0em 1em 1em;
+  width: calc(50% - 1em);
+}
+
+.short {
+  margin: 0em 0em 1em 1em;
+  width: calc(50% - 1em);
+}
+
+.all-line {
+  margin: 0em 0em 1em 1.0em;
+  width: calc(100% - 1em);
 }
 
 .suffix-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(10% - 2em);
+  margin: 0em 0em 1em 1em;
+  width: calc(10% - 1em);
 }
 
-.email-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(50% - 2em);
+.picture-change {
+  background: $white;
+  border-radius: $borderRadius;
+  // non standard margins to adjust for shadows on other items
+  margin: 0em .1em 1em .9em;
+  height: calc(100% - 1em + 4px);
+  width: calc(10% - 1em);
+
 }
 
-.phone-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(50% - 2em);
+.picture-change-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: $gray;
+  height: 100%;
+  width: 100%;
+  font-size: 2.5em;
 }
 
-.picture-file-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(50% - 2em);
+.left2 {
+  margin: 0em 0em 1em 1.0em;
+  width: calc(60% - 1.0em);
 }
 
-.date-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(30% - 2em);
-}
-
-.priv-class-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(70% - 2em);
-}
-
-.permissions-input {
-  margin-bottom: 1em;
-  margin-left: 1em;
-  margin-right: 1em;
-  width: calc(100% - 2em);
+.pic {
+  margin: 0;
+  width: calc(100%);
+  border-radius: $borderRadius;
+  border: 1px solid grey;
 }
 
 .right-card-title {

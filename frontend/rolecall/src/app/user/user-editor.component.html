@@ -7,10 +7,11 @@
       </h1>
       <div class="item-select-container">
         <div
-            *ngFor="let user of renderingUsers"
-            class="app-card item-select"
-            [ngClass]="user.uuid === currentSelectedUser.uuid ? 'selected-item' : ''"
-            (click)="setCurrentUser({user : user, fromInputChange : false, shouldSetLastUser : true})">
+          *ngFor="let user of renderingUsers"
+          class="app-card item-select"
+          [ngClass]="user.uuid === currentSelectedUser.uuid ? 'selected-item' : ''"
+          (click)="setCurrentUser({user : user, fromInputChange : false, shouldSetLastUser : true})"
+        >
           <h2 class="item-name">
             {{ user | fullName }}
           </h2>
@@ -26,113 +27,157 @@
           {{ currentSelectedUser | fullName }}
         </h1>
       </div>
-      <div class="name-container">
-        <div class="name-input">
+      <div class="line-container">
+        <div class="std-left">
           <app-text-input
-              valueName="First Name"
-              (valueChange)="onInputChange($event)"
-              [initValue]="currentSelectedUser?.first_name || ''">
-          </app-text-input>
+            valueName="First Name"
+            appearance="standard"
+            (valueChange)="onInputChange($event)"
+            [initValue]="currentSelectedUser?.first_name || ''"
+          ></app-text-input>
         </div>
-        <div class="name-input">
+        <div class="std">
           <app-text-input
-              valueName="Middle Name"
-              (valueChange)="onInputChange($event)"
-              [initValue]="currentSelectedUser?.middle_name || ''">
-          </app-text-input>
+            valueName="Middle Name"
+            appearance="standard"
+            (valueChange)="onInputChange($event)"
+            [initValue]="currentSelectedUser?.middle_name || ''"
+          ></app-text-input>
         </div>
-        <div class="name-input">
+        <div class="std">
           <app-text-input
-              valueName="Last Name"
-              (valueChange)="onInputChange($event)"
-              [initValue]="currentSelectedUser?.last_name || ''">
-          </app-text-input>
+            valueName="Last Name"
+            appearance="standard"
+            (valueChange)="onInputChange($event)"
+            [initValue]="currentSelectedUser?.last_name || ''"
+          ></app-text-input>
         </div>
         <div class="suffix-input">
           <app-text-input
-              valueName="Suffix"
-              (valueChange)="onInputChange($event)"
-              [initValue]="currentSelectedUser?.suffix || ''">
-          </app-text-input>
+            valueName="Suffix"
+            appearance="standard"
+            (valueChange)="onInputChange($event)"
+            [initValue]="currentSelectedUser?.suffix || ''"
+          ></app-text-input>
         </div>
       </div>
 
-      <div class="notification-email-email-container">
-
-          <div class="email-input">
-            <app-text-input
-                valueName="Notification Email"
-                [initValue]="currentSelectedUser?.contact_info?.notification_email || ''"
-                (valueChange)="onInputChange($event)">
-            </app-text-input>
-          </div>
-          <div class="email-input">
-            <app-text-input
-                valueName="Email"
-                [isDisabled]="!creatingUser"
-                [initValue]="currentSelectedUser?.contact_info?.email || ''"
-                (valueChange)="onInputChange($event)">
-            </app-text-input>
-          </div>
-
-      </div>
-
-      <div class="phone-picture-file-container">
-
-          <div class="phone-input">
-            <app-text-input
-                valueName="Phone"
-                [initValue]="currentSelectedUser?.contact_info?.phone_number || ''"
-                (valueChange)="onInputChange($event)">
-            </app-text-input>
-          </div>
-
-        <div class="picture-file-input">
+      <div class="line-container">
+        <div class="std-left">
           <app-text-input
-              valueName="Picture File"
-              [initValue]="currentSelectedUser?.picture_file || ''"
-              (valueChange)="onInputChange($event)">
-          </app-text-input>
+            valueName="Email"
+            appearance="standard"
+            [isDisabled]="!creatingUser"
+            [initValue]="currentSelectedUser?.contact_info?.email || ''"
+            (valueChange)="onInputChange($event)"
+          ></app-text-input>
         </div>
+        <div class="std">
+          <app-text-input
+            valueName="Notification Email"
+            appearance="standard"
+            [initValue]="currentSelectedUser?.contact_info?.notification_email || ''"
+            (valueChange)="onInputChange($event)"
+          ></app-text-input>
+        </div>
+        <div class="std">
+          <app-text-input
+            valueName="Picture File"
+            appearance="standard"
+            [isDisabled]="true"
+            [initValue]="currentSelectedUser?.picture_file || ''"
+            (valueChange)="onInputChange($event)"
+          ></app-text-input>
+        </div>
+        <button
+          mat-icon-button
+          class="picture-change"
+          aria-label="Change Picture"
+          matTooltip="Change Picture"
+          (click)="getPicture()"
+        >
+          <mat-icon
+            [inline]="true"
+            class="picture-change-icon"
+          >file_upload
+          </mat-icon>
+          <input
+            #inputPicture
+            type="file"
+            style="display: none"
+            (change)="onPictureLoad($event)"
+          />
+        </button>
       </div>
 
-      <div class="date-priv-class-container">
-        <div class="date-input">
-          <app-date-input
-              valueName="Date Joined"
-              [initValue]="currentSelectedUser?.date_joined || getCurrentDate()"
-              (valueChange)="onInputChange($event)">
-          </app-date-input>
+      <div class="bottom">
+        <div class="bottom-left">
+          <div class="short-line-container">
+            <div class="short-left">
+              <app-date-input
+                valueName="Date Joined"
+                appearance="fill"
+                [initValue]="currentSelectedUser?.date_joined || getCurrentDate()"
+                (valueChange)="onInputChange($event)"
+              ></app-date-input>
+            </div>
+            <div class="short">
+              <app-text-input
+                valueName="Phone"
+                appearance="standard"
+                [initValue]="currentSelectedUser?.contact_info?.phone_number || ''"
+                (valueChange)="onInputChange($event)"
+              ></app-text-input>
+            </div>
+    
+          </div>
+    
+          <div class="short-line-container">
+            <div class="all-line">
+              <app-multi-select-input
+                valueName="Roles"
+                appearance="fill"
+                [setValues]="rolesSet"
+                [selectFrom]="getAllRoles()"
+                [displayNameMapping]="rolesNamesMap"
+                (valueChange)="onInputChange($event)"
+              ></app-multi-select-input>
+            </div>
+          </div>
+    
+          <div class="short-line-container">
+            <div class="all-line">
+              <app-multi-select-input
+                valueName="Permissions"
+                appearance="fill"
+                [setValues]="permissionsSet"
+                [selectFrom]="getAllPermissions()"
+                [displayNameMapping]="permissionsNamesMap"
+                (valueChange)="onInputChange($event)"
+              ></app-multi-select-input>
+            </div>
+          </div>
         </div>
-        <div class="priv-class-input">
-          <app-multi-select-input
-              valueName="Roles"
-              [setValues]="rolesSet"
-              [selectFrom]="getAllRoles()"
-              [displayNameMapping]="rolesNamesMap"
-              (valueChange)="onInputChange($event)">
-          </app-multi-select-input>
+
+        <div class="bottom-right">
+          <img
+            class="pic"
+            [src]="image"
+            *ngIf="image"
+          >
         </div>
+
       </div>
 
-      <div class="permissions-input">
-        <app-multi-select-input
-            valueName="Permissions"
-            [setValues]="permissionsSet"
-            [selectFrom]="getAllPermissions()"
-            [displayNameMapping]="permissionsNamesMap"
-            (valueChange)="onInputChange($event)">
-        </app-multi-select-input>
-      </div>
       
       <div class="actions-container">
         <app-action-buttons
           name="User"
-          [aActivator]="canDelete"
+          [aActivator]="canDeleteUser"
           [aHandler]="deleteUser"
-          [bActivator]="canAdd"
+          [bActivator]="canAddUser"
           [bHandler]="addUser"
-          [cActivator]="canSave"
+          [cActivator]="canSaveUser"
           [cHandler]="saveUser"
         ></app-action-buttons>          
       </div>

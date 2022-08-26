@@ -12,6 +12,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import {ActionButtonsComponent} from './action-buttons.component';
+import {DateHeaderComponent} from './date-header.component';
 import {EditableDateInput} from './editable-date-input.component';
 import {EditableMultiSelectInput} from './editable-multiselect-input.component';
 import {EditableTextInput} from './editable-text-input.component';
@@ -26,6 +27,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
 @NgModule({
   declarations: [
     ActionButtonsComponent,
+    DateHeaderComponent,
     EditableTextInput,
     EditableDateInput,
     EditableMultiSelectInput,
@@ -52,6 +54,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
   ],
   exports: [
     ActionButtonsComponent,
+    DateHeaderComponent,
     EditableTextInput,
     EditableDateInput,
     EditableMultiSelectInput,

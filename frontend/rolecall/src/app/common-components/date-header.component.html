@@ -1,0 +1,54 @@
+
+<div class="title-container">
+  <button
+    mat-button
+    class="header"
+    [ngStyle]="{ 'font-size': fontSize }"
+    [attr.aria-label]="aria"
+    [matTooltip]="tip"
+    [matMenuTriggerFor]="timeMenu"
+  >{{ header }}
+  </button>
+  <!-- keep for later -->
+  <!-- <div class="hidden">
+    <input
+      matInput
+      class="hidden"
+      [matDatepicker]="dp"
+      (dateChange)="dateChange($event)"
+    />
+    <mat-datepicker #dp></mat-datepicker>
+  </div> -->
+  <mat-menu #timeMenu="matMenu">
+    <button
+      mat-menu-item
+      class="menu-item"
+      (click)="onMonthBack(1)"
+    >{{ oneBefore }}
+    </button>
+    <button
+      mat-menu-item
+      class="menu-item"
+      (click)="onMonthBack(2)"
+    >{{ twoBefore }}
+    </button>
+    <button
+      mat-menu-item
+      class="menu-item"
+      (click)="onMonthBack(3)"
+    >{{ threeBefore }}
+    </button>
+    <div
+      mat-menu-item
+      class="calendar menu-item-separator"
+      (click)="parentClick($event);"
+    >
+      <mat-calendar
+        [selected]="date"
+        (selectedChange)="onDateChange($event)"
+      ></mat-calendar>
+    </div>
+  </mat-menu>
+
+
+</div>
