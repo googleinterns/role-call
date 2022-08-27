@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {EditableTextInput,
 } from '../common-components/editable-text-input.component';
 import {EditableDateInput,
@@ -27,6 +28,7 @@ import {EmptyStringIfUndefinedPipe,
 } from '../common-components/empty-string-if-undefined.pipe';
 import {UserApi} from '../api/user-api.service';
 
+import {ActionButtonsComponent} from '../common-components/action-buttons.component';
 import {UserEditor} from './user-editor.component';
 
 describe('UserEditorComponent', () => {
@@ -43,6 +45,7 @@ describe('UserEditorComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
         declarations: [
+          ActionButtonsComponent,
           EditableTextInput,
           EditableDateInput,
           EditableMultiSelectInput,
@@ -60,6 +63,7 @@ describe('UserEditorComponent', () => {
           MatDatepickerModule,
           MatNativeDateModule,
           MatSelectModule,
+          MatTooltipModule,
         ],
         providers: [
           {provide: ActivatedRoute, useValue: fakeActivatedRoute},

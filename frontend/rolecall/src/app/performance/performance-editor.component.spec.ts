@@ -18,6 +18,7 @@ import {CastApi} from '../api/cast-api.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
+import {PerfButtonsComponent} from '../common-components/perf-buttons.component';
 import {PerformanceEditor} from './performance-editor.component';
 import {PerformanceModule} from './performance.module';
 
@@ -55,6 +56,7 @@ describe('PerformanceEditorComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
         declarations: [
+          PerfButtonsComponent,
           PerformanceEditor,
         ],
         imports: [

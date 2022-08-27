@@ -12,7 +12,7 @@ export type DateChanger = (newDate: Date) => string;
 export class DateHeaderComponent implements OnInit {
 
   @Input() date = new Date();
-  @Input() changeDate: DateChanger;
+  @Input() changeDate: DateChanger = (date: Date) => date.toLocaleDateString();
   @Input() aria = '';
   @Input() tip = '';
   @Input() fontSize = '';
