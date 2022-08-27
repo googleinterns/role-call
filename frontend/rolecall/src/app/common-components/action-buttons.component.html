@@ -10,6 +10,7 @@
     (click)="aHandle()"
   >
     <mat-icon
+      [inline]="true"
       class="std-action-button-icon-nobg"
       [ngClass]="aActivate() ? 'std-action-bgon' : ''"
     >{{ aIcon }}
@@ -26,6 +27,7 @@
       (click)="bHandle()"
     >
       <mat-icon
+        [inline]="true"
         class="std-action-button-icon-nobg"
         [ngClass]="bActivate() ? 'std-action-bgon' : ''"
       >{{ bIcon }}
@@ -43,6 +45,7 @@
       [matMenuTriggerFor]="bMenu"
     >
       <mat-icon
+        [inline]="true"
         class="std-action-button-icon-nobg"
         [ngClass]="bActivate() ? 'std-action-bgon' : ''"
       >{{ bIcon }}
@@ -67,6 +70,7 @@
     (click)="cHandle()"
   >
     <mat-icon
+      [inline]="true"
       class="std-action-button-icon-nobg"
       [ngClass]="cActivate() ? 'std-action-bgon' : ''"
     >{{ cIcon }}

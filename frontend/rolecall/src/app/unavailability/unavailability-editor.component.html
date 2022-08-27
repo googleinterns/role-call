@@ -7,10 +7,16 @@
     <div class="left-cards-container">
       <div class="left-card app-card">
         <div class="content">
-          <h2 class="title">Unavailabilities</h2>
+          <div class="title">
+            <app-date-header
+              fontSize="1.7rem"
+              [date]="listStartDate"
+              [changeDate]="changeListStartDate"
+            ></app-date-header>
+          </div>
           <div class="children-container">
             <div
-              *ngFor="let procUnav of processedUnavs"
+              *ngFor="let procUnav of displayedUnavs"
               class="child app-card"
               [ngClass]="procUnav.unav.id === state.id ? 'selected-ua' : ''"
               (click)="onEditUnav(procUnav.unav)"

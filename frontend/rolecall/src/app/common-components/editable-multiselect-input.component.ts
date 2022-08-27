@@ -10,6 +10,7 @@ export class EditableMultiSelectInput implements OnInit {
 
   @Input() valueName: string;
   @Input() bgColor: string;
+  @Input() appearance: string;
   @Input() selectFrom: string[];
   @Input() setValues: EventEmitter<string[]>;
   @Input() displayNameMapping: any;

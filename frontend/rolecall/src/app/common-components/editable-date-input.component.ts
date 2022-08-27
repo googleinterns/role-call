@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output,
 } from '@angular/core';
 
+
 @Component({
   selector: 'app-date-input',
   templateUrl: './editable-date-input.component.html',
@@ -11,6 +12,7 @@ export class EditableDateInput implements OnInit, OnChanges {
 
   @Input() valueName: string;
   @Input() bgColor: string;
+  @Input() appearance: string;
   @Input() initValue: number;
   @Output() valueChange: EventEmitter<[string, string]> = new EventEmitter();
   currentValue: Date;

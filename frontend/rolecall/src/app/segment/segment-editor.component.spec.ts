@@ -12,6 +12,8 @@ import {SegmentApi} from '../api/segment-api.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
+
+import {ActionButtonsComponent} from '../common-components/action-buttons.component';
 import {SegmentEditor} from './segment-editor.component';
 import {SegmentModule} from './segment.module';
 
@@ -38,7 +40,9 @@ describe('SegmentEditorComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
         declarations: [
-          SegmentEditor],
+          ActionButtonsComponent,
+          SegmentEditor,
+        ],
         imports: [
           MatFormFieldModule,
           NoopAnimationsModule,

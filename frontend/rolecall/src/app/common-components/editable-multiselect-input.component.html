@@ -1,5 +1,5 @@
 <div class="app-card">
-  <mat-form-field appearance="fill" class="input-margins fit-form">
+  <mat-form-field [appearance]="appearance" class="input-margins fit-form">
     <mat-label>{{valueName}}</mat-label>
     <mat-select multiple ngDefaultControl [(ngModel)]="currentlySelected">
       <mat-option

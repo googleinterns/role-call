@@ -31,11 +31,10 @@
           height: calc(100% - 2rem);
 
           .title {
-            font-size: 2rem;
+            font-size: 1.7rem;
             font-weight: bold;
             margin: 0;
-            padding-left: 1rem;
-            padding-top: 1rem;
+            padding: 1rem 1rem 0rem 1rem;
           }
 
           .children-container {
@@ -126,16 +125,18 @@
       .title-container {
         .title {
           color: black;
-          font-size: xx-large;
+          //font-size: xx-large;
+          font-size: 1.7rem;
           font-weight: bold;
           margin-left: 1rem;
-          margin-right: 1em;
+          margin-right: 1rem;
           // adjust below so titles line up
-          margin-top: 0.2em;
+          margin-top: 0.22em;
           padding-bottom: 0.5rem;
-          padding-left: 1rem;
+          //padding-left: 1rem;
           padding-top: 0.5rem;
           width: calc(100% - 2rem);
+          text-align: center;
         }
       }
 

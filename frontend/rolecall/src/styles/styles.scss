@@ -44,7 +44,7 @@ $custom-typography: mat.define-typography-config(
 @include mat.core($custom-typography);
 
 .mat-tooltip {
-  background-color: white;
+  background-color: lightyellow;
   color: black !important;
   font-size: 1rem;
 }

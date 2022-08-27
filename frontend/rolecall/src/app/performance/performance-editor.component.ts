@@ -59,14 +59,19 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   performanceSelected = false;
   isEditing = false;
 
-  draftPerfs;
-  publishedPerfs;
+  draftPerfs: Performance[] = [];
+  publishedPerfs: Performance[] = [];
+  displayedPerfs: Performance[] = [];
 
   lastStepperIndex = 0;
+
+  listStartDate: Date = new Date();
+  listStart: number;
 
   // Step 1 -------------------------------------------------------
 
   allPerformances: Performance[] = [];
+
   selectedPerformance: Performance;
   dateStr: string;
   date: Date;
@@ -122,6 +127,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       private location: Location,
       private csvGenerator: CsvGenerator,
   ) {
+    this.listStart = this.listStartDate.getTime();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -164,12 +170,22 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     };
   };
 
+  changeListStartDate = (newDate: Date): string => {
+    this.listStartDate = newDate;
+    this.listStart = this.listStartDate.getTime();
+    this.filterOnDate();
+    return `Published Performances After ${
+      this.listStartDate.toLocaleDateString()}`;
+  };
+
   onPerformanceLoad = (perfs: Performance[]): void => {
     this.allPerformances = perfs.sort((a, b) => a.step_1.date - b.step_1.date);
     this.publishedPerfs = this.allPerformances.filter(
         val => val.status === PerformanceStatus.PUBLISHED);
     this.draftPerfs = this.allPerformances.filter(
-        val => val.status === PerformanceStatus.DRAFT);
+        val => val.status === PerformanceStatus.DRAFT
+          || val.status === PerformanceStatus.CANCELED);
+    this.filterOnDate();
     this.performancesLoaded = true;
     this.checkDataLoaded();
   };
@@ -206,6 +222,11 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       this.startAtPerformance(this.urlUUID);
     }
     return this.dataLoaded;
+  };
+
+  filterOnDate = (): void => {
+    this.displayedPerfs = this.publishedPerfs.filter(perf =>
+      perf.step_1.date > this.listStart);
   };
 
   startAtPerformance = (uuid: string): void => {
@@ -982,3 +1003,5 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   };
 
 }
+
+
