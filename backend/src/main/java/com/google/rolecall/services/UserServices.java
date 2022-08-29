@@ -2,6 +2,7 @@ package com.google.rolecall.services;
 
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
+import com.google.rolecall.models.UserAsset;
 import com.google.rolecall.repos.CastMemberRepository;
 import com.google.rolecall.repos.PerformanceCastMemberRepository;
 import com.google.rolecall.repos.UserRepository;
@@ -151,6 +152,21 @@ public class UserServices {
     }
 
     userRepo.deleteById(id);
+  }
+
+  public UserAsset addNewProfilePictureToUser(Integer id, UserAsset asset)
+      throws EntityNotFoundException, InvalidParameterException {
+    User user = getUser(id);
+    user.addProfilePicture(asset);
+    userRepo.save(user);
+    return asset;
+  }
+
+  public void setProfilePicture(Integer id, UserAsset asset)
+      throws EntityNotFoundException, InvalidParameterException {
+    User user = getUser(id);
+    user.toBuilder().setCurrentProfilePicture(asset).build();
+    userRepo.save(user);
   }
 
   /* Determines if an email has a valid email format. */

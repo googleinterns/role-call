@@ -91,6 +91,10 @@ public class UserAsset {
     this.isDeleted = true;
   }
 
+  public String getFileName() {
+    return String.format("%d.%s", this.getId(), this.getFileType().name());
+  }
+
   public UserAsset(AssetType type, FileType fileType) {
     this.type = type;
     this.fileType = fileType;

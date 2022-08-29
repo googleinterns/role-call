@@ -3,6 +3,8 @@ package com.google.rolecall;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+import com.google.rolecall.util.StorageService;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +27,7 @@ public class ApplicationLoader implements ApplicationRunner {
 
   private final Environment environment;
   private final UserRepository userRepo;
+  private final StorageService storageService;
   private String adminFirstName;
   private String adminLastName;
   private String adminEmail;
@@ -40,6 +43,8 @@ public class ApplicationLoader implements ApplicationRunner {
     Optional<User> possibleAdmin = userRepo.findByEmailIgnoreCase(adminEmail);
 
     possibleAdmin.ifPresentOrElse(this::adminExists, this::createAdmin);
+
+    storageService.init();
   }
 
   private void adminExists(User user) {
@@ -152,8 +157,9 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   @Autowired
-  public ApplicationLoader(Environment env, UserRepository userRepo) {
+  public ApplicationLoader(Environment env, UserRepository userRepo, StorageService storageService) {
     this.environment = env;
     this.userRepo = userRepo;
+    this.storageService = storageService;
   }
 }

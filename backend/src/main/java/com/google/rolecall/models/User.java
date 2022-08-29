@@ -12,8 +12,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -103,10 +101,7 @@ public class User {
   private boolean isActive;
 
   @Basic
-  private Integer currentProfilePictureId;
-
-  @Enumerated(EnumType.STRING)
-  private UserAsset.FileType currentProfilePictureFileType;
+  private String currentProfilePicture;
 
   @OneToMany(mappedBy = "owner", 
              cascade = CascadeType.REMOVE,
@@ -216,12 +211,8 @@ public class User {
     return isActive;
   }
 
-  public Integer getCurrentProfilePictureId() {
-    return currentProfilePictureId;
-  }
-
-  public UserAsset.FileType getCurrentProfilePictureFileType() {
-    return currentProfilePictureFileType;
+  public String getCurrentProfilePicture() {
+    return currentProfilePicture;
   }
 
   public void addPerformanceCastMember(PerformanceCastMember member) {
@@ -247,8 +238,8 @@ public class User {
 
   public void removeProfilePicture(UserAsset asset) {
     if (asset.getOwner().getId() == this.id) {
-      if (this.currentProfilePictureId == asset.getId()) {
-        this.currentProfilePictureId = null;
+      if (this.currentProfilePicture.equals(asset.getFileName())) {
+        this.currentProfilePicture = null;
       }
       asset.delete();
       profilePictures.remove(asset);
@@ -361,8 +352,7 @@ public class User {
     private String emergencyContactNumber;
     private String comments;
     private Boolean isActive = true;
-    private Integer currentProfilePictureId;
-    private UserAsset.FileType currentProfilePictureFileType;
+    private String currentProfilePicture;
 
     public Builder setFirstName(String name) {
       if(name != null) {
@@ -533,8 +523,7 @@ public class User {
     }
 
     public Builder setCurrentProfilePicture(UserAsset asset) {
-      this.currentProfilePictureId = asset.getId();
-      this.currentProfilePictureFileType = asset.getFileType();
+      this.currentProfilePicture = asset.getFileName();
       return this;
     }
 
@@ -568,8 +557,7 @@ public class User {
       user.emergencyContactNumber = this.emergencyContactNumber;
       user.comments = this.comments;
       user.isActive = this.isActive;
-      user.currentProfilePictureId = this.currentProfilePictureId;
-      user.currentProfilePictureFileType = this.currentProfilePictureFileType;
+      user.currentProfilePicture = this.currentProfilePicture;
       return user;
     }
 
@@ -600,8 +588,7 @@ public class User {
       this.emergencyContactNumber = user.emergencyContactNumber;
       this.comments = user.comments;
       this.isActive = user.isActive;
-      this.currentProfilePictureId = user.currentProfilePictureId;
-      this.currentProfilePictureFileType = user.currentProfilePictureFileType;
+      this.currentProfilePicture = user.currentProfilePicture;
     }
 
     public Builder() {
