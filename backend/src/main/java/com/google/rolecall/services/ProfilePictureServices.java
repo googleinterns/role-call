@@ -23,6 +23,7 @@ import com.google.rolecall.util.StorageService;
 @Transactional(rollbackFor = Exception.class)
 public class ProfilePictureServices {
 
+  private final long maxFileSize = 20971520; // 20 MB
   private final UserAssetRepository assetRepo;
   private final UserServices userServices;
   private final StorageService storage;
@@ -33,12 +34,18 @@ public class ProfilePictureServices {
         AssetType.PROFILEPICTURE, fileName).getInputStream());
   }
 
+  // Creates a new UsserAsset, copies the file locally, sets the new asset to
+  // the new profilePicture, and attempts to delete the old profile picture.
   public UserAsset createProfilePicture(Integer ownerId, MultipartFile image)
       throws EntityNotFoundException, InvalidParameterException, IOException {
+    if (image.getSize() > maxFileSize) {
+      throw new InvalidParameterException("Image file must be less than 20 MB.");
+    }
+  
     String fileExtension = FilenameUtils.getExtension(image.getOriginalFilename());
     FileType fileType;
     try {
-      fileType = FileType.valueOf(fileExtension);
+      fileType = FileType.valueOf(fileExtension.toUpperCase());
     } catch (Exception e) {
       throw new InvalidParameterException(String.format(
           "Profile picture cannot have type: %s.", fileExtension));
@@ -46,11 +53,22 @@ public class ProfilePictureServices {
 
     UserAsset asset = new UserAsset(AssetType.PROFILEPICTURE, fileType);
     userServices.addNewProfilePictureToUser(ownerId, asset);
-
     storage.store(image, AssetType.PROFILEPICTURE, asset.getFileName());
 
+    String previousPicture = userServices.getUser(ownerId).getPictureFile();
     userServices.setProfilePicture(ownerId, asset);
-    
+    // Attempt to delete and ignore failure.
+    if (previousPicture != null) {
+      try {
+        String[] splitName = previousPicture.split("[\\/\\.]");
+        int previousAssetId = Integer.parseInt(splitName[splitName.length-2]);
+        deleteProfilePicture(previousAssetId);
+      } catch (Exception e) {
+        System.out.println("Failed to delete " + previousPicture
+            + " for user " + ownerId + ": " + e.getMessage());
+      }
+    }
+
     return asset;
   }
 

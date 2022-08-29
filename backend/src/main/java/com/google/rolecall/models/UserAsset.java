@@ -12,6 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.http.MediaType;
+
+import com.google.rolecall.jsonobjects.UserAssetInfo;
+
 /* Asset owned by each user.*/
 @Entity
 @Table
@@ -29,14 +33,15 @@ public class UserAsset {
   }
 
   public enum FileType {
-    JPEG("jpeg"),
-    PNG("png"),
-    HEIC("heic");
+    JPEG("jpeg", MediaType.IMAGE_JPEG),
+    PNG("png", MediaType.IMAGE_PNG);
 
     public final String name;
+    public final MediaType responseType;
 
-    private FileType(String name) {
+    private FileType(String name, MediaType responseType) {
       this.name = name;
+      this.responseType = responseType;
     }
   }
 
@@ -81,7 +86,17 @@ public class UserAsset {
   }
 
   public String getFileName() {
-    return String.format("%d.%s", this.getId(), this.getFileType().name());
+    return String.format("%d.%s", this.getId(), this.getFileType().name);
+  }
+
+  public UserAssetInfo toUserAssetInfo() {
+    return UserAssetInfo.newBuilder()
+      .setId(id)
+      .setType(type.name())
+      .setFileType(fileType.name)
+      .setDateUploaded(dateUploaded.getTime())
+      .setOwnerId(owner.getId())
+      .build();
   }
 
   public UserAsset(AssetType type, FileType fileType) {
