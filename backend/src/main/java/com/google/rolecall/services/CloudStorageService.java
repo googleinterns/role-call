@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.rolecall.models.UserAsset.AssetType;
@@ -12,6 +13,7 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import com.google.rolecall.util.StorageService;
 
 @Profile({"prod", "qa"})
+@Service("CloudStorageService")
 public class CloudStorageService implements StorageService {
 
   @Override

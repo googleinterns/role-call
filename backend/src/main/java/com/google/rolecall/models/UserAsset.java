@@ -53,9 +53,6 @@ public class UserAsset {
   @Column(nullable = false)
   private Date dateUploaded;
 
-  @Column(nullable = false)
-  private Boolean isDeleted;
-
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private User owner;
 
@@ -75,20 +72,12 @@ public class UserAsset {
     return dateUploaded;
   }
 
-  public Boolean isDeleted() {
-    return isDeleted;
-  }
-
   public User getOwner() {
     return owner;
   }
 
   public void setOwner(User owner) {
     this.owner = owner;
-  }
-
-  public void delete() {
-    this.isDeleted = true;
   }
 
   public String getFileName() {
@@ -98,7 +87,6 @@ public class UserAsset {
   public UserAsset(AssetType type, FileType fileType) {
     this.type = type;
     this.fileType = fileType;
-    isDeleted = false;
     dateUploaded = new Date(System.currentTimeMillis());
   }
 }

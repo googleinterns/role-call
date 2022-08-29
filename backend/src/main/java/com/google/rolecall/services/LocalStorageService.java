@@ -10,7 +10,9 @@ import java.nio.file.StandardCopyOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.rolecall.models.UserAsset.AssetType;
@@ -18,6 +20,7 @@ import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.I
 import com.google.rolecall.util.StorageService;
 
 @Profile({"dev"})
+@Service("LocalStorageService")
 public class LocalStorageService implements StorageService {
   private final Path root;
 
@@ -26,9 +29,21 @@ public class LocalStorageService implements StorageService {
     if (!Files.exists(root)) {
       try {
         Files.createDirectories(root);
+        System.out.println("Created new root directory: " + root.toString());
       }
       catch (IOException e) {
         throw new IOException("Could not initialize storage.");
+      }
+    } else {
+      System.out.println("Root directory exists: " + root.toRealPath().toString());
+    }
+    for (AssetType type : AssetType.values()) {
+      Path subDir = Path.of(root.toString(), type.toString());
+      if (!Files.exists(subDir)) {
+        Files.createDirectories(subDir);
+        System.out.println(type.toString() + " directory created: " + subDir.toString());
+      } else {
+        System.out.println(type.toString() + " directory exists: " + subDir.toString());
       }
     }
   }
@@ -50,15 +65,29 @@ public class LocalStorageService implements StorageService {
   }
 
   @Override
-  public Resource loadAsResource(AssetType type, String filename) throws FileNotFoundException {
-    // TODO Auto-generated method stub
-    return null;
+  public Resource loadAsResource(AssetType type, String filename) throws InvalidParameterException, FileNotFoundException {
+    Path filePath = Path.of(root.toString(), type.location, filename);
+    if (!filePath.toAbsolutePath().equals(Path.of(root.toString(), type.location))) {
+      throw new InvalidParameterException("File must be in parent directory.");
+    }
+    Resource resource = new FileSystemResource(filePath);
+    if (!resource.exists()) {
+      throw new FileNotFoundException("No file found for " + filename + ".");
+    }
+    return resource;
   }
 
   @Override
-  public void delete(AssetType type, String filename) throws FileNotFoundException, IOException {
-    // TODO Auto-generated method stub
-    
+  public void delete(AssetType type, String filename)
+      throws InvalidParameterException, FileNotFoundException, IOException {
+    Path filePath = Path.of(root.toString(), type.location, filename);
+    if (!filePath.toAbsolutePath().equals(Path.of(root.toString(), type.location))) {
+      throw new InvalidParameterException("File must be in parent directory.");
+    }
+    if (!Files.exists(filePath)) {
+      throw new FileNotFoundException("No file found for " + filename + ".");
+    }
+    Files.delete(filePath);
   }
 
   @Autowired

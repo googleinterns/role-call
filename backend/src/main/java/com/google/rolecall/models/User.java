@@ -100,9 +100,6 @@ public class User {
   @Column(nullable = false)
   private boolean isActive;
 
-  @Basic
-  private String currentProfilePicture;
-
   @OneToMany(mappedBy = "owner", 
              cascade = CascadeType.REMOVE,
              fetch = FetchType.LAZY)
@@ -211,10 +208,6 @@ public class User {
     return isActive;
   }
 
-  public String getCurrentProfilePicture() {
-    return currentProfilePicture;
-  }
-
   public void addPerformanceCastMember(PerformanceCastMember member) {
     member.setUser(this);
   }
@@ -238,10 +231,9 @@ public class User {
 
   public void removeProfilePicture(UserAsset asset) {
     if (asset.getOwner().getId() == this.id) {
-      if (this.currentProfilePicture.equals(asset.getFileName())) {
-        this.currentProfilePicture = null;
+      if (this.pictureFile.equals(asset.getFileName())) {
+        this.pictureFile = "";
       }
-      asset.delete();
       profilePictures.remove(asset);
     }
   }
@@ -352,7 +344,6 @@ public class User {
     private String emergencyContactNumber;
     private String comments;
     private Boolean isActive = true;
-    private String currentProfilePicture;
 
     public Builder setFirstName(String name) {
       if(name != null) {
@@ -522,11 +513,6 @@ public class User {
       return this;
     }
 
-    public Builder setCurrentProfilePicture(UserAsset asset) {
-      this.currentProfilePicture = asset.getFileName();
-      return this;
-    }
-
     public User build() throws InvalidParameterException {
       if(firstName == null || lastName == null || email == null) {
         throw new InvalidParameterException(
@@ -557,7 +543,6 @@ public class User {
       user.emergencyContactNumber = this.emergencyContactNumber;
       user.comments = this.comments;
       user.isActive = this.isActive;
-      user.currentProfilePicture = this.currentProfilePicture;
       return user;
     }
 
@@ -588,7 +573,6 @@ public class User {
       this.emergencyContactNumber = user.emergencyContactNumber;
       this.comments = user.comments;
       this.isActive = user.isActive;
-      this.currentProfilePicture = user.currentProfilePicture;
     }
 
     public Builder() {

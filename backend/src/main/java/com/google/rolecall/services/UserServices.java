@@ -1,5 +1,6 @@
 package com.google.rolecall.services;
 
+import com.google.rolecall.Constants;
 import com.google.rolecall.jsonobjects.UserInfo;
 import com.google.rolecall.models.User;
 import com.google.rolecall.models.UserAsset;
@@ -162,10 +163,19 @@ public class UserServices {
     return asset;
   }
 
+  public void removeProfilePictureFromUser(Integer id, UserAsset asset)
+      throws EntityNotFoundException, InvalidParameterException {
+    User user = getUser(id);
+    user.removeProfilePicture(asset);
+    userRepo.save(user);
+  }
+
   public void setProfilePicture(Integer id, UserAsset asset)
       throws EntityNotFoundException, InvalidParameterException {
     User user = getUser(id);
-    user.toBuilder().setCurrentProfilePicture(asset).build();
+    user.toBuilder().setPictureFile(String.format("%s/%s",
+        Constants.Mappings.PROFILE_PICTURE_MANAGEMENT, asset.getFileName()))
+        .build();
     userRepo.save(user);
   }
 

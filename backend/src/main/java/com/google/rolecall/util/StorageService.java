@@ -14,7 +14,7 @@ public interface StorageService {
 
 	void store(MultipartFile file, AssetType type, String filename) throws IOException, InvalidParameterException;
 
-	Resource loadAsResource(AssetType type, String filename) throws FileNotFoundException;
+	Resource loadAsResource(AssetType type, String filename) throws FileNotFoundException, InvalidParameterException;
 
-	void delete(AssetType type, String filename) throws FileNotFoundException, IOException;
+	void delete(AssetType type, String filename) throws FileNotFoundException, IOException, InvalidParameterException;
 }

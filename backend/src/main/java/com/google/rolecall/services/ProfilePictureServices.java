@@ -28,7 +28,7 @@ public class ProfilePictureServices {
   private final StorageService storage;
 
   public InputStreamResource getProfilePicture(String fileName)
-      throws FileNotFoundException, IOException {
+      throws FileNotFoundException, IOException, InvalidParameterException {
     return new InputStreamResource(storage.loadAsResource(
         AssetType.PROFILEPICTURE, fileName).getInputStream());
   }
@@ -54,7 +54,8 @@ public class ProfilePictureServices {
     return asset;
   }
 
-  public void deleteProfilePicture(Integer id) throws EntityNotFoundException, InvalidParameterException {
+  public void deleteProfilePicture(Integer id) throws EntityNotFoundException,
+      InvalidParameterException, IOException {
     if (id == null) {
       throw new InvalidParameterException("Missing id");
     }
@@ -62,9 +63,13 @@ public class ProfilePictureServices {
     if (!queryResult.isPresent()) {
         throw new EntityNotFoundException(String.format("assetid %d does not exist", id));
     }
-    // remove image from user
-    // delete image
-    assetRepo.deleteById(id);
+    UserAsset asset = queryResult.get();
+    try {
+      storage.delete(AssetType.PROFILEPICTURE, asset.getFileName());
+    } catch (Exception e) {
+      throw new IOException("File could not be found or deleted.");
+    }
+    userServices.removeProfilePictureFromUser(asset.getOwner().getId(), asset);
   }
 
   @Autowired
