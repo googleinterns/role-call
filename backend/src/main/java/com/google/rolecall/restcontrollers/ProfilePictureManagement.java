@@ -63,8 +63,6 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
     }
     User currentUser = getUser(principal);
     UserAsset newAsset;
-    System.out.println(file.getSize());
-    System.out.println(file.getOriginalFilename());
     try {
       newAsset = profilePictureServices.createProfilePicture(
           currentUser.getId(), file);

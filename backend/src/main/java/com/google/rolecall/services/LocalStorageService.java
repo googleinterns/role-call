@@ -54,8 +54,6 @@ public class LocalStorageService implements StorageService {
       throw new InvalidParameterException("File cannot be empty.");
     }
     Path filePath = Path.of(root.toString(), type.location, filename);
-    System.out.println(filePath.toString());
-    System.out.println(Path.of(root.toString(), type.location));
     if (!filePath.toAbsolutePath().getParent().equals(Path.of(root.toString(), type.location))) {
       throw new InvalidParameterException("File must be in parent directory");
     }

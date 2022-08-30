@@ -84,7 +84,6 @@ public class ProfilePictureServices {
     if (!queryResult.isPresent()) {
         throw new EntityNotFoundException(String.format("assetid %d does not exist", id));
     }
-    System.out.println("Deleting " + id);
     UserAsset asset = queryResult.get();
     try {
       storage.delete(AssetType.PROFILEPICTURE, asset.getFileName());
