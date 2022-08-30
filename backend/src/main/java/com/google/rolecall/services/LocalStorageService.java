@@ -38,7 +38,7 @@ public class LocalStorageService implements StorageService {
       System.out.println("Root directory exists: " + root.toRealPath().toString());
     }
     for (AssetType type : AssetType.values()) {
-      Path subDir = Path.of(root.toString(), type.toString());
+      Path subDir = Path.of(root.toString(), type.location);
       if (!Files.exists(subDir)) {
         Files.createDirectories(subDir);
         System.out.println(type.toString() + " directory created: " + subDir.toString());
@@ -54,20 +54,23 @@ public class LocalStorageService implements StorageService {
       throw new InvalidParameterException("File cannot be empty.");
     }
     Path filePath = Path.of(root.toString(), type.location, filename);
-    if (!filePath.toAbsolutePath().equals(Path.of(root.toString(), type.location))) {
+    System.out.println(filePath.toString());
+    System.out.println(Path.of(root.toString(), type.location));
+    if (!filePath.toAbsolutePath().getParent().equals(Path.of(root.toString(), type.location))) {
       throw new InvalidParameterException("File must be in parent directory");
     }
-    try (InputStream inputStream = file.getInputStream()) {
+    InputStream inputStream = file.getInputStream();
+    try {
       Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-    } catch(IOException e) {
-      throw new IOException("Unable to copy file.");
+    } finally {
+      inputStream.close();
     }
   }
 
   @Override
   public Resource loadAsResource(AssetType type, String filename) throws InvalidParameterException, FileNotFoundException {
     Path filePath = Path.of(root.toString(), type.location, filename);
-    if (!filePath.toAbsolutePath().equals(Path.of(root.toString(), type.location))) {
+    if (!filePath.toAbsolutePath().getParent().equals(Path.of(root.toString(), type.location))) {
       throw new InvalidParameterException("File must be in parent directory.");
     }
     Resource resource = new FileSystemResource(filePath);
@@ -81,7 +84,7 @@ public class LocalStorageService implements StorageService {
   public void delete(AssetType type, String filename)
       throws InvalidParameterException, FileNotFoundException, IOException {
     Path filePath = Path.of(root.toString(), type.location, filename);
-    if (!filePath.toAbsolutePath().equals(Path.of(root.toString(), type.location))) {
+    if (!filePath.toAbsolutePath().getParent().equals(Path.of(root.toString(), type.location))) {
       throw new InvalidParameterException("File must be in parent directory.");
     }
     if (!Files.exists(filePath)) {

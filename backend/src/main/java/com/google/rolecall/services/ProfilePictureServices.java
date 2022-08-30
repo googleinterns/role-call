@@ -23,7 +23,6 @@ import com.google.rolecall.util.StorageService;
 @Transactional(rollbackFor = Exception.class)
 public class ProfilePictureServices {
 
-  private final long maxFileSize = 20971520; // 20 MB
   private final UserAssetRepository assetRepo;
   private final UserServices userServices;
   private final StorageService storage;
@@ -38,10 +37,6 @@ public class ProfilePictureServices {
   // the new profilePicture, and attempts to delete the old profile picture.
   public UserAsset createProfilePicture(Integer ownerId, MultipartFile image)
       throws EntityNotFoundException, InvalidParameterException, IOException {
-    if (image.getSize() > maxFileSize) {
-      throw new InvalidParameterException("Image file must be less than 20 MB.");
-    }
-  
     String fileExtension = FilenameUtils.getExtension(image.getOriginalFilename());
     FileType fileType;
     try {
@@ -53,7 +48,15 @@ public class ProfilePictureServices {
 
     UserAsset asset = new UserAsset(AssetType.PROFILEPICTURE, fileType);
     userServices.addNewProfilePictureToUser(ownerId, asset);
-    storage.store(image, AssetType.PROFILEPICTURE, asset.getFileName());
+    assetRepo.saveAndFlush(asset);
+    try {
+      storage.store(image, AssetType.PROFILEPICTURE, asset.getFileName());
+    } catch(Exception e) {
+      // Delete asset if not stored.
+      assetRepo.delete(asset);
+      assetRepo.flush();
+      throw e;
+    }
 
     String previousPicture = userServices.getUser(ownerId).getPictureFile();
     userServices.setProfilePicture(ownerId, asset);
@@ -81,6 +84,7 @@ public class ProfilePictureServices {
     if (!queryResult.isPresent()) {
         throw new EntityNotFoundException(String.format("assetid %d does not exist", id));
     }
+    System.out.println("Deleting " + id);
     UserAsset asset = queryResult.get();
     try {
       storage.delete(AssetType.PROFILEPICTURE, asset.getFileName());
@@ -88,6 +92,8 @@ public class ProfilePictureServices {
       throw new IOException("File could not be found or deleted.");
     }
     userServices.removeProfilePictureFromUser(asset.getOwner().getId(), asset);
+    assetRepo.delete(asset);
+    assetRepo.flush();
   }
 
   @Autowired

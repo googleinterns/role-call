@@ -5,6 +5,6 @@ backend/.vscode/*
 backend/.settings/*
 backend/.classpath
 backend/.factorypath
-backend/stored-files/*
+stored-files/*
 .idea
 frontend/rolecall/.vscode/settings.json

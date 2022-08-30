@@ -33,7 +33,7 @@ public class UserAsset {
   }
 
   public enum FileType {
-    JPEG("jpeg", MediaType.IMAGE_JPEG),
+    JPG("jpg", MediaType.IMAGE_JPEG),
     PNG("png", MediaType.IMAGE_PNG);
 
     public final String name;
@@ -104,4 +104,6 @@ public class UserAsset {
     this.fileType = fileType;
     dateUploaded = new Date(System.currentTimeMillis());
   }
+
+  public UserAsset() {}
 }

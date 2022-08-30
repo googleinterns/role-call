@@ -23,6 +23,8 @@ final class Annotations {
   @interface Get {
     @AliasFor(annotation = RequestMapping.class, attribute = "params")
     String[] value() default {};
+    @AliasFor(annotation = RequestMapping.class, attribute = "path")
+    String[] path() default {};
   }
 
   /* POST request methods of an @Endpoint class. */
@@ -61,7 +63,6 @@ final class Annotations {
   @RestController
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @interface Endpoint {
-
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String value();
   }

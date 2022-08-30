@@ -9,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,39 +32,44 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
 
   private final ProfilePictureServices profilePictureServices;
 
-  @Get("/{filename:}")
-  public ResponseEntity<InputStreamResource> getProfilePicture(
+  @Get(path = "/{filename}")
+  public CompletableFuture<ResponseEntity<InputStreamResource>> getProfilePicture(
       @PathVariable String filename) {
     String extension = FilenameUtils.getExtension(filename);
     if (extension == null) {
-      return ResponseEntity.notFound().build();
+      return CompletableFuture.failedFuture(
+          new InvalidParameterException("Filename cannot be empty."));
     }
     try {
       InputStream stream = profilePictureServices
           .getProfilePicture(filename).getInputStream();
       MediaType mediaType = FileType.valueOf(
           extension.toUpperCase()).responseType;
-      return ResponseEntity.ok().contentType(mediaType)
-          .body(new InputStreamResource(stream));
+      return CompletableFuture.completedFuture(ResponseEntity.ok().contentType(mediaType)
+          .body(new InputStreamResource(stream)));
     } catch(FileNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    } catch(IOException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    } catch (InvalidParameterException e) {
-      return ResponseEntity.badRequest().build();
+      return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+    } catch(Exception e) {
+      return CompletableFuture.failedFuture(e);
     }
   }
 
-  @Post(Constants.RequestParameters.FILE)
+  @Post
   public CompletableFuture<ResponseSchema<UserAssetInfo>> uploadFile(Principal principal,
       @RequestParam(Constants.RequestParameters.FILE) MultipartFile file) {
+    if (file == null) {
+      return CompletableFuture.failedFuture(
+          new InvalidParameterException("File is required."));
+    }
     User currentUser = getUser(principal);
     UserAsset newAsset;
+    System.out.println(file.getSize());
+    System.out.println(file.getOriginalFilename());
     try {
       newAsset = profilePictureServices.createProfilePicture(
           currentUser.getId(), file);
     } catch(IOException e) {
-      return CompletableFuture.failedFuture(new InternalError());
+      return CompletableFuture.failedFuture(e);
     } catch(Exception e) {
       return CompletableFuture.failedFuture(e);
     }
@@ -75,10 +79,8 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
     return CompletableFuture.completedFuture(response);
   }
 
-
-
   @Autowired
-  private ProfilePictureManagement(ProfilePictureServices profilePictureServices) {
+  public ProfilePictureManagement(ProfilePictureServices profilePictureServices) {
     this.profilePictureServices = profilePictureServices;
   }
 }
