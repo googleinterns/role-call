@@ -1,8 +1,11 @@
-import {Component, Input, OnInit,
+import { Component, Input, OnInit,
 } from '@angular/core';
 
 
 export type DateChanger = (newDate: Date) => string;
+
+// Coulnd not be inline below due to lint warnings.
+const defaultDC = (date: Date): string => date.toLocaleDateString();
 
 @Component({
   selector: 'app-date-header',
@@ -12,7 +15,7 @@ export type DateChanger = (newDate: Date) => string;
 export class DateHeaderComponent implements OnInit {
 
   @Input() date = new Date();
-  @Input() changeDate: DateChanger = (date: Date) => date.toLocaleDateString();
+  @Input() changeDate: DateChanger = defaultDC;
   @Input() aria = '';
   @Input() tip = '';
   @Input() fontSize = '';

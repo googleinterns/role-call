@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {of} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
-import {Location} from '@angular/common';
-import {createSpyObjWithProps} from 'src/test-utils';
+import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { createSpyObjWithProps } from 'src/test-utils';
 
-import {CastApi} from '../api/cast-api.service';
-import {SegmentApi} from '../api/segment-api.service';
-import {UserApi} from '../api/user-api.service';
-import {LoggingService} from '../services/logging.service';
-import {CsvGenerator} from '../services/csv-generator.service';
+import { CastApi } from '../api/cast-api.service';
+import { SegmentApi } from '../api/segment-api.service';
+import { UserApi } from '../api/user-api.service';
+import { LoggingService } from '../services/logging.service';
+import { CsvGenerator } from '../services/csv-generator.service';
 
-import {CastEditor} from './cast-editor.component';
-import {CastModule} from './cast.module';
+import { CastEditor } from './cast-editor.component';
+import { CastModule } from './cast.module';
 
-import {SuperBalletDisplayService,
+import { SuperBalletDisplayService,
 } from '../services/super-ballet-display.service';
-import {SegmentDisplayListService,
+import { SegmentDisplayListService,
 } from '../services/segment-display-list.service';
 
 describe('CastEditorComponent', () => {

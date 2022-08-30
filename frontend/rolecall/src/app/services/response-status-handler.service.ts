@@ -1,11 +1,11 @@
-import {CommonModule} from '@angular/common';
-import {HttpResponse} from '@angular/common/http';
-import {Component, Inject, Injectable, NgModule} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef,
+import { CommonModule } from '@angular/common';
+import { HttpResponse } from '@angular/common/http';
+import { Component, Inject, Injectable, NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef,
 } from '@angular/material/dialog';
-import {LoginApi} from '../api/login-api.service';
-import {lastValueFrom} from 'rxjs';
+import { LoginApi } from '../api/login-api.service';
+import { lastValueFrom } from 'rxjs';
 
 export type ErrorEvent = {
   url: string;

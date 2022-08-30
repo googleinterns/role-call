@@ -1,10 +1,10 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {EditableTextInput} from './editable-text-input.component';
-import {CommonComponentsModule} from './common-components.module';
+import { EditableTextInput } from './editable-text-input.component';
+import { CommonComponentsModule } from './common-components.module';
 
 describe('EditableTextInput', () => {
   let component: EditableTextInput;

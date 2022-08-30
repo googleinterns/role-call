@@ -1,26 +1,31 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed, waitForAsync,
+} from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {of} from 'rxjs';
-import {RouterTestingModule} from '@angular/router/testing';
-import {createSpyObjWithProps} from 'src/test-utils';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
-import {ChangeDetectorRef} from '@angular/core';
+import { of } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { createSpyObjWithProps } from 'src/test-utils';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
-import {CsvGenerator} from '../services/csv-generator.service';
-import {PerformanceApi} from '../api/performance-api.service';
-import {UserApi} from '../api/user-api.service';
-import {SegmentApi} from '../api/segment-api.service';
-import {CastApi} from '../api/cast-api.service';
-import {ResponseStatusHandlerService,
+import { CsvGenerator } from '../services/csv-generator.service';
+import { PerformanceApi } from '../api/performance-api.service';
+import { UserApi } from '../api/user-api.service';
+import { SegmentApi } from '../api/segment-api.service';
+import { CastApi } from '../api/cast-api.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-import {PerfButtonsComponent} from '../common-components/perf-buttons.component';
-import {PerformanceEditor} from './performance-editor.component';
-import {PerformanceModule} from './performance.module';
+import { PerfButtonsComponent,
+} from '../common-components/perf-buttons.component';
+import { PerformanceEditor } from './performance-editor.component';
+import { PerformanceModule } from './performance.module';
+// Needed to be imported for ng test to run
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('PerformanceEditorComponent', () => {
   const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
@@ -64,6 +69,7 @@ describe('PerformanceEditorComponent', () => {
           NoopAnimationsModule,
           PerformanceModule,
           RouterTestingModule,
+          HttpClientTestingModule,
         ],
         providers: [
           {provide: PerformanceApi, useValue: mockPerformanceApi},

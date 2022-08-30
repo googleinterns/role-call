@@ -6,21 +6,21 @@
 .nav-bar-container {
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  height: $contentHeight;
   justify-content: space-between;
   position: absolute;
   right: 100vw;
-  top: 10vh;
+  top: $menuBarHeight;
   width: 25vw;
   z-index: 10;
 }
 
 .overlay {
   background: rgba(0, 0, 0, 0.25);
-  height: 90vh;
+  height: $contentHeight;
   position: absolute;
   left: 0;
-  top: 10vh;
+  top: $menuBarHeight;
   width: 100vw;
   z-index: 9;
 }
@@ -43,8 +43,8 @@
 
 // The sideways menu button at the top of the nav bar
 .close-nav-button {
-  font-size: 5vh;
-  height: 10vh;
+  font-size: $menuBarHeight / 2;
+  height: $menuBarHeight / 1.3;
   width: 10vh;
 }
 

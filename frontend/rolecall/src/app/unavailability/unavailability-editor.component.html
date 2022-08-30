@@ -63,7 +63,7 @@
             (selectionChange)="onSelectReason($event)"
           >
             <mat-option
-              *ngFor="let reasonStr of unavAPI.reasonList; let k = index"
+              *ngFor="let reasonStr of unavApi.reasonList; let k = index"
               [value]="reasonStr">
               {{ reasonStr }}
             </mat-option>

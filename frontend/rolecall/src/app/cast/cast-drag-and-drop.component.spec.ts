@@ -1,14 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test-utils';
+import { ComponentFixture, TestBed, waitForAsync,
+} from '@angular/core/testing';
+import { of } from 'rxjs';
+import { createSpyObjWithProps } from 'src/test-utils';
 
-import {LoggingService} from '../services/logging.service';
-import {SegmentApi} from '../api/segment-api.service';
-import {CastApi} from '../api/cast-api.service';
-import {UserApi} from '../api/user-api.service';
-import {CsvGenerator} from '../services/csv-generator.service';
+import { LoggingService } from '../services/logging.service';
+import { SegmentApi } from '../api/segment-api.service';
+import { CastApi } from '../api/cast-api.service';
+import { UserApi } from '../api/user-api.service';
+import { CsvGenerator } from '../services/csv-generator.service';
 
-import {CastDragAndDrop} from './cast-drag-and-drop.component';
+import { CastDragAndDrop } from './cast-drag-and-drop.component';
 
 describe('CastDragAndDropComponent', () => {
   const fakeLoggingService = {} as LoggingService;

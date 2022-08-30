@@ -1,6 +1,6 @@
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
  * Creates a jasmine SpyObj with the given methods provided as object or

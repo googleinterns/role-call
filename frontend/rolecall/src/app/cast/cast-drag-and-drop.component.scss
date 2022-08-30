@@ -33,14 +33,7 @@ $lastCellFillerWidth: 2.2rem;
   outline-offset: -1px;
   width: fit-content;
 }
-.child-absence {
-  color: red;
-}
-.user-cell {
-  display: flex;
-  flex-direction: row;  
-  align-items: center;
-}
+
 .cell {
   background: $offWhite;
   outline: $offoffWhite solid 2px;
@@ -79,6 +72,21 @@ $lastCellFillerWidth: 2.2rem;
     vertical-align: middle;
     width: $cellWidth;
   }
+}
+
+.absence-cell {
+  @extend .cell;
+  background: yellow;
+}
+
+.dancer-absence {
+  color: red;
+}
+
+.user-cell {
+  display: flex;
+  flex-direction: row;  
+  align-items: center;
 }
 
 .name-input {

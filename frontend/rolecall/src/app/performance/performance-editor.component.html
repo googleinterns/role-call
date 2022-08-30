@@ -60,6 +60,7 @@
             [aActivator]="canCancel"
             [aHandler]="onCancelPerformance"
             bIcon="check_circle"
+            bAria="Publish Performance"
             [bActivator]="canPublish"
             [bHandler]="onPublishPerformance"
             [cActivator]="canSavePerformance"
@@ -464,6 +465,8 @@
             <app-cast-drag-and-drop
               #castDnD
               [selectedSegment]="selectedSegment"
+              [performanceDate]="performanceDate"
+              [wunavs]="workUnavs"
               (castChangeEmitter)="onChangeCast($event)"
               [ngStyle]="selectedSegment.type === 'SEGMENT' || selectedSegment.type === 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }"
             >

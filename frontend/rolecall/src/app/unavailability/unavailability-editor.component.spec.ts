@@ -1,25 +1,28 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed, waitForAsync,
+} from '@angular/core/testing';
+import { NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatSelectModule} from '@angular/material/select';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test-utils';
+import { of } from 'rxjs';
+import { createSpyObjWithProps } from 'src/test-utils';
 
-import {UnavailabilityApi} from '../api/unavailability-api.service';
-import {UserApi} from '../api/user-api.service';
+import { UnavailabilityApi } from '../api/unavailability-api.service';
+import { UserApi } from '../api/user-api.service';
 
-import {ActionButtonsComponent} from '../common-components/action-buttons.component';
-import {DateHeaderComponent} from '../common-components/date-header.component'
-import {UnavailabilityEditor} from './unavailability-editor.component';
+import { UnavailabilityEditor } from './unavailability-editor.component';
+import { DateHeaderComponent,
+} from '../common-components/date-header.component';
+import { ActionButtonsComponent,
+} from '../common-components/action-buttons.component';
 
 describe('UnavailabilityEditorComponent', () => {
   const mockUnavailabilityApi = createSpyObjWithProps<UnavailabilityApi>({
@@ -48,10 +51,10 @@ describe('UnavailabilityEditorComponent', () => {
             MatFormFieldModule,
             MatInputModule,
             MatIconModule,
-            MatMenuModule,
             MatSelectModule,
             MatDatepickerModule,
             MatNativeDateModule,
+            MatMenuModule,
             MatTooltipModule,
             NoopAnimationsModule,
           ],

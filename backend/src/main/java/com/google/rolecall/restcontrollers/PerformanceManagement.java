@@ -38,8 +38,17 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     return CompletableFuture.completedFuture(response);
   }
 
-  public PerformanceManagement(PerformanceServices performanceService) {
-    this.performanceService = performanceService;
+  @Get(Constants.RequestParameters.CHECK_UNAVS)
+  public CompletableFuture<ResponseSchema<List<PerformanceInfo>>> getAllPerformancesWithUnavs(
+    @RequestParam(value=Constants.RequestParameters.CHECK_UNAVS, required=false) Boolean checkUnavs) {
+    List<Performance> allPerformances = performanceService.getAllPerformancesWithUnavs(checkUnavs);
+
+    List<PerformanceInfo> performances = allPerformances.stream().map(p ->
+        p.toPerformanceInfo()
+        ).collect(Collectors.toList());
+
+    ResponseSchema<List<PerformanceInfo>> response = new ResponseSchema<>(performances);
+    return CompletableFuture.completedFuture(response);
   }
 
   @Get(Constants.RequestParameters.PERFORMANCE_ID)
@@ -124,5 +133,9 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     }
     
     return CompletableFuture.completedFuture(null);
+  }
+
+  public PerformanceManagement(PerformanceServices performanceService) {
+    this.performanceService = performanceService;
   }
 }

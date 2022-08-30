@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {SettingsBase} from './settings-base.component';
+import { SettingsBase } from './settings-base.component';
 
 describe('SettingsBase', () => {
   let component: SettingsBase;

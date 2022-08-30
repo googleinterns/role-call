@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
-import {MatSelectChange} from '@angular/material/select';
-import {Unavailability, UnavailabilityApi, UnavailabilityReason,
+import { Component, OnInit } from '@angular/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSelectChange } from '@angular/material/select';
+import { Unavailability, UnavailabilityApi, UnavailabilityReason,
 } from '../api/unavailability-api.service';
-import {User, UserApi} from '../api/user-api.service';
+import { User, UserApi } from '../api/user-api.service';
 import * as APITypes from 'src/api-types';
 
 
@@ -45,9 +45,9 @@ export class UnavailabilityEditor implements OnInit {
   usersLoaded = false;
 
   constructor(
-    private userAPI: UserApi,
+    private userApi: UserApi,
 
-    public unavAPI: UnavailabilityApi,
+    public unavApi: UnavailabilityApi,
   ) {
     this.listStart = this.listStartDate.getTime();
   }
@@ -55,18 +55,12 @@ export class UnavailabilityEditor implements OnInit {
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     this.state = this.createNewUnavailability();
-    this.unavAPI.unavailabilityEmitter.subscribe(val => this.onUnavsLoad(val));
-    this.userAPI.userEmitter.subscribe(val => this.onUsersLoad(val));
-    this.unavAPI.getAllUnavailabilities();
-    this.userAPI.getAllUsers();
+    this.unavApi.unavailabilityEmitter.subscribe(vals =>
+      this.onUnavsLoad(vals));
+    this.userApi.userEmitter.subscribe(vals => this.onUsersLoad(vals));
+    this.unavApi.getAllUnavailabilities();
+    this.userApi.getAllUsers();
   }
-
-  changeListStartDate = (newDate: Date): string => {
-    this.listStartDate = newDate;
-    this.listStart = this.listStartDate.getTime();
-    this.filterOnDate();
-    return `Unavailabilites After ${this.listStartDate.toLocaleDateString()}`;
-  };
 
   onUnavsLoad = (
     unavs: Unavailability[],
@@ -96,7 +90,7 @@ export class UnavailabilityEditor implements OnInit {
   afterAllDataLoaded = (): void => {
     this.processedUnavs = this.unavs.map(ua => ({
         unav: ua,
-        user: this.userAPI.users.get(String(ua.userId)),
+        user: this.userApi.users.get(String(ua.userId)),
         fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
         toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
       })
@@ -107,6 +101,13 @@ export class UnavailabilityEditor implements OnInit {
   filterOnDate = (): void => {
     this.displayedUnavs = this.processedUnavs.filter(ua =>
       ua.unav.endDate > this.listStart);
+  };
+
+  changeListStartDate = (newDate: Date): string => {
+    this.listStartDate = newDate;
+    this.listStart = this.listStartDate.getTime();
+    this.filterOnDate();
+    return `Unavailabilites After ${this.listStartDate.toLocaleDateString()}`;
   };
 
   createNewUnavailability = (): Unavailability => {
@@ -190,7 +191,7 @@ export class UnavailabilityEditor implements OnInit {
   ): void => {
     this.resetCompState();
     this.state = JSON.parse(JSON.stringify(unav));
-    this.selectedUser = this.userAPI.users.get(String(this.state.userId));
+    this.selectedUser = this.userApi.users.get(String(this.state.userId));
     this.selectedReason = unav.reason;
     this.initialSelectedReason = this.makeTypePretty(this.selectedReason);
     this.startDate = new Date(unav.startDate);
@@ -218,13 +219,13 @@ export class UnavailabilityEditor implements OnInit {
 
 
   doSetUnav = async (): Promise<APITypes.SuccessIndicator> =>
-    this.unavAPI.setUnavailability(this.state);
+    this.unavApi.setUnavailability(this.state);
 
 
   doDeleteUnav = async (
     ua: Unavailability,
   ): Promise<APITypes.SuccessIndicator> => {
-    const success = this.unavAPI.deleteUnavailability(ua);
+    const success = this.unavApi.deleteUnavailability(ua);
     this.onNewUnav();
     return success;
   };

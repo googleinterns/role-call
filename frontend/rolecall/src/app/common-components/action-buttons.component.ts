@@ -1,4 +1,4 @@
-import {Component, Input, OnInit,
+import { Component, Input, OnInit,
 } from '@angular/core';
 
 export type Activator = () => boolean;

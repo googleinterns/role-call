@@ -1,12 +1,12 @@
-import {HttpClient} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
-import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-import {MockDashboardBackend} from '../mocks/mock-dashboard-backend';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService,
+import { MockDashboardBackend } from '../mocks/mock-dashboard-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
 export type DashPerformance = {

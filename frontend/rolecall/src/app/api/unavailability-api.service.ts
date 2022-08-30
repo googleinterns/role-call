@@ -1,17 +1,24 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as APITypes from 'src/api-types';
-import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-import {MockUnavailabilityBackend} from '../mocks/mock-unavailability-backend';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService,
+import { MockUnavailabilityBackend,
+} from '../mocks/mock-unavailability-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
+
+export type WorkUnav = {
+  userId: number;
+  startDate: Date;
+  endDate: Date;
+};
 
 export type Unavailability = {
   id: number;
@@ -210,36 +217,36 @@ export class UnavailabilityApi {
    * Takes backend response, updates data structures for all unavailabilities.
    */
    private getAllUnavailabilitiesResponse = async (
-    ): Promise<AllUnavailabilitiesResponse> =>
-      this.requestAllUnavailabilities().then(val => {
-        // Update the unavailabilities map
-        this.unavailabilities.clear();
-        for (const unav of val.data) {
-          if (!unav.reason) {
-            unav.reason = 'UNDEF';
-          }
-          this.unavailabilities.set(unav.id, unav);
+  ): Promise<AllUnavailabilitiesResponse> =>
+    this.requestAllUnavailabilities().then(val => {
+      // Update the unavailabilities map
+      this.unavailabilities.clear();
+      for (const unav of val.data) {
+        if (!unav.reason) {
+          unav.reason = 'UNDEF';
         }
-        // Log any warnings
-        for (const warning of val.warnings) {
-          this.loggingService.logWarn(warning);
-        }
-        return val;
-      });
+        this.unavailabilities.set(unav.id, unav);
+      }
+      // Log any warnings
+      for (const warning of val.warnings) {
+        this.loggingService.logWarn(warning);
+      }
+      return val;
+    }
+  );
+
+  /** Sends backend request and awaits response. */
+  private setUnavailabilityResponse = async (
+    unav: Unavailability,
+  ): Promise<HttpResponse<any>> =>
+    this.requestUnavailabilitySet(unav);
 
 
-    /** Sends backend request and awaits response. */
-    private setUnavailabilityResponse = async (
-      unav: Unavailability,
-    ): Promise<HttpResponse<any>> =>
-      this.requestUnavailabilitySet(unav);
-
-
-    /** Sends backend request and awaits response. */
-    private deleteUnavailabilityResponse = async (
-      unav: Unavailability,
-    ): Promise<HttpResponse<any>> =>
-      this.requestUnavailabilityDelete(unav);
+  /** Sends backend request and awaits response. */
+  private deleteUnavailabilityResponse = async (
+    unav: Unavailability,
+  ): Promise<HttpResponse<any>> =>
+    this.requestUnavailabilityDelete(unav);
 
 
 

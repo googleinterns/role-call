@@ -1,17 +1,17 @@
 
-import {TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import {LoggingService} from '../services/logging.service';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {ResponseStatusHandlerService,
+import { LoggingService } from '../services/logging.service';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-import {SegmentApi} from './segment-api.service';
+import { SegmentApi } from './segment-api.service';
 
 describe('SegmentApiService', () => {
   const fakeLoggingService = {} as LoggingService;

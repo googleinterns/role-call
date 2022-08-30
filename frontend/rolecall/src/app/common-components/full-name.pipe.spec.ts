@@ -1,4 +1,4 @@
-import {NumberToPlacePipe} from './number-to-place.pipe';
+import { NumberToPlacePipe } from './number-to-place.pipe';
 
 describe('NumberToPlacePipe', () => {
   let pipe: NumberToPlacePipe;

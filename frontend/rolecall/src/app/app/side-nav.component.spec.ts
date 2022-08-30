@@ -1,12 +1,12 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatIconModule} from '@angular/material/icon';
-import {BrowserModule} from '@angular/platform-browser';
-import {Router} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserModule } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import {AppRoutingModule} from './app-routing.module';
-import {SideNav} from './side-nav.component';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { SideNav } from './side-nav.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SideNav', () => {
   let component: SideNav;

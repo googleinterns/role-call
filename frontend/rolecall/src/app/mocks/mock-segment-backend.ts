@@ -1,5 +1,5 @@
-import {HttpResponse} from '@angular/common/http';
-import {AllSegmentsResponse, Segment} from '../api/segment-api.service';
+import { HttpResponse } from '@angular/common/http';
+import { AllSegmentsResponse, Segment } from '../api/segment-api.service';
 
 /**
  * Mocks the segment backend responses

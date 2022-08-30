@@ -4,7 +4,7 @@
 
 
 .root-container {
-  height: 90vh;
+  height: $contentHeight;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

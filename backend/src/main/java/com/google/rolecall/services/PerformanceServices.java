@@ -54,7 +54,16 @@ public class PerformanceServices {
   public List<Performance> getAllPerformances() {
     List<Performance> allPerformances = new ArrayList<>();
     performanceRepo.findAll().forEach(allPerformances::add);
-    allPerformances.forEach(p -> p.setHasAbsence(this.checkAbs(p)));
+    return allPerformances;
+  }
+
+  public List<Performance> getAllPerformancesWithUnavs(Boolean checkUnavs) {
+    List<Performance> allPerformances = new ArrayList<>();
+    performanceRepo.findAll().forEach(allPerformances::add);
+System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
+    if (checkUnavs) {
+      allPerformances.forEach(p -> p.setHasAbsence(this.checkAbs(p)));
+    }
     return allPerformances;
   }
 
@@ -62,11 +71,13 @@ public class PerformanceServices {
     List<Unavailability> uList = new ArrayList<>();
     p.getProgram().forEach( program -> {      
       program.getPerformanceCastMembers().forEach(member -> {        
-         Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser().getId(), new Date(p.getDate().getTime()));
-         if (unavailability != null) {
+        Unavailability unavailability =
+          unavailabilityService.getUnavailabilityByUserAndDate(member.getUser()
+            .getId(), new Date(p.getDate().getTime()));
+        if (unavailability != null) {
           member.setHasAbsence(true);
           uList.add(unavailability);      
-         }
+        }
       });
     });    
     return uList.size() > 0;

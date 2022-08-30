@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {UnavailabilityEditor} from './unavailability-editor.component';
-import {UnavailabilityModule} from './unavailability.module';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { UnavailabilityEditor } from './unavailability-editor.component';
+import { UnavailabilityModule } from './unavailability.module';
 
 
 const routes: Routes = [

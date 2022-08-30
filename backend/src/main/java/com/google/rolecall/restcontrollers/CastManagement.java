@@ -36,8 +36,8 @@ public class CastManagement extends AsyncRestEndpoint {
   }
 
   @Get(Constants.RequestParameters.PERF_DATE)
-  public CompletableFuture<ResponseSchema<List<CastInfo>>> getAllCastsWithAbsence(@RequestParam(
-    value=Constants.RequestParameters.PERF_DATE, required=false) long perfdate) {
+  public CompletableFuture<ResponseSchema<List<CastInfo>>> getAllCastsWithAbsence(
+    @RequestParam(value=Constants.RequestParameters.PERF_DATE, required=false) long perfdate) {
     List<CastInfo> allCasts = castService.getAllCasts(perfdate).stream().map(c->c.toCastInfo())
         .collect(Collectors.toList());
 

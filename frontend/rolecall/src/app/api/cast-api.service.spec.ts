@@ -1,12 +1,13 @@
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import {LoggingService} from '../services/logging.service';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {ResponseStatusHandlerService,
+import { LoggingService } from '../services/logging.service';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-import {CastApi} from './cast-api.service';
-import {SegmentApi} from './segment-api.service';
+import { CastApi } from './cast-api.service';
+import { SegmentApi } from './segment-api.service';
+import { GlobalsService } from '../services/globals.service';
 
 describe('CastApiService', () => {
   const fakeLoggingService = {} as LoggingService;
@@ -14,12 +15,13 @@ describe('CastApiService', () => {
   const fakeSegmentApi = {} as SegmentApi;
   const fakeHeaderUtilityService = {} as HeaderUtilityService;
   const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
+  const g = new GlobalsService();
 
   let service: CastApi;
 
   beforeEach(() => {
     service = new CastApi(fakeLoggingService, fakeHttpClient, fakeSegmentApi,
-        fakeHeaderUtilityService, fakeResponseStatusHandlerService);
+        fakeHeaderUtilityService, fakeResponseStatusHandlerService, g);
   });
 
   it('should be created', () => {

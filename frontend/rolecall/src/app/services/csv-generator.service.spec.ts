@@ -1,7 +1,6 @@
-import {SegmentApi} from '../api/segment-api.service';
-import {UserApi} from '../api/user-api.service';
-
-import {CsvGenerator} from './csv-generator.service';
+import { SegmentApi } from '../api/segment-api.service';
+import { UserApi } from '../api/user-api.service';
+import { CsvGenerator } from './csv-generator.service';
 
 describe('CsvGeneratorService', () => {
   const fakeUserApi = {} as UserApi;

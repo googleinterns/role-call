@@ -1,13 +1,13 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {of} from 'rxjs';
+import { of } from 'rxjs';
 
-import {DashboardApi} from '../api/dashboard-api.service';
+import { DashboardApi } from '../api/dashboard-api.service';
 
-import {Dashboard} from './dashboard.component';
+import { Dashboard } from './dashboard.component';
 
 describe('DashboardComponent', () => {
   let component: Dashboard;

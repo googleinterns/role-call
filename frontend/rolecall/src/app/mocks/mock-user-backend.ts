@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpResponse} from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import * as APITypes from 'src/api-types';
 
 import {AllUsersResponse, OneUserResponse, User} from '../api/user-api.service';

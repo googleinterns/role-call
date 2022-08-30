@@ -1,4 +1,4 @@
-import {NavBarChild} from 'src/types';
+import { NavBarChild } from 'src/types';
 
 /**
  * The nav bar data structures to build out the

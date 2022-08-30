@@ -5,18 +5,18 @@
 // removed in a future version of Jasmine.
 // Basically test setup without any testing will be unallowed in the future.
 
-// import {TestBed, waitForAsync} from '@angular/core/testing';
-// import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-// import {HttpClient} from '@angular/common/http';
-// import {NgZone} from '@angular/core';
-// import {Router} from '@angular/router';
-// import {MockGAPI} from '../mocks/mock-gapi';
-// // import {LoggingService} from '../services/logging.service';
+// import { TestBed, waitForAsync } from '@angular/core/testing';
+// import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+// import { HttpClient } from '@angular/common/http';
+// import { NgZone } from '@angular/core';
+// import { Router } from '@angular/router';
+// import { MockGAPI } from '../mocks/mock-gapi';
+// // import { LoggingService } from '../services/logging.service';
 
-// import {MatFormFieldModule} from '@angular/material/form-field';
+// import { MatFormFieldModule } from '@angular/material/form-field';
 
-// import {LoginApi} from './login-api.service';
-// import {of} from 'rxjs';
+// import { LoginApi } from './login-api.service';
+// import { of } from 'rxjs';
 
 // describe('LoginApi', () => {
 //   let mockZone: jasmine.SpyObj<NgZone>;

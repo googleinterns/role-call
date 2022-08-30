@@ -1,6 +1,5 @@
-import {LoginApi} from '../api/login-api.service';
-
-import {HeaderUtilityService} from './header-utility.service';
+import { LoginApi } from '../api/login-api.service';
+import { HeaderUtilityService } from './header-utility.service';
 
 describe('HeaderUtilityService', () => {
   let service: HeaderUtilityService;

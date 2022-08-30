@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {Location} from '@angular/common';
-import {Component, ElementRef, EventEmitter, OnInit, ViewChild,
+import { Location } from '@angular/common';
+import { Component, ElementRef, EventEmitter, OnInit, ViewChild,
 } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {User, UserApi} from '../api/user-api.service';
+import { ActivatedRoute } from '@angular/router';
+import { User, UserApi } from '../api/user-api.service';
 
 /**
  * The view for the User Editor, allowing users to create other users
