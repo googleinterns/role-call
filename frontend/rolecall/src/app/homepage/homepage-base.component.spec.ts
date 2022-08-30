@@ -1,20 +1,20 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {MatIconModule} from '@angular/material/icon';
-import {Dashboard} from './dashboard.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatIconModule } from '@angular/material/icon';
+import { Dashboard } from './dashboard.component';
 
-import {Router} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import {MatDialogModule, MAT_DIALOG_DATA, MatDialogRef,
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef,
 } from '@angular/material/dialog';
 
-import {LoadingSpinnerComponent,
+import { LoadingSpinnerComponent,
 } from '../common-components/loading-spinner.component';
 
-import {HomepageBase} from './homepage-base.component';
+import { HomepageBase } from './homepage-base.component';
 
 describe('HomepageBase', () => {
   let component: HomepageBase;

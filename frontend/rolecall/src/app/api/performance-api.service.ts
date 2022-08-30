@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as APITypes from 'src/api-types';
-import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-import {MockPerformanceBackend} from '../mocks/mock-performance-backend';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService,
+import { MockPerformanceBackend } from '../mocks/mock-performance-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
+import { GlobalsService } from '../services/globals.service';
 
 type Group = {
   group_index: number;
@@ -39,8 +40,8 @@ export type PerformanceSegment = {
 
 export type Performance = {
   uuid: string;
+  // Should be removed?
   dateTime?: number;
-  hasAbsence?: boolean;
   status: APITypes.PerformanceStatus.DRAFT |
       APITypes.PerformanceStatus.PUBLISHED |
       APITypes.PerformanceStatus.CANCELED;
@@ -59,6 +60,8 @@ export type Performance = {
   step_3: {
     segments: PerformanceSegment[];
   };
+  // For frontend use only. Is not saved.
+  hasAbsence?: boolean;
 };
 
 export type RawAllPerformancesResponse = {
@@ -136,6 +139,8 @@ export class PerformanceApi {
       private http: HttpClient,
       private headerUtil: HeaderUtilityService,
       private respHandler: ResponseStatusHandlerService,
+
+      public g: GlobalsService,
   ) {
   }
 
@@ -311,11 +316,14 @@ export class PerformanceApi {
       return this.mockBackend.requestAllPerformances();
     }
     const header = await this.headerUtil.generateHeader();
+    const params = new HttpParams().append('checkUnavs',
+        `${this.g.checkUnavs}`);
     return lastValueFrom(this.http.get<RawAllPerformancesResponse>(
         environment.backendURL + 'api/performance', {
           headers: header,
           observe: 'response',
-          withCredentials: true
+          withCredentials: true,
+          params,
         }))
         .catch(errorResp => errorResp)
         .then(resp =>

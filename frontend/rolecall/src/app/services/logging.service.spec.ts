@@ -1,4 +1,4 @@
-import {ERROR_PREFIX, LOG_PREFIX, LoggingService, WARN_PREFIX,
+import { ERROR_PREFIX, LOG_PREFIX, LoggingService, WARN_PREFIX,
 } from './logging.service';
 
 describe('LoggingService', () => {

@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {LoginApi} from '../api/login-api.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LoginApi } from '../api/login-api.service';
 
 @Component({
   selector: 'app-welcome-page',

@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {SegmentModule} from './segment.module';
-import {SegmentEditor} from './segment-editor.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { SegmentModule } from './segment.module';
+import { SegmentEditor } from './segment-editor.component';
 
 
 const routes: Routes = [

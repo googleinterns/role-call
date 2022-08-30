@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpClient} from '@angular/common/http';
-import {Injectable, NgZone} from '@angular/core';
-import {Router} from '@angular/router';
-import {BehaviorSubject, Observable, Subscription, lastValueFrom, timer,
+import { HttpClient } from '@angular/common/http';
+import { Injectable, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, Subscription, lastValueFrom, timer,
 } from 'rxjs';
-import {environment} from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 
 export type LoginResponse = {

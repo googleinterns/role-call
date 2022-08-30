@@ -1,0 +1,10 @@
+@import "src/styles/constants";
+
+.menubar {
+  height: $menuBarHeight;
+}
+
+.content {
+  height: $contentHeight;
+  overflow: hidden;
+}

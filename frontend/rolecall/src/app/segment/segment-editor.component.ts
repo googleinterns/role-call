@@ -1,18 +1,18 @@
-import {CdkDragDrop, transferArrayItem} from '@angular/cdk/drag-drop';
-import {Location} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
-import {MatSelectChange} from '@angular/material/select';
-import {ActivatedRoute} from '@angular/router';
-import {COLORS} from 'src/constants';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
+import { COLORS } from 'src/constants';
 import * as APITypes from 'src/api-types';
 
-import {Segment, SegmentApi, SegmentType, Position,
+import { Segment, SegmentApi, SegmentType, Position,
 } from '../api/segment-api.service';
-import {ResponseStatusHandlerService,
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
-import {SuperBalletDisplayService,
+import { SuperBalletDisplayService,
 } from '../services/super-ballet-display.service';
-import {SegmentDisplayListService,
+import { SegmentDisplayListService,
 } from '../services/segment-display-list.service';
 
 export type WorkingSegment = Segment & {

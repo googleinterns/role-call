@@ -3,13 +3,13 @@
 .std-panel-container {
   display: flex;
   justify-content: space-evenly;
-  min-height: 90vh;
+  min-height: $contentHeight;
   width: 100%;
 }
 
 // Margins on the panel cards
 .std-card-margins {
-  height: 96vh;
+  height: calc($contentHeight - 2.5vh);
   margin: 2vh;
 }
 
@@ -23,7 +23,8 @@
   justify-content: flex-start;
   margin: 1em;
   //max-height: 86vh;
-  max-height: 87.5vh;
+  //max-height: 87.5vh;
+  max-height: calc($contentHeight - 2.5vh);
 }
 
 .std-left-card-double {

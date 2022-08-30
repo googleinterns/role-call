@@ -11,8 +11,9 @@ import {HeaderUtilityService} from '../services/header-utility.service';
 import {LoggingService} from '../services/logging.service';
 import {ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
-
 import {SegmentApi, Position} from './segment-api.service';
+import {GlobalsService} from '../services/globals.service';
+
 
 type RawCastMember = {
   id: number;
@@ -127,6 +128,8 @@ export class CastApi {
       private segmentApi: SegmentApi,
       private headerUtil: HeaderUtilityService,
       private respHandler: ResponseStatusHandlerService,
+
+      public g: GlobalsService,
   ) {
   }
 
@@ -137,7 +140,11 @@ export class CastApi {
     }
     await this.segmentApi.getAllSegments();
     const header = await this.headerUtil.generateHeader();
+    if (!this.g.checkUnavs) {
+      perfDate = 0;
+    }
     const params = new HttpParams().append('perfdate', '' + perfDate);
+console.log('PERFDATE', perfDate);
     return lastValueFrom(this.http.get<AllRawCastsResponse>(
         environment.backendURL + 'api/cast', {
           headers: header,

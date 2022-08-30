@@ -1,7 +1,8 @@
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component} from '@angular/core';
-import {constNavBarEntries} from 'src/constants';
-import {NavBarChild} from 'src/types';
+import { animate, state, style, transition, trigger,
+} from '@angular/animations';
+import { Component } from '@angular/core';
+import { constNavBarEntries } from 'src/constants';
+import { NavBarChild } from 'src/types';
 
 /**
  * The side navigation panel component.

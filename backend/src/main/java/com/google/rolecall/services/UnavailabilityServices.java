@@ -48,7 +48,7 @@ public class UnavailabilityServices {
 
   
   public Unavailability getUnavailabilityByUserAndDate(Integer userId, Date date){
-    return unavailabilityRepo.getUnavailabilityByUserAndDate(userId,date);
+    return unavailabilityRepo.getUnavailabilityByUserAndDate(userId, date);
   };
 
 

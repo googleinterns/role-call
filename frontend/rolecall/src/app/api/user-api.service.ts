@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as APITypes from 'src/api-types';
-import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-import {MockUserBackend} from '../mocks/mock-user-backend';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService,
+import { MockUserBackend } from '../mocks/mock-user-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
+import { BooleanInput } from '@angular/cdk/coercion';
 
 export type User = {
   uuid: APITypes.UserUUID;
@@ -33,6 +34,8 @@ export type User = {
       email: string | undefined;
     };
   };
+  // For frontend use only. Not saved.
+  isAbsent?: BooleanInput;
 };
 
 interface RawUser {

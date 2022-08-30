@@ -1,14 +1,15 @@
 @import "src/styles/colors";
+@import "src/styles/constants";
 
 
 // The container that represents the entire stepper bar card and is animated
 .stepper-bar-container {
   display: flex;
   flex-direction: row;
-  height: 88vh;
+  height: calc($contentHeight - 2vh);
   justify-content: center;
   margin-bottom: 0;
-  margin-top: 10vh;
+  margin-top: $menuBarHeight;
   position: absolute;
   right: 100vw;
   top: 0;

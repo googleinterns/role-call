@@ -1,6 +1,7 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {LoginApi} from '../api/login-api.service';
-import {SideNav} from './side-nav.component';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { LoginApi } from '../api/login-api.service';
+import { GlobalsService } from '../services/globals.service';
+import { SideNav } from './side-nav.component';
 
 /**
  * The site-wide header that holds the menu bar, login information,
@@ -9,7 +10,7 @@ import {SideNav} from './side-nav.component';
 @Component({
   selector: 'app-site-header',
   templateUrl: './site-header.component.html',
-  styleUrls: ['./site-header.component.scss']
+  styleUrls: ['./site-header.component.scss'],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class SiteHeader implements OnInit, AfterViewInit {
@@ -21,6 +22,7 @@ export class SiteHeader implements OnInit, AfterViewInit {
   responseReceived = false;
 
   constructor(
+    public g: GlobalsService,
     public loginAPI: LoginApi,
   ) {
   }

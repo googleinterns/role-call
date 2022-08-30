@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 /** Logging prefixes. */
 export const ERROR_PREFIX = '{{ ERROR }} :: ';

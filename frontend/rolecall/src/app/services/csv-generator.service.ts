@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {Injectable} from '@angular/core';
-import {saveAs} from 'file-saver-es';
-import {Cast} from '../api/cast-api.service';
-import {Performance} from '../api/performance-api.service';
-import {SegmentApi} from '../api/segment-api.service';
-import {UserApi} from '../api/user-api.service';
+import { Injectable } from '@angular/core';
+import { saveAs } from 'file-saver-es';
+import { Cast } from '../api/cast-api.service';
+import { Performance } from '../api/performance-api.service';
+import { SegmentApi } from '../api/segment-api.service';
+import { UserApi } from '../api/user-api.service';
 
 @Injectable({providedIn: 'root'})
 export class CsvGenerator {

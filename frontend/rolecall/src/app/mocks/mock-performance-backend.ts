@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpResponse} from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import * as APITypes from 'src/api-types';
 
-import {AllPerformancesResponse, OnePerformanceResponse, Performance,
+import { AllPerformancesResponse, OnePerformanceResponse, Performance,
 } from '../api/performance-api.service';
 
 /** Mocks the oerformance backend responses. */

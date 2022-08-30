@@ -1,25 +1,26 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {ActivatedRoute} from '@angular/router';
-import {Location} from '@angular/common';
-import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test-utils';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { of } from 'rxjs';
+import { createSpyObjWithProps } from 'src/test-utils';
 
-import {SegmentApi} from '../api/segment-api.service';
-import {ResponseStatusHandlerService,
+import { SegmentApi } from '../api/segment-api.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
 
-import {ActionButtonsComponent} from '../common-components/action-buttons.component';
-import {SegmentEditor} from './segment-editor.component';
-import {SegmentModule} from './segment.module';
+import { ActionButtonsComponent,
+} from '../common-components/action-buttons.component';
+import { SegmentEditor } from './segment-editor.component';
+import { SegmentModule } from './segment.module';
 
-import {SuperBalletDisplayService,
+import { SuperBalletDisplayService,
 } from '../services/super-ballet-display.service';
-import {SegmentDisplayListService,
+import { SegmentDisplayListService,
 } from '../services/segment-display-list.service';
 
 describe('SegmentEditorComponent', () => {

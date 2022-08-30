@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Segment, SegmentType} from '../api/segment-api.service';
-import {SuperBalletDisplayService} from './super-ballet-display.service';
+import { Injectable } from '@angular/core';
+import { Segment, SegmentType } from '../api/segment-api.service';
+import { SuperBalletDisplayService } from './super-ballet-display.service';
 
 // export type DisplaySegment = Segment & {
 //   isOpen: boolean;

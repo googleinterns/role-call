@@ -135,17 +135,23 @@
             </div>
             <div
               *ngFor="let dancer of position.castRows[i3].subCastDancers; let i4 = index"
-              class="cell"
               cdkDrag
               [cdkDragData]="dancer"
               [ngStyle]="i4 === boldedCast ? {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}"
             >
-              <div *ngIf="dancer !== undefined" class="user-cell">
-                <img
-                  class="user-image"
-                  [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase"
+              <div [ngClass]="dancer?.hasAbsence ? 'absence-cell' : 'cell'">
+                <div
+                  *ngIf="dancer !== undefined" class="user-cell"
                 >
-                <div [ngClass]="dancer.hasAbsence ? 'child-absence' : ''">{{dancer.user | fullName}}</div>
+                  <img
+                    class="user-image"
+                    [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase"
+                  >
+                  <div
+                    [ngClass]="dancer.hasAbsence ? 'dancer-absence' : ''"
+                  >{{dancer.user | fullName}}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -168,15 +174,22 @@
       >
         <div
           *ngFor="let user of allUsers"
-          class="cell user-cell"
           cdkDrag
           [cdkDragData]="user"
         >
-          <img
-            class="user-image"
-            [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase"
+          <div
+            class="user-cell"
+            [ngClass]="user.isAbsent ? 'absence-cell' : 'cell'"
           >
-          {{user | fullName}}
+            <img
+              class="user-image"
+              [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase"
+            >
+            <div
+              [ngClass]="user.isAbsent ? 'dancer-absence' : ''"
+            >{{user | fullName}}
+            </div>        
+          </div>
         </div>
       </div>
     </div>

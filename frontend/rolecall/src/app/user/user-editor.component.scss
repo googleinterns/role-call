@@ -11,7 +11,8 @@
   justify-content: flex-start;
   margin: 1em;
   //max-height: 86vh;
-  max-height: 87.5vh;
+  //max-height: 87.5vh;
+  max-height: calc($contentHeight - 2.5vh);
 }
 
 .line-container {

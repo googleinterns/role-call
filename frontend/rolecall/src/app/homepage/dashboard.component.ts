@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {DashboardApi, DashPerformance} from '../api/dashboard-api.service';
+import { Component, OnInit } from '@angular/core';
+import { DashboardApi, DashPerformance } from '../api/dashboard-api.service';
 
 type WeekdayOptions = 'long' | 'short' | 'narrow';
 type YearOptions = 'numeric' | '2-digit';

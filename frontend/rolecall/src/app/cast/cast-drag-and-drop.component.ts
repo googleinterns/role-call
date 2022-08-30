@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as APITypes from 'src/api-types';
-import {CAST_COUNT} from 'src/constants';
+import { CAST_COUNT } from 'src/constants';
 
-import {Cast, CastApi, CastGroup} from '../api/cast-api.service';
-import {SegmentApi, Segment, Position} from '../api/segment-api.service';
-import {User, UserApi} from '../api/user-api.service';
-import {CsvGenerator} from '../services/csv-generator.service';
+import { Cast, CastApi, CastGroup } from '../api/cast-api.service';
+import { SegmentApi, Segment, Position } from '../api/segment-api.service';
+import { User, UserApi } from '../api/user-api.service';
+import { CsvGenerator } from '../services/csv-generator.service';
+import { WorkUnav } from '../api/unavailability-api.service';
+
 
 type UICastDancer = {
   uuid: string;
@@ -35,9 +37,17 @@ type UICastPosition = {
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class CastDragAndDrop implements OnInit {
 
+  /** Input that specifies the currently selected segment */
   @Input() selectedSegment: Segment;
 
+  /** Input that specifies if the cast has been saved before */
   @Input() canDelete: boolean;
+
+  /** Input of the performance date, if available */
+  @Input() performanceDate: Date;
+
+  /** Input that idenfies available unavailability information */
+  @Input() wunavs: WorkUnav[];
 
   /** Output by which parent components can launch add cast. */
   @Output() addCastEmitter: EventEmitter<void> = new EventEmitter();
@@ -325,6 +335,27 @@ export class CastDragAndDrop implements OnInit {
     this.allUsers = users.filter(user => user.has_roles.isDancer);
     this.allUsers = this.allUsers.sort(
         (a, b) => a.last_name < b.last_name ? -1 : 1);
+    if (this.wunavs) {
+      // We have unavailability data.
+      this.allUsers.forEach(user => {
+        const userId = Number(user.uuid);
+        let findIx = this.wunavs.findIndex(wu => wu.userId === userId);
+        if (findIx > -1) {
+          while (findIx < this.wunavs.length) {
+            const wunav = this.wunavs[findIx];
+            if (wunav.userId === userId) {
+              if (wunav.startDate <= this.performanceDate
+                && wunav.endDate >= this.performanceDate) {
+                user.isAbsent = true;
+console.log('USER', user);
+                break;
+              }
+            }
+            findIx += 1;
+          }
+        }
+      });
+    }
     if (this.checkAllLoaded()) {
       this.setupData();
     }

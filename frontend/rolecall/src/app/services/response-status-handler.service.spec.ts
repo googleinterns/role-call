@@ -1,8 +1,7 @@
-import {MatDialog} from '@angular/material/dialog';
-
-import {LoginApi} from '../api/login-api.service';
-
-import {ResponseStatusHandlerService} from './response-status-handler.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginApi } from '../api/login-api.service';
+import { ResponseStatusHandlerService,
+} from './response-status-handler.service';
 
 describe('ResponseStatusHandlerService', () => {
   let service: ResponseStatusHandlerService;

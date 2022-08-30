@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {Location} from '@angular/common';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { Location } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import * as APITypes from 'src/api-types';
-import {CAST_COUNT} from 'src/constants';
+import { CAST_COUNT } from 'src/constants';
 
-import {Cast, CastApi} from '../api/cast-api.service';
-import {Segment, SegmentApi} from '../api/segment-api.service';
-import {CastDragAndDrop} from './cast-drag-and-drop.component';
-import {SuperBalletDisplayService,
+import { Cast, CastApi } from '../api/cast-api.service';
+import { Segment, SegmentApi } from '../api/segment-api.service';
+import { CastDragAndDrop } from './cast-drag-and-drop.component';
+import { SuperBalletDisplayService,
 } from '../services/super-ballet-display.service';
-import {SegmentDisplayListService,
+import { SegmentDisplayListService,
 } from '../services/segment-display-list.service';
 
 

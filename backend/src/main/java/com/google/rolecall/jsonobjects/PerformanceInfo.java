@@ -104,8 +104,6 @@ public abstract class PerformanceInfo {
     @JsonProperty("hasAbsence")
     public abstract Builder setHasAbsence(Boolean hasAbsence);
 
-
-    
     @JsonProperty("performanceSections")
     public abstract Builder setPerformanceSections(List<PerformanceSectionInfo> performanceSections);
 

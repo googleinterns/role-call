@@ -1,12 +1,12 @@
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {TestBed} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import {MockUserBackend} from '../mocks/mock-user-backend';
-import {ResponseStatusHandlerService,
+import { MockUserBackend } from '../mocks/mock-user-backend';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
-import {AllUsersResponse, OneUserResponse, UserApi} from './user-api.service';
+import { AllUsersResponse, OneUserResponse, UserApi } from './user-api.service';
 
 describe('UserApi', () => {
   const fakeHttpClient = {} as HttpClient;

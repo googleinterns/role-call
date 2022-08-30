@@ -1,8 +1,10 @@
+@import "src/styles/constants";
+
 .container {
   display: flex;
   flex-direction: column;
-  height: 90vh;
-  max-height: 90vh;
+  height: $contentHeight;
+  max-height: $contentHeight;
   justify-content: center;
   left: 0;
   margin: 0;

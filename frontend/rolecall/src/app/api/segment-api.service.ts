@@ -1,13 +1,13 @@
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as APITypes from 'src/api-types';
-import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-import {MockSegmentBackend} from '../mocks/mock-segment-backend';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService,
+import { MockSegmentBackend } from '../mocks/mock-segment-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
 type RawPosition = {
@@ -54,6 +54,8 @@ export type Segment = {
   type: SegmentType;
   positions: Position[];
   deletePositions: Position[];
+  // For frontend use only. Is not saved.
+  hasAbsence?: boolean;
 };
 
 export type AllSegmentsResponse = {

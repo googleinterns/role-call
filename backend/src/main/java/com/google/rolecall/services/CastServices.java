@@ -55,9 +55,9 @@ public class CastServices {
     return allCasts;
   }
 
-  
-  public void checkAbs(Cast p, long perfdate) {       
-    p.getSubCasts().forEach( subcast -> {      
+  public void checkAbs(Cast p, long perfdate) {
+System.out.println("CHECKING UNAVS");
+    p.getSubCasts().forEach( subcast -> {
       subcast.getCastMembers().forEach(member -> {        
          Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser().getId(), new Date(perfdate));
          if (unavailability != null) {          

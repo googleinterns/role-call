@@ -48,3 +48,9 @@ $custom-typography: mat.define-typography-config(
   color: black !important;
   font-size: 1rem;
 }
+
+::ng-deep .mat-checkbox-inner-container {
+  height: 3rem;
+  font-size: 2rem;
+  color:lightblue;
+}

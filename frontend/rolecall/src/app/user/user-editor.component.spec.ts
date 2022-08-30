@@ -1,35 +1,36 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {EditableTextInput,
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { EditableTextInput,
 } from '../common-components/editable-text-input.component';
-import {EditableDateInput,
+import { EditableDateInput,
 } from '../common-components/editable-date-input.component';
-import {EditableMultiSelectInput,
+import { EditableMultiSelectInput,
 } from '../common-components/editable-multiselect-input.component';
-import {LoadingSpinnerComponent,
+import { LoadingSpinnerComponent,
 } from '../common-components/loading-spinner.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatSelectModule} from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
-import {ActivatedRoute} from '@angular/router';
-import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test-utils';
-import {Location} from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
+import { createSpyObjWithProps } from 'src/test-utils';
+import { Location } from '@angular/common';
 
-import {EmptyStringIfUndefinedPipe,
+import { EmptyStringIfUndefinedPipe,
 } from '../common-components/empty-string-if-undefined.pipe';
-import {UserApi} from '../api/user-api.service';
+import { UserApi } from '../api/user-api.service';
 
-import {ActionButtonsComponent} from '../common-components/action-buttons.component';
-import {UserEditor} from './user-editor.component';
+import { UserEditor } from './user-editor.component';
+import { ActionButtonsComponent,
+} from '../common-components/action-buttons.component';
 
 describe('UserEditorComponent', () => {
   const fakeActivatedRoute = {snapshot: {params: {uuid: 'testUUID'}}};
