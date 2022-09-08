@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as APITypes from 'src/api-types';
 import { CAST_COUNT } from 'src/constants';
 
 import { Cast, CastApi } from '../api/cast-api.service';
 import { Segment, SegmentApi } from '../api/segment-api.service';
+import { User, UserApi } from '../api/user-api.service';
 import { CastDragAndDrop } from './cast-drag-and-drop.component';
 import { SuperBalletDisplayService,
 } from '../services/super-ballet-display.service';
 import { SegmentDisplayListService,
 } from '../services/segment-display-list.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -21,29 +23,39 @@ import { SegmentDisplayListService,
   styleUrls: ['./cast-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class CastEditor implements OnInit {
+export class CastEditor implements OnInit, OnDestroy {
 
   @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
 
   selectedCast: Cast;
   selectedSegment: Segment;
   urlUUID: APITypes.CastUUID;
+  users: User[] = [];
   allCasts: Cast[] = [];
   selectedSegmentCasts: Cast[] = [];
   expandedCode= 0;
 
   lastSelectedCastIndex: number;
   lastSelectedCast: Cast;
+
+  segmentSubscription: Subscription;
+  castSubscription: Subscription;
+  userSubscription: Subscription;
+
   dataLoaded = false;
+  usersLoads = false;
   segmentsLoaded = false;
   castsLoaded = false;
+  usersLoaded = false;
+
   canDelete = false;
 
   private allSegments: Segment[] = [];
 
   constructor(
-      private castAPI: CastApi,
+      private castApi: CastApi,
       private segmentApi: SegmentApi,
+      private userApi: UserApi,
       private route: ActivatedRoute,
       private location: Location,
       private superBalletDisplay: SuperBalletDisplayService,
@@ -56,14 +68,25 @@ export class CastEditor implements OnInit {
     if (uuid) {
       this.urlUUID = uuid;
     }
-    this.castAPI.castEmitter.subscribe(cast => {
+    this.userSubscription = this.userApi.userEmitter.subscribe(users => {
+      this.onUserLoad(users);
+    });
+    this.userApi.getAllUsers();
+    this.castSubscription = this.castApi.castEmitter.subscribe(cast => {
       this.onCastLoad(cast);
     });
-    this.castAPI.getAllCasts();
-    this.segmentApi.segmentEmitter.subscribe(segment => {
-      this.onSegmentLoad(segment);
+    this.castApi.getAllCasts(true, 'ngOnInit (cast-editor)');
+    this.segmentSubscription =
+      this.segmentApi.segmentEmitter.subscribe(segment => {
+        this.onSegmentLoad(segment);
     });
-    this.segmentApi.getAllSegments();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+    this.castSubscription.unsubscribe();
+    this.segmentSubscription.unsubscribe();
   }
 
   // Select from screen
@@ -120,15 +143,16 @@ export class CastEditor implements OnInit {
             group_index: 0,
             members: []
           }],
+          hasAbsence: false,
         }),
       )
     };
     this.canDelete = false;
     this.allCasts.push(newCast);
     this.selectedSegmentCasts.push(newCast);
-    await this.castAPI.setCast(newCast, true);
+    await this.castApi.setCast(newCast, true);
     this.setCurrentCast({cast: newCast});
-    await this.castAPI.getAllCasts();
+    await this.castApi.getAllCasts(false, 'addCast') ;
   };
 
   toggleExpanded = (): void => {
@@ -148,7 +172,8 @@ export class CastEditor implements OnInit {
   // Private functions
 
   private checkDataLoaded = (): boolean => {
-    this.dataLoaded = this.segmentsLoaded && this.castsLoaded;
+    this.dataLoaded = this.usersLoaded && this.segmentsLoaded
+        && this.castsLoaded;
     return this.dataLoaded;
   };
 
@@ -210,6 +235,17 @@ export class CastEditor implements OnInit {
     this.leftList.buildDisplayList(this.allSegments, this.starTest);
   };
 
+  /** Called when users are loaded from the User API. */
+  private onUserLoad = (users: User[]): void => {
+    this.usersLoaded = true;
+    this.users = users.filter(user => user.has_roles.isDancer);
+    this.users = this.users.sort(
+        (a, b) => a.last_name < b.last_name ? -1 : 1);
+    // clear unavailibility data, if present
+    this.users.forEach(u => u.isAbsent = false);
+    this.checkDataLoaded();
+  };
+
   private onSegmentLoad = (segments: Segment[]): void => {
     this.allSegments = segments.filter(segment => segment.type !== 'SEGMENT');
     this.buildLeftList();
@@ -222,7 +258,7 @@ export class CastEditor implements OnInit {
   };
 
   private onCastLoad = (casts: Cast[]): void => {
-    if (this.castAPI.hasCast(this.urlUUID)) {
+    if (this.castApi.hasCast(this.urlUUID)) {
       this.dragAndDrop.selectCast({uuid: this.urlUUID});
       this.setCastURL();
     }
@@ -265,7 +301,7 @@ export class CastEditor implements OnInit {
       this.onSetCurrentCast(this.selectedCast);
     } else {
       this.urlUUID = this.dragAndDrop.selectedCastUUID;
-      this.setCurrentCast({cast: this.castAPI.castFromUUID(this.urlUUID)});
+      this.setCurrentCast({cast: this.castApi.castFromUUID(this.urlUUID)});
     }
     this.checkForUrlCompliance();
     this.castsLoaded = true;

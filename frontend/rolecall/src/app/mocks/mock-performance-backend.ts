@@ -27,52 +27,59 @@ export class MockPerformanceBackend {
         segments: ['212', 'intermission']
       },
       step_3: {
-        segments: [
+        perfSegments: [
           {
             id: '12',
             segment: '212',
+            type: 'UNDEF',
             length: 600,
             selected_group: 1,
             custom_groups: [{
                 position_uuid: '213',
                 position_order: 0,
+                hasAbsence: false,
                 groups: [
                   {
                     group_index: 0, members: [
-                      {uuid: '184', position_number: 1},
-                      {uuid: '186', position_number: 3},
-                      {uuid: '183', position_number: 0},
-                      {uuid: '188', position_number: 5},
-                      {uuid: '185', position_number: 2},
-                      {uuid: '187', position_number: 4}
+                      {uuid: '184', position_number: 1, hasAbsence: false},
+                      {uuid: '186', position_number: 3, hasAbsence: false},
+                      {uuid: '183', position_number: 0, hasAbsence: false},
+                      {uuid: '188', position_number: 5, hasAbsence: false},
+                      {uuid: '185', position_number: 2, hasAbsence: false},
+                      {uuid: '187', position_number: 4, hasAbsence: false},
                     ]
                   },
                   {
                     group_index: 2, members: [
-                      {uuid: '196', position_number: 2},
-                      {uuid: '195', position_number: 0}
+                      {uuid: '196', position_number: 2, hasAbsence: false},
+                      {uuid: '195', position_number: 0, hasAbsence: false},
                     ]
                   },
                   {
                     group_index: 1, members: [
-                      {uuid: '193', position_number: 4},
-                      {uuid: '189', position_number: 0},
-                      {uuid: '194', position_number: 5},
-                      {uuid: '190', position_number: 1},
-                      {uuid: '192', position_number: 3},
-                      {uuid: '191', position_number: 2}
+                      {uuid: '193', position_number: 4, hasAbsence: false},
+                      {uuid: '189', position_number: 0, hasAbsence: false},
+                      {uuid: '194', position_number: 5, hasAbsence: false},
+                      {uuid: '190', position_number: 1, hasAbsence: false},
+                      {uuid: '192', position_number: 3, hasAbsence: false},
+                      {uuid: '191', position_number: 2, hasAbsence: false},
                     ]
                   }
-                ]
+                ],
               }
-            ]
+            ],
+            name: '',
+            hasAbsence: false,
           },
           {
             id: '13',
             segment: 'intermission',
+            type: 'UNDEF',
             selected_group: undefined,
             length: 300,
-            custom_groups: []
+            custom_groups: [],
+            name: '',
+            hasAbsence: false,
           }
         ]
       }
@@ -93,53 +100,60 @@ export class MockPerformanceBackend {
         segments: ['212', 'intermission']
       },
       step_3: {
-        segments: [
+        perfSegments: [
           {
             id: '15',
             segment: '212',
+            type: 'UNDEF',
             length: 600,
             selected_group: 0,
             custom_groups: [
               {
                 position_uuid: '213',
                 position_order: 0,
+                hasAbsence: false,
                 groups: [
                   {
                     group_index: 0, members: [
-                      {uuid: '184', position_number: 1},
-                      {uuid: '186', position_number: 3},
-                      {uuid: '183', position_number: 0},
-                      {uuid: '188', position_number: 5},
-                      {uuid: '185', position_number: 2},
-                      {uuid: '187', position_number: 4}
+                      {uuid: '184', position_number: 1, hasAbsence: false},
+                      {uuid: '186', position_number: 3, hasAbsence: false},
+                      {uuid: '183', position_number: 0, hasAbsence: false},
+                      {uuid: '188', position_number: 5, hasAbsence: false},
+                      {uuid: '185', position_number: 2, hasAbsence: false},
+                      {uuid: '187', position_number: 4, hasAbsence: false},
                     ]
                   },
                   {
                     group_index: 2, members: [
-                      {uuid: '196', position_number: 2},
-                      {uuid: '195', position_number: 0}
+                      {uuid: '196', position_number: 2, hasAbsence: false},
+                      {uuid: '195', position_number: 0, hasAbsence: false},
                     ]
                   },
                   {
                     group_index: 1, members: [
-                      {uuid: '193', position_number: 4},
-                      {uuid: '189', position_number: 0},
-                      {uuid: '194', position_number: 5},
-                      {uuid: '190', position_number: 1},
-                      {uuid: '192', position_number: 3},
-                      {uuid: '191', position_number: 2}
+                      {uuid: '193', position_number: 4, hasAbsence: false},
+                      {uuid: '189', position_number: 0, hasAbsence: false},
+                      {uuid: '194', position_number: 5, hasAbsence: false},
+                      {uuid: '190', position_number: 1, hasAbsence: false},
+                      {uuid: '192', position_number: 3, hasAbsence: false},
+                      {uuid: '191', position_number: 2, hasAbsence: false},
                     ]
                   }
                 ]
               }
-            ]
+            ],
+            name: '',
+            hasAbsence: false,
           },
           {
             id: '14',
             segment: 'intermission',
+            type: 'UNDEF',
             length: 300,
             selected_group: undefined,
-            custom_groups: []
+            custom_groups: [],
+            name: '',
+            hasAbsence: false,
           }
         ]
       }

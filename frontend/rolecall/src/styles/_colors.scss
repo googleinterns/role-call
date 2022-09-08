@@ -7,3 +7,12 @@ $lightLightGray: #b1b1b1;
 $black: black;
 $aaOrange: #ff6666;
 $aaOrangeGradient: linear-gradient(to right, #f7690a, #ff5927);
+
+$unavailFg: white;
+$unavailBg: red;
+
+.std-absence {
+  background: $unavailBg;
+  color: $unavailFg;
+  text-decoration-color: $unavailFg;
+}

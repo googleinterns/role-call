@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-multi-select-input',
@@ -6,7 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./editable-multiselect-input.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class EditableMultiSelectInput implements OnInit {
+export class EditableMultiSelectInput implements OnInit, OnDestroy {
 
   @Input() valueName: string;
   @Input() bgColor: string;
@@ -15,13 +17,20 @@ export class EditableMultiSelectInput implements OnInit {
   @Input() setValues: EventEmitter<string[]>;
   @Input() displayNameMapping: any;
   @Output() valueChange: EventEmitter<[string, string[]]> = new EventEmitter();
+
   currentlySelected: string[] = [];
+  setValueSubscription: Subscription;
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-    this.setValues.subscribe(val => {
+    this.setValueSubscription = this.setValues.subscribe(val => {
       this.update(val);
     });
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.setValueSubscription.unsubscribe();
   }
 
   update = (values: string[]): void => {

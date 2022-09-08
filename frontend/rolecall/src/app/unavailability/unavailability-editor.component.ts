@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatSelectChange } from '@angular/material/select';
 import { Unavailability, UnavailabilityApi, UnavailabilityReason,
 } from '../api/unavailability-api.service';
 import { User, UserApi } from '../api/user-api.service';
 import * as APITypes from 'src/api-types';
+import { Subscription } from 'rxjs';
 
 
 type ProcessedUnav = {
@@ -20,7 +21,7 @@ type ProcessedUnav = {
   styleUrls: ['./unavailability-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class UnavailabilityEditor implements OnInit {
+export class UnavailabilityEditor implements OnInit, OnDestroy {
 
   unavs: Unavailability[] = [];
   processedUnavs: ProcessedUnav[] = [];
@@ -40,6 +41,10 @@ export class UnavailabilityEditor implements OnInit {
   initialSelectedReason = '';
 
   allUsers: User[];
+
+  userSubscription: Subscription;
+  unavSubscription: Subscription;
+
   dataLoaded = false;
   unavsLoaded = false;
   usersLoaded = false;
@@ -55,11 +60,19 @@ export class UnavailabilityEditor implements OnInit {
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     this.state = this.createNewUnavailability();
-    this.unavApi.unavailabilityEmitter.subscribe(vals =>
-      this.onUnavsLoad(vals));
-    this.userApi.userEmitter.subscribe(vals => this.onUsersLoad(vals));
+    this.unavSubscription =
+        this.unavApi.unavailabilityEmitter.subscribe(vals =>
+            this.onUnavsLoad(vals));
     this.unavApi.getAllUnavailabilities();
+    this.userSubscription =
+        this.userApi.userEmitter.subscribe(vals => this.onUsersLoad(vals));
     this.userApi.getAllUsers();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.unavSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 
   onUnavsLoad = (

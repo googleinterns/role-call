@@ -11,7 +11,7 @@ import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
 import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
-import { BooleanInput } from '@angular/cdk/coercion';
+
 
 export type User = {
   uuid: APITypes.UserUUID;
@@ -35,7 +35,7 @@ export type User = {
     };
   };
   // For frontend use only. Not saved.
-  isAbsent?: BooleanInput;
+  isAbsent: boolean;
 };
 
 interface RawUser {
@@ -97,8 +97,9 @@ export class UserApi {
   /** All the loaded users mapped by UUID. */
   users: Map<APITypes.UserUUID, User> = new Map<APITypes.UserUUID, User>();
 
-  /** Emitter that is called whenever users are loaded. */
+  /** Emitter that is called whenever all users are loaded. */
   userEmitter: EventEmitter<User[]> = new EventEmitter();
+
 
   constructor(
       private loggingService: LoggingService,
@@ -153,9 +154,10 @@ export class UserApi {
                     emergency_contact: {
                       name: rawUser.emergencyContactName,
                       phone_number: rawUser.emergencyContactNumber,
-                      email: 'N/A'
-                    }
-                  }
+                      email: 'N/A',
+                    },
+                  },
+                  isAbsent: false,
                 })
               )
             },

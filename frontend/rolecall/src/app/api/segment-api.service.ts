@@ -44,7 +44,7 @@ export type Position = {
   size: number;
 };
 
-export type SegmentType = 'SEGMENT' | 'BALLET' | 'SUPER';
+export type SegmentType = 'SEGMENT' | 'BALLET' | 'SUPER' | 'UNDEF';
 
 export type Segment = {
   uuid: string;

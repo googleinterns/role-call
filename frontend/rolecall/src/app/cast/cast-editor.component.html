@@ -92,6 +92,7 @@
   <div class="drag-and-drop-container">
     <app-cast-drag-and-drop
       #castDragAndDrop
+      [users]="users"
       [selectedSegment]="selectedSegment"
       [canDelete]="canDelete"
       (addCastEmitter)="addCast()"

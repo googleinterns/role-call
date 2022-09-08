@@ -6,14 +6,14 @@ import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 
 import { PerformanceApi } from './performance-api.service';
-import { GlobalsService } from '../services/globals.service';
+import { ContextService } from '../services/context.service';
 
 describe('PerformanceApiService', () => {
   const fakeLoggingService = {} as LoggingService;
   const fakeHttpClient = {} as HttpClient;
   const fakeHeaderUtilityService = {} as HeaderUtilityService;
   const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
-  const g = new GlobalsService();
+  const g = new ContextService();
 
   let service: PerformanceApi;
 

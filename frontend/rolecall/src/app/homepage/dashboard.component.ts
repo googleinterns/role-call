@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DashboardApi, DashPerformance } from '../api/dashboard-api.service';
 
 type WeekdayOptions = 'long' | 'short' | 'narrow';
@@ -25,24 +26,33 @@ export type ProcessedDashPerformance = {
   styleUrls: ['./dashboard.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, OnDestroy {
 
   allDashPerfs: DashPerformance[];
   upcomingDashPerfs: DashPerformance[];
   pastDashPerfs: DashPerformance[];
   processedUpcomingDashPerfs: ProcessedDashPerformance[] = [];
   processedPastDashPerfs: ProcessedDashPerformance[] = [];
+  dashSubscription: Subscription;
   dashPerfsLoaded = false;
   dataLoaded = false;
 
-  constructor(private dashAPI: DashboardApi) {
+  constructor(
+    private dashApi: DashboardApi,
+  ) {
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-    this.dashAPI.dashPerformanceEmitter.subscribe(
+    this.dashSubscription =
+      this.dashApi.dashPerformanceEmitter.subscribe(
         val => this.onDashPerfsLoad(val));
-    this.dashAPI.getAllDashboard();
+    this.dashApi.getAllDashboard();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.dashSubscription.unsubscribe();
   }
 
   onDashPerfsLoad = (dashPerfArr: DashPerformance[]): void => {

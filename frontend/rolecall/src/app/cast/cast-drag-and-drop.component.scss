@@ -3,7 +3,7 @@
 
 
 $cellHeight: 3.5rem;
-$cellWidth: 14rem;
+$cellWidth: 14.5rem;
 $bothTextWidth: 12.5rem;
 $bothFillerWidth: 1.5rem;
 $lastCellTextWidth: 11.8rem;
@@ -76,11 +76,7 @@ $lastCellFillerWidth: 2.2rem;
 
 .absence-cell {
   @extend .cell;
-  background: yellow;
-}
-
-.dancer-absence {
-  color: red;
+  background: $unavailBg;
 }
 
 .user-cell {

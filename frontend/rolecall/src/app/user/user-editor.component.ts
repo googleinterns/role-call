@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Location } from '@angular/common';
-import { Component, ElementRef, EventEmitter, OnInit, ViewChild,
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { User, UserApi } from '../api/user-api.service';
 
 /**
@@ -16,7 +17,7 @@ import { User, UserApi } from '../api/user-api.service';
   styleUrls: ['./user-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class UserEditor implements OnInit {
+export class UserEditor implements OnInit, OnDestroy {
   @ViewChild('inputPicture') inputPicture: ElementRef;
 
   permissionsSet: EventEmitter<string[]> = new EventEmitter();
@@ -56,6 +57,8 @@ export class UserEditor implements OnInit {
 
   private prevWorkingState: User | undefined;
   private workingUser: User | undefined;
+
+  private userSubscription: Subscription;
 
   private dataLoaded = false;
 
@@ -123,10 +126,15 @@ export class UserEditor implements OnInit {
     if (uuid) {
       this.urlPointingUUID = uuid;
     }
-    this.userAPI.userEmitter.subscribe(user => {
+    this.userSubscription = this.userAPI.userEmitter.subscribe(user => {
       this.onUserLoad(user);
     });
     this.userAPI.getAllUsers();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 
   setCurrentUser = ({user, fromInputChange, shouldSetLastUser}: {
@@ -222,9 +230,10 @@ export class UserEditor implements OnInit {
         emergency_contact: {
           name: '',
           phone_number: '',
-          email: ''
-        }
+          email: '',
+        },
       },
+      isAbsent: false,
       knows_positions: [],
       uuid: 'newUser:' + Date.now()
     };

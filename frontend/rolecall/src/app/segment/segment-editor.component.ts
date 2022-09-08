@@ -1,6 +1,6 @@
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { COLORS } from 'src/constants';
@@ -14,6 +14,7 @@ import { SuperBalletDisplayService,
 } from '../services/super-ballet-display.service';
 import { SegmentDisplayListService,
 } from '../services/segment-display-list.service';
+import { Subscription } from 'rxjs';
 
 export type WorkingSegment = Segment & {
   addingPositions: DraggablePosition[];
@@ -43,7 +44,7 @@ type DraggablePosition = {
   styleUrls: ['./segment-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class SegmentEditor implements OnInit {
+export class SegmentEditor implements OnInit, OnDestroy {
   dragAndDropData: DraggablePosition[] = [];
   currentSelectedSegment: WorkingSegment;
 
@@ -58,6 +59,8 @@ export class SegmentEditor implements OnInit {
   workingSegment: WorkingSegment;
   canDelete = false;
   canSave = false;
+
+  segmentSubscription: Subscription;
 
   creatingSegment = false;
   segmentsLoaded = false;
@@ -89,11 +92,16 @@ export class SegmentEditor implements OnInit {
     if (uuid) {
       this.urlPointingUUID = uuid;
     }
-    this.segmentApi.segmentEmitter.subscribe(
-        segment => {
-          this.onSegmentLoad(segment);
-        });
+    this.segmentSubscription =
+      this.segmentApi.segmentEmitter.subscribe(segment => {
+        this.onSegmentLoad(segment);
+      });
     this.segmentApi.getAllSegments();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.segmentSubscription.unsubscribe();
   }
 
   onSegmentLoad = (segments: Segment[]): void => {

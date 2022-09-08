@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 import { LoginApi } from '../api/login-api.service';
-import { GlobalsService } from '../services/globals.service';
+import { ContextService } from '../services/context.service';
 import { SideNav } from './side-nav.component';
 
 /**
@@ -13,7 +15,7 @@ import { SideNav } from './side-nav.component';
   styleUrls: ['./site-header.component.scss'],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class SiteHeader implements OnInit, AfterViewInit {
+export class SiteHeader implements OnInit, OnDestroy, AfterViewInit {
 
   /** Reference to the nav bar */
   @Input() navBar: SideNav;
@@ -21,8 +23,10 @@ export class SiteHeader implements OnInit, AfterViewInit {
   /** Whether we've received a response from the login API */
   responseReceived = false;
 
+  loginSubscription: Subscription;
+
   constructor(
-    public g: GlobalsService,
+    public g: ContextService,
     public loginAPI: LoginApi,
   ) {
   }
@@ -32,13 +36,20 @@ export class SiteHeader implements OnInit, AfterViewInit {
     this.loginAPI.login().then(() => {
       this.configureHeaderForLogin();
     });
-    this.loginAPI.isLoggedIn$.subscribe((isLoggedIn: boolean | undefined) => {
-      if (!isLoggedIn) {
-        this.loginAPI.signOut();
-      }
-      this.configureHeaderForLogin();
-      this.loginAPI.refresh();
-    });
+    this.loginSubscription = this.loginAPI.isLoggedIn$
+        .subscribe((isLoggedIn: boolean | undefined) => {
+            if (!isLoggedIn) {
+              this.loginAPI.signOut();
+            }
+            this.configureHeaderForLogin();
+            this.loginAPI.refresh();
+          });
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    // don't know if subscription should continue
+    // this.loginSubscription.unsubscribe();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions

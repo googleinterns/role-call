@@ -1,5 +1,6 @@
 //@import "src/styles/colors";
 @import "src/styles/constants";
+// buttons includes colors
 @import "src/styles/buttons";
 
 
@@ -9,9 +10,12 @@ $buttonRowHeight: 5rem;
   z-index: 0;
 }
 
-.child-absence {
-  color: red;
+.std-absence {
+  background: $unavailBg;
+  color: $unavailFg;
+  text-decoration-color: $unavailFg;
 }
+
 .page-container {
   height: $contentHeight;
   width: 100%;
@@ -361,12 +365,17 @@ $buttonRowHeight: 5rem;
       width: 100%;
 
       .delete-button-icon {
-        font-size: 4rem;
+        font-size: 3rem;
         color: $gray;
         vertical-align: middle;
       }
     }
   }
+}
+
+.has-absence {
+  background: $unavailBg;
+  color: $unavailFg;
 }
 
 .segment-name-card {
@@ -455,14 +464,19 @@ $buttonRowHeight: 5rem;
           margin: 0 1em 0.5em 1em;
 
           .child {
-            &-selected {
-              background: $offoffWhite;
-            }
+            // &-selected {
+            //   background: $offoffWhite;
+            // }
 
             .segment-title {
               font-size: x-large;
               font-weight: bold;
               padding: 0.5em 1em;
+
+              &-selected {
+                border-radius: $borderRadius;
+                border: 3px solid $lightGray;
+              }
             }
           }
         }

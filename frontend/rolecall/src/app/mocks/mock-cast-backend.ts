@@ -20,20 +20,22 @@ export class MockCastBackend {
       castCount: 3,
       filled_positions: [
         {
-          position_uuid: '248', groups: [
+          position_uuid: '248',
+          groups: [
             {
               position_uuid: '248', group_index: 1, members: [
-                {uuid: '185', position_number: 1},
-                {uuid: '193', position_number: 0}
+                {uuid: '185', position_number: 1, hasAbsence: false},
+                {uuid: '193', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '248', group_index: 0, members: [
-                {uuid: '198', position_number: 1},
-                {uuid: '191', position_number: 0}
+                {uuid: '198', position_number: 1, hasAbsence: false},
+                {uuid: '191', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false,
         }
       ]
     },
@@ -47,29 +49,30 @@ export class MockCastBackend {
           position_uuid: '359', groups: [
             {
               position_uuid: '359', group_index: 0, members: [
-                {uuid: '193', position_number: 1},
-                {uuid: '194', position_number: 0}
+                {uuid: '193', position_number: 1, hasAbsence: false},
+                {uuid: '194', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '359', group_index: 1, members: [
-                {uuid: '189', position_number: 0},
-                {uuid: '191', position_number: 1}
+                {uuid: '189', position_number: 0, hasAbsence: false},
+                {uuid: '191', position_number: 1, hasAbsence: false}
               ]
             },
             {
               position_uuid: '359', group_index: 2, members: [
-                {uuid: '187', position_number: 1},
-                {uuid: '184', position_number: 0}
+                {uuid: '187', position_number: 1, hasAbsence: false},
+                {uuid: '184', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '359', group_index: 3, members: [
-                {uuid: '200', position_number: 0},
-                {uuid: '209', position_number: 1}
+                {uuid: '200', position_number: 0, hasAbsence: false},
+                {uuid: '209', position_number: 1, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         }
       ]
     },
@@ -83,124 +86,132 @@ export class MockCastBackend {
           position_uuid: '227', groups: [
             {
               position_uuid: '227', group_index: 0, members: [
-                {uuid: '193', position_number: 0}
+                {uuid: '193', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '227', group_index: 1, members: [
-                {uuid: '203', position_number: 0}
+                {uuid: '203', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '223', groups: [
             {
               position_uuid: '223', group_index: 0, members: [
-                {uuid: '197', position_number: 0}
+                {uuid: '197', position_number: 0, hasAbsence: false}
               ]
             }, {
               position_uuid: '223', group_index: 1, members: [
-                {uuid: '184', position_number: 0}
+                {uuid: '184', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '224', groups: [
             {
               position_uuid: '224', group_index: 0, members: [
-                {uuid: '198', position_number: 0}
+                {uuid: '198', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '224', group_index: 1, members: [
-                {uuid: '199', position_number: 0}
+                {uuid: '199', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '225', groups: [
             {
               position_uuid: '225', group_index: 0, members: [
-                {uuid: '189', position_number: 0}
+                {uuid: '189', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '225', group_index: 1, members: [
-                {uuid: '202', position_number: 0}
+                {uuid: '202', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '222', groups: [
             {
               position_uuid: '222', group_index: 0, members: [
-                {uuid: '191', position_number: 0}
+                {uuid: '191', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '222', group_index: 1, members: [
-                {uuid: '192', position_number: 0}
+                {uuid: '192', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '226', groups: [
             {
               position_uuid: '226', group_index: 0, members: [
-                {uuid: '188', position_number: 0}
+                {uuid: '188', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '226', group_index: 1, members: [
-                {uuid: '187', position_number: 0}
+                {uuid: '187', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '228', groups: [
             {
               position_uuid: '228', group_index: 0, members: [
-                {uuid: '195', position_number: 6},
-                {uuid: '194', position_number: 4},
-                {uuid: '200', position_number: 5},
-                {uuid: '186', position_number: 2},
-                {uuid: '185', position_number: 0},
-                {uuid: '183', position_number: 1},
-                {uuid: '199', position_number: 3}
+                {uuid: '195', position_number: 6, hasAbsence: false},
+                {uuid: '194', position_number: 4, hasAbsence: false},
+                {uuid: '200', position_number: 5, hasAbsence: false},
+                {uuid: '186', position_number: 2, hasAbsence: false},
+                {uuid: '185', position_number: 0, hasAbsence: false},
+                {uuid: '183', position_number: 1, hasAbsence: false},
+                {uuid: '199', position_number: 3, hasAbsence: false}
               ]
             },
             {
               position_uuid: '228', group_index: 1, members: [
-                {uuid: '204', position_number: 0},
-                {uuid: '209', position_number: 6},
-                {uuid: '196', position_number: 1},
-                {uuid: '205', position_number: 2},
-                {uuid: '208', position_number: 5},
-                {uuid: '207', position_number: 4},
-                {uuid: '206', position_number: 3}
+                {uuid: '204', position_number: 0, hasAbsence: false},
+                {uuid: '209', position_number: 6, hasAbsence: false},
+                {uuid: '196', position_number: 1, hasAbsence: false},
+                {uuid: '205', position_number: 2, hasAbsence: false},
+                {uuid: '208', position_number: 5, hasAbsence: false},
+                {uuid: '207', position_number: 4, hasAbsence: false},
+                {uuid: '206', position_number: 3, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         },
         {
           position_uuid: '221', groups: [
             {
               position_uuid: '221', group_index: 0, members: [
-                {uuid: '190', position_number: 0}
+                {uuid: '190', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '221', group_index: 1, members: [
-                {uuid: '201', position_number: 0}
+                {uuid: '201', position_number: 0, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         }
       ]
     },
@@ -214,31 +225,32 @@ export class MockCastBackend {
           position_uuid: '213', groups: [
             {
               position_uuid: '213', group_index: 0, members: [
-                {uuid: '184', position_number: 1},
-                {uuid: '186', position_number: 3},
-                {uuid: '183', position_number: 0},
-                {uuid: '188', position_number: 5},
-                {uuid: '185', position_number: 2},
-                {uuid: '187', position_number: 4}
+                {uuid: '184', position_number: 1, hasAbsence: false},
+                {uuid: '186', position_number: 3, hasAbsence: false},
+                {uuid: '183', position_number: 0, hasAbsence: false},
+                {uuid: '188', position_number: 5, hasAbsence: false},
+                {uuid: '185', position_number: 2, hasAbsence: false},
+                {uuid: '187', position_number: 4, hasAbsence: false}
               ]
             },
             {
               position_uuid: '213', group_index: 2, members: [
-                {uuid: '196', position_number: 2},
-                {uuid: '195', position_number: 0}
+                {uuid: '196', position_number: 2, hasAbsence: false},
+                {uuid: '195', position_number: 0, hasAbsence: false}
               ]
             },
             {
               position_uuid: '213', group_index: 1, members: [
-                {uuid: '193', position_number: 4},
-                {uuid: '189', position_number: 0},
-                {uuid: '194', position_number: 5},
-                {uuid: '190', position_number: 1},
-                {uuid: '192', position_number: 3},
-                {uuid: '191', position_number: 2}
+                {uuid: '193', position_number: 4, hasAbsence: false},
+                {uuid: '189', position_number: 0, hasAbsence: false},
+                {uuid: '194', position_number: 5, hasAbsence: false},
+                {uuid: '190', position_number: 1, hasAbsence: false},
+                {uuid: '192', position_number: 3, hasAbsence: false},
+                {uuid: '191', position_number: 2, hasAbsence: false}
               ]
             }
-          ]
+          ],
+          hasAbsence: false
         }
       ]
     }

@@ -11,13 +11,16 @@ import { HeaderUtilityService } from '../services/header-utility.service';
 import { LoggingService } from '../services/logging.service';
 import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
-import { GlobalsService } from '../services/globals.service';
+import { ContextService } from '../services/context.service';
+import { SegmentType } from './segment-api.service';
 
 type Group = {
   group_index: number;
   members: {
     uuid: string;
     position_number: number;
+    // not saved
+    hasAbsence: boolean;
   }[];
   memberNames?: string[];
 };
@@ -27,15 +30,19 @@ type CustomGroup = {
   position_order: number;
   groups: Group[];
   name?: string;
+  // ignored
+  hasAbsence: boolean;
 };
 
 export type PerformanceSegment = {
   id: string;
   segment: string;
+  name: string;
+  type: SegmentType;
+  hasAbsence: boolean;
   length: number;
   selected_group: number;
   custom_groups: CustomGroup[];
-  name?: string;
 };
 
 export type Performance = {
@@ -58,7 +65,7 @@ export type Performance = {
     segments: string[];
   };
   step_3: {
-    segments: PerformanceSegment[];
+    perfSegments: PerformanceSegment[];
   };
   // For frontend use only. Is not saved.
   hasAbsence?: boolean;
@@ -140,7 +147,7 @@ export class PerformanceApi {
       private headerUtil: HeaderUtilityService,
       private respHandler: ResponseStatusHandlerService,
 
-      public g: GlobalsService,
+      public g: ContextService,
   ) {
   }
 
@@ -174,17 +181,19 @@ export class PerformanceApi {
         ).map(val => String(val.sectionId))
       },
       step_3: {
-        segments: raw.performanceSections.map(val => ({
+        perfSegments: raw.performanceSections.map(val => ({
             id: String(val.id),
             segment: String(val.sectionId),
+            type: 'UNDEF',
             length: 0,
             selected_group: val.primaryCast,
             custom_groups: val.positions.map(position => ({
                 position_uuid: String(position.positionId),
                 position_order: position.positionOrder,
-                groups: position.casts.map(sumCast => ({
-                    group_index: sumCast.castNumber,
-                    members: sumCast.members.map(mem => ({
+                hasAbsence: false,
+                groups: position.casts.map(cast => ({
+                    group_index: cast.castNumber,
+                    members: cast.members.map(mem => ({
                         uuid: String(mem.userId),
                         position_number: mem.order,
                         hasAbsence: mem.hasAbsence
@@ -193,7 +202,9 @@ export class PerformanceApi {
                   })
                 )
               })
-            )
+            ),
+            name: '',
+            hasAbsence: false,
           })
         )
       }
@@ -216,7 +227,7 @@ export class PerformanceApi {
       state: perf.step_1.state,
       dateTime: perf.step_1.date,
       status: perf.status ? perf.status : APITypes.PerformanceStatus.DRAFT,
-      performanceSections: perf.step_3.segments.map((seg, segIx) => ({
+      performanceSections: perf.step_3.perfSegments.map((seg, segIx) => ({
           id: seg.id ? Number(seg.id) : undefined,
           sectionPosition: segIx,
           primaryCast: seg.selected_group,
@@ -264,7 +275,7 @@ export class PerformanceApi {
     // in the performance
     const deletedSections = this.performances.get(String(rawPerf.id))
         .step_3
-        .segments
+        .perfSegments
         .filter(val =>
               rawPerf.performanceSections.find(
                   perfSec => String(perfSec.id) === val.id) === undefined
