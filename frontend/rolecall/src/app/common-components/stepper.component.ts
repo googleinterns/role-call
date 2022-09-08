@@ -99,6 +99,16 @@ export class Stepper implements OnInit, OnChanges {
       && this.currentStepIndex !== 0;
 
 
+  firstStep = (): void => {
+    this.currentStepIndex = 0;
+    this.emitStep();
+  };
+
+  lastStep = (): void => {
+    this.currentStepIndex = this.stepperOptions.length - 1;
+    this.emitStep();
+  };
+
   nextStep = (): boolean => {
     if (!this.hasNextStep()) {
       return false;

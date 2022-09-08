@@ -40,6 +40,7 @@
             [aActivator]="canDeletePerformance"
             [aHandler]="onDeletePerformance"
             bIcon="content_copy"
+            bAria="Duplicate Performance"
             [bActivator]="canDeletePerformance"
             [bHandler]="onDuplicatePerformance"
             [cActivator]="canSavePerformance"
@@ -85,17 +86,19 @@
           </div>
           <div class="children-container">
             <div class="child-container">
-              <div
-                *ngFor="let perf of displayedPerfs" class="child app-card"
+              <!--
                 [ngClass]="this.selectedPerformance && perf.uuid === this.selectedPerformance.uuid ? 'child-selected' : ''"
+              -->
+              <div
+                *ngFor="let perf of displayedPublishedPerfs"
+                class="child app-card"
+                [ngClass]="perf.hasAbsence ? 'std-absence' : ''"
                 (click)="onSelectRecentPerformance(perf)"
               >
                 <h3 class="performance-title" >
-                  <div [ngClass]="perf.hasAbsence ? 'child-absence' : ''" >
-                    {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
-                      + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - "
-                      + perf.step_1.title }}
-                  </div>
+                  {{ perf.step_1.city + ", " + perf.step_1.state + " " + perf.step_1.country + " - "
+                    + perf.step_1.venue + " - " + toDateString(perf.step_1.date) + " - "
+                    + perf.step_1.title }}
                 </h3>
               </div>
             </div>
@@ -187,7 +190,7 @@
                   <input
                     matInput
                     type="datetime-local"
-                    (input)="onStep1Input('date', $event)"
+                    (change)="onStep1Input('date', $event)"
                     [value]="dateStr"
                   />
                 </mat-form-field>
@@ -275,20 +278,20 @@
             </div>
             <div class="segment-list app-card">
               <div
-                *ngFor="let segment of state.step_3.segments; let i = index"
+                *ngFor="let psegment of state.step_3.perfSegments; let i = index"
                 class="segment-in-list-container"
                 [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1"
               >
-                <h3 class="title">{{segment['name']}}</h3>
+                <h3 class="title">{{psegment['name']}}</h3>
                 <div
-                  *ngFor="let pos of segment.custom_groups"
+                  *ngFor="let pos of psegment.custom_groups"
                   class="pos-container"
                   [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7"
                 >
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                      *ngIf="group.group_index === segment.selected_group"
+                      *ngIf="group.group_index === psegment.selected_group"
                       class="dancer-list"
                     >
                       <p class="names">
@@ -352,8 +355,14 @@
               >
                 <div
                   class="app-card segment-name-card"
+                  [class.has-absence]="selectedPerformance?.step_3?.
+                    perfSegments[i]?.hasAbsence"   
                   [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0"
                 >
+                  <!--
+                    [class.has-absence]="selectedPerformance?.step_3?.
+                      perfSegments[i]?.hasAbsence"                    
+                  -->
                   <h2
                     class="segment-name-delete"
                     [class.std-italic-font]="data.siblingId > 0"
@@ -397,11 +406,16 @@
             <div
               *ngFor="let segment of step2Data; let i = index"
               class="child app-card"
-              [class.child-selected]="segment.uuid === this.selectedSegment.uuid && selectedIndex === i"
+              [class.has-absence]="selectedPerformance?.step_3?.
+                perfSegments[i]?.hasAbsence"   
               [style.margin-left.rem]="segment.siblingId > 0 ? 2 : 0"
               (click)="onSelectStep3Segment(segment, i)"
             >
-              <h3 class="segment-title">{{ segment.name }}</h3>
+              <h3
+                class="segment-title"
+                [class.segment-title-selected]="segment.uuid === this.selectedSegment.uuid && selectedIndex === i"
+              >{{ segment.name }}
+              </h3>
             </div>
           </div>
         </div>
@@ -464,9 +478,9 @@
           <div class="cast-drag-and-drop-container">
             <app-cast-drag-and-drop
               #castDnD
+              [users]="allUsers"
               [selectedSegment]="selectedSegment"
               [performanceDate]="performanceDate"
-              [wunavs]="workUnavs"
               (castChangeEmitter)="onChangeCast($event)"
               [ngStyle]="selectedSegment.type === 'SEGMENT' || selectedSegment.type === 'SUPER' ? { 'display': 'none' } : { 'height': '100%' }"
             >
@@ -518,20 +532,20 @@
             </div>
             <div class="segment-list app-card">
               <div
-                *ngFor="let segment of state.step_3.segments; let i = index"
+                *ngFor="let psegment of state.step_3.perfSegments; let i = index"
                 class="segment-in-list-container"
                 [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1"
               >
-                <h3 class="title">{{segment['name']}}</h3>
+                <h3 class="title">{{psegment['name']}}</h3>
                 <div
-                  *ngFor="let pos of segment.custom_groups"
+                  *ngFor="let pos of psegment.custom_groups"
                   class="pos-container"
                   [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7"
                 >
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                      *ngIf="group.group_index === segment.selected_group"
+                      *ngIf="group.group_index === psegment.selected_group"
                       class="dancer-list"
                     >
                       <p class="names">
@@ -556,18 +570,18 @@
             </h2>
             <div class="segment-list-submitted segment-list app-card">
               <div
-                *ngFor="let segment of state.step_3.segments"
+                *ngFor="let psegment of state.step_3.perfSegments"
                 class="segment-container"
               >
-                <h3 class="title">{{segment['name']}}</h3>
+                <h3 class="title">{{psegment['name']}}</h3>
                 <div
-                  *ngFor="let pos of segment.custom_groups"
+                  *ngFor="let pos of psegment.custom_groups"
                   class="pos-container"
                 >
                   <h4 class="pos-title">{{pos['name']}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
-                      *ngIf="group.group_index === segment.selected_group"
+                      *ngIf="group.group_index === psegment.selected_group"
                       class="dancer-list"
                     >
                       <p class="names">{{group['memberNames'].join(", ")}}</p>

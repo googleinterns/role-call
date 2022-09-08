@@ -7,7 +7,7 @@ import { ResponseStatusHandlerService,
 
 import { CastApi } from './cast-api.service';
 import { SegmentApi } from './segment-api.service';
-import { GlobalsService } from '../services/globals.service';
+import { ContextService } from '../services/context.service';
 
 describe('CastApiService', () => {
   const fakeLoggingService = {} as LoggingService;
@@ -15,7 +15,7 @@ describe('CastApiService', () => {
   const fakeSegmentApi = {} as SegmentApi;
   const fakeHeaderUtilityService = {} as HeaderUtilityService;
   const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
-  const g = new GlobalsService();
+  const g = new ContextService();
 
   let service: CastApi;
 

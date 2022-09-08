@@ -94,9 +94,9 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
     return result;
   }
 
-  public ServiceResult<Performance> editPerformance(PerformanceInfo newPerformance)
+  public ServiceResult<Performance> editPerformance(PerformanceInfo performanceInfo)
       throws InvalidParameterException, EntityNotFoundException {
-    Performance performance = updatePerformance(newPerformance);
+    Performance performance = updatePerformance(performanceInfo);
     List<String> warnings = verifyPerformance(performance);
 
     performance = performanceRepo.save(performance);
@@ -107,7 +107,7 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
       String message = performance.getDescription();
 
       // get all performers
-      List<PerformanceSectionInfo> sections = newPerformance.performanceSections();
+      List<PerformanceSectionInfo> sections = performanceInfo.performanceSections();
       for (PerformanceSectionInfo section : sections) {
         List<PerformancePositionInfo> positions = section.positions();
         for (PerformancePositionInfo position : positions) {

@@ -94,7 +94,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
 
   @Patch
   public CompletableFuture<ResponseSchema<PerformanceInfo>> editCast(Principal principal,
-      @RequestBody PerformanceInfo newPerformance) {
+      @RequestBody PerformanceInfo performance) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
       return CompletableFuture.failedFuture(
@@ -103,7 +103,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
 
     ServiceResult<Performance> result;
     try {
-      result = performanceService.editPerformance(newPerformance);
+      result = performanceService.editPerformance(performance);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     } catch(EntityNotFoundException e) {

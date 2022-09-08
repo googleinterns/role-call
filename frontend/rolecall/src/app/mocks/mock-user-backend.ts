@@ -43,9 +43,10 @@ export class MockUserBackend {
         emergency_contact: {
           name: '',
           phone_number: '',
-          email: 'N/A'
-        }
-      }
+          email: 'N/A',
+        },
+      },
+      isAbsent: true,
     },
     {
       uuid: '183',
@@ -79,8 +80,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '184',
@@ -114,8 +116,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '185',
@@ -149,8 +152,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '186',
@@ -184,8 +188,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '187',
@@ -220,8 +225,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '188',
@@ -255,8 +261,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '189',
@@ -290,8 +297,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '190',
@@ -325,8 +333,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '191',
@@ -360,8 +369,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '192',
@@ -395,8 +405,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '193',
@@ -430,8 +441,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '194',
@@ -465,8 +477,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '195',
@@ -500,8 +513,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '196',
@@ -535,8 +549,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '197',
@@ -570,8 +585,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '198',
@@ -605,8 +621,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '199',
@@ -640,8 +657,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '200',
@@ -675,8 +693,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '201',
@@ -710,8 +729,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '202',
@@ -745,8 +765,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '203',
@@ -780,8 +801,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '204',
@@ -815,8 +837,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '205',
@@ -850,8 +873,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '206',
@@ -885,8 +909,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '207',
@@ -920,8 +945,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '208',
@@ -955,8 +981,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '209',
@@ -990,8 +1017,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '210',
@@ -1025,8 +1053,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     },
     {
       uuid: '211',
@@ -1060,8 +1089,9 @@ export class MockUserBackend {
           name: '',
           phone_number: '',
           email: 'N/A'
-        }
-      }
+        },
+      },
+      isAbsent: false,
     }
   ];
 

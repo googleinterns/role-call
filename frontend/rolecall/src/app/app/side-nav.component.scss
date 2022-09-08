@@ -43,8 +43,8 @@
 
 // The sideways menu button at the top of the nav bar
 .close-nav-button {
-  font-size: $menuBarHeight / 2;
-  height: $menuBarHeight / 1.3;
+  font-size: calc($menuBarHeight / 2);
+  height: calc($menuBarHeight / 1.3);
   width: 10vh;
 }
 

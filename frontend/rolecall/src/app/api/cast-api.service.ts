@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {HttpClient, HttpResponse, HttpParams} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as APITypes from 'src/api-types';
-import {environment} from 'src/environments/environment';
-import {lastValueFrom} from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-import {MockCastBackend} from '../mocks/mock-cast-backend';
-import {HeaderUtilityService} from '../services/header-utility.service';
-import {LoggingService} from '../services/logging.service';
-import {ResponseStatusHandlerService,
+import { MockCastBackend } from '../mocks/mock-cast-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
-import {SegmentApi, Position} from './segment-api.service';
-import {GlobalsService} from '../services/globals.service';
+import { SegmentApi, Position } from './segment-api.service';
+import { ContextService } from '../services/context.service';
 
 
 type RawCastMember = {
@@ -52,7 +52,7 @@ type OneRawCastsResponse = {
 export type CastMember = {
   uuid: string;
   position_number: number;
-  hasAbsence?: boolean;
+  hasAbsence: boolean;
 };
 
 export type CastGroup = {
@@ -64,7 +64,7 @@ export type CastGroup = {
 export type CastPosition = {
   position_uuid: string;
   groups: CastGroup[];
-  hasAbsence?: boolean;
+  hasAbsence: boolean;
 };
 
 export type Cast = {
@@ -129,16 +129,23 @@ export class CastApi {
       private headerUtil: HeaderUtilityService,
       private respHandler: ResponseStatusHandlerService,
 
-      public g: GlobalsService,
+      public g: ContextService,
   ) {
   }
 
   /** Hits backend with all casts GET request. */
-  requestAllCasts = async (perfDate: number = 0): Promise<AllCastsResponse> => {
+  requestAllCasts = async (
+    forceSegmentLoad: boolean,
+    dbgMsg: string,
+    perfDate: number = 0,
+  ): Promise<AllCastsResponse> => {
+console.log('GET CASTS', dbgMsg);
     if (environment.mockBackend) {
       return this.mockBackend.requestAllCasts();
     }
-    await this.segmentApi.getAllSegments();
+    if (forceSegmentLoad || this.segmentApi.segments.size === 0) {
+      await this.segmentApi.getAllSegments();
+    }
     const header = await this.headerUtil.generateHeader();
     if (!this.g.checkUnavs) {
       perfDate = 0;
@@ -181,7 +188,7 @@ console.log('PERFDATE', perfDate);
                           rawSubCast.members.map(rawMem => ({
                               uuid: String(rawMem.userId),
                               position_number: rawMem.order,
-                              hasAbsence: rawMem.hasAbsence,
+                              hasAbsence: rawMem.hasAbsence ?? false,
                             })
                           ));
                     } else {
@@ -194,7 +201,7 @@ console.log('PERFDATE', perfDate);
                         members: rawSubCast.members.map(rawMem => ({
                             uuid: String(rawMem.userId),
                             position_number: rawMem.order,
-                            hasAbsence: rawMem.hasAbsence,
+                            hasAbsence: rawMem.hasAbsence ?? false,
                           })
                         )
                       });
@@ -209,7 +216,7 @@ console.log('PERFDATE', perfDate);
                       members: rawSubCast.members.map(rawMem => ({
                           uuid: String(rawMem.userId),
                           position_number: rawMem.order,
-                          hasAbsence: rawMem.hasAbsence,
+                          hasAbsence: rawMem.hasAbsence ?? false,
                         })
                       )
                     });
@@ -228,11 +235,12 @@ console.log('PERFDATE', perfDate);
                   castCount: highestCastNumber + 1,
                   filled_positions: Array.from(uniquePositionIDs.values())
                       .map(positionID => ({
-                          position_uuid: String(allPositions.find(
-                              pos => Number(pos.uuid) === positionID).uuid),
+                          position_uuid: String(allPositions.find(pos =>
+                              Number(pos.uuid) === positionID).uuid),
                           groups: groups.filter(g => g.position_uuid === String(
-                              allPositions.find(
-                                  pos => Number(pos.uuid) === positionID).uuid))
+                              allPositions.find(pos =>
+                                  Number(pos.uuid) === positionID).uuid)),
+                          hasAbsence: false,
                         })
                       )
                 };
@@ -311,8 +319,12 @@ console.log('PERFDATE', perfDate);
   };
 
   /** Gets all the casts from the backend and returns them. */
-  getAllCasts = async (perfDate: number = 0): Promise<Cast[]> =>
-    this.getAllCastsResponse(perfDate).then(() => {
+  getAllCasts = async (
+    forceSegmentLoad: boolean,
+    dbgMsg: string,
+    perfDate: number = 0,
+  ): Promise<Cast[]> =>
+    this.getAllCastsResponse(forceSegmentLoad, dbgMsg, perfDate).then(() => {
       const allCasts = Array.from(this.casts.values())
           .concat(...this.workingCasts.values());
       this.castEmitter.emit(allCasts);
@@ -325,9 +337,9 @@ console.log('PERFDATE', perfDate);
   /** Gets a specific cast from the backend by UUID and returns it. */
   getCast = async (uuid: APITypes.CastUUID): Promise<Cast> =>
     this.getOneCastResponse(uuid).then(val => {
-      const allCasts = Array.from(this.casts.values())
+      const cast = Array.from(this.casts.values())
           .concat(...this.workingCasts.values());
-      this.castEmitter.emit(allCasts);
+      this.castEmitter.emit(cast);
       return val.data.cast;
     });
 
@@ -353,7 +365,7 @@ console.log('PERFDATE', perfDate);
     return this.setCastResponse(cast).then(response => {
       const rawCast = (response as unknown as OneRawCastsResponse).data;
       this.lastSavedCastId = rawCast.id;
-      this.getAllCasts();
+      this.getAllCasts(false, 'set');
       return {
         successful: true
       };
@@ -368,14 +380,14 @@ console.log('PERFDATE', perfDate);
   deleteCast = async (cast: Cast): Promise<APITypes.SuccessIndicator> => {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
-      this.getAllCasts();
+      this.getAllCasts(false, 'delete 1');
       return Promise.resolve({
         successful: true
       });
     }
     return this.deleteCastResponse(cast).then(() => {
       this.casts.delete(cast.uuid);
-      this.getAllCasts();
+      this.getAllCasts(false, 'delete 2');
       return {
         successful: true
       };
@@ -441,9 +453,11 @@ console.log('PERFDATE', perfDate);
 
   /** Takes backend response, updates data structures for all users. */
   private getAllCastsResponse = async (
+    forceSegmentLoad: boolean,
+    dbgMsg: string,
     perfDate: number,
   ): Promise<AllCastsResponse> =>
-    this.requestAllCasts(perfDate).then(val => {
+    this.requestAllCasts(forceSegmentLoad, dbgMsg, perfDate).then(val => {
       // Update the casts map
       this.casts.clear();
       for (const cast of val.data.casts) {

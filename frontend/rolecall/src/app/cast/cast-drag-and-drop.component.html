@@ -137,8 +137,7 @@
               *ngFor="let dancer of position.castRows[i3].subCastDancers; let i4 = index"
               cdkDrag
               [cdkDragData]="dancer"
-              [ngStyle]="i4 === boldedCast ? {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}"
-            >
+             >
               <div [ngClass]="dancer?.hasAbsence ? 'absence-cell' : 'cell'">
                 <div
                   *ngIf="dancer !== undefined" class="user-cell"
@@ -148,7 +147,9 @@
                     [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase"
                   >
                   <div
-                    [ngClass]="dancer.hasAbsence ? 'dancer-absence' : ''"
+                    [ngClass]="dancer.hasAbsence ? 'std-absence' : ''"
+                    [ngStyle]="i4 === boldedCast ?
+                      {'font-weight' : 'bold', 'text-decoration': 'underline'} : {}"
                   >{{dancer.user | fullName}}
                   </div>
                 </div>
@@ -168,12 +169,12 @@
         class="horizontal-list user-pool"
         cdkDropList
         cdkDropListOrientation="horizontal"
-        [cdkDropListData]="allUsers"
+        [cdkDropListData]="users"
         (cdkDropListDropped)="drop($event)"
         id="user-pool"
       >
         <div
-          *ngFor="let user of allUsers"
+          *ngFor="let user of users"
           cdkDrag
           [cdkDragData]="user"
         >
@@ -186,7 +187,7 @@
               [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase"
             >
             <div
-              [ngClass]="user.isAbsent ? 'dancer-absence' : ''"
+              [ngClass]="user.isAbsent ? 'std-absence' : ''"
             >{{user | fullName}}
             </div>        
           </div>

@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 import * as APITypes from 'src/api-types';
 import { CAST_COUNT } from 'src/constants';
 
 import { Cast, CastApi, CastGroup } from '../api/cast-api.service';
 import { SegmentApi, Segment, Position } from '../api/segment-api.service';
 import { User, UserApi } from '../api/user-api.service';
+import { ContextService } from '../services/context.service';
 import { CsvGenerator } from '../services/csv-generator.service';
-import { WorkUnav } from '../api/unavailability-api.service';
 
 
 type UICastDancer = {
@@ -35,7 +37,10 @@ type UICastPosition = {
   styleUrls: ['./cast-drag-and-drop.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class CastDragAndDrop implements OnInit {
+export class CastDragAndDrop implements OnInit, OnDestroy {
+
+  /** Input that idenfies available unavailability information */
+  @Input() users: User[];
 
   /** Input that specifies the currently selected segment */
   @Input() selectedSegment: Segment;
@@ -46,15 +51,11 @@ export class CastDragAndDrop implements OnInit {
   /** Input of the performance date, if available */
   @Input() performanceDate: Date;
 
-  /** Input that idenfies available unavailability information */
-  @Input() wunavs: WorkUnav[];
-
   /** Output by which parent components can launch add cast. */
   @Output() addCastEmitter: EventEmitter<void> = new EventEmitter();
 
   /** Output by which other components can listen to cast changes. */
   @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
-
 
   /** Base URL of images in cloud storage. */
   // eslint-disable-next-line max-len
@@ -63,9 +64,6 @@ export class CastDragAndDrop implements OnInit {
   /** The current cast we're editing, as well as the UUID of it. */
   selectedCastUUID: APITypes.CastUUID;
   cast: Cast;
-
-  /** All users to display in user pool. */
-  allUsers: User[] = [];
 
 
   /** Whether or not the save/delete buttons should be rendered. */
@@ -80,7 +78,8 @@ export class CastDragAndDrop implements OnInit {
 
   castCount = CAST_COUNT;
 
-  usersLoaded = false;
+  castSubscription: Subscription;
+
   castsLoaded = false;
   dataLoaded = false;
   castSelected = false;
@@ -89,8 +88,9 @@ export class CastDragAndDrop implements OnInit {
   canSave = false;
 
   constructor(
-      private userAPI: UserApi,
-      private castAPI: CastApi,
+      private g: ContextService,
+      private userApi: UserApi,
+      private castApi: CastApi,
       private segmentApi: SegmentApi,
       private csvGenerator: CsvGenerator
   ) {
@@ -99,18 +99,19 @@ export class CastDragAndDrop implements OnInit {
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-    this.userAPI.userEmitter.subscribe(users => {
-      this.onUserLoad(users);
-    });
-    this.castAPI.castEmitter.subscribe(() => {
+    this.castSubscription = this.castApi.castEmitter.subscribe(() => {
       this.onCastLoad();
     });
     if (this.perfDate) {
-      this.castAPI.getAllCasts(this.perfDate);
+      this.castApi.getAllCasts(false, 'ngOnInit 1', this.perfDate);
     } else {
-      this.castAPI.getAllCasts(0);
+      this.castApi.getAllCasts(false, 'ngOnInit 2', 0);
     }
-    this.userAPI.getAllUsers();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.castSubscription.unsubscribe();
   }
 
   /** Setter to set the bolded cast number. */
@@ -135,9 +136,9 @@ export class CastDragAndDrop implements OnInit {
     saveDeleteEnabled?: boolean;
     perfDate?: number;
   }): void => {
-    if (perfDate > 0) {
+    if (perfDate > 0 && this.g.checkUnavs) {
       this.perfDate = perfDate;
-      this.castAPI.getAllCasts(this.perfDate);
+      this.castApi.getAllCasts(false, 'selectCast', this.perfDate);
     }
     if (uuid) {
       this.buttonsEnabled = saveDeleteEnabled;
@@ -174,6 +175,7 @@ export class CastDragAndDrop implements OnInit {
                     subCasts[subCastIndex].members.push({
                       uuid: dancer.uuid,
                       position_number: dancerIndex,
+                      hasAbsence: false,
                     });
                   }
                 }
@@ -182,6 +184,7 @@ export class CastDragAndDrop implements OnInit {
             return {
               position_uuid: uiPos.pos.uuid,
               groups: subCasts,
+              hasAbsence: false,
             };
           })
     });
@@ -258,11 +261,11 @@ export class CastDragAndDrop implements OnInit {
 
   saveCast = async (): Promise<void> => {
     this.cast = this.dataToCast();
-    return this.castAPI.setCast(this.cast).then(result => {
+    return this.castApi.setCast(this.cast).then(result => {
       if (!result.successful) {
         alert(result.error);
       }
-      this.selectedCastUUID = String(this.castAPI.lastSavedCastId);
+      this.selectedCastUUID = String(this.castApi.lastSavedCastId);
       this.canSave = false;
     });
   };
@@ -279,7 +282,7 @@ export class CastDragAndDrop implements OnInit {
     this.castsLoaded = false;
     this.castSelected = false;
     this.selectedCastUUID = undefined;
-    this.castAPI.deleteCast(this.cast);
+    this.castApi.deleteCast(this.cast);
     this.canDelete = false;
   };
 
@@ -323,42 +326,10 @@ export class CastDragAndDrop implements OnInit {
 
   /** Checks that all the required data is loaded to begin rendering. */
   private checkAllLoaded = (): boolean => {
-    if (this.usersLoaded && this.castsLoaded) {
+    if (this.castsLoaded) {
       this.dataLoaded = true;
     }
     return this.dataLoaded;
-  };
-
-  /** Called when users are loaded from the User API. */
-  private onUserLoad = (users: User[]): void => {
-    this.usersLoaded = true;
-    this.allUsers = users.filter(user => user.has_roles.isDancer);
-    this.allUsers = this.allUsers.sort(
-        (a, b) => a.last_name < b.last_name ? -1 : 1);
-    if (this.wunavs) {
-      // We have unavailability data.
-      this.allUsers.forEach(user => {
-        const userId = Number(user.uuid);
-        let findIx = this.wunavs.findIndex(wu => wu.userId === userId);
-        if (findIx > -1) {
-          while (findIx < this.wunavs.length) {
-            const wunav = this.wunavs[findIx];
-            if (wunav.userId === userId) {
-              if (wunav.startDate <= this.performanceDate
-                && wunav.endDate >= this.performanceDate) {
-                user.isAbsent = true;
-console.log('USER', user);
-                break;
-              }
-            }
-            findIx += 1;
-          }
-        }
-      });
-    }
-    if (this.checkAllLoaded()) {
-      this.setupData();
-    }
   };
 
   /** Called when casts are loaded from the Cast API. */
@@ -384,7 +355,7 @@ console.log('USER', user);
       return;
     }
     this.castPositions = [];
-    if (!this.castAPI.hasCast(this.selectedCastUUID)) {
+    if (!this.castApi.hasCast(this.selectedCastUUID)) {
       // In performances, casts are specified in section 3 and there is
       // a pointer to 'this' there. This pointer is not available
       // in section 4, so if the performance is saved in section 4
@@ -392,7 +363,7 @@ console.log('USER', user);
       this.castSelected = false;
       return;
     }
-    this.cast = this.castAPI.castFromUUID(this.selectedCastUUID);
+    this.cast = this.castApi.castFromUUID(this.selectedCastUUID);
     this.castCount = this.cast.castCount;
     this.buildSubCastHeader();
     const positions = this.segmentApi.segments.get(this.cast.segment).positions;
@@ -456,7 +427,7 @@ console.log('USER', user);
               });
             }
           }
-          const dancer = this.userAPI.users.get(member.uuid);
+          const dancer = this.userApi.users.get(member.uuid);
           const castRow = uiPos.castRows[member.position_number];
           if (castRow) {
             castRow.subCastDancers[group.group_index] = {

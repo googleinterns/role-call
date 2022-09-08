@@ -61,7 +61,7 @@ export class CsvGenerator {
     const headers = ['Performance', 'Ballet', 'Length', 'Position',
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
-    const objs: any[][][][] = perf.step_3.segments.filter(s =>
+    const objs: any[][][][] = perf.step_3.perfSegments.filter(s =>
       this.segmentApi.segments.get(s.segment).type === 'BALLET').map(seg =>
         seg.custom_groups.map(filledPos =>
           filledPos.groups.map(g =>
