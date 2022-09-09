@@ -68,7 +68,9 @@ export class ResponseStatusHandlerService {
     if (response.status === 401) {
       rej('');
       this.loginAPI.signOut().then(() => {
-        this.loginAPI.login();
+console.log('Loggong out and in again');
+        //this.loginAPI.login();
+        this.loginAPI.scheduleLogin();
       });
       return;
     }
