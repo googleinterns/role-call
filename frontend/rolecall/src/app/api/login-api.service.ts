@@ -72,6 +72,11 @@ export class LoginApi {
     });
   }
 
+  scheduleLogin = (): void => {
+    // this.isAuthLoaded = false;
+    this.ticks = this.seconds.subscribe(() => this.loginWrapper());
+  };
+
   /** Initialize OAuth2. */
   public initGoogleAuth = async (): Promise<void> =>
     new Promise(resolve => {
