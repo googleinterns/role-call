@@ -69,7 +69,8 @@ export class ResponseStatusHandlerService {
       rej('');
       this.loginAPI.signOut().then(() => {
 console.log('Loggong out and in again');
-        this.loginAPI.login();
+        //this.loginAPI.login();
+        this.loginAPI.isAuthLoaded = false;
         this.loginAPI.scheduleLogin();
       });
       return;

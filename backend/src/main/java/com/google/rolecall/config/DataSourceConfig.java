@@ -95,7 +95,10 @@ public class DataSourceConfig {
     String projectId = env.getProperty("spring.cloud.gcp.projectId");
     String secretName = env.getProperty("cloud.secret.name");
     try {
-System.out.printf("getCloudDbPassword projectId=%s secretName=%s \n", projectId, secretName);
+logger.log(
+Level.INFO,
+String.format(
+"getCloudDbPassword projectId=%s secretName=%s \n", projectId, secretName));
       password = getSecretResponse(projectId, secretName).getPayload().getData().toStringUtf8();
     } catch (IOException e) {
       throw new RuntimeException(
