@@ -65,16 +65,16 @@ export class ResponseStatusHandlerService {
     rej: (reason?: any) => void
   ): Promise<void> => {
 
-    if (response.status === 401) {
-      rej('');
-      this.loginAPI.signOut().then(() => {
-console.log('Loggong out and in again');
-        //this.loginAPI.login();
-        this.loginAPI.isAuthLoaded = false;
-        this.loginAPI.scheduleLogin();
-      });
-      return;
-    }
+//     if (response.status === 401) {
+//       rej('');
+//       this.loginAPI.signOut().then(() => {
+// console.log('Loggong out and in again');
+//         //this.loginAPI.login();
+//         this.loginAPI.isAuthLoaded = false;
+//         this.loginAPI.scheduleLogin();
+//       });
+//       return;
+//     }
 
     if (response.status < 200 || response.status > 299) {
       const rsp = response as any;

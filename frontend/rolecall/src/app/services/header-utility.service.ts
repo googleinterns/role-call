@@ -19,7 +19,7 @@ export class HeaderUtilityService {
     this.sentToken = this.loginAPI.isLoggedIn && this.sentToken;
   };
 
-  generateHeader = (): Promise<HttpHeaders> => {
+  generateHeader = async (): Promise<HttpHeaders> => {
     this.updateSentToken();
     return this.loginAPI.loginPromise.then(() => {
       if (this.sentToken) {
