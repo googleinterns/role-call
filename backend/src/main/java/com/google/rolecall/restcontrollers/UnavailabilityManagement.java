@@ -18,6 +18,8 @@ import com.google.rolecall.services.UnavailabilityServices;
 import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
+import java.util.logging.Level;     // dbg
+import java.util.logging.Logger;    // dbg
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +46,8 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
       @RequestParam(value=Constants.RequestParameters.END_DATE, required=true) long endLong) {
     Date startDate = new Date(startLong);
     Date endDate = new Date(endLong);
+
+logger.log(Level.INFO, "_____________________________UNAVAIABILITIES");
 
     List<UnavailabilityInfo> allUnavailable = 
         unavailabilityService.getUnavailabilityByDateRange(startDate, endDate)
