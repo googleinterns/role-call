@@ -47,7 +47,9 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
     Date startDate = new Date(startLong);
     Date endDate = new Date(endLong);
 
-logger.log(Level.INFO, "_____________________________UNAVAIABILITIES");
+System.out.prinf(      "_____________________________ Before");
+logger.log(Level.INFO, "_____________________________ UNAVAIABILITIES");
+System.out.prinf(      "_____________________________ After");
 
     List<UnavailabilityInfo> allUnavailable = 
         unavailabilityService.getUnavailabilityByDateRange(startDate, endDate)
