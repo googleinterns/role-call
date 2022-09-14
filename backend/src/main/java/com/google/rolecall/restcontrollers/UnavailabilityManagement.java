@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Endpoint(Constants.Mappings.UNAVAILABILITY_MANAGEMENT)
 public class UnavailabilityManagement extends AsyncRestEndpoint {
 
+  private Logger logger = Logger.getLogger(UnavailabilityManagement.class.getName()); // debug
+
   private final UnavailabilityServices unavailabilityService;
   //private final UserServices userService;
 
@@ -47,9 +49,9 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
     Date startDate = new Date(startLong);
     Date endDate = new Date(endLong);
 
-System.out.prinf(      "_____________________________ Before");
+System.out.printf(      "_____________________________ Before\n");
 logger.log(Level.INFO, "_____________________________ UNAVAIABILITIES");
-System.out.prinf(      "_____________________________ After");
+System.out.printf(      "_____________________________ After\n");
 
     List<UnavailabilityInfo> allUnavailable = 
         unavailabilityService.getUnavailabilityByDateRange(startDate, endDate)
