@@ -1,4 +1,5 @@
-@import "../../styles/colors";
+@import "src/styles/colors";
+
 
 .page-container {
   display: flex;
@@ -22,19 +23,18 @@
       width: calc(50% - 2rem);
 
       .left-card {
-        // background: $offWhite;
-        height: calc(50% - 2rem);
+        background: $offWhite;
+        height: calc(100% - 2rem);
         margin: 1rem;
 
         .content {
           height: calc(100% - 2rem);
 
           .title {
-            font-size: 2rem;
+            font-size: 1.7rem;
             font-weight: bold;
             margin: 0;
-            padding-left: 1rem;
-            padding-top: 1rem;
+            padding: 1rem 1rem 0rem 1rem;
           }
 
           .children-container {
@@ -43,34 +43,53 @@
             padding-bottom: 1rem;
             width: 100%;
 
+            .selected-ua {
+              background: $offoffWhite;
+            }
+
             .child {
-              background: $offWhite;
               margin-left: 1rem;
               margin-right: 1rem;
               min-height: 5rem;
               margin-top: 1rem;
-              position: relative;
 
               .child-content {
-                .title {
-                  font-size: 1.5rem;
-                  font-weight: bold;
-                  height: fit-content;
-                  margin-bottom: 0;
-                  padding-left: 1rem;
-                  padding-right: 1rem;
-                  padding-top: 1rem;
-                  text-overflow: ellipsis;
-                  overflow-x: hidden;
-                  overflow-y: hidden;
-                  white-space: nowrap;
+
+                .child-content-first-line {
                   width: 100%;
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+
+                  .title {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin-bottom: 0;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    padding-top: 1rem;
+                    text-overflow: ellipsis;
+                    overflow-x: hidden;
+                    overflow-y: hidden;
+                    white-space: nowrap;
+                  }
+
+                  .reason {
+                    font-size: 1.2rem;
+                    margin-bottom: 0;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    padding-top: 1.2rem;
+                    text-overflow: ellipsis;
+                    overflow-x: hidden;
+                    overflow-y: hidden;
+                    white-space: nowrap;
+                  }
                 }
 
                 .date {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -78,7 +97,6 @@
                 .time {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -86,23 +104,8 @@
                 .location {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
-                }
-
-                .action-button {
-                  bottom: 1rem;
-                  background: $AAOrangeGradient;
-                  color: white;
-                  font-size: 1.2rem;
-                  font-weight: bold;
-                  position: absolute;
-                  right: 1rem;
-
-                  &-delete {
-                    right: 6rem;
-                  }
                 }
               }
             }
@@ -117,45 +120,31 @@
       height: calc(100% - 2rem);
       justify-content: flex-start;
       margin: 1rem;
-      position: relative;
       width: calc(50% - 2rem);
-
-      .action-button {
-        bottom: 1rem;
-        background: $AAOrangeGradient;
-        color: white;
-        font-size: 1.4rem;
-        font-weight: bold;
-        position: absolute;
-        right: 1rem;
-
-        &-left {
-          background: $AAOrangeGradient;
-          right: 0;
-          left: 1rem;
-        }
-      }
 
       .title-container {
         .title {
           color: black;
-          font-size: xx-large;
+          //font-size: xx-large;
+          font-size: 1.7rem;
           font-weight: bold;
           margin-left: 1rem;
-          margin-right: 1em;
-          margin-top: 0.5em;
+          margin-right: 1rem;
+          // adjust below so titles line up
+          margin-top: 0.22em;
           padding-bottom: 0.5rem;
-          padding-left: 1rem;
+          //padding-left: 1rem;
           padding-top: 0.5rem;
           width: calc(100% - 2rem);
+          text-align: center;
         }
       }
 
-      .user-select-container {
+      .dropdown-select-container {
         margin-left: 2rem;
         width: calc(100% - 4rem);
 
-        .user-select {
+        .dropdown-select {
           width: 100%;
         }
       }
@@ -172,7 +161,7 @@
       .description-container {
         background: $offWhite;
         height: 100%;
-        margin-bottom: 4.4rem;
+        margin-bottom: .3rem;
         margin-left: 2rem;
         width: calc(100% - 4rem);
 
@@ -188,11 +177,17 @@
         .description-input {
           background: $offWhite;
           border: none;
-          height: calc(100% - 4rem);
+          height: calc(100% - 3.3rem);
           padding: 0.5rem 1rem 0;
           resize: none;
           width: 100%;
+
         }
+      }
+
+      .actions-container {
+        width: calc(100% - 10rem);
+        margin: 1rem 5rem 1rem 5rem;
       }
     }
   }

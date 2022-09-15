@@ -1,17 +1,35 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import {of} from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {DashboardApi} from '../api/dashboard_api.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {Dashboard} from './dashboard.component';
+import { of } from 'rxjs';
+
+import { DashboardApi } from '../api/dashboard-api.service';
+
+import { Dashboard } from './dashboard.component';
 
 describe('DashboardComponent', () => {
   let component: Dashboard;
 
   beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+        declarations: [
+          Dashboard,
+        ],
+        imports: [
+          MatFormFieldModule,
+          NoopAnimationsModule,
+        ]
+      })
+      .compileComponents();
+    }));
+
+  beforeEach(waitForAsync(() => {
     const fakeDashboardApi = {
       dashPerformanceEmitter: of([]),
-      getAllDashboard() {
+      // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+      getAllDashboard(): void {
       }
     } as DashboardApi;
 

@@ -1,10 +1,11 @@
 /* Add/import global styles in this file. */
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
-@import "constants";
 
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
+
+@import "constants";
 
 // div styling to make a card
 .app-card {
@@ -41,3 +42,15 @@ $custom-typography: mat.define-typography-config(
     $font-family: "Source Sans Pro, sans-serif",
 );
 @include mat.core($custom-typography);
+
+.mat-tooltip {
+  background-color: lightyellow;
+  color: black !important;
+  font-size: 1rem;
+}
+
+::ng-deep .mat-checkbox-inner-container {
+  height: 3rem;
+  font-size: 2rem;
+  color:lightblue;
+}

@@ -1,0 +1,139 @@
+@import "src/styles/colors";
+@import "src/styles/constants";
+
+
+// The div that holds the entire site header
+.site-header-container {
+  background: $aaOrangeGradient;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: $menuBarHeight;
+  justify-content: flex-start;
+  width: 100vw;
+}
+
+// The nav trigger menu button on the left
+.nav-trigger-button {
+  color: white;
+  font-size: calc($menuBarHeight / 2);
+  height: $menuBarHeight;
+  width: $menuBarHeight;
+  //padding-top: if($is-mobile, calc(5px - (1200px - 100vh)/20), calc($menuBarHeight / 6));
+  //margin-top: calc($menuBarHeight / 3);
+  //margin-left: calc($menuBarHeight / 4);
+  transition: all 0.3s linear;
+}
+
+// The right cluster including the log in button
+.top-right {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  font-size: 1rem;
+}
+
+// begin test intup
+
+.checkbox {
+  align-self: center;
+  margin-right: 1rem;
+}
+
+// ng-deep necessary if not using ViewEncapsulation.None in ts-file
+mat-checkbox ::ng-deep .mat-checkbox-frame {
+  border-color: white;
+}
+
+mat-checkbox ::ng-deep .mat-checkbox-inner-container {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+// end test input
+
+// The middle sub-container that holds titles and graphics
+.site-header-subcontainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+// The container for the log in button
+.log-in-account-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin-right: 1.5em;
+  width: fit-content;
+}
+
+// The log in button
+.log-in-button {
+  font-size: large;
+  height: 50%;
+  width: fit-content;
+}
+
+// The profile picture
+.profile-image {
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
+  cursor: pointer;
+  height: calc($menuBarHeight * .8);
+  width: calc($menuBarHeight * .8);
+}
+
+// The dropdown for the profile
+.profile-drop-down-item-container {
+  display: flex;
+  justify-content: center;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  width: 100%;
+}
+
+.profile-name {
+  font-size: larger;
+  font-weight: 500;
+  margin-top: 0.75em;
+}
+
+// Loading spinner CSS
+.loader {
+  animation: spin 2s linear infinite;
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #d3d3d3; /* Darker grey */
+  border-radius: 50%;
+  min-height: 7vh;
+  margin-bottom: auto;
+  margin-right: 1.5em;
+  margin-top: auto;
+  min-width: 7vh;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.logo {
+  cursor: pointer;
+  display: block;
+  filter: invert(100%);
+  height: auto;
+  // max-width: 240px;
+  max-height: 100%;
+  transition: all 0.3s linear;
+  width: auto;
+}

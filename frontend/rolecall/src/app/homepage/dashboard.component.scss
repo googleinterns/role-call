@@ -1,5 +1,6 @@
-@import "../../styles/colors";
-@import "../../styles/constants";
+@import "src/styles/colors";
+@import "src/styles/constants";
+
 
 .page-container {
   display: flex;
@@ -117,7 +118,7 @@
 
                 .action-button {
                   bottom: 1rem;
-                  background: $AAOrangeGradient;
+                  background: $aaOrangeGradient;
                   color: white;
                   font-size: 1.2rem;
                   font-weight: bold;
@@ -207,7 +208,7 @@
 
                 .action-button {
                   bottom: 1rem;
-                  background: $AAOrangeGradient;
+                  background: $aaOrangeGradient;
                   color: white;
                   font-size: 1.2rem;
                   font-weight: bold;

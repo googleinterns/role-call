@@ -1,41 +1,34 @@
 <div class="page-container">
   <app-loading-spinner *ngIf="!dataLoaded"></app-loading-spinner>
-  <div *ngIf="dataLoaded" class="main-container app-card">
+  <div
+    *ngIf="dataLoaded"
+    class="main-container app-card"
+  >
     <div class="left-cards-container">
       <div class="left-card app-card">
         <div class="content">
-          <h2 class="title">Current Unavailabilities</h2>
-          <div class="children-container">
-            <div class="child app-card" *ngFor="let procUnav of processedCurrUnavs">
-              <div class="child-content">
-                <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
-                <h4 class="date">{{"From " + procUnav.fromDateStr + " to "
-                + procUnav.toDateStr }}</h4>
-                <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
-                  Edit
-                </button>
-                <button
-                    mat-flat-button class="action-button-delete action-button"
-                    (click)="onDeleteUnav(procUnav.unav)">
-                  Delete
-                </button>
-              </div>
-            </div>
+          <div class="title">
+            <app-date-header
+              fontSize="1.7rem"
+              [date]="listStartDate"
+              [changeDate]="changeListStartDate"
+            ></app-date-header>
           </div>
-        </div>
-      </div>
-      <div class="left-card app-card">
-        <div class="content">
-          <h2 class="title">Past Unavailabilities</h2>
           <div class="children-container">
-            <div class="child app-card" *ngFor="let procUnav of processedPastUnavs">
+            <div
+              *ngFor="let procUnav of displayedUnavs"
+              class="child app-card"
+              [ngClass]="procUnav.unav.id === state.id ? 'selected-ua' : ''"
+              (click)="onEditUnav(procUnav.unav)"
+            >
               <div class="child-content">
-                <h3 class="title">{{procUnav.user.first_name + " " + procUnav.user.last_name}}</h3>
-                <h4 class="date">{{"From " + procUnav.fromDateStr + " to "
-                + procUnav.toDateStr }}</h4>
-                <button mat-flat-button class="action-button" (click)="onEditUnav(procUnav.unav)">
-                  Edit
-                </button>
+                <div class="child-content-first-line">
+                  <h3 class="title">{{ procUnav.user | fullName }}</h3>
+                  <h4 class="reason">{{ makeTypePretty(procUnav.unav.reason)  }}</h4>
+                </div>
+                <h4 class="date">{{
+                  "From " + procUnav.fromDateStr + " to " + procUnav.toDateStr
+                }}</h4>
               </div>
             </div>
           </div>
@@ -44,14 +37,35 @@
     </div>
     <div class="unav-editor-container app-card">
       <div class="title-container">
-        <h2 class="title" type="text">Unavailability Reporter</h2>
+        <h2 class="title" type="text">Unavailability Editor</h2>
       </div>
-      <div class="user-select-container">
-        <mat-form-field appearance="fill" class="user-select">
+      <div class="dropdown-select-container">
+        <mat-form-field appearance="fill" class="dropdown-select">
           <mat-label>For User</mat-label>
-          <mat-select [(value)]="selectedUser" (selectionChange)="onSelectUser($event)">
-            <mat-option *ngFor="let user of allUsers; let i = index" [value]="user">
-              {{ user.first_name + " " + user.last_name }}
+          <mat-select
+            [(value)]="selectedUser"
+            (selectionChange)="onSelectUser($event)"
+          >
+            <mat-option
+              *ngFor="let user of allUsers; let i = index"
+              [value]="user"
+            >
+              {{ user | fullName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="dropdown-select-container">
+        <mat-form-field appearance="fill" class="dropdown-select">
+          <mat-label>Reason</mat-label>
+          <mat-select
+            [(value)]="initialSelectedReason"
+            (selectionChange)="onSelectReason($event)"
+          >
+            <mat-option
+              *ngFor="let reasonStr of unavApi.reasonList; let k = index"
+              [value]="reasonStr">
+              {{ reasonStr }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -79,20 +93,25 @@
         </mat-form-field>
       </div>
       <div class="description-container app-card">
-        <h3 class="description-title">Description</h3>
+        <h3 class="description-title">Optional Extra Information</h3>
         <textarea
             class="description-input"
             [(ngModel)]="state.description"
             (input)="onDescChange($event)"></textarea>
       </div>
-      <button
-          mat-flat-button class="action-button" [ngStyle]="!canSave ? { 'background': 'none' } : {}"
-          [disabled]="!canSave" (click)="onSaveUnav()">
-        Save
-      </button>
-      <button mat-flat-button class="action-button-left action-button" (click)="onNewUnav()">
-        New
-      </button>
+
+      <div class="actions-container">
+        <app-action-buttons
+          name="Unavailability"
+          [aActivator]="canDeleteUnav"
+          [aHandler]="onDeleteUnav"
+          [bActivator]="canAddUnav"
+          [bHandler]="onNewUnav"
+          [cActivator]="canSaveUnav"
+          [cHandler]="onSaveUnav"
+        ></app-action-buttons>          
+      </div>
+
     </div>
   </div>
 </div>

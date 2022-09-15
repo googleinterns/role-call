@@ -49,7 +49,7 @@ public abstract class UserInfo {
 
   @Nullable
   @JsonProperty("dateJoined")
-  @JsonFormat(pattern="MM-dd-yyyy")
+  @JsonFormat(pattern="yyyy-MM-dd")
   public abstract Calendar dateJoined();
 
   // Roles
@@ -160,7 +160,7 @@ public abstract class UserInfo {
     public abstract Builder setPhoneNumber(String phoneNumber);
 
     @JsonProperty("dateJoined")
-    @JsonFormat(pattern="MM-dd-yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd")
     public abstract Builder setDateJoined(Calendar dateJoined);
 
     // Roles

@@ -1,11 +1,28 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {of} from 'rxjs';
-import {createSpyObjWithProps} from 'src/test_utils';
+import { ComponentFixture, TestBed, waitForAsync,
+} from '@angular/core/testing';
+import { NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {UnavailabilityApi} from '../api/unavailability-api.service';
-import {UserApi} from '../api/user_api.service';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-import {UnavailabilityEditor} from './unavailability-editor.component';
+import { of } from 'rxjs';
+import { createSpyObjWithProps } from 'src/test-utils';
+
+import { UnavailabilityApi } from '../api/unavailability-api.service';
+import { UserApi } from '../api/user-api.service';
+
+import { UnavailabilityEditor } from './unavailability-editor.component';
+import { DateHeaderComponent,
+} from '../common-components/date-header.component';
+import { ActionButtonsComponent,
+} from '../common-components/action-buttons.component';
 
 describe('UnavailabilityEditorComponent', () => {
   const mockUnavailabilityApi = createSpyObjWithProps<UnavailabilityApi>({
@@ -24,7 +41,23 @@ describe('UnavailabilityEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [UnavailabilityEditor],
+          declarations: [
+            ActionButtonsComponent,
+            DateHeaderComponent,
+            UnavailabilityEditor,
+          ],
+          imports: [
+            FormsModule,
+            MatFormFieldModule,
+            MatInputModule,
+            MatIconModule,
+            MatSelectModule,
+            MatDatepickerModule,
+            MatNativeDateModule,
+            MatMenuModule,
+            MatTooltipModule,
+            NoopAnimationsModule,
+          ],
           providers: [
             {provide: UnavailabilityApi, useValue: mockUnavailabilityApi},
             {provide: UserApi, useValue: mockUserApi},

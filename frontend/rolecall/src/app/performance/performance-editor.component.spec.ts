@@ -1,20 +1,31 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {of} from 'rxjs';
-import {RouterTestingModule} from '@angular/router/testing';
-import {createSpyObjWithProps} from 'src/test_utils';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
-import {ChangeDetectorRef} from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync,
+} from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import {CsvGenerator} from '../services/csv-generator.service';
-import {PerformanceApi} from '../api/performance-api.service';
-import {UserApi} from '../api/user_api.service';
-import {PieceApi} from '../api/piece_api.service';
-import {CastApi} from '../api/cast_api.service';
-import {ResponseStatusHandlerService} from '../services/response-status-handler.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-import {PerformanceEditor} from './performance-editor.component';
-import {PerformanceModule} from './performance.module';
+import { of } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { createSpyObjWithProps } from 'src/test-utils';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+
+import { CsvGenerator } from '../services/csv-generator.service';
+import { PerformanceApi } from '../api/performance-api.service';
+import { UserApi } from '../api/user-api.service';
+import { SegmentApi } from '../api/segment-api.service';
+import { CastApi } from '../api/cast-api.service';
+import { ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
+
+import { PerfButtonsComponent,
+} from '../common-components/perf-buttons.component';
+import { PerformanceEditor } from './performance-editor.component';
+import { PerformanceModule } from './performance.module';
+// Needed to be imported for ng test to run
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('PerformanceEditorComponent', () => {
   const fakeResponseStatusHandlerService = {} as ResponseStatusHandlerService;
@@ -31,10 +42,10 @@ describe('PerformanceEditorComponent', () => {
     methods: {getAllUsers: Promise.resolve([])},
     props: {userEmitter: of([])},
   });
-  const mockPieceApi = createSpyObjWithProps<PieceApi>({
-    baseName: 'mockPieceApi',
-    methods: {getAllPieces: Promise.resolve([])},
-    props: {pieceEmitter: of([])},
+  const mockSegmentApi = createSpyObjWithProps<SegmentApi>({
+    baseName: 'mockSegmentApi',
+    methods: {getAllSegments: Promise.resolve([])},
+    props: {segmentEmitter: of([])},
   });
   const mockCastApi = createSpyObjWithProps<CastApi>({
     baseName: 'mockCastApi',
@@ -49,28 +60,34 @@ describe('PerformanceEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-          declarations: [PerformanceEditor],
-          imports: [
-            PerformanceModule,
-            RouterTestingModule,
-          ],
-          providers: [
-            {provide: PerformanceApi, useValue: mockPerformanceApi},
-            {provide: UserApi, useValue: mockUserApi},
-            {provide: PieceApi, useValue: mockPieceApi},
-            {provide: CastApi, useValue: mockCastApi},
-            {
-              provide: ResponseStatusHandlerService,
-              useValue: fakeResponseStatusHandlerService
-            },
-            {provide: ChangeDetectorRef, useValue: fakeChangeDetectorRef},
-            {provide: ActivatedRoute, useValue: fakeActivatedRoute},
-            {provide: Location, useValue: mockLocation},
-            {provide: CsvGenerator, useValue: fakeCsvGenerator},
-          ]
-        })
-        .compileComponents();
-  }));
+        declarations: [
+          PerfButtonsComponent,
+          PerformanceEditor,
+        ],
+        imports: [
+          MatFormFieldModule,
+          NoopAnimationsModule,
+          PerformanceModule,
+          RouterTestingModule,
+          HttpClientTestingModule,
+        ],
+        providers: [
+          {provide: PerformanceApi, useValue: mockPerformanceApi},
+          {provide: UserApi, useValue: mockUserApi},
+          {provide: SegmentApi, useValue: mockSegmentApi},
+          {provide: CastApi, useValue: mockCastApi},
+          {
+            provide: ResponseStatusHandlerService,
+            useValue: fakeResponseStatusHandlerService
+          },
+          {provide: ChangeDetectorRef, useValue: fakeChangeDetectorRef},
+          {provide: ActivatedRoute, useValue: fakeActivatedRoute},
+          {provide: Location, useValue: mockLocation},
+          {provide: CsvGenerator, useValue: fakeCsvGenerator},
+        ]
+      })
+      .compileComponents();
+    }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PerformanceEditor);

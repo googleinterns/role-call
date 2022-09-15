@@ -1,0 +1,37 @@
+
+.title-container {
+
+  .header {
+    font-size: 1.6rem;
+    font-weight: bold;
+    line-height: 1.1em;
+    white-space: pre-wrap;
+    margin: 0;
+    width: 100%;
+  }
+
+  // keep for later
+  // .hidden {
+  //   width: 0;
+  //   height: 0;
+  //   margin: 0;
+  //   padding: 0;
+  //   border: none;
+  // }
+
+}
+
+.menu-item {
+  font-size: 1.1rem;
+  width: 18rem;
+}
+
+.menu-item-separator {
+  border-top: 1px solid darkgray;
+}
+
+.calendar {
+  //line-height: 10rem;
+  height: 21rem;
+}
+

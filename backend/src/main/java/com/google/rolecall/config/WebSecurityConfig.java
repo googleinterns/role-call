@@ -67,10 +67,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
-    String allowedOrigin = env.getProperty("rolecall.frontend.url");
     CorsConfiguration configuration = new CorsConfiguration();
 
-    configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
+    String allowedOrigin = env.getProperty("rolecall.frontend.url");
+
+    if (allowedOrigin.equals("http://localhost:4200")) {
+      // Allow several urls in dev mode, to allow several version to run
+      // simultaneously.
+      String allowedOrigin2 = env.getProperty("rolecall.frontend.url2");
+      String allowedOrigin3 = env.getProperty("rolecall.frontend.url3");
+      configuration.setAllowedOrigins(Arrays.asList(
+          allowedOrigin, allowedOrigin2, allowedOrigin3));
+    } else {
+      configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
+    }
+
     configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH","DELETE"));
     configuration.setAllowCredentials(true);
     configuration.setAllowedHeaders(Arrays.asList("*"));

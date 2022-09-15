@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  oauthClientID: '1019357530310-7ji3q93sgef1qehiftv4r3ca26mivg47.apps.googleusercontent.com',
+  oauthClientID:
+    '295609371427-c10eqkgp6l7rhm7njnji72cqcm74uo4s.apps.googleusercontent.com',
   mockBackend: false,
   logRequests: true,
   devEmail: 'admin@rolecall.com',

@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {PerformanceEditor} from './performance-editor.component';
-import {PerformanceModule} from './performance.module';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { PerformanceEditor } from './performance-editor.component';
+import { PerformanceModule } from './performance.module';
 
 
 const routes: Routes = [

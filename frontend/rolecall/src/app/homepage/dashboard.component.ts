@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {DashboardApi, DashPerformance} from '../api/dashboard_api.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DashboardApi, DashPerformance } from '../api/dashboard-api.service';
 
 type WeekdayOptions = 'long' | 'short' | 'narrow';
 type YearOptions = 'numeric' | '2-digit';
@@ -11,12 +12,12 @@ type HourOptions = 'numeric' | '2-digit';
 type MinutesOptions = 'numeric' | '2-digit';
 
 export type ProcessedDashPerformance = {
-  title: string,
-  dateStr: string,
-  timeStr: string,
-  location: string,
-  uuid: string,
-  routerLink: string
+  title: string;
+  dateStr: string;
+  timeStr: string;
+  location: string;
+  uuid: string;
+  routerLink: string;
 };
 
 @Component({
@@ -24,26 +25,37 @@ export type ProcessedDashPerformance = {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class Dashboard implements OnInit {
+// eslint-disable-next-line @angular-eslint/component-class-suffix
+export class Dashboard implements OnInit, OnDestroy {
 
   allDashPerfs: DashPerformance[];
   upcomingDashPerfs: DashPerformance[];
   pastDashPerfs: DashPerformance[];
   processedUpcomingDashPerfs: ProcessedDashPerformance[] = [];
   processedPastDashPerfs: ProcessedDashPerformance[] = [];
+  dashSubscription: Subscription;
   dashPerfsLoaded = false;
   dataLoaded = false;
 
-  constructor(private dashAPI: DashboardApi) {
+  constructor(
+    private dashApi: DashboardApi,
+  ) {
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-    this.dashAPI.dashPerformanceEmitter.subscribe(
+    this.dashSubscription =
+      this.dashApi.dashPerformanceEmitter.subscribe(
         val => this.onDashPerfsLoad(val));
-    this.dashAPI.getAllDashboard();
+    this.dashApi.getAllDashboard();
   }
 
-  onDashPerfsLoad(dashPerfArr: DashPerformance[]) {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.dashSubscription.unsubscribe();
+  }
+
+  onDashPerfsLoad = (dashPerfArr: DashPerformance[]): void => {
     this.allDashPerfs = dashPerfArr.sort((a, b) => a.dateTime - b.dateTime);
     const now = Date.now();
     this.upcomingDashPerfs =
@@ -70,9 +82,9 @@ export class Dashboard implements OnInit {
         routerLink: '/performance/' + perf.id
       };
     });
-    this.processedPastDashPerfs = this.pastDashPerfs.sort((a, b) => {
-      return b.dateTime - a.dateTime;
-    }).map(perf => {
+    this.processedPastDashPerfs = this.pastDashPerfs.sort((a, b) =>
+      b.dateTime - a.dateTime
+    ).map(perf => {
       const date = new Date(perf.dateTime);
       return {
         title: perf.title,
@@ -85,11 +97,11 @@ export class Dashboard implements OnInit {
     });
     this.dashPerfsLoaded = true;
     this.checkDataLoaded();
-  }
+  };
 
-  checkDataLoaded(): boolean {
+  checkDataLoaded = (): boolean => {
     this.dataLoaded = this.dashPerfsLoaded;
     return this.dataLoaded;
-  }
+  };
 
 }

@@ -21,6 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -59,6 +60,9 @@ public class Performance {
   @Enumerated(EnumType.ORDINAL)
   private Status status;
 
+  @Transient
+  private boolean hasAbsence;
+
   // This as a set masks a larger issue PerformanceRepository.getById duplicates sections
   @OneToMany(mappedBy = "performance", 
       cascade = CascadeType.ALL, 
@@ -70,6 +74,13 @@ public class Performance {
     return id;
   }
 
+  public boolean getHasAbsence() {
+    return hasAbsence;
+  }
+
+  public void setHasAbsence( boolean hasAbsence) {
+    this.hasAbsence = hasAbsence; 
+  }
   public String getTitle() {
     return title;
   }
@@ -104,6 +115,10 @@ public class Performance {
 
   public List<PerformanceSection> getProgram() {
     return new ArrayList<>(performanceSections);
+  }
+
+  public void makeDraft() {
+    this.status = Status.DRAFT;
   }
 
   public void publish() {
@@ -168,6 +183,7 @@ public class Performance {
         .setDateTime(getDate().getTime())
         .setStatus(getStatus())
         .setPerformanceSections(sections)
+        .setHasAbsence(getHasAbsence())
         .build();
 
     return info;

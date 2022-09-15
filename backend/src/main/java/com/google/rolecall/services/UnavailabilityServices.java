@@ -46,6 +46,12 @@ public class UnavailabilityServices {
     return allUnavailabilities;
   }
 
+  
+  public Unavailability getUnavailabilityByUserAndDate(Integer userId, Date date){
+    return unavailabilityRepo.getUnavailabilityByUserAndDate(userId, date);
+  };
+
+
   private boolean overlapsDateRange(Unavailability u, Date startDate, Date endDate) {
     boolean uStartDateIsAfterStartDate = u.getStartDate().compareTo(startDate) >= 0;
     boolean uStartDateIsBeforeEndDate = u.getStartDate().compareTo(endDate) <= 0;
@@ -62,6 +68,7 @@ public class UnavailabilityServices {
   public Unavailability createUnavailability(UnavailabilityInfo info)
       throws InvalidParameterException, EntityNotFoundException {
     Unavailability unavailable = Unavailability.newBuilder()
+        .setReason(info.reason())
         .setDescription(info.description())
         .setStartDate(info.startDate())
         .setEndDate(info.endDate())
@@ -77,6 +84,7 @@ public class UnavailabilityServices {
       throws InvalidParameterException, EntityNotFoundException {
     Unavailability unavailable = getUnavailability(info.id())
         .toBuilder()
+        .setReason(info.reason())
         .setDescription(info.description())
         .setStartDate(info.startDate())
         .setEndDate(info.endDate())

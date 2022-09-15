@@ -1,0 +1,101 @@
+import { HttpClient } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
+
+import { MockDashboardBackend } from '../mocks/mock-dashboard-backend';
+import { HeaderUtilityService } from '../services/header-utility.service';
+import { LoggingService } from '../services/logging.service';
+import { ResponseStatusHandlerService,
+} from '../services/response-status-handler.service';
+
+export type DashPerformance = {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  dateTime: number;
+  status: 'CANCELED';
+};
+
+export type AllDashResponse = {
+  data: {
+    performances: DashPerformance[];
+  };
+  warnings: string[];
+};
+
+/**
+ * A service responsible for interfacing with the Dashboard APIs and
+ * keeping track of all dashboard objects by ID.
+ */
+@Injectable({providedIn: 'root'})
+export class DashboardApi {
+  /** Mock backend. */
+  mockBackend: MockDashboardBackend = new MockDashboardBackend();
+
+  /** All the loaded dashboard performances mapped by UUID. */
+  dashPerformances: Map<number, DashPerformance> =
+      new Map<number, DashPerformance>();
+
+  /** Emitter that is called whenever dashboard performances are loaded. */
+  dashPerformanceEmitter: EventEmitter<DashPerformance[]> = new EventEmitter();
+
+  constructor(
+      private loggingService: LoggingService,
+      private http: HttpClient,
+      private headerUtil: HeaderUtilityService,
+      private respHandler: ResponseStatusHandlerService,
+  ) {
+  }
+
+  /** Hits backend with all dash GET request. */
+  requestAllDashboard = async (): Promise<AllDashResponse> => {
+    if (environment.mockBackend) {
+      return this.mockBackend.requestAllDashboard();
+    }
+    return lastValueFrom(this.http.get<AllDashResponse>(
+        environment.backendURL + 'api/dashboard', {
+          headers: await this.headerUtil.generateHeader(),
+          observe: 'response',
+          withCredentials: true
+        }))
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<AllDashResponse>(resp))
+        .then(val =>
+          val
+        );
+  };
+
+  /** Gets all the dash performances from the backend and returns them. */
+  getAllDashboard = async (): Promise<DashPerformance[]> =>
+    this.getAllDashResponse().then(val => {
+      this.dashPerformanceEmitter.emit(
+          Array.from(this.dashPerformances.values()));
+      return val;
+    }).then(val => val.data.performances).catch(() =>
+      []
+    );
+
+
+  // Private methods
+
+  /**
+   * Takes backend response, updates data structures for all dash performances.
+   */
+   private getAllDashResponse = async (): Promise<AllDashResponse> =>
+    this.requestAllDashboard().then(val => {
+      // Update the dashboard performance map
+      this.dashPerformances.clear();
+      for (const dashPerf of val.data.performances) {
+        this.dashPerformances.set(dashPerf.id, dashPerf);
+      }
+      // Log any warnings
+      for (const warning of val.warnings) {
+        this.loggingService.logWarn(warning);
+      }
+      return val;
+    });
+
+
+}

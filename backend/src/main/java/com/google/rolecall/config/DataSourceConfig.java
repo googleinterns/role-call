@@ -42,7 +42,7 @@ public class DataSourceConfig {
     String userName = env.getProperty("spring.datasource.username");
     String password = env.getProperty("spring.datasource.password");
 
-    DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+    DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
 
     dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
     dataSourceBuilder.url(url);
@@ -95,6 +95,10 @@ public class DataSourceConfig {
     String projectId = env.getProperty("spring.cloud.gcp.projectId");
     String secretName = env.getProperty("cloud.secret.name");
     try {
+logger.log(
+Level.INFO,
+String.format(
+"getCloudDbPassword projectId=%s secretName=%s \n", projectId, secretName));
       password = getSecretResponse(projectId, secretName).getPayload().getData().toStringUtf8();
     } catch (IOException e) {
       throw new RuntimeException(

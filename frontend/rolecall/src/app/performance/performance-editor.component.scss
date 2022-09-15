@@ -1,40 +1,35 @@
-@import "../../styles/colors";
-@import "../../styles/constants";
+//@import "src/styles/colors";
+@import "src/styles/constants";
+// buttons includes colors
+@import "src/styles/buttons";
+
 
 $buttonRowHeight: 5rem;
 
 .button-overall-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: relative;
   z-index: 0;
+}
 
-  .button {
-    background: $AAOrangeGradient;
-    color: white;
-    font-size: x-large;
-    font-weight: bold;
-    margin: 0.5rem;
-    padding: 0.5em 1.5em;
-    height: 4rem;
-  }
+.std-absence {
+  background: $unavailBg;
+  color: $unavailFg;
+  text-decoration-color: $unavailFg;
 }
 
 .page-container {
-  height: 90vh;
+  height: $contentHeight;
   width: 100%;
 }
 
 .step0 {
   .cards-container {
     display: flex;
-    height: calc(90vh - 5rem);
+    height: calc($contentHeight - 5rem);
     justify-content: space-evenly;
     width: 100vw;
 
     .left-card-container {
-      height: calc(90vh - 5rem);
+      height: calc($contentHeight - 5rem);
       width: 45vw;
 
       .left-card {
@@ -45,34 +40,17 @@ $buttonRowHeight: 5rem;
         justify-content: flex-start;
         margin: 0.5rem;
 
-        .dup-button-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-end;
-
-          .dup-button {
-            background: $white;
-            border-radius: $borderRadius;
-            height: 6vh;
-            margin: 1em;
-            width: 6vh;
-          }
-
-          .dup-button-icon {
-            font-size: 2.5em;
-            vertical-align: middle;
-          }
-        }
-
         .title-container {
-          .title {
-            font-size: xx-large;
-            font-weight: bold;
-            margin-left: 0.5em;
-            margin-right: 0.5em;
-            padding-top: 0.5em;
-          }
+          // for margin em
+          font-size: 1.6rem;
+          margin: .5em .5em .5em .5em;
+          width: calc(100% - 1em);
         }
+
+        // .word-break {
+        //   white-space: pre-wrap;
+        // }
+
 
         .children-container {
           overflow-y: scroll;
@@ -97,7 +75,7 @@ $buttonRowHeight: 5rem;
     }
 
     .right-card-container {
-      height: calc(90vh - 5rem);
+      height: calc($contentHeight - 5rem);
       width: 45vw;
 
       .right-card {
@@ -108,32 +86,15 @@ $buttonRowHeight: 5rem;
         justify-content: flex-start;
         margin: 0.5rem;
 
-        .dup-button-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-end;
-
-          .dup-button {
-            background: $white;
-            border-radius: $borderRadius;
-            height: 6vh;
-            margin: 1em;
-            width: 6vh;
-          }
-
-          .dup-button-icon {
-            font-size: 2.5em;
-            vertical-align: middle;
-          }
-        }
-
         .title-container {
+
           .title {
-            font-size: xx-large;
+            //font-size: xx-large;
+            font-size: 1.6rem;
             font-weight: bold;
-            margin-left: 0.5em;
-            margin-right: 0.5em;
-            padding-top: 0.5em;
+            line-height: 1.1em;
+            margin: .5em .5em .5em .5em;
+            text-align: center;
           }
         }
 
@@ -167,7 +128,7 @@ $buttonRowHeight: 5rem;
   justify-content: space-evenly;
 
   .right-card-container {
-    height: calc(90vh - 5rem);
+    height: calc($contentHeight - 5rem);
     width: 95vw;
 
     .right-card {
@@ -191,14 +152,14 @@ $buttonRowHeight: 5rem;
             display: flex;
             flex-direction: row;
             justify-content: flex-end;
-            width: 6vh;
+            width: 8rem;
 
             .reset-button {
               background: $white;
               border-radius: $borderRadius;
-              height: 6vh;
-              margin: 1em;
-              width: 6vh;
+              height: 4rem;
+              margin: 1rem 2rem 0rem 2rem;
+              width: 4rem;
             }
 
             .reset-button-icon {
@@ -235,65 +196,6 @@ $buttonRowHeight: 5rem;
           margin-top: 0.5em;
         }
 
-        .date-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          margin-top: 1em;
-
-          .date-title-container {
-            margin-right: 2rem;
-          }
-
-          .date-input {
-            width: 25%;
-          }
-        }
-
-        .location-container {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          margin-left: 2rem;
-          margin-right: 1rem;
-
-          .location-title-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            justify-content: center;
-
-            .location-title {
-              margin-left: 0;
-            }
-          }
-
-          .location-card {
-            height: min-content;
-            margin-left: 0.5rem;
-            margin-right: 1rem;
-            width: 100%;
-
-            .location-input {
-              background: none;
-              border: none;
-              color: black;
-              font-size: large;
-              height: 100%;
-              margin: auto;
-              padding: 0.75em 1em;
-              position: relative;
-              resize: none;
-              white-space: normal;
-              width: 100%;
-
-              &:focus {
-                border: none;
-              }
-            }
-          }
-        }
-
         .description-container {
           // max-height: 60%;
           min-height: 0;
@@ -309,7 +211,7 @@ $buttonRowHeight: 5rem;
             margin-bottom: 1rem;
             overflow-y: scroll;
 
-            .segment-container {
+            .segment-in-list-container {
               border-left: 4px solid;
               border-color: $lightLightGray;
               margin-bottom: 0.5rem;
@@ -365,7 +267,7 @@ $buttonRowHeight: 5rem;
               font-size: large;
               margin: 0;
               padding: 0.75em 1em;
-              position: relative;
+              //position: relative;
               resize: none;
 
               &:focus {
@@ -388,7 +290,7 @@ $buttonRowHeight: 5rem;
   justify-content: space-evenly;
 
   .left-card-container {
-    height: calc(84vh - 5rem);
+    height: calc($contentHeight - 6vh - 5rem);
     margin-top: 6vh;
     width: 25vw;
 
@@ -413,7 +315,7 @@ $buttonRowHeight: 5rem;
   }
 
   .right-card-container {
-    height: calc(90vh - 5rem);
+    height: calc($contentHeight - 5rem);
     width: 75vw;
 
     .right-card {
@@ -439,7 +341,7 @@ $buttonRowHeight: 5rem;
   }
 }
 
-.piece-container {
+.segment-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -463,18 +365,24 @@ $buttonRowHeight: 5rem;
       width: 100%;
 
       .delete-button-icon {
-        font-size: 6vh;
+        font-size: 3rem;
+        color: $gray;
         vertical-align: middle;
       }
     }
   }
 }
 
-.piece-name-card {
+.has-absence {
+  background: $unavailBg;
+  color: $unavailFg;
+}
+
+.segment-name-card {
   margin-left: 1em;
   width: calc(100% - 2em);
 
-  .piece-name {
+  .segment-name {
     font-size: x-large;
     font-weight: bold;
     margin-left: 1em;
@@ -492,7 +400,7 @@ $buttonRowHeight: 5rem;
   }
 }
 
-#piece-list {
+#segment-list {
   overflow-y: scroll;
 }
 
@@ -507,7 +415,7 @@ $buttonRowHeight: 5rem;
   justify-content: space-evenly;
 
   .left-card-container {
-    height: calc(82vh - 5rem);
+    height: calc($contentHeight - 8vh - 5rem);
     margin-top: 8vh;
     width: 25vw;
 
@@ -556,14 +464,19 @@ $buttonRowHeight: 5rem;
           margin: 0 1em 0.5em 1em;
 
           .child {
-            &-selected {
-              background: $offoffWhite;
-            }
+            // &-selected {
+            //   background: $offoffWhite;
+            // }
 
             .segment-title {
               font-size: x-large;
               font-weight: bold;
               padding: 0.5em 1em;
+
+              &-selected {
+                border-radius: $borderRadius;
+                border: 3px solid $lightGray;
+              }
             }
           }
         }
@@ -572,7 +485,7 @@ $buttonRowHeight: 5rem;
   }
 
   .right-card-container {
-    height: calc(90vh - 5rem);
+    height: calc($contentHeight - 5rem);
     width: 75vw;
 
     .right-card {
@@ -618,7 +531,7 @@ $buttonRowHeight: 5rem;
   height: 100%;
 
   .finalize-card-container {
-    height: calc(90vh - 5rem);
+    height: calc($contentHeight - 5rem);
     padding-top: 1rem;
     width: 100vw;
 
@@ -662,10 +575,11 @@ $buttonRowHeight: 5rem;
           .export-button {
             background: $white;
             border-radius: $borderRadius;
-            height: 6vh;
+            height: 4rem;
             margin-right: 1rem;
             margin-top: 0.5rem;
-            width: 6vh;
+            margin-bottom: 0.5rem;
+            width: 4rem;
           }
 
           .export-button-icon {
@@ -677,7 +591,7 @@ $buttonRowHeight: 5rem;
         .segment-list {
           display: flex;
           flex-direction: column;
-          height: calc(90vh - 12rem);
+          height: calc($contentHeight - 12rem);
           justify-content: flex-start;
           margin-left: 1rem;
           margin-right: 1rem;
@@ -685,10 +599,10 @@ $buttonRowHeight: 5rem;
           overflow-y: scroll;
 
           &-submitted {
-            height: calc(90vh - 16rem);
+            height: calc($contentHeight - 16rem);
           }
 
-          .segment-container {
+          .segment-in-list-container {
             border-left: 4px solid;
             border-color: $lightLightGray;
             margin-bottom: 0.5rem;
@@ -736,6 +650,122 @@ $buttonRowHeight: 5rem;
       }
     }
   }
+}
+
+table {
+  margin: 1rem 2rem 0rem 2rem;
+}
+
+// td {
+//   border: 1px solid darkgrey;
+// }
+
+.minw {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.ddlabel {
+  padding: 2.1rem 0.5rem 0rem 1rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  vertical-align: top;
+  text-align: right;
+}
+
+.ddlabel1 {
+  @extend .ddlabel;
+  padding-left: 0rem;
+}
+
+.label {
+  padding: 1rem 0.5rem 0rem 1rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  vertical-align: top;
+  text-align: right;
+}
+
+.label1 {
+  @extend .label;
+  padding-left: 0rem;
+}
+
+.date-input {
+  width: 100%;
+  font-size: large;
+  font-weight: 800;
+}
+
+.status-select {
+  width: 100%;
+  font-size: large;
+  font-weight: 800;
+}
+
+.location-card {
+  height: min-content;
+  padding-top: .2rem;
+}
+
+.location-input {
+  // background: none;
+  border: none;
+  // color: black;
+  font-size: large;
+  // margin: auto;
+  padding: 0.75em 1em;
+  resize: none;
+  // white-space: normal;
+  height: 100%;
+  width: 100%;
+
+  &:focus {
+    border: none;
+  }
+}
+
+.actions-container {
+  width: calc(100% - 10rem);
+  margin: .6rem 5rem 1rem 5rem;
+
+  .center-button {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  // had to add this scss because the program refused to pick up
+  // .std-action-button and .std-action-button-icon.
+  // I don't know why.
+  .action-button {
+    height: 3.5rem;
+    width: 3.5rem;
+  }
+  
+
+  .action-button-icon {
+    color: $gray;
+    background: $aaOrangeGradient;
+    border-radius: 6px;
+    //background-clip: border-box;
+    font-size: 3.5rem;
+    height: 3.5rem;
+    line-height: 3.5rem;
+    vertical-align: middle;
+    width: 3.5rem;
+  }
+
+  // .action-button-icon-nobg {
+  //   @extend .action-button-icon;
+  //   background: $lightLightGray;
+  // }
+
+  // .bgon {
+  //   background: $aaOrangeGradient;
+  // }
+
 }
 
 .cdk-drag-animating {

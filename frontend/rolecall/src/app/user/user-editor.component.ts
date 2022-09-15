@@ -1,7 +1,11 @@
-import {Location} from '@angular/common';
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {User, UserApi} from '../api/user_api.service';
+/* eslint-disable @typescript-eslint/naming-convention */
+
+import { Location } from '@angular/common';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { User, UserApi } from '../api/user-api.service';
 
 /**
  * The view for the User Editor, allowing users to create other users
@@ -12,20 +16,50 @@ import {User, UserApi} from '../api/user_api.service';
   templateUrl: './user-editor.component.html',
   styleUrls: ['./user-editor.component.scss']
 })
-export class UserEditor implements OnInit {
+// eslint-disable-next-line @angular-eslint/component-class-suffix
+export class UserEditor implements OnInit, OnDestroy {
+  @ViewChild('inputPicture') inputPicture: ElementRef;
+
   permissionsSet: EventEmitter<string[]> = new EventEmitter();
   rolesSet: EventEmitter<string[]> = new EventEmitter();
 
   currentSelectedUser: User;
   renderingUsers: User[];
+
+  rolesNamesMap = {
+    isAdmin: 'Is Admin',
+    isChoreographer: 'Is Choreographer',
+    isDancer: 'Is Dancer',
+    isOther: 'Is Other',
+  };
+
+  permissionsNamesMap = {
+    canLogin: 'Can Login',
+    canReceiveNotifications: 'Receives Notifications',
+    managePerformances: 'Manages Performances',
+    manageCasts: 'Manages Casts',
+    manageBallets: 'Manages Ballets',
+    manageRoles: 'Manages Roles',
+    manageRules: 'Manages Rules',
+  };
+
+  image?: string | ArrayBuffer;
+
+  canDelete = false;
+  canSave = false;
+  hasNewPicture = false;
+
+  creatingUser = false;
+
+  usersLoaded = false;
+
   private urlPointingUUID: string;
 
   private prevWorkingState: User | undefined;
   private workingUser: User | undefined;
-  disableSave = true;
-  creatingUser = false;
 
-  usersLoaded = false;
+  private userSubscription: Subscription;
+
   private dataLoaded = false;
 
   private lastSelectedUserEmail: string;
@@ -43,7 +77,7 @@ export class UserEditor implements OnInit {
       key: 'last_name',
       type: 'string'
     },
-    'Suffix': {
+    Suffix: {
       key: 'suffix',
       type: 'string'
     },
@@ -51,11 +85,11 @@ export class UserEditor implements OnInit {
       key: 'contact_info.notification_email',
       type: 'string'
     },
-    'Email': {
+    Email: {
       key: 'contact_info.email',
       type: 'string'
     },
-    'Phone': {
+    Phone: {
       key: 'contact_info.phone_number',
       type: 'string'
     },
@@ -67,52 +101,259 @@ export class UserEditor implements OnInit {
       key: 'date_joined',
       type: 'date'
     },
-    'Roles': {
+    Roles: {
       key: 'has_roles',
       type: 'roles'
     },
-    'Permissions': {
+    Permissions: {
       key: 'has_permissions',
       type: 'permissions'
     },
   };
 
-  rolesNamesMap = {
-    isAdmin: 'Is Admin',
-    isChoreographer: 'Is Choreographer',
-    isDancer: 'Is Dancer',
-    isOther: 'Is Other',
-  };
-  permissionsNamesMap = {
-    canLogin: 'Can Login',
-    canReceiveNotifications: 'Receives Notifications',
-    managePerformances: 'Manages Performances',
-    manageCasts: 'Manages Casts',
-    manageBallets: 'Manages Ballets',
-    manageRoles: 'Manages Roles',
-    manageRules: 'Manages Rules',
-  };
-
   private currentDate = Date.now();
 
   constructor(
-      private readonly route: ActivatedRoute,
-      private readonly userAPI: UserApi,
-      private readonly location: Location) {
+    private readonly route: ActivatedRoute,
+    private readonly userAPI: UserApi,
+    private readonly location: Location,
+  ) {
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     const uuid: string = this.route.snapshot.params.uuid;
     if (uuid) {
       this.urlPointingUUID = uuid;
     }
-    this.userAPI.userEmitter.subscribe(user => {
+    this.userSubscription = this.userAPI.userEmitter.subscribe(user => {
       this.onUserLoad(user);
     });
     this.userAPI.getAllUsers();
   }
 
-  private onUserLoad(users: User[]) {
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+
+  setCurrentUser = ({user, fromInputChange, shouldSetLastUser}: {
+    user: User | undefined;
+    fromInputChange?: boolean;
+    shouldSetLastUser?: boolean;
+  }): void => {
+    if (shouldSetLastUser) {
+      this.lastSelectedUserEmail = user.contact_info.email;
+    }
+
+    if (user && this.currentSelectedUser && user.uuid
+        !== this.currentSelectedUser.uuid) {
+      this.creatingUser = false;
+      this.canDelete = true;
+      this.canSave = false;
+    }
+
+    if (this.workingUser && user.uuid !== this.workingUser.uuid) {
+      this.renderingUsers = this.renderingUsers.filter(
+          renderingUser => renderingUser.uuid !== this.workingUser.uuid
+                           && this.userAPI.isValidUser(renderingUser));
+      if (this.prevWorkingState) {
+        this.currentSelectedUser = this.prevWorkingState;
+        this.renderingUsers.push(this.currentSelectedUser);
+      }
+      this.prevWorkingState = undefined;
+      this.workingUser = undefined;
+    }
+
+    this.image = undefined;
+    this.hasNewPicture = false;
+    this.currentSelectedUser = user;
+    if (!fromInputChange) {
+      if (!this.currentSelectedUser) {
+        this.rolesSet.emit([]);
+        this.permissionsSet.emit([]);
+      } else {
+        this.rolesSet.emit(this.getSelectedRoles(this.currentSelectedUser));
+        this.permissionsSet.emit(
+            this.getSelectedPermissions(this.currentSelectedUser));
+      }
+    }
+
+    if (this.location.path().startsWith('/user') || this.location.path()
+        .startsWith('/user/')) {
+      this.location.replaceState('/user/' + user.uuid);
+    }
+    this.urlPointingUUID = user.uuid;
+    this.renderingUsers.sort((a, b) =>
+      a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
+  };
+
+  canAddUser = (): boolean =>
+    true;
+
+
+  addUser = (): void => {
+    if (this.creatingUser) {
+      return;
+    }
+    this.creatingUser = true;
+    this.canSave = true;
+    this.prevWorkingState = undefined;
+    this.image = undefined;
+    this.hasNewPicture = false;
+    const newUser: User = {
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      suffix: '',
+      picture_file: undefined,
+      has_roles: {
+        isAdmin: false,
+        isChoreographer: false,
+        isDancer: false,
+        isOther: false,
+      },
+      has_permissions: {
+        canLogin: true,
+        canReceiveNotifications: true,
+        managePerformances: false,
+        manageCasts: false,
+        manageBallets: false,
+        manageRoles: false,
+        manageRules: false
+      },
+      date_joined: Date.now(),
+      contact_info: {
+        phone_number: '',
+        email: '',
+        notification_email: '',
+        emergency_contact: {
+          name: '',
+          phone_number: '',
+          email: '',
+        },
+      },
+      isAbsent: false,
+      knows_positions: [],
+      uuid: 'newUser:' + Date.now()
+    };
+    this.currentSelectedUser = newUser;
+    this.renderingUsers.push(newUser);
+    this.workingUser = newUser;
+    this.setCurrentUser({user: this.workingUser});
+  };
+
+  canDeleteUser = (): boolean =>
+   this.canDelete;
+
+
+  deleteUser = (): void => {
+    this.prevWorkingState = undefined;
+    this.renderingUsers = this.renderingUsers.filter(
+        user => user.uuid !== this.currentSelectedUser.uuid);
+
+    if (!this.creatingUser) {
+      this.userAPI.deleteUser(this.currentSelectedUser);
+    }
+    if (this.renderingUsers.length > 0) {
+      this.setCurrentUser({user: this.renderingUsers[0]});
+    } else {
+      this.setCurrentUser({user: undefined});
+    }
+  };
+
+  canSaveUser = (): boolean =>
+    this.canSave || this.hasNewPicture;
+
+
+  saveUser = (): void => {
+    if (this.hasNewPicture) {
+console.log('SAVE PICTURE');
+    }
+    if (this.canSave) {
+      this.lastSelectedUserEmail = this.workingUser.contact_info.email;
+      this.userAPI.setUser(this.workingUser).then(async result => {
+        if (result.successful) {
+          this.creatingUser = false;
+          this.canDelete = true;
+          this.canSave = false;
+          const prevUUID = this.workingUser.uuid;
+          this.prevWorkingState = undefined;
+          this.workingUser = undefined;
+          await this.userAPI.getAllUsers();
+          const foundSame = this.renderingUsers.find(
+              user => user.uuid === prevUUID);
+          if (foundSame && this.location.path().startsWith('user')) {
+            this.setCurrentUser({user: foundSame});
+          }
+        }
+      });
+    }
+  };
+
+  getCurrentDate = (): number =>
+    this.currentDate;
+
+
+  getAllRoles = (): string[] =>
+    Object.keys(this.rolesNamesMap);
+
+
+  getAllPermissions = (): string[] =>
+    Object.keys(this.permissionsNamesMap);
+
+
+  getSelectedPermissions = (user: User): string[] => {
+    if (!user) {
+      return [];
+    }
+    return Object.entries(user.has_permissions)
+        .filter(([, selected]) => selected)
+        .map(([permission]) => permission);
+  };
+
+  onInputChange = (change: [string, any]): void => {
+    const valueName = change[0];
+    const value = change[1];
+
+    if (!this.workingUser) {
+      this.prevWorkingState =
+          JSON.parse(JSON.stringify(this.currentSelectedUser));
+      this.workingUser = JSON.parse(JSON.stringify(this.currentSelectedUser));
+      this.setCurrentUser({user: this.workingUser, fromInputChange: true});
+    }
+
+    if (this.workingUser) {
+      this.setWorkingPropertyByKey(valueName, value);
+    }
+  };
+
+  onPictureLoad = (event: Event): void => {
+    const file = (event.target as HTMLInputElement).files[0];
+    if (!file) {
+      return;
+    }
+    if (!file.type.match('image.*')) {
+      alert('Only images are supported');
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = ((): void => {
+      this.image = reader.result;
+      this.hasNewPicture = true;
+      this.currentSelectedUser.picture_file = file.name;
+      this.canSave = true;
+    });
+  };
+
+  getPicture = (): void => {
+    this.inputPicture.nativeElement.click();
+  };
+
+  // Private methods
+
+  private onUserLoad = (users: User[]): void => {
     if (users.length === 0) {
       this.renderingUsers = [];
       return;
@@ -142,9 +383,9 @@ export class UserEditor implements OnInit {
     if (this.dataLoaded) {
       this.onDataLoaded();
     }
-  }
+  };
 
-  private onDataLoaded() {
+  private onDataLoaded = (): void => {
     if (!this.urlPointingUUID) {
       this.setCurrentUser({user: this.renderingUsers[0]});
     } else {
@@ -164,147 +405,9 @@ export class UserEditor implements OnInit {
         });
       }
     }
-  }
+  };
 
-  setCurrentUser({user, fromInputChange, shouldSetLastUser}: {
-    user: User | undefined,
-    fromInputChange?: boolean,
-    shouldSetLastUser?: boolean,
-  }) {
-    if (shouldSetLastUser) {
-      this.lastSelectedUserEmail = user.contact_info.email;
-    }
-
-    if (user && this.currentSelectedUser && user.uuid
-        !== this.currentSelectedUser.uuid) {
-      this.creatingUser = false;
-      this.disableSave = true;
-    }
-
-    if (this.workingUser && user.uuid !== this.workingUser.uuid) {
-      this.renderingUsers = this.renderingUsers.filter(
-          renderingUser => renderingUser.uuid !== this.workingUser.uuid
-                           && this.userAPI.isValidUser(renderingUser));
-      if (this.prevWorkingState) {
-        this.currentSelectedUser = this.prevWorkingState;
-        this.renderingUsers.push(this.currentSelectedUser);
-      }
-      this.prevWorkingState = undefined;
-      this.workingUser = undefined;
-    }
-
-    this.currentSelectedUser = user;
-    if (!fromInputChange) {
-      if (!this.currentSelectedUser) {
-        this.rolesSet.emit([]);
-        this.permissionsSet.emit([]);
-      } else {
-        this.rolesSet.emit(this.getSelectedRoles(this.currentSelectedUser));
-        this.permissionsSet.emit(
-            this.getSelectedPermissions(this.currentSelectedUser));
-      }
-    }
-
-    if (this.location.path().startsWith('/user') || this.location.path()
-        .startsWith('/user/')) {
-      this.location.replaceState('/user/' + user.uuid);
-    }
-    this.urlPointingUUID = user.uuid;
-    this.renderingUsers.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
-  }
-
-  addUser() {
-    if (this.creatingUser) {
-      return;
-    }
-    this.creatingUser = true;
-    this.disableSave = false;
-    this.prevWorkingState = undefined;
-    const newUser: User = {
-      first_name: undefined,
-      middle_name: undefined,
-      last_name: undefined,
-      suffix: undefined,
-      picture_file: undefined,
-      has_roles: {
-        isAdmin: false,
-        isChoreographer: false,
-        isDancer: false,
-        isOther: false,
-      },
-      has_permissions: {
-        canLogin: true,
-        canReceiveNotifications: true,
-        managePerformances: false,
-        manageCasts: false,
-        manageBallets: false,
-        manageRoles: false,
-        manageRules: false
-      },
-      date_joined: Date.now(),
-      contact_info: {
-        phone_number: undefined,
-        email: undefined,
-        notification_email: undefined,
-        emergency_contact: {
-          name: undefined,
-          phone_number: undefined,
-          email: undefined
-        }
-      },
-      knows_positions: [],
-      uuid: 'newUser:' + Date.now()
-    };
-    this.currentSelectedUser = newUser;
-    this.renderingUsers.push(newUser);
-    this.workingUser = newUser;
-    this.setCurrentUser({user: this.workingUser});
-  }
-
-  deleteUser() {
-    this.prevWorkingState = undefined;
-    this.renderingUsers = this.renderingUsers.filter(
-        user => user.uuid !== this.currentSelectedUser.uuid);
-
-    if (!this.creatingUser) {
-      this.userAPI.deleteUser(this.currentSelectedUser);
-    }
-
-    this.renderingUsers.length > 0 ?
-        this.setCurrentUser({user: this.renderingUsers[0]}) :
-        this.setCurrentUser({user: undefined});
-  }
-
-  saveUser() {
-    this.lastSelectedUserEmail = this.workingUser.contact_info.email;
-
-    this.userAPI.setUser(this.workingUser).then(async result => {
-      if (result.successful) {
-        this.creatingUser = false;
-        this.disableSave = true;
-        const prevUUID = this.workingUser.uuid;
-        this.prevWorkingState = undefined;
-        this.workingUser = undefined;
-        await this.userAPI.getAllUsers();
-        const foundSame = this.renderingUsers.find(
-            user => user.uuid === prevUUID);
-
-        if (foundSame && this.location.path().startsWith('user')) {
-          this.setCurrentUser({user: foundSame});
-        }
-      }
-    });
-  }
-  
-  getCurrentDate(): number {
-    return this.currentDate;
-  }
-
-  getAllRoles(): string[] {
-    return Object.keys(this.rolesNamesMap);
-  }
-
-  private getSelectedRoles(user: User): string[] {
+  private getSelectedRoles = (user: User): string[] => {
     if (!user) {
       return [];
     }
@@ -312,38 +415,9 @@ export class UserEditor implements OnInit {
     return Object.entries(user.has_roles)
         .filter(([, selected]) => selected)
         .map(([role]) => role);
-  }
+  };
 
-  getAllPermissions(): string[] {
-    return Object.keys(this.permissionsNamesMap);
-  }
-
-  getSelectedPermissions(user: User): string[] {
-    if (!user) {
-      return [];
-    }
-    return Object.entries(user.has_permissions)
-        .filter(([, selected]) => selected)
-        .map(([permission]) => permission);
-  }
-
-  onInputChange(change: [string, any]) {
-    const valueName = change[0];
-    const value = change[1];
-
-    if (!this.workingUser) {
-      this.prevWorkingState =
-          JSON.parse(JSON.stringify(this.currentSelectedUser));
-      this.workingUser = JSON.parse(JSON.stringify(this.currentSelectedUser));
-      this.setCurrentUser({user: this.workingUser, fromInputChange: true});
-    }
-
-    if (this.workingUser) {
-      this.setWorkingPropertyByKey(valueName, value);
-    }
-  }
-
-  private setWorkingPropertyByKey(key: string, val: any) {
+  private setWorkingPropertyByKey = (key: string, val: any): void => {
     const info = this.nameToPropertyMap[key];
     const splits = info.key.split('.');
     let objInQuestion = this.workingUser;
@@ -352,18 +426,18 @@ export class UserEditor implements OnInit {
     }
     if (info.type === 'date') {
       val = Date.parse(val.value);
-      this.disableSave = false;
+      this.canSave = true;
     } else if (info.type === 'permissions') {
       const permissions = this.workingUser.has_permissions;
       for (const permission of Object.keys(permissions)) {
         if (val.includes(permission)) {
           if (!permissions[permission]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           permissions[permission] = true;
         } else {
           if (permissions[permission]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           permissions[permission] = false;
         }
@@ -374,20 +448,21 @@ export class UserEditor implements OnInit {
       for (const role of Object.keys(roles)) {
         if (val.includes(role)) {
           if (!roles[role]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           roles[role] = true;
         } else {
           if (roles[role]) {
-            this.disableSave = false;
+            this.canSave = true;
           }
           roles[role] = false;
         }
       }
       val = roles;
     } else {
-      this.disableSave = false;
+      this.canSave = true;
     }
     objInQuestion[splits[splits.length - 1]] = val;
-  }
+  };
+
 }
