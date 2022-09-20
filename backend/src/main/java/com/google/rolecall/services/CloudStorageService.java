@@ -20,7 +20,7 @@ import com.google.rolecall.models.UserAsset.AssetType;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.util.StorageService;
 
-@Profile({"prod", "qa"})
+@Profile({ "prod", "qa" })
 @Service("CloudStorageService")
 public class CloudStorageService implements StorageService {
   private Storage storage;
@@ -53,7 +53,7 @@ public class CloudStorageService implements StorageService {
   @Override
   public Resource loadAsResource(AssetType type, String filename) throws FileNotFoundException {
     Blob blob = storage.get(
-      BlobId.of(bucketName, String.format("%s/%s", type.location, filename)));
+        BlobId.of(bucketName, String.format("%s/%s", type.location, filename)));
     if (blob == null || !blob.exists()) {
       throw new FileNotFoundException("No file found for " + filename + ".");
     }
@@ -63,7 +63,7 @@ public class CloudStorageService implements StorageService {
   @Override
   public void delete(AssetType type, String filename) throws FileNotFoundException, IOException {
     Blob blob = storage.get(
-      BlobId.of(bucketName, String.format("%s/%s", type.location, filename)));
+        BlobId.of(bucketName, String.format("%s/%s", type.location, filename)));
     if (blob == null || !blob.exists()) {
       throw new FileNotFoundException("No file found for " + filename + ".");
     }

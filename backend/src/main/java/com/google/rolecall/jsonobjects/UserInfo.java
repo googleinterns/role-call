@@ -49,7 +49,7 @@ public abstract class UserInfo {
 
   @Nullable
   @JsonProperty("dateJoined")
-  @JsonFormat(pattern="yyyy-MM-dd")
+  @JsonFormat(pattern = "yyyy-MM-dd")
   public abstract Calendar dateJoined();
 
   // Roles
@@ -69,7 +69,7 @@ public abstract class UserInfo {
   @JsonProperty("isOther")
   public abstract Boolean isOther();
 
-  //Permissions
+  // Permissions
   @Nullable
   @JsonProperty("canLogin")
   public abstract Boolean canLogin();
@@ -160,7 +160,7 @@ public abstract class UserInfo {
     public abstract Builder setPhoneNumber(String phoneNumber);
 
     @JsonProperty("dateJoined")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public abstract Builder setDateJoined(Calendar dateJoined);
 
     // Roles
@@ -194,7 +194,7 @@ public abstract class UserInfo {
 
     @JsonProperty("manageRoles")
     public abstract Builder setManageRoles(Boolean manageRoles);
-    
+
     @JsonProperty("manageRules")
     public abstract Builder setManageRules(Boolean manageRules);
 

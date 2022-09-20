@@ -31,7 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("performanceServices")
 @Transactional(rollbackFor = Exception.class)
 public class PerformanceServices {
-  @Autowired private org.springframework.core.env.Environment environment;
+  @Autowired
+  private org.springframework.core.env.Environment environment;
   private final PerformanceRepository performanceRepo;
   private final SectionServices sectionService;
   private final UserServices userService;
@@ -60,26 +61,25 @@ public class PerformanceServices {
   public List<Performance> getAllPerformancesWithUnavs(Boolean checkUnavs) {
     List<Performance> allPerformances = new ArrayList<>();
     performanceRepo.findAll().forEach(allPerformances::add);
-System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
+    System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
     if (checkUnavs) {
       allPerformances.forEach(p -> p.setHasAbsence(this.checkAbs(p)));
     }
     return allPerformances;
   }
 
-  public boolean checkAbs(Performance p) {    
+  public boolean checkAbs(Performance p) {
     List<Unavailability> uList = new ArrayList<>();
-    p.getProgram().forEach( program -> {      
-      program.getPerformanceCastMembers().forEach(member -> {        
-        Unavailability unavailability =
-          unavailabilityService.getUnavailabilityByUserAndDate(member.getUser()
+    p.getProgram().forEach(program -> {
+      program.getPerformanceCastMembers().forEach(member -> {
+        Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser()
             .getId(), new Date(p.getDate().getTime()));
         if (unavailability != null) {
           member.setHasAbsence(true);
-          uList.add(unavailability);      
+          uList.add(unavailability);
         }
       });
-    });    
+    });
     return uList.size() > 0;
   }
 
@@ -132,9 +132,10 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
   public void deletePerformance(int id) throws EntityNotFoundException, InvalidParameterException {
     // Published or Canceled performances should be deletable. Errors happen.
     // Performance performance = getPerformance(id);
-    // if (performance.getStatus() == Status.PUBLISHED || performance.getStatus() == Status.CANCELED) {
-    //   throw new InvalidParameterException(
-    //       "Cannot delete performance that has been published or cancled");
+    // if (performance.getStatus() == Status.PUBLISHED || performance.getStatus() ==
+    // Status.CANCELED) {
+    // throw new InvalidParameterException(
+    // "Cannot delete performance that has been published or cancled");
     // }
 
     performanceRepo.deleteById(id);
@@ -145,16 +146,15 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
   /** Creates a new performance object and publishes performacne */
   private Performance buildNewPerformance(PerformanceInfo info)
       throws InvalidParameterException, EntityNotFoundException {
-    Performance performance =
-        Performance.newBuilder()
-            .setTitle(info.title())
-            .setDescription(info.description())
-            .setCity(info.city())
-            .setCountry(info.country())
-            .setState(info.state())
-            .setVenue(info.venue())
-            .setDateTime(info.dateTime())
-            .build();
+    Performance performance = Performance.newBuilder()
+        .setTitle(info.title())
+        .setDescription(info.description())
+        .setCity(info.city())
+        .setCountry(info.country())
+        .setState(info.state())
+        .setVenue(info.venue())
+        .setDateTime(info.dateTime())
+        .build();
 
     if (info.status() == Status.PUBLISHED) {
       performance.publish();
@@ -170,11 +170,10 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
   private Performance addNewSections(Performance performance, List<PerformanceSectionInfo> program)
       throws InvalidParameterException, EntityNotFoundException {
     for (PerformanceSectionInfo info : program) {
-      PerformanceSection performanceSection =
-          PerformanceSection.newBuilder()
-              .setPrimaryCast(info.primaryCast())
-              .setSectionPosition(info.sectionPosition())
-              .build();
+      PerformanceSection performanceSection = PerformanceSection.newBuilder()
+          .setPrimaryCast(info.primaryCast())
+          .setSectionPosition(info.sectionPosition())
+          .build();
 
       Section section = sectionService.getSection(info.sectionId());
       section.addPerformanceSection(performanceSection);
@@ -204,11 +203,10 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
       Performance performance, List<PerformanceSectionInfo> editSections)
       throws InvalidParameterException, EntityNotFoundException {
     for (PerformanceSectionInfo info : editSections) {
-      PerformanceSection performanceSection =
-          performance.getPerformanceSectionById(info.id()).toBuilder()
-              .setPrimaryCast(info.primaryCast())
-              .setSectionPosition(info.sectionPosition())
-              .build();
+      PerformanceSection performanceSection = performance.getPerformanceSectionById(info.id()).toBuilder()
+          .setPrimaryCast(info.primaryCast())
+          .setSectionPosition(info.sectionPosition())
+          .build();
 
       if (info.positions() != null) {
         performanceSection = updateCastMembers(performanceSection, info.positions());
@@ -228,8 +226,7 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
       PerformanceSection performanceSection, List<PerformancePositionInfo> performancePositions)
       throws InvalidParameterException, EntityNotFoundException {
     for (PerformancePositionInfo positionInfo : performancePositions) {
-      Position currentPosition =
-          performanceSection.getSection().getPositionById(positionInfo.positionId());
+      Position currentPosition = performanceSection.getSection().getPositionById(positionInfo.positionId());
 
       if (positionInfo.performanceCasts() == null || positionInfo.performanceCasts().isEmpty()) {
         continue;
@@ -244,9 +241,8 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
         }
 
         for (PerformanceCastMemberInfo memberInfo : castsInfo.performanceCastMembers()) {
-          performanceSection =
-              addPerformanceCastMember(
-                  performanceSection, memberInfo, currentPosition, currentCastNumber, isPerforming);
+          performanceSection = addPerformanceCastMember(
+              performanceSection, memberInfo, currentPosition, currentCastNumber, isPerforming);
         }
       }
     }
@@ -264,11 +260,10 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
 
     User user = userService.getUser(memberInfo.userId());
 
-    PerformanceCastMember member =
-        PerformanceCastMember.newBuilder()
-            .setOrder(memberInfo.order())
-            .setCastNumber(castNumber)
-            .build();
+    PerformanceCastMember member = PerformanceCastMember.newBuilder()
+        .setOrder(memberInfo.order())
+        .setCastNumber(castNumber)
+        .build();
 
     member.setPerforming(isPerforming);
 
@@ -299,8 +294,7 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
       PerformanceSection performanceSection, List<PerformancePositionInfo> performancePositions)
       throws InvalidParameterException, EntityNotFoundException {
     for (PerformancePositionInfo positionInfo : performancePositions) {
-      Position currentPosition =
-          performanceSection.getSection().getPositionById(positionInfo.positionId());
+      Position currentPosition = performanceSection.getSection().getPositionById(positionInfo.positionId());
 
       if (positionInfo.performanceCasts() == null || positionInfo.performanceCasts().isEmpty()) {
         continue;
@@ -318,13 +312,12 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
           if (memberInfo.delete() != null && memberInfo.delete()) {
             deletePerformanceCastMember(performanceSection, memberInfo);
           } else if (memberInfo.id() == null) {
-            performanceSection =
-                addPerformanceCastMember(
-                    performanceSection,
-                    memberInfo,
-                    currentPosition,
-                    currentCastNumber,
-                    isPerforming);
+            performanceSection = addPerformanceCastMember(
+                performanceSection,
+                memberInfo,
+                currentPosition,
+                currentCastNumber,
+                isPerforming);
           } else {
             updatePerformanceCastMember(
                 performanceSection, memberInfo, currentPosition, currentCastNumber);
@@ -351,16 +344,15 @@ System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
 
   private Performance updatePerformance(PerformanceInfo info)
       throws InvalidParameterException, EntityNotFoundException {
-    Performance performance =
-        getPerformance(info.id()).toBuilder()
-            .setTitle(info.title())
-            .setDescription(info.description())
-            .setCity(info.city())
-            .setCountry(info.country())
-            .setState(info.state())
-            .setVenue(info.venue())
-            .setDateTime(info.dateTime())
-            .build();
+    Performance performance = getPerformance(info.id()).toBuilder()
+        .setTitle(info.title())
+        .setDescription(info.description())
+        .setCity(info.city())
+        .setCountry(info.country())
+        .setState(info.state())
+        .setVenue(info.venue())
+        .setDateTime(info.dateTime())
+        .build();
 
     if (info.status() == Status.DRAFT) {
       performance.makeDraft();

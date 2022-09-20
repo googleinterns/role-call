@@ -32,7 +32,7 @@ public class ApplicationLoader implements ApplicationRunner {
   private String adminLastName;
   private String adminEmail;
 
-  @Profile({"dev", "prod", "qa"})
+  @Profile({ "dev", "prod", "qa" })
   @Override
   public void run(ApplicationArguments args) throws Exception {
     // Initialize admin if exists, or create one with given information.
@@ -58,17 +58,16 @@ public class ApplicationLoader implements ApplicationRunner {
   private void createAdmin() {
     User admin;
     try {
-      admin =
-          User.newBuilder()
-              .setFirstName(adminFirstName)
-              .setMiddleName("")
-              .setLastName(adminLastName)
-              .setSuffix("")
-              .setEmail(adminEmail)
-              .setIsActive(true)
-              .setCanLogin(true)
-              .setIsAdmin(true)
-              .build();
+      admin = User.newBuilder()
+          .setFirstName(adminFirstName)
+          .setMiddleName("")
+          .setLastName(adminLastName)
+          .setSuffix("")
+          .setEmail(adminEmail)
+          .setIsActive(true)
+          .setCanLogin(true)
+          .setIsAdmin(true)
+          .build();
     } catch (InvalidParameterException e) {
       logger.log(Level.SEVERE, "Unable to Create admin. Insufficient Properties.");
       return;
@@ -100,18 +99,17 @@ public class ApplicationLoader implements ApplicationRunner {
 
     cal.setTime(sdf.parse(dateJoined));
 
-    user =
-        User.newBuilder()
-            .setFirstName(fName)
-            .setMiddleName(mName)
-            .setLastName(lName)
-            .setSuffix(suffix)
-            .setEmail(email)
-            .setDateJoined(cal)
-            .setIsActive(true)
-            .setCanLogin(true)
-            .setIsDancer(true)
-            .build();
+    user = User.newBuilder()
+        .setFirstName(fName)
+        .setMiddleName(mName)
+        .setLastName(lName)
+        .setSuffix(suffix)
+        .setEmail(email)
+        .setDateJoined(cal)
+        .setIsActive(true)
+        .setCanLogin(true)
+        .setIsDancer(true)
+        .build();
     userRepo.save(user);
   }
 

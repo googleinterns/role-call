@@ -19,7 +19,7 @@ import com.google.rolecall.models.UserAsset.AssetType;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.util.StorageService;
 
-@Profile({"dev"})
+@Profile({ "dev" })
 @Service("LocalStorageService")
 public class LocalStorageService implements StorageService {
   private final Path root;
@@ -30,8 +30,7 @@ public class LocalStorageService implements StorageService {
       try {
         Files.createDirectories(root);
         System.out.println("Created new root directory: " + root.toString());
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         throw new IOException("Could not initialize storage.");
       }
     } else {
@@ -66,7 +65,8 @@ public class LocalStorageService implements StorageService {
   }
 
   @Override
-  public Resource loadAsResource(AssetType type, String filename) throws InvalidParameterException, FileNotFoundException {
+  public Resource loadAsResource(AssetType type, String filename)
+      throws InvalidParameterException, FileNotFoundException {
     Path filePath = Path.of(root.toString(), type.location, filename);
     if (!filePath.toAbsolutePath().getParent().equals(Path.of(root.toString(), type.location))) {
       throw new InvalidParameterException("File must be in parent directory.");

@@ -26,9 +26,9 @@ import org.hibernate.annotations.NaturalId;
 @Entity
 @Table
 public class User {
-  
+
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   @Column(nullable = false)
@@ -58,7 +58,7 @@ public class User {
 
   @Basic
   @Temporal(TemporalType.DATE)
-  @JsonFormat(pattern="yyyy-MM-dd")
+  @JsonFormat(pattern = "yyyy-MM-dd")
   private Calendar dateJoined;
 
   // Roles with defaults
@@ -100,9 +100,7 @@ public class User {
   @Column(nullable = false)
   private boolean isActive;
 
-  @OneToMany(mappedBy = "owner", 
-             cascade = CascadeType.REMOVE,
-             fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
   private List<UserAsset> profilePictures;
 
   public Integer getId() {
@@ -142,7 +140,7 @@ public class User {
   }
 
   public Optional<Calendar> getDateJoined() {
-    return dateJoined == null ? Optional.empty(): Optional.of(dateJoined);
+    return dateJoined == null ? Optional.empty() : Optional.of(dateJoined);
   }
 
   // Roles
@@ -170,23 +168,23 @@ public class User {
   public boolean recievesNotifications() {
     return notifications;
   }
-  
+
   public boolean canManagePerformances() {
     return managePerformances;
   }
-  
+
   public boolean canManageCasts() {
     return manageCasts;
   }
-  
+
   public boolean canManagePieces() {
     return managePieces;
   }
-  
+
   public boolean canManageRoles() {
     return manageRoles;
   }
-  
+
   public boolean canManageRules() {
     return manageRules;
   }
@@ -246,7 +244,7 @@ public class User {
     roleIn.add(isOther()); // OTHER
 
     ArrayList<String> rolesOut = new ArrayList<>();
-    for(int i = 0; i < Constants.Roles.ROLES.length; i++) {
+    for (int i = 0; i < Constants.Roles.ROLES.length; i++) {
       if (roleIn.get(i)) {
         rolesOut.add(Constants.Roles.ROLES[i]);
       }
@@ -266,7 +264,7 @@ public class User {
     permissionsIn.add(isAdmin() || canManageRules()); // MANAGE_RULES
 
     ArrayList<String> permissionsOut = new ArrayList<>();
-    for(int i = 0; i < Constants.Roles.ROLES.length; i++) {
+    for (int i = 0; i < Constants.Roles.ROLES.length; i++) {
       if (permissionsIn.get(i)) {
         permissionsOut.add(Constants.Roles.ROLES[i]);
       }
@@ -346,175 +344,175 @@ public class User {
     private Boolean isActive = true;
 
     public Builder setFirstName(String name) {
-      if(name != null) {
+      if (name != null) {
         this.firstName = name;
       }
       return this;
     }
 
     public Builder setMiddleName(String name) {
-      if(name != null) {
+      if (name != null) {
         this.middleName = name;
       }
       return this;
     }
-  
+
     public Builder setLastName(String name) {
-      if(name != null) {
+      if (name != null) {
         this.lastName = name;
       }
       return this;
     }
 
     public Builder setSuffix(String suffix) {
-      if(suffix != null) {
+      if (suffix != null) {
         this.suffix = suffix;
       }
       return this;
     }
-  
+
     public Builder setEmail(String email) {
-      if(email != null) {
+      if (email != null) {
         this.email = email.toLowerCase();
       }
       return this;
     }
-  
+
     public Builder setNotificationEmail(String notificationEmail) {
-      if(notificationEmail != null) {
+      if (notificationEmail != null) {
         this.notificationEmail = notificationEmail.toLowerCase();
       }
       return this;
     }
-  
+
     public Builder setPictureFile(String pictureFile) {
-      if(pictureFile != null) {
+      if (pictureFile != null) {
         this.pictureFile = pictureFile;
       }
       return this;
     }
-  
+
     public Builder setPhoneNumber(String phoneNumber) {
-      if(phoneNumber != null) {
+      if (phoneNumber != null) {
         this.phoneNumber = phoneNumber;
       }
       return this;
     }
 
     public Builder setDateJoined(Calendar dateJoined) {
-      if(dateJoined != null) {
+      if (dateJoined != null) {
         this.dateJoined = dateJoined;
       }
       return this;
     }
-  
+
     public Builder setIsAdmin(Boolean isAdmin) {
-      if(isAdmin != null) {
+      if (isAdmin != null) {
         this.isAdmin = isAdmin;
       }
       return this;
     }
-  
+
     public Builder setIsChoreographer(Boolean isChoreographer) {
-      if(isChoreographer != null) {
+      if (isChoreographer != null) {
         this.isChoreographer = isChoreographer;
       }
       return this;
     }
-  
+
     public Builder setIsDancer(Boolean isDancer) {
-      if(isDancer != null) {
+      if (isDancer != null) {
         this.isDancer = isDancer;
       }
       return this;
     }
-  
+
     public Builder setIsOther(Boolean isOther) {
-      if(isOther != null) {
+      if (isOther != null) {
         this.isOther = isOther;
       }
       return this;
     }
-  
+
     public Builder setCanLogin(Boolean canLogin) {
-      if(canLogin != null) {
+      if (canLogin != null) {
         this.canLogin = canLogin;
       }
       return this;
     }
 
     public Builder setRecievesNotifications(Boolean notifications) {
-      if(notifications != null) {
+      if (notifications != null) {
         this.notifications = notifications;
       }
       return this;
     }
-    
+
     public Builder setManagePerformances(Boolean managePerformances) {
-      if(managePerformances != null) {
+      if (managePerformances != null) {
         this.managePerformances = managePerformances;
       }
       return this;
     }
-    
+
     public Builder setManageCasts(Boolean manageCasts) {
-      if(manageCasts != null) {
+      if (manageCasts != null) {
         this.manageCasts = manageCasts;
       }
       return this;
     }
-    
+
     public Builder setManagePieces(Boolean managePieces) {
-      if(managePieces != null) {
+      if (managePieces != null) {
         this.managePieces = managePieces;
       }
       return this;
     }
-    
+
     public Builder setManageRoles(Boolean manageRoles) {
-      if(manageRoles != null) {
+      if (manageRoles != null) {
         this.manageRoles = manageRoles;
       }
       return this;
     }
-    
+
     public Builder setManageRules(Boolean manageRules) {
-      if(manageRules != null) {
+      if (manageRules != null) {
         this.manageRules = manageRules;
       }
       return this;
     }
-  
+
     public Builder setEmergencyContactName(String emergencyContactName) {
-      if(emergencyContactName != null) {
+      if (emergencyContactName != null) {
         this.emergencyContactName = emergencyContactName;
       }
       return this;
     }
-  
+
     public Builder setEmergencyContactNumber(String emergencyContactNumber) {
-      if(emergencyContactNumber != null) {
+      if (emergencyContactNumber != null) {
         this.emergencyContactNumber = emergencyContactNumber;
       }
       return this;
     }
-  
+
     public Builder setComments(String comments) {
-      if(comments != null) {
+      if (comments != null) {
         this.comments = comments;
       }
       return this;
     }
 
     public Builder setIsActive(Boolean isActive) {
-      if(isActive != null) {
+      if (isActive != null) {
         this.isActive = isActive;
       }
       return this;
     }
 
     public User build() throws InvalidParameterException {
-      if(firstName == null || lastName == null || email == null) {
+      if (firstName == null || lastName == null || email == null) {
         throw new InvalidParameterException(
             "User must have non-null firstName, lastName, and email");
       }

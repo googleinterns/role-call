@@ -25,7 +25,7 @@ public abstract class UserAssetInfo {
   @Nullable
   @JsonProperty("dateUploaded")
   public abstract Long dateUploaded();
-  
+
   @Nullable
   @JsonProperty("ownerId")
   public abstract Integer ownerId();

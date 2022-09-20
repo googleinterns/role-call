@@ -46,7 +46,7 @@ public class UserAsset {
   }
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   @Enumerated(EnumType.STRING)
@@ -91,12 +91,12 @@ public class UserAsset {
 
   public UserAssetInfo toUserAssetInfo() {
     return UserAssetInfo.newBuilder()
-      .setId(id)
-      .setType(type.name())
-      .setFileType(fileType.name)
-      .setDateUploaded(dateUploaded.getTime())
-      .setOwnerId(owner.getId())
-      .build();
+        .setId(id)
+        .setType(type.name())
+        .setFileType(fileType.name)
+        .setDateUploaded(dateUploaded.getTime())
+        .setOwnerId(owner.getId())
+        .build();
   }
 
   public UserAsset(AssetType type, FileType fileType) {
@@ -105,5 +105,6 @@ public class UserAsset {
     dateUploaded = new Date(System.currentTimeMillis());
   }
 
-  public UserAsset() {}
+  public UserAsset() {
+  }
 }

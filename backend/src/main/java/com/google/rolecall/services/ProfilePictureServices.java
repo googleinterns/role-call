@@ -51,7 +51,7 @@ public class ProfilePictureServices {
     assetRepo.saveAndFlush(asset);
     try {
       storage.store(image, AssetType.PROFILEPICTURE, asset.getFileName());
-    } catch(Exception e) {
+    } catch (Exception e) {
       // Delete asset if not stored.
       assetRepo.delete(asset);
       assetRepo.flush();
@@ -64,7 +64,7 @@ public class ProfilePictureServices {
     if (previousPicture != null) {
       try {
         String[] splitName = previousPicture.split("[\\/\\.]");
-        int previousAssetId = Integer.parseInt(splitName[splitName.length-2]);
+        int previousAssetId = Integer.parseInt(splitName[splitName.length - 2]);
         deleteProfilePicture(previousAssetId);
       } catch (Exception e) {
         System.out.println("Failed to delete " + previousPicture
@@ -82,7 +82,7 @@ public class ProfilePictureServices {
     }
     Optional<UserAsset> queryResult = assetRepo.findById(id);
     if (!queryResult.isPresent()) {
-        throw new EntityNotFoundException(String.format("assetid %d does not exist", id));
+      throw new EntityNotFoundException(String.format("assetid %d does not exist", id));
     }
     UserAsset asset = queryResult.get();
     try {
