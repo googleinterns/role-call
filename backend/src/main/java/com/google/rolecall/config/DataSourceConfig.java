@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 /**
- * Configures the database connection as a DataSource object through profile specific inititializing
+ * Configures the database connection as a DataSource object through profile
+ * specific inititializing
  * functions.
  */
 @Configuration
@@ -60,7 +61,7 @@ public class DataSourceConfig {
    * spring.cloud.gcp.sql.instance-connection-name found through
    * application-prod.properties.
    */
-  @Profile({"prod", "qa"})
+  @Profile({ "prod", "qa" })
   @Bean
   public DataSource getDataSourceCloudSql() {
     return new HikariDataSource(getCloudConfig());
@@ -95,10 +96,10 @@ public class DataSourceConfig {
     String projectId = env.getProperty("spring.cloud.gcp.projectId");
     String secretName = env.getProperty("cloud.secret.name");
     try {
-logger.log(
-Level.INFO,
-String.format(
-"getCloudDbPassword projectId=%s secretName=%s \n", projectId, secretName));
+      logger.log(
+          Level.INFO,
+          String.format(
+              "getCloudDbPassword projectId=%s secretName=%s \n", projectId, secretName));
       password = getSecretResponse(projectId, secretName).getPayload().getData().toStringUtf8();
     } catch (IOException e) {
       throw new RuntimeException(
@@ -120,10 +121,13 @@ String.format(
   @VisibleForTesting
   AccessSecretVersionResponse getSecretResponse(String projectId, String secretName)
       throws Exception {
-    SecretManagerServiceClient client = SecretManagerServiceClient.create();
-    SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
+    AccessSecretVersionResponse response;
+    try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
+      SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
+      response = client.accessSecretVersion(name);
+    }
 
-    return client.accessSecretVersion(name);
+    return response;
   }
 
   @Autowired

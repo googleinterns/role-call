@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
       throws Exception {
-      authenticationManagerBuilder.authenticationProvider(authProvider);
+    authenticationManagerBuilder.authenticationProvider(authProvider);
   }
 
   @Override
@@ -82,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
     }
 
-    configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH","DELETE"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE"));
     configuration.setAllowCredentials(true);
     configuration.setAllowedHeaders(Arrays.asList("*"));
 
