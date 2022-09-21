@@ -50,7 +50,7 @@ public abstract class UnavailabilityInfo {
   }
 
   @AutoValue.Builder
-  public abstract static class  Builder {
+  public abstract static class Builder {
     @JsonProperty("id")
     public abstract Builder setId(Integer id);
 

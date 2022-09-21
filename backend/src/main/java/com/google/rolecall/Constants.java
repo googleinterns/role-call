@@ -11,6 +11,7 @@ public class Constants {
     public static final String PERFORMANCE_MANAGEMENT = "/api/performance";
     public static final String DASHBOARD_MANAGEMENT = "/api/dashboard";
     public static final String UNAVAILABILITY_MANAGEMENT = "/api/unavailable";
+    public static final String PROFILE_PICTURE_MANAGEMENT = "/api/profile_picture";
   }
 
   public static class RequestParameters {
@@ -24,6 +25,7 @@ public class Constants {
     public static final String END_DATE = "enddate";
     public static final String PERF_DATE = "perfdate";
     public static final String CHECK_UNAVS = "checkUnavs";
+    public static final String FILE = "file";
   }
 
   public static class Headers {

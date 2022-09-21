@@ -30,3 +30,9 @@ admin.email=admin@rolecall.com
 
 # 4. Debug Mode disables oauth authentication
 rolecall.debug=true
+
+# 5. Location of local asset file subdirectories
+rolecall.asset.directory=/path/to/base/directory
+
+#6 Cloud asset bucket name
+rolecall.asset.resource.bucket=prod-asset-bucket

@@ -23,6 +23,8 @@ final class Annotations {
   @interface Get {
     @AliasFor(annotation = RequestMapping.class, attribute = "params")
     String[] value() default {};
+    @AliasFor(annotation = RequestMapping.class, attribute = "path")
+    String[] path() default {};
   }
 
   /* POST request methods of an @Endpoint class. */
