@@ -6,6 +6,9 @@ service: backend-prod
 env_variables:
   SPRING_PROFILES_ACTIVE: "prod"
 
+# B2 (default 512Mb memory), B4 1024Mb
+instance_class: B4
+
 # Only use 1 instance for development
 manual_scaling:
   instances: 1
