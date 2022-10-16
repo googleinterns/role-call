@@ -9,4 +9,5 @@ export const environment = {
   useDevEmail: false,
   backendURL:
     'https://backend-prod-dot-absolute-water-286821.uk.r.appspot.com/',
+  picPath: 'api/profile_picture/url/'
 };

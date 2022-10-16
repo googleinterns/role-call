@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CrudApi } from './crud-api.service';
 import { PictureApi } from './picture-api.service';
 import * as APITypes from 'src/api-types';
-
+import { environment } from 'src/environments/environment';
 import { MockUserBackend } from '../mocks/mock-user-backend';
 import { DataCache } from '../utils/data-cache';
 
@@ -258,9 +258,17 @@ export class UserApi {
             user.picture_file);
         user.picture_file = '';
       } else {
-        this.pictureApi.getOnePicture(user.picture_file).then(img => {
-          if (!!img) {           
-            user.image = img;
+        this.pictureApi.getOnePicture(user.picture_file).then(img => {          
+          if (!!img) {
+            const reader = new FileReader();
+            reader.onload = function() {
+              user.image = this.result;
+            }
+            if (environment.name === 'dev') {
+              reader.readAsDataURL(img);
+            } else {
+              reader.readAsText(img);
+            }            
           } else {
             console.log('Setting picture to blank');
             user.picture_file = '';
