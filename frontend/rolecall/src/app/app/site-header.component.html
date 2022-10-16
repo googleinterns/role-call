@@ -1,8 +1,8 @@
 <div class="site-header-container">
   <button
-    [disabled]="!loginAPI.isLoggedIn"
+    [disabled]="!loginApi.isLoggedIn"
     class="nav-trigger-button"
-    [ngStyle]="!loginAPI.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }"
+    [ngStyle]="!loginApi.isLoggedIn ? { 'opacity' : '0', 'width' : '0' } : { 'opacity' : '1' }"
     mat-icon-button
     aria-label="Toggle Navigation Button"
     (click)="onNavButtonClick()"
@@ -13,7 +13,7 @@
     </mat-icon>
   </button>
   <img
-    [ngStyle]="!loginAPI.isLoggedIn ? { 'margin-left': '2rem' }: {}"
+    [ngStyle]="!loginApi.isLoggedIn ? { 'margin-left': '2rem' }: {}"
     src="/assets/images/AADT-logo.png"
     class="logo"
     routerLink="/"
@@ -24,7 +24,7 @@
   </div>
   <!-- extra div to clump all extra content to the right -->
   <div class="top-right">
-    <!-- test input begin -->
+    <!-- test input begin Deactivated
     <div class="checkbox">
       <mat-checkbox
         class="example-margin"
@@ -32,33 +32,33 @@
       >Server Unav Check
       </mat-checkbox>
     </div>
-    <!-- test input end -->
+    !-- test input end -->
     <div class=" site-header-subcontainer">
       <div
         class="log-in-account-container"
-        [style.display]="!loginAPI.isLoggedIn ? 'flex' : 'none'"
+        [style.display]="!loginApi.isLoggedIn ? 'flex' : 'none'"
       >
         <div id="gsi_btn"></div>        
       </div>
 
       <div
         class="log-in-account-container"
-        [style.display]="loginAPI.isLoggedIn ? 'flex' : 'none'"
+        [style.display]="loginApi.isLoggedIn ? 'flex' : 'none'"
         ngbDropdown
         #profileDrop="ngbDropdown"
       >
         <img
           class="profile-image"
-          [src]="this.loginAPI.imageURL"
+          [src]="this.loginApi.imageURL"
           ngbDropdownAnchor
           (click)="profileDrop.isOpen() ? profileDrop.close() : profileDrop.open()"
         >
         <div ngbDropdownMenu aria-labelledby="dropdownManual">
           <div class="profile-drop-down-item-container">
-            <h3 class="profile-name">{{ loginAPI.givenName + " " + loginAPI.familyName }}</h3>
+            <h3 class="profile-name">{{ loginApi.givenName + " " + loginApi.familyName }}</h3>
           </div>
           <div class="profile-drop-down-item-container">
-            <h3 class="profile-email">{{ loginAPI.email }}</h3>
+            <h3 class="profile-email">{{ loginApi.email }}</h3>
           </div>
           <button
             ngbDropdownItem

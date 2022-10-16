@@ -1,6 +1,6 @@
 
 <div
-  *ngIf="dataLoaded && selectedSegment"
+  *ngIf="castApi.cache.isLoaded && selectedSegment"
   class="drop-group-container"
   cdkDropListGroup
 >
@@ -144,7 +144,7 @@
                 >
                   <img
                     class="user-image"
-                    [src]="baseImageUrl + dancer.pictureFile + '.jpg' | lowercase"
+                    [src]="dancer.user.image"
                   >
                   <div
                     [ngClass]="dancer.hasAbsence ? 'std-absence' : ''"
@@ -184,7 +184,7 @@
           >
             <img
               class="user-image"
-              [src]="baseImageUrl + user.picture_file + '.jpg' | lowercase"
+              [src]="user.image"
             >
             <div
               [ngClass]="user.isAbsent ? 'std-absence' : ''"

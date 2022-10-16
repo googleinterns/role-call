@@ -21,7 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+// import javax.persistence.Transient;
 
 
 @Entity
@@ -60,8 +60,8 @@ public class Performance {
   @Enumerated(EnumType.ORDINAL)
   private Status status;
 
-  @Transient
-  private boolean hasAbsence;
+  // @Transient
+  // private boolean hasAbsence;
 
   // This as a set masks a larger issue PerformanceRepository.getById duplicates sections
   @OneToMany(mappedBy = "performance", 
@@ -74,13 +74,14 @@ public class Performance {
     return id;
   }
 
-  public boolean getHasAbsence() {
-    return hasAbsence;
-  }
+  // public boolean getHasAbsence() {
+  //   return hasAbsence;
+  // }
 
-  public void setHasAbsence( boolean hasAbsence) {
-    this.hasAbsence = hasAbsence; 
-  }
+  // public void setHasAbsence( boolean hasAbsence) {
+  //   this.hasAbsence = hasAbsence; 
+  // }
+
   public String getTitle() {
     return title;
   }
@@ -122,15 +123,19 @@ public class Performance {
   }
 
   public void publish() {
-    if(status == Status.DRAFT) {
-      this.status = Status.PUBLISHED;
-    }
+    // The below restriction is controversial.
+    // if(status == Status.DRAFT) {
+    //   this.status = Status.PUBLISHED;
+    // }
+    this.status = Status.PUBLISHED;
   }
 
   public void cancel() {
-    if(status == Status.PUBLISHED) {
-      this.status = Status.CANCELED;
-    }
+    // The below restriction is controversial.
+    // if(status == Status.PUBLISHED) {
+    //   this.status = Status.CANCELED;
+    // }
+    this.status = Status.CANCELED;
   }
 
   public void addPerformanceSection(PerformanceSection performanceSection) {
@@ -164,7 +169,7 @@ public class Performance {
     }
 
     throw new EntityNotFoundException(String.format(
-        "PerformacneSection with id %d does not exist for this Performance", id));
+        "PerformanceSection with id %d does not exist for this Performance", id));
   }
 
   public PerformanceInfo toPerformanceInfo() {
@@ -183,7 +188,7 @@ public class Performance {
         .setDateTime(getDate().getTime())
         .setStatus(getStatus())
         .setPerformanceSections(sections)
-        .setHasAbsence(getHasAbsence())
+        // .setHasAbsence(getHasAbsence())
         .build();
 
     return info;

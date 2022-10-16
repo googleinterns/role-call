@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CrudApi } from './crud-api.service';
 import * as APITypes from 'src/api-types';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
 
 import { MockCastBackend } from '../mocks/mock-cast-backend';
 import { HeaderUtilityService } from '../services/header-utility.service';
-import { LoggingService } from '../services/logging.service';
 import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
-import { SegmentApi, Position } from './segment-api.service';
+import { SegmentApi, Segment, Position } from './segment-api.service';
 import { ContextService } from '../services/context.service';
+import { DataCache, CacheLoadReturn, CacheSetReturn, ItemStdReturn,
+} from '../utils/data-cache';
+import { RawAllItemsResponse } from './crud-api.service';
 
 
 type RawCastMember = {
@@ -38,16 +41,16 @@ type RawCast = {
 };
 
 // Get all casts
-type AllRawCastsResponse = {
-  data: RawCast[];
-  warnings: string[];
-};
+// type AllRawCastsResponse = {
+//   data: RawCast[];
+//   warnings: string[];
+// };
 
 // Get one specific cast
-type OneRawCastsResponse = {
-  data: RawCast;
-  warnings: string[];
-};
+// type OneRawCastsResponse = {
+//   data: RawCast;
+//   warnings: string[];
+// };
 
 export type CastMember = {
   uuid: string;
@@ -75,19 +78,19 @@ export type Cast = {
   filled_positions: CastPosition[];
 };
 
-export type AllCastsResponse = {
-  data: {
-    casts: Cast[];
-  };
-  warnings: string[];
-};
+// export type AllCastsResponse = {
+//   data: {
+//     casts: Cast[];
+//   };
+//   warnings: string[];
+// };
 
-export type OneCastResponse = {
-  data: {
-    cast: Cast;
-  };
-  warnings: string[];
-};
+// export type OneCastResponse = {
+//   data: {
+//     cast: Cast;
+//   };
+//   warnings: string[];
+// };
 
 /**
  * A service responsible for interfacing with the Cast APIs,
@@ -99,8 +102,8 @@ export class CastApi {
   /** The last saved id (every time a cast is saved it receives a new id). */
   lastSavedCastId: number;
 
-  /** Mock backend. */
-  mockBackend: MockCastBackend = new MockCastBackend();
+  /** True if the cached data was calculated with performance dates. */
+  hasPerformanceDates = false;
 
   /**
    * The casts which are not on the backend but are currently needed by
@@ -116,102 +119,116 @@ export class CastApi {
   /** The raw casts handed over by the backend. */
   rawCasts: RawCast[] = [];
 
-  /** All the loaded casts mapped by UUID. */
-  casts: Map<APITypes.CastUUID, Cast> = new Map<APITypes.CastUUID, Cast>();
+  // /** All the loaded casts mapped by UUID. */
+  // casts: Map<APITypes.CastUUID, Cast> = new Map<APITypes.CastUUID, Cast>();
 
-  /** Emitter that is called whenever casts are loaded. */
-  castEmitter: EventEmitter<Cast[]> = new EventEmitter();
+  // /** Emitter that is called whenever casts are loaded. */
+  // castEmitter: EventEmitter<Cast[]> = new EventEmitter();
+
+  cache: DataCache<APITypes.CastUUID>;
 
   constructor(
-      private loggingService: LoggingService,
       private http: HttpClient,
-      private segmentApi: SegmentApi,
       private headerUtil: HeaderUtilityService,
       private respHandler: ResponseStatusHandlerService,
+      private segmentApi: SegmentApi,
 
       public g: ContextService,
+      public crudApi: CrudApi<APITypes.UserUUID>,
   ) {
+    this.cache = new DataCache<APITypes.UserUUID>({
+      name: 'Cast',
+      apiName: 'api/cast',
+      ixName: 'castid',
+      crudApi: this.crudApi,
+      getIx: this.getIx,
+      // sortCmp: this.castCmp,
+      mockBackend: new MockCastBackend(),
+      // loadAllParams: this.loadAllCastsParams,
+      loadAllEmitItems: this.loadAllEmitCasts,
+    });
+    this.cache.loadAllRequestOverride = this.stdLoadAllCasts;
+    this.cache.setRequestOverride = this.stdSetCast;
   }
 
+  public getIx = (item: unknown): APITypes.CastUUID =>
+    ( item as Cast ).uuid;
+
+  // public castCmp = (a: unknown, b: unknown): number =>
+  //     ( a as Cast ).name.toLowerCase() <
+  //     ( b as Cast ).name.toLowerCase() ? -1 : 1;
+
+  public loadAllCastsCompanionQuery = async (): Promise<void> => {
+    await this.segmentApi.loadAllSegments();
+  };
+
+  // public loadAllCastsParams = (): HttpParams => {
+  //   const perfDate = this.g.checkUnavs ? this.g.checUnavDate : 0;
+  //   return new HttpParams().append('perfdate', '' + perfDate);
+  // };
+
+  public loadAllEmitCasts = (): unknown[] =>
+    Array.from(this.cache.arr).concat(...this.workingCasts.values());
+
   /** Hits backend with all casts GET request. */
-  requestAllCasts = async (
-    forceSegmentLoad: boolean,
-    dbgMsg: string,
-    perfDate: number = 0,
-  ): Promise<AllCastsResponse> => {
-console.log('GET CASTS', dbgMsg);
+  public stdLoadAllCasts = async (
+    cache: DataCache<APITypes.CastUUID>,
+  ): Promise<CacheLoadReturn> => {
+    const api = cache.apiName;
     if (environment.mockBackend) {
-      return this.mockBackend.requestAllCasts();
+      return cache.mockBackend.requestAllMocks();
     }
-    if (forceSegmentLoad || this.segmentApi.segments.size === 0) {
-      await this.segmentApi.getAllSegments();
+    await this.segmentApi.loadAllSegments();
+    const headers = await this.headerUtil.generateHeader();
+    let params: HttpParams;
+    if (cache.loadAllParams) {
+      params = cache.loadAllParams();
     }
-    const header = await this.headerUtil.generateHeader();
-    if (!this.g.checkUnavs) {
-      perfDate = 0;
-    }
-    const params = new HttpParams().append('perfdate', '' + perfDate);
-console.log('PERFDATE', perfDate);
-    return lastValueFrom(this.http.get<AllRawCastsResponse>(
-        environment.backendURL + 'api/cast', {
-          headers: header,
+    return lastValueFrom(this.http.get<RawAllItemsResponse>(
+        environment.backendURL + api, {
+          headers,
           observe: 'response',
           withCredentials: true,
           params,
         }))
         .catch(errorResp => errorResp)
-        .then(resp => this.respHandler.checkResponse<AllRawCastsResponse>(resp))
+        .then(resp => this.respHandler.checkResponse<RawAllItemsResponse>(resp))
         .then(result => {
-          this.rawCasts = result.data;
+          this.rawCasts = result.data as RawCast[];
           const allPositions: Position[] = [];
-          Array.from(this.segmentApi.segments.values()).forEach(segment => {
-            allPositions.push(...segment.positions);
+          Array.from(this.segmentApi.cache.map.values()).forEach(segment => {
+            allPositions.push(...( segment as Segment ).positions);
           });
           return {
-            data: {
-              casts: result.data.map(rawCast => {
-                let highestCastNumber = 0;
-                const groups: CastGroup[] = [];
-                for (const rawSubCast of rawCast.subCasts) {
-                  const foundGroup = groups.find(
-                      g => g.position_uuid === String(
-                          allPositions.find(pos =>
-                           Number(pos.uuid) === rawSubCast.positionId).uuid));
-                  if (foundGroup) {
-                    const foundGroupIndex = groups.find(
-                        g => g.position_uuid === String(allPositions.find(
-                            pos => Number(pos.uuid)
-                                   === rawSubCast.positionId).uuid)
-                             && g.group_index === rawSubCast.castNumber);
-                    if (foundGroupIndex) {
-                      foundGroupIndex.members = foundGroupIndex.members.concat(
-                          rawSubCast.members.map(rawMem => ({
-                              uuid: String(rawMem.userId),
-                              position_number: rawMem.order,
-                              hasAbsence: rawMem.hasAbsence ?? false,
-                            })
-                          ));
-                    } else {
-                      // Note: This is duplicated with the following else-block
-                      groups.push({
-                        position_uuid: String(allPositions.find(
-                            pos => Number(pos.uuid)
-                                   === rawSubCast.positionId).uuid),
-                        group_index: rawSubCast.castNumber,
-                        members: rawSubCast.members.map(rawMem => ({
+            items: result.data.map(rawItem => {
+              const rawCast = rawItem as RawCast;
+              let highestCastNumber = 0;
+              const groups: CastGroup[] = [];
+              for (const rawSubCast of rawCast.subCasts) {
+                const foundGroup = groups.find(
+                    g => g.position_uuid === String(
+                        allPositions.find(pos =>
+                          Number(pos.uuid) === rawSubCast.positionId).uuid));
+                if (foundGroup) {
+                  const foundGroupIndex = groups.find(
+                      g => g.position_uuid === String(allPositions.find(
+                          pos => Number(pos.uuid)
+                                  === rawSubCast.positionId).uuid)
+                            && g.group_index === rawSubCast.castNumber);
+                  if (foundGroupIndex) {
+                    foundGroupIndex.members = foundGroupIndex.members.concat(
+                        rawSubCast.members.map(rawMem => ({
                             uuid: String(rawMem.userId),
                             position_number: rawMem.order,
                             hasAbsence: rawMem.hasAbsence ?? false,
                           })
-                        )
-                      });
-                    }
+                        ));
                   } else {
-                    // Note: This is the same code as the preceding else-block
+                    // Note: This is duplicated with the following else-block
                     groups.push({
                       position_uuid: String(allPositions.find(
                           pos => Number(pos.uuid)
-                                 === rawSubCast.positionId).uuid),
+                                  === rawSubCast.positionId).uuid),
                       group_index: rawSubCast.castNumber,
                       members: rawSubCast.members.map(rawMem => ({
                           uuid: String(rawMem.userId),
@@ -221,128 +238,133 @@ console.log('PERFDATE', perfDate);
                       )
                     });
                   }
-                  if (highestCastNumber < rawSubCast.castNumber) {
-                    highestCastNumber = rawSubCast.castNumber;
-                  }
+                } else {
+                  // Note: This is the same code as the preceding else-block
+                  groups.push({
+                    position_uuid: String(allPositions.find(
+                        pos => Number(pos.uuid)
+                                === rawSubCast.positionId).uuid),
+                    group_index: rawSubCast.castNumber,
+                    members: rawSubCast.members.map(rawMem => ({
+                        uuid: String(rawMem.userId),
+                        position_number: rawMem.order,
+                        hasAbsence: rawMem.hasAbsence ?? false,
+                      })
+                    )
+                  });
                 }
-                const uniquePositionIDs = new Set<number>();
-                rawCast.subCasts.forEach(
-                    val => uniquePositionIDs.add(val.positionId));
-                return {
-                  uuid: String(rawCast.id),
-                  name: rawCast.name,
-                  segment: String(rawCast.sectionId),
-                  castCount: highestCastNumber + 1,
-                  filled_positions: Array.from(uniquePositionIDs.values())
-                      .map(positionID => ({
-                          position_uuid: String(allPositions.find(pos =>
-                              Number(pos.uuid) === positionID).uuid),
-                          groups: groups.filter(g => g.position_uuid === String(
-                              allPositions.find(pos =>
-                                  Number(pos.uuid) === positionID).uuid)),
-                          hasAbsence: false,
-                        })
-                      )
-                };
-              })
-            },
+                if (highestCastNumber < rawSubCast.castNumber) {
+                  highestCastNumber = rawSubCast.castNumber;
+                }
+              }
+              const uniquePositionIDs = new Set<number>();
+              rawCast.subCasts.forEach(
+                  val => uniquePositionIDs.add(val.positionId));
+              return {
+                uuid: String(rawCast.id),
+                name: rawCast.name,
+                segment: String(rawCast.sectionId),
+                castCount: highestCastNumber + 1,
+                filled_positions: Array.from(uniquePositionIDs.values())
+                    .map(positionID => ({
+                        position_uuid: String(allPositions.find(pos =>
+                            Number(pos.uuid) === positionID).uuid),
+                        groups: groups.filter(g => g.position_uuid === String(
+                            allPositions.find(pos =>
+                                Number(pos.uuid) === positionID).uuid)),
+                        hasAbsence: false,
+                      })
+                    )
+              };
+            }),
             warnings: result.warnings
           };
         });
   };
 
-  /** Hits backend with one cast GET request. */
-  requestOneCast = async (
-    uuid: APITypes.UserUUID,
-  ): Promise<OneCastResponse> =>
-    this.mockBackend.requestOneCast(uuid);
-
+  // No special implementation for requestOneCast is provided as
+  // it is not needed for the client. If called the generic CRUD
+  // function will be used. It will either retirieve a Mock value
+  // or a Raw database value.
 
   /** Hits backend with create/edit cast POST request. */
-  requestCastSet = async (cast: Cast): Promise<HttpResponse<any>> => {
+  requestCastSet = async (
+    cache: DataCache<APITypes.CastUUID>,
+    item: unknown,
+  ): Promise<ItemStdReturn> => {
+    const api = cache.apiName;
+    const delApi = `${cache.apiName}?${cache.ixName}=`;
+    const getIx = cache.getIx;
+    const cast = item as Cast;
     if (environment.mockBackend) {
-      return this.mockBackend.requestCastSet(cast);
+      return this.cache.mockBackend.requestMockSet(cache, getIx);
     }
+    const headers = await this.headerUtil.generateHeader();
+    const observe: 'body' | 'events' | 'response' = 'response';
+    const withCredentials = true;
+    const httpParams = { headers, observe, withCredentials };
     // Check if we have record of the cast and patch if we do
     if (this.hasCast(cast.uuid)) {
       // Do patch
-      const header = await this.headerUtil.generateHeader();
+      // instead of patching db, delete and post new.
       return lastValueFrom(this.http.delete(
-          environment.backendURL + 'api/cast?castid=' + cast.uuid, {
-            headers: header,
-            observe: 'response',
-            withCredentials: true
-          }))
-          .catch(errorResp => errorResp)
-          .then(
-              resp => this.respHandler.checkResponse<any>(resp))
-          .then(async () => {
-            const rawCast = this.patchPostPrep(cast);
-            return lastValueFrom(this.http.post(
-                environment.backendURL + 'api/cast', rawCast, {
-                  headers: header,
-                  observe: 'response',
-                  withCredentials: true
-                }))
-                .catch(errorResp => errorResp).then(
-                  resp => this.respHandler.checkResponse<any>(resp));
-          });
+          environment.backendURL + delApi + cast.uuid,
+          httpParams,
+        ))
+        .catch(errorResp => errorResp)
+        .then(resp => this.respHandler.checkResponse<any>(resp))
+        .then(async () => {
+          const rawCast = this.castToPostRaw(cast);
+          return lastValueFrom(this.http.post(
+              environment.backendURL + api,
+              rawCast,
+              httpParams,
+            ))
+            .catch(errorResp => errorResp)
+            .then(resp => this.respHandler.checkResponse<any>(resp));
+        });
     } else {
       // Do post
-      const rawCast = this.patchPostPrep(cast);
-      const header = await this.headerUtil.generateHeader();
+      const rawCast = this.castToPostRaw(cast);
       return lastValueFrom(this.http.post(
-        environment.backendURL + 'api/cast', rawCast, {
-          headers: header,
-          observe: 'response',
-          withCredentials: true
-        }))
+          environment.backendURL + api,
+          rawCast,
+          httpParams,
+        ))
         .catch(errorResp => errorResp).then(
-          resp => this.respHandler.checkResponse<any>(resp));
+            resp => this.respHandler.checkResponse<any>(resp));
     }
   };
 
-  /** Hits backend with delete cast POST request. */
-  requestCastDelete = async (cast: Cast): Promise<HttpResponse<any>> => {
-    if (environment.mockBackend) {
-      return this.mockBackend.requestCastDelete(cast);
+
+  loadAllCasts = async (
+    forceDbRead: boolean = false,
+    _perfDate: number = 0,
+  ): Promise<Cast[]> => {
+    if (forceDbRead || !this.cache.isLoaded) {
+      return await this.cache.loadAll() as Cast[];
     }
-    const header = await this.headerUtil.generateHeader();
-    return lastValueFrom(this.http.delete(
-        environment.backendURL + 'api/cast?castid=' + cast.uuid, {
-          headers: header,
-          observe: 'response',
-          withCredentials: true
-        }))
-        .catch(errorResp => errorResp)
-        .then(resp => this.respHandler.checkResponse<any>(resp));
+    let items: unknown[];
+    if (this.loadAllEmitCasts) {
+      items = this.loadAllEmitCasts();
+    } else {
+      items = Array.from(this.cache.arr.values());
+    }
+    this.cache.loadedAll.emit(items);
+    return items as Cast[];
   };
 
-  /** Gets all the casts from the backend and returns them. */
-  getAllCasts = async (
-    forceSegmentLoad: boolean,
-    dbgMsg: string,
-    perfDate: number = 0,
-  ): Promise<Cast[]> =>
-    this.getAllCastsResponse(forceSegmentLoad, dbgMsg, perfDate).then(() => {
-      const allCasts = Array.from(this.casts.values())
-          .concat(...this.workingCasts.values());
-      this.castEmitter.emit(allCasts);
-      return allCasts;
-    }).catch(() =>
-      []
-    );
+  lookup = (ix: APITypes.CastUUID): Cast =>
+    this.cache.map.get(ix) as Cast;
 
 
-  /** Gets a specific cast from the backend by UUID and returns it. */
-  getCast = async (uuid: APITypes.CastUUID): Promise<Cast> =>
-    this.getOneCastResponse(uuid).then(val => {
-      const cast = Array.from(this.casts.values())
-          .concat(...this.workingCasts.values());
-      this.castEmitter.emit(cast);
-      return val.data.cast;
-    });
-
+  stdSetCast = async (
+    cache: DataCache<APITypes.CastUUID>,
+    item: unknown,
+  ): Promise<CacheSetReturn> =>
+    this.requestCastSet(cache, item)
+      .then(r => DataCache.itemSetReturnOk(r))
+      .catch(e => DataCache.itemSetReturnError(e));
 
   /**
    * Requests an update to the backend which may or may not be successful,
@@ -355,42 +377,27 @@ console.log('PERFDATE', perfDate);
   ): Promise<APITypes.SuccessIndicator> => {
     if (isWorkingCast) {
       this.workingCasts.set(cast.uuid, cast);
-      return Promise.resolve({
-        successful: true
-      });
+      return { successful: true };
     }
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
     }
-    return this.setCastResponse(cast).then(response => {
-      const rawCast = (response as unknown as OneRawCastsResponse).data;
-      this.lastSavedCastId = rawCast.id;
-      this.getAllCasts(false, 'set');
-      return {
-        successful: true
-      };
-    }).catch(reason => ({
-        successful: false,
-        error: reason,
-      })
-    );
+    return this.cache.set(cast);
   };
 
+
   /** Requests for the backend to delete the cast. */
-  deleteCast = async (cast: Cast): Promise<APITypes.SuccessIndicator> => {
+  deleteCast = async (
+    cast: Cast,
+  ): Promise<APITypes.SuccessIndicator> => {
     if (this.workingCasts.has(cast.uuid)) {
       this.workingCasts.delete(cast.uuid);
-      this.getAllCasts(false, 'delete 1');
-      return Promise.resolve({
-        successful: true
-      });
+      this.loadAllCasts();
+      return { successful: true };
     }
-    return this.deleteCastResponse(cast).then(() => {
-      this.casts.delete(cast.uuid);
-      this.getAllCasts(false, 'delete 2');
-      return {
-        successful: true
-      };
+    return this.cache.delete(cast).then(() => {
+      this.loadAllCasts();
+      return { successful: true };
     }).catch(reason => ({
         successful: false,
         error: reason,
@@ -402,14 +409,18 @@ console.log('PERFDATE', perfDate);
    * Check if the cached casts (working casts and backend casts) includes
    * a cast with a specific UUID.
    */
-  hasCast = (castUUID: APITypes.CastUUID): boolean =>
-    this.casts.has(castUUID) || this.workingCasts.has(castUUID);
+  hasCast = (castUUID: APITypes.CastUUID): boolean => {
+    const inCasts = this.cache.map.has(castUUID);
+    const inWorkingCasts = this.workingCasts.has(castUUID);
+    return inCasts || inWorkingCasts;
+  };
+
 
 
   /** Return the cast (working or backend) with a specific cast UUID. */
   castFromUUID = (castUUID: APITypes.CastUUID): Cast => {
-    if (this.casts.has(castUUID)) {
-      return this.casts.get(castUUID);
+    if (this.cache.map.has(castUUID)) {
+      return this.lookup(castUUID);
     }
     if (this.workingCasts.has(castUUID)) {
       return this.workingCasts.get(castUUID);
@@ -419,11 +430,12 @@ console.log('PERFDATE', perfDate);
 
   // Private methods
 
-  private patchPostPrep = (cast: Cast): RawCast => {
+  /** Turns a cast to be patched into a raw cast to be posted. */
+  private castToPostRaw = (cast: Cast): RawCast => {
     const allSubCasts: RawSubCast[] = [];
     const allPositions: Position[] = [];
-    Array.from(this.segmentApi.segments.values()).forEach(segment => {
-      allPositions.push(...segment.positions);
+    Array.from(this.segmentApi.cache.map.values()).forEach(segment => {
+      allPositions.push(...( segment as Segment ).positions);
     });
     for (const filledPos of cast.filled_positions) {
       for (const group of filledPos.groups) {
@@ -450,54 +462,5 @@ console.log('PERFDATE', perfDate);
       subCasts: allSubCasts,
     };
   };
-
-  /** Takes backend response, updates data structures for all users. */
-  private getAllCastsResponse = async (
-    forceSegmentLoad: boolean,
-    dbgMsg: string,
-    perfDate: number,
-  ): Promise<AllCastsResponse> =>
-    this.requestAllCasts(forceSegmentLoad, dbgMsg, perfDate).then(val => {
-      // Update the casts map
-      this.casts.clear();
-      for (const cast of val.data.casts) {
-        this.casts.set(cast.uuid, cast);
-      }
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-
-
-  /** Takes backend response, updates data structure for one cast. */
-  private getOneCastResponse = async (
-    uuid: APITypes.CastUUID,
-  ): Promise<OneCastResponse> =>
-    this.requestOneCast(uuid).then(val => {
-      // Update cast in map
-      this.casts.set(val.data.cast.uuid, val.data.cast);
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-
-
-  /** Sends backend request and awaits response. */
-  private setCastResponse = async (
-    cast: Cast,
-  ): Promise<HttpResponse<any>> =>
-    this.requestCastSet(cast);
-
-
-  /** Sends backend request and awaits response. */
-  private deleteCastResponse = async (
-    cast: Cast,
-  ): Promise<HttpResponse<any>> =>
-    this.requestCastDelete(cast);
-
 
 }

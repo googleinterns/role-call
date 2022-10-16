@@ -10,7 +10,9 @@ export type UserUUID = string;
 export type SegmentUUID = string;
 export type CastUUID = string;
 export type PerformanceUUID = string;
+export type PictureUUID = string;
 export type UnavailabilityUUID = number;
+export type DashUUID = string;
 export type SuccessIndicator = {
   successful: boolean;
   error?: string;

@@ -159,7 +159,8 @@ public class UserServices {
       throws EntityNotFoundException, InvalidParameterException {
     User user = getUser(id);
     user.addProfilePicture(asset);
-    userRepo.save(user);
+    // Don't update user. User is updated separately.
+    //userRepo.save(user);
     return asset;
   }
 
@@ -167,17 +168,17 @@ public class UserServices {
       throws EntityNotFoundException, InvalidParameterException {
     User user = getUser(id);
     user.removeProfilePicture(asset);
-    userRepo.save(user);
+    // Don't update user. User is updates separately.
+    //userRepo.save(user);
   }
 
-  public void setProfilePicture(Integer id, UserAsset asset)
-      throws EntityNotFoundException, InvalidParameterException {
-    User user = getUser(id);
-    user.toBuilder().setPictureFile(String.format("%s/%s",
-        Constants.Mappings.PROFILE_PICTURE_MANAGEMENT, asset.getFileName()))
-        .build();
-    userRepo.save(user);
-  }
+  // Don't update user. User is updated separately.
+  // public void setProfilePicture(Integer id, UserAsset asset)
+  //     throws EntityNotFoundException, InvalidParameterException {
+  //   User user = getUser(id);
+  //   user.toBuilder().setPictureFile(asset.getFileName())).build();
+  //   userRepo.save(user);
+  // }
 
   /* Determines if an email has a valid email format. */
   private boolean validateEmail(String email) {

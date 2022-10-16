@@ -4,8 +4,9 @@ import { CdkDragDrop, copyArrayItem, transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import pdfMake from 'pdfmake/build/pdfmake';
-import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy,
-  OnInit, ViewChild,
+import { AfterViewChecked, ChangeDetectorRef, Component,
+  OnDestroy, OnInit, ViewChild, ViewChildren, QueryList,
+  AfterViewInit,
 } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
@@ -34,10 +35,14 @@ import { ContextService } from '../services/context.service';
   styleUrls: ['./performance-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
+export class PerformanceEditor implements OnInit, OnDestroy,
+AfterViewInit, AfterViewChecked {
 
   @ViewChild('stepper') stepper: Stepper;
-  @ViewChild('castDnD') castDnD?: CastDragAndDrop;
+  @ViewChildren('castDnD') castDnDQ?: QueryList<CastDragAndDrop>;
+
+  /** The cast drag and drop sub screen */
+  castDnD?: CastDragAndDrop;
 
   stepperOpts = [
     'Performance Details',
@@ -136,17 +141,18 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // --------------------------------------------------------------
 
+  private subscriptions = new Subscription();
+
   constructor(
       private g: ContextService,
-      private performanceAPI: PerformanceApi,
-      private segmentApi: SegmentApi,
-      private castApi: CastApi,
-      // private respHandler: ResponseStatusHandlerService,
-      private userApi: UserApi,
-      private unavApi: UnavailabilityApi,
-      private changeDetectorRef: ChangeDetectorRef,
       private activatedRoute: ActivatedRoute,
       private location: Location,
+      private cdRef: ChangeDetectorRef,
+      private performanceApi: PerformanceApi,
+      private segmentApi: SegmentApi,
+      private castApi: CastApi,
+      private userApi: UserApi,
+      private unavApi: UnavailabilityApi,
       private csvGenerator: CsvGenerator,
   ) {
     this.listStart = this.listStartDate.getTime();
@@ -161,38 +167,61 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.urlUUID = this.activatedRoute.snapshot.params.uuid;
     this.state = this.createNewPerformance();
     this.performanceSubscription =
-        this.performanceAPI.performanceEmitter.subscribe(
-            val => this.onPerformanceLoad(val));
+        this.performanceApi.cache.loadedAll.subscribe(items =>
+            this.onPerformanceLoad(items as Performance[]));
     this.segmentSubscription =
-        this.segmentApi.segmentEmitter.subscribe(val =>
-            this.onSegmentLoad(val));
+        this.segmentApi.cache.loadedAll.subscribe(items =>
+            this.onSegmentLoad(items as Segment[]));
     this.castSubscription =
-        this.castApi.castEmitter.subscribe(val => this.onCastLoad(val));
+        this.castApi.cache.loadedAll.subscribe(items =>
+            this.onCastLoad(items as Cast[]));
     this.userSubscription =
-        this.userApi.userEmitter.subscribe(val => this.onUserLoad(val));
+        this.userApi.cache.loadedAll.subscribe(val =>
+            this.onUserLoad(val as User[]));
     this.unavSubscription =
-        this.unavApi.unavailabilityEmitter.subscribe(vals =>
-            this.onUnavsLoad(vals));
+        this.unavApi.cache.loadedAll.subscribe(vals =>
+            this.onUnavsLoad(vals as Unavailability[]));
     this.requestData();
     this.initPDFMake();
   }
 
-  requestData = (): void => {
-    this.performanceAPI.getAllPerformances();
-    // this.segmentApi.getAllSegments();
-    this.castApi.getAllCasts(true, 'requestData');
-    this.userApi.getAllUsers();
-    this.unavApi.getAllUnavailabilities();
+  requestData = async (
+    forceRead: boolean = false,
+  ): Promise<void> => {
+    this.performanceApi.loadAllPerformances(forceRead);
+    // await to avoid second db load of segments.
+    await this.segmentApi.loadAllSegments(forceRead);
+    this.castApi.loadAllCasts(forceRead);
+    this.userApi.loadAllUsers(forceRead);
+    this.unavApi.loadAllUnavailabilities(forceRead);
+  };
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngAfterViewInit(): void {
+    if (this.castDnDQ!.first) {
+      this.setupDragAndDropView();
+      this.cdRef.detectChanges();
+    }
+    this.subscriptions.add(this.castDnDQ!.changes.subscribe(() => {
+      this.setupDragAndDropView();
+    }));
+  }
+
+  setupDragAndDropView = (): void => {
+    this.castDnD = this.castDnDQ.first;
+    this.checkDataLoaded();
   };
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnDestroy(): void {
     this.deleteWorkingCasts();
     this.performanceSubscription.unsubscribe();
-    // this.segmentSubscription.unsubscribe();
+    this.segmentSubscription.unsubscribe();
     this.castSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.unavSubscription.unsubscribe();
+
+    this.subscriptions.unsubscribe();
   }
 
   toDateString = (num: number): string =>
@@ -215,9 +244,14 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   };
 
   changeListStartDate = (newDate: Date): string => {
-    this.listStartDate = newDate;
-    this.listStart = this.listStartDate.getTime();
-    this.filterOnDate();
+    if (newDate.getTime() === new Date(0).getTime()) {
+      this.setDataLoaded(false);
+      this.requestData(true);
+    } else {
+      this.listStartDate = newDate;
+      this.listStart = this.listStartDate.getTime();
+      this.filterOnDate();
+    }
     return `Published Performances After ${
       this.listStartDate.toLocaleDateString()}`;
   };
@@ -237,7 +271,8 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   onUserLoad = (users: User[]): void => {
     this.allUsers = users.filter(user => user.has_roles.isDancer);
     this.allUsers = this.allUsers.sort(
-        (a, b) => a.last_name < b.last_name ? -1 : 1);
+        (a, b) => a.last_name.toLocaleLowerCase() <
+        b.last_name.toLocaleLowerCase() ? -1 : 1);
     this.usersLoaded = true;
     this.checkDataLoaded();
   };
@@ -312,7 +347,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         cg.groups.forEach( g => {
           // 'every' stops when false is returned
           g.members.forEach(m => {
-            const user = this.userApi.users.get(m.uuid);
+            const user = this.userApi.lookup(m.uuid);
             if (user.isAbsent) {
               if (g.group_index === ps.selected_group) {
                 ps.hasAbsence = true;
@@ -335,7 +370,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       ps.custom_groups.every(cg =>
         cg.groups.every( g =>
           g.members.every(m => {
-            const user = this.userApi.users.get(m.uuid);
+            const user = this.userApi.lookup(m.uuid);
             if (user.isAbsent) {
               if (g.group_index === ps.selected_group) {
                 return false;
@@ -357,7 +392,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         fp.hasAbsence = false;
         fp.groups.forEach(group => {
           group.members.forEach(m => {
-            const user = this.userApi.users.get(m.uuid);
+            const user = this.userApi.lookup(m.uuid);
             m.hasAbsence = user.isAbsent;
             if (user.isAbsent) {
               fp.hasAbsence = true;
@@ -483,11 +518,20 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       this.castDnD.castSelected = false;
     }
 
-    this.performanceAPI.setPerformance(this.dataToPerformance());
+    await this.performanceApi.cache.set(this.dataToPerformance());
+    this.requestData();
     this.deleteWorkingCasts();
     this.resetState(true);
   };
 
+  setDataLoaded = (value: boolean): void => {
+    this.performancesLoaded = value;
+    this.usersLoaded = value;
+    this.segmentsLoaded = value;
+    this.castsLoaded = value;
+    this.unavsLoaded = value;
+    this.dataLoaded = value;
+  };
 
   resetState = (reloadData: boolean): void => {
     this.deleteWorkingCasts();
@@ -506,12 +550,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.primaryGroupNum = 0;
     this.allCasts = [];
     if (reloadData) {
-      this.performancesLoaded = false;
-      this.usersLoaded = false;
-      this.segmentsLoaded = false;
-      this.castsLoaded = false;
-      this.unavsLoaded = false;
-      this.dataLoaded = false;
+      this.setDataLoaded(false);
       this.requestData();
     }
     this.location.replaceState('/performance');
@@ -599,7 +638,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
 
   onDeletePerformance = (): void => {
-    this.performanceAPI.deletePerformance(this.selectedPerformance);
+    this.performanceApi.cache.delete(this.selectedPerformance);
     this.resetState(true);
   };
 
@@ -743,10 +782,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
         this.segmentToCast.set(exportedCast.uuid, [exportedCast,
           this.primaryGroupNum, this.segmentLength]);
         await this.castApi.setCast(exportedCast, true);
-        await this.castApi.getAllCasts(true, 'temporarySaveCastChanges');
+        await this.castApi.loadAllCasts();
       }
       if (this.selectedSegment && this.selectedSegment.type === 'SEGMENT') {
-        this.intermissions.set(this.selectedIndex, this.segmentLength);
+        await this.intermissions.set(this.selectedIndex, this.segmentLength);
       }
       this.castDnD?.setBoldedCast(this.segmentToCast.get(prevCastUUID)
           ? this.segmentToCast.get(prevCastUUID)[1] : undefined);
@@ -792,9 +831,9 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
           }
         ))
       };
-      this.segmentToCast.set(newCast.uuid, [newCast, 0, 0]);
-      this.castApi.setCast(newCast, true);
-      await this.castApi.getAllCasts(true, 'onSelectStep3Segment');
+      await this.segmentToCast.set(newCast.uuid, [newCast, 0, 0]);
+      await this.castApi.setCast(newCast, true);
+      await this.castApi.loadAllCasts();
       castAndPrimLength = this.segmentToCast.get(castUUID);
     }
     this.primaryGroupNum = castAndPrimLength[1];
@@ -807,7 +846,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
     this.updateGroupIndices(castAndPrimLength[0]);
     this.updateCastsForSegment();
     this.segmentLength = castAndPrimLength[2];
-    this.changeDetectorRef.detectChanges();
+    this.cdRef.detectChanges();
     this.castDnD?.setBoldedCast(this.segmentToCast.get(castUUID)[1]);
   };
 
@@ -847,7 +886,7 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
       this.castDnD.castPositions.forEach(cp =>
         cp.castRows.forEach(cr =>
           cr.subCastDancers.forEach(sd => {
-              const user = this.userApi.users.get(sd.uuid);
+              const user = this.userApi.lookup(sd.uuid);
               sd.hasAbsence = user.isAbsent;
               if (user.isAbsent) {
                 hasAbsence = true;
@@ -860,6 +899,10 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngAfterViewChecked(): void {
+    // if cast has already been set, turn off auto set.
+    if (this.castDnD?.cast) {
+      this.shouldSelectFirstSegment = false;
+    }
     if (this.selectedSegment && this.shouldSelectFirstSegment) {
       this.onSelectStep3Segment(this.selectedSegment, 0);
       this.shouldSelectFirstSegment = false;
@@ -869,7 +912,6 @@ export class PerformanceEditor implements OnInit, OnDestroy, AfterViewChecked {
   initStep3Data = async (
     waitForCastReturn: boolean,
   ): Promise<void> => {
-console.log('INIT STEP3');
     this.selectedSegment = this.step2Data[0];
     this.selectedIndex = 0;
     this.shouldSelectFirstSegment = true;
@@ -877,7 +919,7 @@ console.log('INIT STEP3');
     for (const entry of this.intermissions.entries()) {
       if (this.step2Data.length > entry[0] &&
           this.step2Data[entry[0]].type === 'SEGMENT') {
-        newInterms.set(entry[0], entry[1]);
+        await newInterms.set(entry[0], entry[1]);
       }
     }
     this.intermissions = newInterms;
@@ -890,9 +932,9 @@ console.log('INIT STEP3');
       }
       for (const [i, seg] of this.state.step_3.perfSegments.entries()) {
         const castUUID = this.state.uuid + 'cast' + seg.segment;
-        if (this.segmentApi.segments.get(seg.segment).type === 'SEGMENT') {
-          this.intermissions.set(i, seg.length ? seg.length : 0);
-          this.segmentToPerfSectionID.set(castUUID, seg.id);
+        if (this.segmentApi.lookup(seg.segment).type === 'SEGMENT') {
+          await this.intermissions.set(i, seg.length ? seg.length : 0);
+          await this.segmentToPerfSectionID.set(castUUID, seg.id);
         } else {
           const cast: Cast = {
             uuid: castUUID,
@@ -901,17 +943,17 @@ console.log('INIT STEP3');
             castCount: CAST_COUNT,
             filled_positions: seg.custom_groups,
           };
-          this.segmentToCast.set(castUUID, [cast, seg.selected_group,
+          await this.segmentToCast.set(castUUID, [cast, seg.selected_group,
             seg.length ? seg.length : 0]);
-          this.segmentToPerfSectionID.set(castUUID, seg.id);
+          await this.segmentToPerfSectionID.set(castUUID, seg.id);
           this.castApi.setCast(cast, true);
         }
       }
       // moved here to cut down on data reads
       if (waitForCastReturn) {
-        await this.castApi.getAllCasts(true, 'initStep3Data (with await)');
+        await this.castApi.loadAllCasts();
       } else {
-        this.castApi.getAllCasts(true, 'initStep3Data');
+        this.castApi.loadAllCasts();
       }
       this.initCastsLoaded = true;
     }
@@ -928,9 +970,10 @@ console.log('INIT STEP3');
   onAutofillCast = async (cast: Cast): Promise<void> => {
     const newCast: Cast = JSON.parse(JSON.stringify(cast));
     newCast.uuid = this.state.uuid + 'cast' + this.selectedSegment.uuid;
-    this.segmentToCast.set(newCast.uuid, [newCast, 0, this.segmentLength]);
-    this.castApi.setCast(newCast, true);
-    await this.castApi.getAllCasts(true, 'onAutofillCast');
+    this.segmentToCast.set(newCast.uuid,
+        [newCast, 0, this.segmentLength]);
+    await this.castApi.setCast(newCast, true);
+    await this.castApi.loadAllCasts();
     this.checkCastUnavs(this.state);
     this.updateGroupIndices(newCast);
   };
@@ -952,28 +995,28 @@ console.log('INIT STEP3');
   onPublishPerformance = async (): Promise<void> => {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.PUBLISHED;
-    this.performanceAPI.setPerformance(finishedPerf).then(() => {
+    await this.performanceApi.cache.set(finishedPerf).then(() => {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
-      this.resetState(false);
+      this.resetState(true);
     }).catch(err => {
       alert('Unable to save performance: ' + err.error.status + ' ' +
-            err.error.error);
+          err.error.error);
     });
   };
 
   onCancelPerformance = async (): Promise<void> => {
     const finishedPerf = this.dataToPerformance();
     finishedPerf.status = PerformanceStatus.CANCELED;
-    this.performanceAPI.setPerformance(finishedPerf).then(() => {
+    await this.performanceApi.cache.set(finishedPerf).then(() => {
       this.submitted = true;
       this.initCastsLoaded = false;
       this.deleteWorkingCasts();
-      this.resetState(false);
+      this.resetState(true);
     }).catch(err => {
       alert('Unable to save performance: ' + err.error.status + ' ' +
-            err.error.error);
+          err.error.error);
     });
   };
 
@@ -1163,8 +1206,8 @@ console.log('INIT STEP3');
                 groups: val.groups.map(g => ({
                     ...g,
                     memberNames: g.members.map(
-                        mem => this.userApi.users.get(mem.uuid)).map(
-                        usr => usr.first_name + ' ' +
+                        mem => this.userApi.lookup(mem.uuid))
+                            .map(usr => usr.first_name + ' ' +
                                (usr.middle_name ? usr.middle_name + ' ' : '') +
                                usr.last_name +
                                (usr.suffix ? usr.suffix : ''),

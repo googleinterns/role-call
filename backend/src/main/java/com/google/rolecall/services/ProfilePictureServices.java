@@ -59,7 +59,7 @@ public class ProfilePictureServices {
     }
 
     String previousPicture = userServices.getUser(ownerId).getPictureFile();
-    userServices.setProfilePicture(ownerId, asset);
+    //userServices.setProfilePicture(ownerId, asset);
     // Attempt to delete and ignore failure.
     if (previousPicture != null) {
       try {
@@ -67,8 +67,8 @@ public class ProfilePictureServices {
         int previousAssetId = Integer.parseInt(splitName[splitName.length - 2]);
         deleteProfilePicture(previousAssetId);
       } catch (Exception e) {
-        System.out.println("Failed to delete " + previousPicture
-            + " for user " + ownerId + ": " + e.getMessage());
+        System.out.println("Failed to delete >" + previousPicture
+            + "< for user " + ownerId + ": " + e.getMessage());
       }
     }
 

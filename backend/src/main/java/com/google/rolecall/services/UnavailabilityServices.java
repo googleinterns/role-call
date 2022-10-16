@@ -47,9 +47,9 @@ public class UnavailabilityServices {
   }
 
   
-  public Unavailability getUnavailabilityByUserAndDate(Integer userId, Date date){
-    return unavailabilityRepo.getUnavailabilityByUserAndDate(userId, date);
-  };
+  // public Unavailability getUnavailabilityByUserAndDate(Integer userId, Date date){
+  //   return unavailabilityRepo.getUnavailabilityByUserAndDate(userId, date);
+  // };
 
 
   private boolean overlapsDateRange(Unavailability u, Date startDate, Date endDate) {

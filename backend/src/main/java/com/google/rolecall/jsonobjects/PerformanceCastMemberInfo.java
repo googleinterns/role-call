@@ -25,9 +25,9 @@ public abstract class PerformanceCastMemberInfo {
   @JsonProperty("performing")
   public abstract Boolean performing();
 
-  @Nullable
-  @JsonProperty("hasAbsence")
-  public abstract Boolean hasAbsence(); 
+  // @Nullable
+  // @JsonProperty("hasAbsence")
+  // public abstract Boolean hasAbsence(); 
 
   @Nullable
   public abstract Boolean delete();
@@ -65,8 +65,8 @@ public abstract class PerformanceCastMemberInfo {
     @JsonProperty("delete")
     public abstract Builder setDelete(Boolean delete);
 
-    @JsonProperty("hasAbsence")
-    public abstract Builder setHasAbsence(Boolean hasAbsence);    
+    // @JsonProperty("hasAbsence")
+    // public abstract Builder setHasAbsence(Boolean hasAbsence);    
     
     public abstract PerformanceCastMemberInfo build();
   }

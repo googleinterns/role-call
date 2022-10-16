@@ -86,9 +86,6 @@
           </div>
           <div class="children-container">
             <div class="child-container">
-              <!--
-                [ngClass]="this.selectedPerformance && perf.uuid === this.selectedPerformance.uuid ? 'child-selected' : ''"
-              -->
               <div
                 *ngFor="let perf of displayedPublishedPerfs"
                 class="child app-card"
@@ -294,8 +291,10 @@
                       *ngIf="group.group_index === psegment.selected_group"
                       class="dancer-list"
                     >
-                      <p class="names">
-                        {{group['memberNames'] ? group['memberNames'].join(", ") : ""}}</p>
+                      <div [ngClass]="pos.hasAbsence ? 'dancer-list-absence' : ''">
+                        <p class="names">
+                          {{group.memberNames ? group.memberNames.join(", ") : ""}}</p>
+                      </div>
                     </div>
                   </ng-container>
                 </div>
@@ -359,10 +358,6 @@
                     perfSegments[i]?.hasAbsence"   
                   [style.margin-left.rem]="data.siblingId > 0 ? 2 : 0"
                 >
-                  <!--
-                    [class.has-absence]="selectedPerformance?.step_3?.
-                      perfSegments[i]?.hasAbsence"                    
-                  -->
                   <h2
                     class="segment-name-delete"
                     [class.std-italic-font]="data.siblingId > 0"
@@ -536,20 +531,23 @@
                 class="segment-in-list-container"
                 [style.margin-left.rem]="step2Data[i].siblingId > 0 ? 4 : 1"
               >
-                <h3 class="title">{{psegment['name']}}</h3>
+                <h3 class="title">{{psegment.name}}</h3>
                 <div
                   *ngFor="let pos of psegment.custom_groups"
                   class="pos-container"
                   [style.margin-left.rem]="hasSuper && step2Data[i].siblingId < 1 ? 10 : 7"
                 >
-                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  <h4 class="pos-title">{{pos.name}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
                       *ngIf="group.group_index === psegment.selected_group"
                       class="dancer-list"
                     >
-                      <p class="names">
-                        {{ group['memberNames'] ? group['memberNames'].join(", ") : "" }}</p>
+                      <div [ngClass]="pos.hasAbsence ? 'dancer-list-absence' : ''">
+                        <p class="names">
+                          {{ group.memberNames ? group.memberNames.join(", ") : "" }}
+                        </p>
+                      </div>
                     </div>
                   </ng-container>
                 </div>
@@ -573,18 +571,20 @@
                 *ngFor="let psegment of state.step_3.perfSegments"
                 class="segment-container"
               >
-                <h3 class="title">{{psegment['name']}}</h3>
+                <h3 class="title">{{psegment.name}}</h3>
                 <div
                   *ngFor="let pos of psegment.custom_groups"
                   class="pos-container"
                 >
-                  <h4 class="pos-title">{{pos['name']}}</h4>
+                  <h4 class="pos-title">{{pos.name}}</h4>
                   <ng-container *ngFor="let group of pos.groups">
                     <div
                       *ngIf="group.group_index === psegment.selected_group"
                       class="dancer-list"
                     >
-                      <p class="names">{{group['memberNames'].join(", ")}}</p>
+                      <div [ngClass]="pos.hasAbsence ? 'dancer-list-absence' : ''">
+                        <p class="names">{{ group.memberNames.join(", ") }}</p>
+                      </div>
                     </div>
                   </ng-container>
                 </div>

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit,
+  ViewChildren, QueryList, ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as APITypes from 'src/api-types';
 import { CAST_COUNT } from 'src/constants';
@@ -23,9 +25,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./cast-editor.component.scss']
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class CastEditor implements OnInit, OnDestroy {
+export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('castDragAndDrop') dragAndDrop: CastDragAndDrop;
+  @ViewChildren('castDragAndDrop') dragAndDropQ?: QueryList<CastDragAndDrop>;
+
+  dragAndDrop?: CastDragAndDrop;
 
   selectedCast: Cast;
   selectedSegment: Segment;
@@ -47,39 +51,57 @@ export class CastEditor implements OnInit, OnDestroy {
   segmentsLoaded = false;
   castsLoaded = false;
   usersLoaded = false;
+  dragAndDropSetup = false;
 
   canDelete = false;
 
   private allSegments: Segment[] = [];
 
+  private subscriptions = new Subscription();
+
   constructor(
-      private castApi: CastApi,
-      private segmentApi: SegmentApi,
-      private userApi: UserApi,
-      private route: ActivatedRoute,
-      private location: Location,
-      private superBalletDisplay: SuperBalletDisplayService,
-      public leftList: SegmentDisplayListService,
+    private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private location: Location,
+    private castApi: CastApi,
+    private segmentApi: SegmentApi,
+    private userApi: UserApi,
+
+    private superBalletDisplay: SuperBalletDisplayService,
+    public leftList: SegmentDisplayListService,
   ) { }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const uuid = this.route.snapshot.params.uuid;
     if (uuid) {
       this.urlUUID = uuid;
     }
-    this.userSubscription = this.userApi.userEmitter.subscribe(users => {
-      this.onUserLoad(users);
+    this.userSubscription = this.userApi.cache.loadedAll.subscribe(users => {
+      this.onUserLoad(users as User[]);
     });
-    this.userApi.getAllUsers();
-    this.castSubscription = this.castApi.castEmitter.subscribe(cast => {
-      this.onCastLoad(cast);
-    });
-    this.castApi.getAllCasts(true, 'ngOnInit (cast-editor)');
+    this.userApi.loadAllUsers();
     this.segmentSubscription =
-      this.segmentApi.segmentEmitter.subscribe(segment => {
-        this.onSegmentLoad(segment);
+    this.segmentApi.cache.loadedAll.subscribe(items => {
+      this.onSegmentLoad(items as Segment[]);
     });
+    // await below guarantees that segment db load doesn't happen twice.
+    await this.segmentApi.loadAllSegments();
+    this.castSubscription = this.castApi.cache.loadedAll.subscribe(casts => {
+      this.onCastLoad(casts as Cast[]);
+    });
+    this.castApi.loadAllCasts();
+  }
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngAfterViewInit(): void {
+    if (this.dragAndDropQ!.first) {
+      this.setupDragAndDropView();
+      this.cdRef.detectChanges();
+    }
+    this.subscriptions.add(this.dragAndDropQ!.changes.subscribe(() => {
+      this.setupDragAndDropView();
+    }));
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -87,7 +109,14 @@ export class CastEditor implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
     this.castSubscription.unsubscribe();
     this.segmentSubscription.unsubscribe();
+
+    this.subscriptions.unsubscribe();
   }
+
+  setupDragAndDropView = (): void => {
+    this.dragAndDrop = this.dragAndDropQ.first;
+    this.checkDataLoaded();
+  };
 
   // Select from screen
   selectSegment = (segmentIndex: number): void => {
@@ -112,6 +141,9 @@ export class CastEditor implements OnInit, OnDestroy {
     cast: Cast | undefined;
     index?: number;
   }): void => {
+    if (!this.dragAndDrop) {
+      return;
+    }
     if (index === undefined && cast) {
       index = this.selectedSegmentCasts.findIndex(
           findCast => cast.uuid === findCast.uuid);
@@ -152,7 +184,7 @@ export class CastEditor implements OnInit, OnDestroy {
     this.selectedSegmentCasts.push(newCast);
     await this.castApi.setCast(newCast, true);
     this.setCurrentCast({cast: newCast});
-    await this.castApi.getAllCasts(false, 'addCast') ;
+    await this.castApi.loadAllCasts();
   };
 
   toggleExpanded = (): void => {
@@ -169,11 +201,24 @@ export class CastEditor implements OnInit, OnDestroy {
     this.buildLeftList();
   };
 
+  refreshData = async (): Promise<void> => {
+    this.usersLoaded = false;
+    this.segmentsLoaded = false;
+    this.castsLoaded = false;
+    this.userApi.loadAllUsers(true);
+    // await below guarantees that segment db load doesn't happen twice.
+    await this.segmentApi.loadAllSegments(true);
+    this.castApi.loadAllCasts(true);
+  };
+
   // Private functions
 
   private checkDataLoaded = (): boolean => {
     this.dataLoaded = this.usersLoaded && this.segmentsLoaded
         && this.castsLoaded;
+    if (this.dataLoaded && this.dragAndDrop && !this.dragAndDropSetup) {
+      this.setupDragAndDrop(this.castApi.cache.arr as Cast[]);
+    }
     return this.dataLoaded;
   };
 
@@ -240,7 +285,8 @@ export class CastEditor implements OnInit, OnDestroy {
     this.usersLoaded = true;
     this.users = users.filter(user => user.has_roles.isDancer);
     this.users = this.users.sort(
-        (a, b) => a.last_name < b.last_name ? -1 : 1);
+        (a, b) => a.last_name.toLocaleLowerCase() <
+        b.last_name.toLocaleLowerCase() ? -1 : 1);
     // clear unavailibility data, if present
     this.users.forEach(u => u.isAbsent = false);
     this.checkDataLoaded();
@@ -273,7 +319,16 @@ export class CastEditor implements OnInit, OnDestroy {
       this.checkDataLoaded();
       return;
     }
-    if (!this.dragAndDrop.castSelected) {
+    if (this.dragAndDrop && this.usersLoaded) {
+      this.setupDragAndDrop(casts);
+    }
+    this.checkForUrlCompliance();
+    this.castsLoaded = true;
+    this.checkDataLoaded();
+  };
+
+  private setupDragAndDrop = (casts: Cast[]): void => {
+    if (!this.dragAndDrop?.castSelected) {
       if (this.lastSelectedCast) {
         const foundCast = casts.find(
             c => c.name === this.lastSelectedCast.name);
@@ -303,9 +358,7 @@ export class CastEditor implements OnInit, OnDestroy {
       this.urlUUID = this.dragAndDrop.selectedCastUUID;
       this.setCurrentCast({cast: this.castApi.castFromUUID(this.urlUUID)});
     }
-    this.checkForUrlCompliance();
-    this.castsLoaded = true;
-    this.checkDataLoaded();
+    this.dragAndDropSetup = true;
   };
 
   private setCastURL = (): void => {

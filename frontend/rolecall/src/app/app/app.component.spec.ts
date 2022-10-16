@@ -1,21 +1,22 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
+// import { of } from 'rxjs';
 import { FakePage } from 'src/test-utils';
 import { LoginApi } from '../api/login-api.service';
-import { DashboardApi } from '../api/dashboard-api.service';
+// import { DashboardApi } from '../api/dashboard-api.service';
+import { PerformanceApi } from '../api/performance-api.service';
 
 import { App } from './app.component';
 import { AppModule } from './app.module';
 
 describe('App', () => {
   const fakeDashboardApi = {
-    dashPerformanceEmitter: of([]),
+    // dashPerformanceEmitter: of([]),
     // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-    getAllDashboard() {
+    loadAllPerformances() {
     }
-  } as DashboardApi;
+  } as PerformanceApi;
   const fakeLoginApi = {loginPromise: Promise.resolve()} as LoginApi;
 
   beforeEach(waitForAsync(() => {
@@ -27,13 +28,13 @@ describe('App', () => {
       imports: [
         MatIconModule,
         RouterTestingModule.withRoutes([
-          {path: `dashboard`, component: FakePage},
+          { path: `dashboard`, component: FakePage },
         ]),
         AppModule,
       ],
       providers: [
-        {provide: DashboardApi, useValue: fakeDashboardApi},
-        {provide: LoginApi, useValue: fakeLoginApi},
+        { provide: PerformanceApi, useValue: fakeDashboardApi },
+        { provide: LoginApi, useValue: fakeLoginApi },
       ]
     }).compileComponents();
   }));

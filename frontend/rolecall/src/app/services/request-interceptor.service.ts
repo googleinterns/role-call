@@ -8,7 +8,7 @@ import { LoginApi } from '../api/login-api.service';
 @Injectable({providedIn: 'root'})
 export class RequestInterceptorService implements HttpInterceptor {
 
-  constructor(private loginAPI: LoginApi) {
+  constructor(private loginApi: LoginApi) {
   }
 
   intercept = (
@@ -16,7 +16,7 @@ export class RequestInterceptorService implements HttpInterceptor {
       next: HttpHandler,
   ): Observable<HttpEvent<any>> => {
     // Ensures fresh Google OAuth token
-    this.loginAPI.login();
+    this.loginApi.login();
     if (environment.logRequests) {
       console.log(req);
     }

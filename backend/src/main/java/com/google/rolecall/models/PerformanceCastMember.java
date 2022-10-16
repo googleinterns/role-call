@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+// import javax.persistence.Transient;
 
 @Entity
 @Table
@@ -41,10 +41,9 @@ public class PerformanceCastMember {
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Position position;
 
-  @Transient
-  private boolean hasAbsence;
+  // @Transient
+  // private boolean hasAbsence;
 
-  
   public Integer getId() {
     return id;
   }
@@ -77,13 +76,13 @@ public class PerformanceCastMember {
     return position;
   }
 
-  public boolean getHasAbsence() {
-    return hasAbsence;
-  }
+  // public boolean getHasAbsence() {
+  //   return hasAbsence;
+  // }
 
-  public void setHasAbsence( boolean hasAbsence) {
-    this.hasAbsence = hasAbsence; 
-  }
+  // public void setHasAbsence( boolean hasAbsence) {
+  //   this.hasAbsence = hasAbsence; 
+  // }
 
   public void setPerforming(boolean isPerforming) {
     this.performing = isPerforming;
@@ -111,7 +110,7 @@ public class PerformanceCastMember {
         .setOrder(order)
         .setPerforming(performing)
         .setUserId(user.getId())
-        .setHasAbsence(getHasAbsence())
+        // .setHasAbsence(getHasAbsence())
         .build();
   }
 

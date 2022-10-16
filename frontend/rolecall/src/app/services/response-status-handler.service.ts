@@ -24,7 +24,7 @@ export class ResponseStatusHandlerService {
 
   constructor(
     public dialog: MatDialog,
-    // private loginAPI: LoginApi,
+    // private LoginApi: LoginApi,
   ) {
   }
 
@@ -67,11 +67,11 @@ export class ResponseStatusHandlerService {
 
 //     if (response.status === 401) {
 //       rej('');
-//       this.loginAPI.signOut().then(() => {
+//       this.LoginApi.signOut().then(() => {
 // console.log('Loggong out and in again');
-//         //this.loginAPI.login();
-//         this.loginAPI.isAuthLoaded = false;
-//         this.loginAPI.scheduleLogin();
+//         //this.LoginApi.login();
+//         this.LoginApi.isAuthLoaded = false;
+//         this.LoginApi.scheduleLogin();
 //       });
 //       return;
 //     }
@@ -86,8 +86,8 @@ export class ResponseStatusHandlerService {
         status: response.status,
         statusText: response.statusText,
       };
-      const userResp = await this.showError(errorEvent);
-      rej(userResp);
+      const reason = await this.showError(errorEvent);
+      rej(reason);
     } else {
       res(response.body);
     }

@@ -10,9 +10,14 @@
           class="group-wrapper1"
           [class.small-cast-list-wrapper]="expandedCode === 1">
         <div class="select-container-header">
-          <h1 class="std-left-card-title">
-            Casts
-          </h1>
+          <button
+            mat-button
+            class="std-left-card-title"
+            attr.aria-label="Reload Users"
+            matTooltip="Reload User Data"
+            (click)="refreshData()"
+          >Casts
+          </button>
         </div>
         <div
             #castList

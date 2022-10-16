@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoginApi } from '../api/login-api.service';
-import { ContextService } from '../services/context.service';
+import { UserApi } from '../api/user-api.service';
 import { SideNav } from './side-nav.component';
 
 /**
@@ -26,23 +26,27 @@ export class SiteHeader implements OnInit, OnDestroy, AfterViewInit {
   loginSubscription: Subscription;
 
   constructor(
-    public g: ContextService,
-    public loginAPI: LoginApi,
+    private userApi: UserApi,
+
+    public loginApi: LoginApi,
   ) {
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-    this.loginAPI.login().then(() => {
+    this.loginApi.login().then(() => {
       this.configureHeaderForLogin();
     });
-    this.loginSubscription = this.loginAPI.isLoggedIn$
+    this.loginSubscription = this.loginApi.isLoggedIn$
         .subscribe((isLoggedIn: boolean | undefined) => {
             if (!isLoggedIn) {
-              this.loginAPI.signOut();
+              this.loginApi.signOut();
             }
             this.configureHeaderForLogin();
-            this.loginAPI.refresh();
+            this.loginApi.refresh();
+            if (isLoggedIn) {
+              this.doStartup();
+            }
           });
   }
 
@@ -54,8 +58,13 @@ export class SiteHeader implements OnInit, OnDestroy, AfterViewInit {
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngAfterViewInit(): void {
-    this.loginAPI.loginBtn = document.getElementById('gsi_btn');
+    this.loginApi.loginBtn = document.getElementById('gsi_btn');
   }
+
+  doStartup = async (): Promise<void> => {
+    await this.userApi.cache.loadAll();
+    this.userApi.loadAllPictures();
+  };
 
   /**
    * Toggles the open state of the nav side bar
@@ -71,7 +80,7 @@ export class SiteHeader implements OnInit, OnDestroy, AfterViewInit {
 
   /** Sign out of google OAuth2 */
   onSignOut = (): void => {
-    this.loginAPI.signOut();
+    this.loginApi.signOut();
     this.configureHeaderForLogin();
   };
 
