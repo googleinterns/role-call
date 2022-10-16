@@ -35,7 +35,7 @@ public class LocalStorageService implements StorageService {
   private final Path root;
 
   private Storage storage;
-  private String bucketName = "ry_pic_bucket";
+  private String bucketName;
   @Override
   public void init() throws IOException {
     if (!Files.exists(root)) {
@@ -120,6 +120,7 @@ public class LocalStorageService implements StorageService {
   @Autowired
   public LocalStorageService(Environment env, Storage storage) {
     this.storage = storage;
+    this.bucketName = env.getProperty("rolecall.asset.resource.bucket");
     root = Path.of(env.getProperty("rolecall.asset.resource.directory")).toAbsolutePath();
   }
 }
