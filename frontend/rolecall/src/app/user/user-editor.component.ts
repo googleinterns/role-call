@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User, UserApi } from '../api/user-api.service';
 import { PictureApi, PictureInfo } from '../api/picture-api.service';
-
+import {NgxImageCompressService} from "ngx-image-compress";
 /**
  * The view for the User Editor, allowing users to create other users
  * and view user information.
@@ -119,6 +119,7 @@ export class UserEditor implements OnInit, OnDestroy {
     private readonly location: Location,
     private readonly userApi: UserApi,
     private readonly pictureApi: PictureApi,
+    private imageCompress: NgxImageCompressService
   ) {
   }
 
@@ -320,18 +321,37 @@ export class UserEditor implements OnInit, OnDestroy {
       alert('Only images are supported');
       return;
     }
+
     this.checkWorkingUser();
     this.formData = new FormData();
     this.formData.append('userid', this.workingUser.uuid);
-    this.formData.append('file', file);
+   // this.formData.append('file', file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = ((): void => {
       this.currentSelectedUser.image = reader.result;
       this.hasNewPicture = true;
       this.canSave = true;
-    });
+
+      this.imageCompress.compressFile(<string>reader.result, null, 100, 100, 320, 320) // 50% ratio, 50% quality
+        .then(
+          (compressedImage) => {    
+           // console.log(compressedImage)   ;
+            this.formData.append('file', this.dataURItoBlob(compressedImage), file.name);
+          }
+        );
+      
+    }).bind(this) ;
   };
+
+  dataURItoBlob = (dataURI): Blob => {
+    let arr = dataURI.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+  }
 
   getPicture = (): void => {
     this.inputPicture.nativeElement.click();
