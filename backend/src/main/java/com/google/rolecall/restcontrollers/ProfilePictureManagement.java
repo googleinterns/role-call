@@ -54,6 +54,24 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
     }
   }
 
+  @Get(path = "/url/{filename}")
+  public CompletableFuture<ResponseEntity<String>> getProfilePictureUrl(
+      @PathVariable String filename) {
+    String extension = FilenameUtils.getExtension(filename);
+    if (extension == null) {
+      return CompletableFuture.failedFuture(
+          new InvalidParameterException("Filename cannot be empty."));
+    }
+    try {      
+      return CompletableFuture.completedFuture(ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN)
+          .body(profilePictureServices.getProfilePictureUrl(filename)));
+    } catch(FileNotFoundException e) {
+      return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+    } catch(Exception e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
   @Post
   public CompletableFuture<ResponseSchema<UserAssetInfo>> uploadFile(Principal principal,
       @RequestParam(Constants.RequestParameters.USER_ID) int ownerId,

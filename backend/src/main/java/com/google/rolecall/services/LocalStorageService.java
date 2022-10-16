@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
@@ -19,11 +21,21 @@ import com.google.rolecall.models.UserAsset.AssetType;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.util.StorageService;
 
+
+
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.Storage.SignUrlOption;
+
+
 @Profile({ "dev" })
 @Service("LocalStorageService")
 public class LocalStorageService implements StorageService {
   private final Path root;
 
+  private Storage storage;
+  private String bucketName = "ry_pic_bucket";
   @Override
   public void init() throws IOException {
     if (!Files.exists(root)) {
@@ -46,7 +58,7 @@ public class LocalStorageService implements StorageService {
         // else {
         //   System.out.println(type.toString() + " directory exists: " + subDir.toString());
         // }
-    }
+    }    
   }
 
   @Override
@@ -81,6 +93,18 @@ public class LocalStorageService implements StorageService {
   }
 
   @Override
+  public String loadAsUrl(AssetType type, String filename)
+      throws InvalidParameterException, FileNotFoundException {           
+        Blob blob = storage.get(
+          BlobId.of(bucketName, String.format("%s/%s", type.location, filename)));
+        if (blob == null || !blob.exists()) {
+          throw new FileNotFoundException("No file found for " + filename + ".");
+        }
+        return storage.signUrl(blob.toBuilder().setContentType("text/plain").build(), 1, TimeUnit.DAYS, SignUrlOption.withV4Signature()).toString();
+  }
+
+
+  @Override
   public void delete(AssetType type, String filename)
       throws InvalidParameterException, FileNotFoundException, IOException {
     Path filePath = Path.of(root.toString(), type.location, filename);
@@ -94,7 +118,8 @@ public class LocalStorageService implements StorageService {
   }
 
   @Autowired
-  public LocalStorageService(Environment env) {
+  public LocalStorageService(Environment env, Storage storage) {
+    this.storage = storage;
     root = Path.of(env.getProperty("rolecall.asset.resource.directory")).toAbsolutePath();
   }
 }

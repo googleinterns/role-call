@@ -31,7 +31,7 @@ export type User = {
   };
   // For frontend use only. Not saved.
   isAbsent?: boolean;
-  image?: string | ArrayBuffer;
+  image?: string | ArrayBuffer | Blob;
 };
 
 interface RawUser {
@@ -259,12 +259,8 @@ export class UserApi {
         user.picture_file = '';
       } else {
         this.pictureApi.getOnePicture(user.picture_file).then(img => {
-          if (img.size > 0) {
-            const reader = new FileReader();
-            reader.readAsDataURL(img);
-            reader.onload = ((): void => {
-              user.image = reader.result;
-            });
+          if (!!img) {           
+            user.image = img;
           } else {
             console.log('Setting picture to blank');
             user.picture_file = '';

@@ -60,11 +60,11 @@ export class PictureApi {
       ? HeaderType.png : HeaderType.jpg;
     const header = await this.headerUtil.generateHeader(fileType);
     return lastValueFrom(this.http.get<OnePictureResponse>(
-        environment.backendURL + 'api/profile_picture/' + fileName, {
+        environment.backendURL + 'api/profile_picture/url/' + fileName, {
           headers: header,
           observe: 'response',
           withCredentials: true,
-          responseType: 'blob' as 'json', // dirty trick
+          responseType: 'text' as 'json', // dirty trick
         }))
         .catch(errorResp => errorResp)
         .then(resp => this.respHandler.checkResponse<Blob>(

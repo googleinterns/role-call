@@ -33,6 +33,13 @@ public class ProfilePictureServices {
         AssetType.PROFILEPICTURE, fileName).getInputStream());
   }
 
+  public String getProfilePictureUrl(String fileName) 
+      throws FileNotFoundException, IOException, InvalidParameterException {
+    return storage.loadAsUrl(
+      AssetType.PROFILEPICTURE, fileName);
+}
+  
+
   // Creates a new UsserAsset, copies the file locally, sets the new asset to
   // the new profilePicture, and attempts to delete the old profile picture.
   public UserAsset createProfilePicture(Integer ownerId, MultipartFile image)
