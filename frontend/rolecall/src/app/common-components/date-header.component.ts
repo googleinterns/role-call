@@ -24,6 +24,7 @@ export class DateHeaderComponent implements OnInit {
   oneBefore: string;
   twoBefore: string;
   threeBefore: string;
+  refresh: string;
 
   backDates: Date[] = [];
 
@@ -47,7 +48,11 @@ export class DateHeaderComponent implements OnInit {
   }
 
   onMonthBack = (months: number): void => {
-    this.header = this.dateChange(this.backDates[months - 1]);
+    if (months === 4) {
+      this.dateChange(new Date(0));
+    } else {
+      this.header = this.dateChange(this.backDates[months - 1]);
+    }
   };
 
   onDateChange = (newDate: Date): void => {
@@ -56,10 +61,12 @@ export class DateHeaderComponent implements OnInit {
   };
 
   dateChange = (newDate: Date): string => {
-    this.oneBefore = `Back one month ${this.calcBefore(newDate, 1)}`;
-    this.twoBefore = `Back two months ${this.calcBefore(newDate, 2)}`;
-    this.threeBefore = `Back three months ${this.calcBefore(newDate, 3)}`;
-
+    if (newDate.getTime() !== new Date(0).getTime()) {
+      this.oneBefore = `Back one month ${this.calcBefore(newDate, 1)}`;
+      this.twoBefore = `Back two months ${this.calcBefore(newDate, 2)}`;
+      this.threeBefore = `Back three months ${this.calcBefore(newDate, 3)}`;
+      this.refresh = `Refresh current selection`;
+    }
     return this.changeDate(newDate);
   };
 

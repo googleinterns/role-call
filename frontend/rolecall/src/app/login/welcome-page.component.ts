@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoginApi } from '../api/login-api.service';
+
 
 @Component({
   selector: 'app-welcome-page',
@@ -11,23 +10,11 @@ import { LoginApi } from '../api/login-api.service';
 export class WelcomePage implements OnInit {
 
   constructor(
-    private loginAPI: LoginApi,
-    private router: Router,
   ) {
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-  ngOnInit(): void {
-    if (this.loginAPI.isLoggedIn) {
-      this.redirectToDashboard();
-    }
-    this.loginAPI.loginPromise.then(() => {
-      this.redirectToDashboard();
-    });
+  async ngOnInit(): Promise<void> {
   }
-
-  redirectToDashboard = (): void => {
-    this.router.navigateByUrl('/dashboard');
-  };
 
 }

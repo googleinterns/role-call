@@ -2,6 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -19,6 +20,7 @@ import { CastEditor } from './cast-editor.component';
   imports: [
     CommonModule,
     MatButtonModule,
+    MatTooltipModule,
     CommonComponentsModule,
     MatIconModule,
     MatMenuModule,

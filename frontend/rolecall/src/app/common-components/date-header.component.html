@@ -9,16 +9,6 @@
     [matMenuTriggerFor]="timeMenu"
   >{{ header }}
   </button>
-  <!-- keep for later -->
-  <!-- <div class="hidden">
-    <input
-      matInput
-      class="hidden"
-      [matDatepicker]="dp"
-      (dateChange)="dateChange($event)"
-    />
-    <mat-datepicker #dp></mat-datepicker>
-  </div> -->
   <mat-menu #timeMenu="matMenu">
     <button
       mat-menu-item
@@ -37,6 +27,12 @@
       class="menu-item"
       (click)="onMonthBack(3)"
     >{{ threeBefore }}
+    </button>
+    <button
+      mat-menu-item
+      class="menu-item"
+      (click)="onMonthBack(4)"
+    >{{ refresh }}
     </button>
     <div
       mat-menu-item

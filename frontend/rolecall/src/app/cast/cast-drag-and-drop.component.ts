@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output,
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit,
+  Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as APITypes from 'src/api-types';
@@ -17,7 +18,6 @@ import { CsvGenerator } from '../services/csv-generator.service';
 type UICastDancer = {
   uuid: string;
   user: User;
-  pictureFile: string;
   hasAbsence?: boolean;
 };
 
@@ -57,10 +57,6 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
   /** Output by which other components can listen to cast changes. */
   @Output() castChangeEmitter: EventEmitter<Cast> = new EventEmitter();
 
-  /** Base URL of images in cloud storage. */
-  // eslint-disable-next-line max-len
-  baseImageUrl = 'https://storage.googleapis.com/absolute-water-286821.appspot.com/headshots/';
-
   /** The current cast we're editing, as well as the UUID of it. */
   selectedCastUUID: APITypes.CastUUID;
   cast: Cast;
@@ -83,29 +79,37 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
   castsLoaded = false;
   dataLoaded = false;
   castSelected = false;
+  selectCastHasBeenCalled = false;
   perfDate = 0;
 
   canSave = false;
 
+  // Marks that drop handling is in effect.
+  // When db caching was added, the data load was speeded up
+  // to the point that the old logic stepped on itself.
+  // This variable helps avoid 'deadly embraces'.
+  private dropHandling = false;
+
   constructor(
-      private g: ContextService,
-      private userApi: UserApi,
-      private castApi: CastApi,
-      private segmentApi: SegmentApi,
-      private csvGenerator: CsvGenerator
+    private cdRef: ChangeDetectorRef,
+    private g: ContextService,
+    private csvGenerator: CsvGenerator,
+    private userApi: UserApi,
+    private segmentApi: SegmentApi,
+
+    public castApi: CastApi,
   ) {
     this.buildSubCastHeader();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
-    this.castSubscription = this.castApi.castEmitter.subscribe(() => {
+    this.castSubscription = this.castApi.cache.loadedAll.subscribe(() => {
       this.onCastLoad();
     });
+    this.perfDate = this.performanceDate.getTime();
     if (this.perfDate) {
-      this.castApi.getAllCasts(false, 'ngOnInit 1', this.perfDate);
-    } else {
-      this.castApi.getAllCasts(false, 'ngOnInit 2', 0);
+      this.castApi.loadAllCasts();
     }
   }
 
@@ -136,15 +140,16 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
     saveDeleteEnabled?: boolean;
     perfDate?: number;
   }): void => {
+    this.selectCastHasBeenCalled = true;
     if (perfDate > 0 && this.g.checkUnavs) {
       this.perfDate = perfDate;
-      this.castApi.getAllCasts(false, 'selectCast', this.perfDate);
+      this.castApi.loadAllCasts();
     }
     if (uuid) {
       this.buttonsEnabled = saveDeleteEnabled;
       this.castSelected = true;
       this.selectedCastUUID = uuid;
-      if (this.dataLoaded) {
+      if (this.checkAllLoaded()) {
         this.setupData();
       }
     }
@@ -161,13 +166,13 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
             let subCasts: CastGroup[] = new Array(this.castCount).fill([]);
             subCasts = subCasts.map((_, subCastIndex) => ({
                 group_index: subCastIndex,
-                members: []
+                members: [],
               })
             );
             for (let subCastIndex = 0; subCastIndex < subCasts.length;
-                 subCastIndex++) {
+                  subCastIndex++) {
               for (let dancerIndex = 0; dancerIndex < uiPos.dancerCount;
-                   dancerIndex++) {
+                    dancerIndex++) {
                 const castRow = uiPos.castRows[dancerIndex];
                 if (castRow) {
                   const dancer = castRow.subCastDancers[subCastIndex];
@@ -186,7 +191,7 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
               groups: subCasts,
               hasAbsence: false,
             };
-          })
+          }),
     });
 
 
@@ -202,6 +207,8 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
     if (fromContainer === 'user-pool' && toContainer === 'user-pool') {
       return;
     }
+
+    this.dropHandling = true;
 
     this.canSave = true;
     if (!event.isPointerOverContainer || toContainer === 'user-pool') {
@@ -261,10 +268,7 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
 
   saveCast = async (): Promise<void> => {
     this.cast = this.dataToCast();
-    return this.castApi.setCast(this.cast).then(result => {
-      if (!result.successful) {
-        alert(result.error);
-      }
+    return this.castApi.setCast(this.cast).then(() => {
       this.selectedCastUUID = String(this.castApi.lastSavedCastId);
       this.canSave = false;
     });
@@ -326,9 +330,7 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
 
   /** Checks that all the required data is loaded to begin rendering. */
   private checkAllLoaded = (): boolean => {
-    if (this.castsLoaded) {
-      this.dataLoaded = true;
-    }
+    this.dataLoaded = this.castsLoaded && this.selectCastHasBeenCalled;
     return this.dataLoaded;
   };
 
@@ -341,7 +343,7 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
   };
 
   private getPosIndex = (cast: Cast, uuid: string): number => {
-    const positions = this.segmentApi.segments.get(cast.segment).positions;
+    const positions = this.segmentApi.lookup(cast.segment).positions;
     for (let i = 0; i < positions.length; i++) {
       if (positions[i].uuid === uuid) {
         return i;
@@ -354,19 +356,24 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
     if (!this.castSelected) {
       return;
     }
-    this.castPositions = [];
     if (!this.castApi.hasCast(this.selectedCastUUID)) {
+      if (this.dropHandling) {
+        this.dropHandling = false;
+        return;
+      }
       // In performances, casts are specified in section 3 and there is
       // a pointer to 'this' there. This pointer is not available
       // in section 4, so if the performance is saved in section 4
       // 'this.castSelected' can't be set to false there. Hence this logic.
       this.castSelected = false;
+      this.cdRef.detectChanges();
       return;
     }
+    this.castPositions = [];
     this.cast = this.castApi.castFromUUID(this.selectedCastUUID);
     this.castCount = this.cast.castCount;
     this.buildSubCastHeader();
-    const positions = this.segmentApi.segments.get(this.cast.segment).positions;
+    const positions = this.segmentApi.lookup(this.cast.segment).positions;
     const dancerCounts = new Array(positions.length);
     for (const filledPosition of this.cast.filled_positions) {
       let dancerCount = 0;
@@ -427,14 +434,16 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
               });
             }
           }
-          const dancer = this.userApi.users.get(member.uuid);
+          const dancer = this.userApi.lookup(member.uuid);
           const castRow = uiPos.castRows[member.position_number];
+          // if (this.performanceDate && member.hasAbsence) {
+          //   group.hasAbsence = true;
+          // }
           if (castRow) {
             castRow.subCastDancers[group.group_index] = {
               uuid: dancer.uuid,
               user: dancer,
-              pictureFile: dancer.picture_file,
-              hasAbsence: member.hasAbsence,
+              hasAbsence: this.performanceDate ? member.hasAbsence : false,
             };
           }
         }

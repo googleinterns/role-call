@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { CommonComponentsModule,
 } from '../common-components/common-components.module';
@@ -14,7 +15,8 @@ import { HomepageBase } from './homepage-base.component';
     CommonModule,
     CommonComponentsModule,
     RouterModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule,
   ],
   exports: [HomepageBase]
 })

@@ -11,13 +11,13 @@ import { UserApi } from '../api/user-api.service';
 export class CsvGenerator {
 
   constructor(
-    private userAPI: UserApi,
+    private userApi: UserApi,
     private segmentApi: SegmentApi) {
   }
 
   generateCSVFromCast = async (cast: Cast): Promise<void> => {
-    await this.userAPI.getAllUsers();
-    await this.segmentApi.getAllSegments();
+    await this.userApi.loadAllUsers();
+    await this.segmentApi.loadAllSegments();
     const headers = ['Cast Name', 'Segment', 'Position', 'Cast Number',
       'Dancer Number',
       'Dancer First', 'Dancer Last'];
@@ -25,10 +25,10 @@ export class CsvGenerator {
       filledPos.groups.map(g =>
         g.members.sort(
             (a, b) => a.position_number < b.position_number ? -1 : 1).map(m => {
-          const segment = this.segmentApi.segments.get(cast.segment);
+          const segment = this.segmentApi.lookup(cast.segment);
           const position = segment.positions.find(
               pos => pos.uuid === filledPos.position_uuid);
-          const dancer = this.userAPI.users.get(m.uuid);
+          const dancer = this.userApi.lookup(m.uuid);
           return {
             'Cast Name': cast.name,
             Segment: segment.name,
@@ -56,22 +56,22 @@ export class CsvGenerator {
   };
 
   generateCSVFromPerformance = async (perf: Performance): Promise<void> => {
-    await this.userAPI.getAllUsers();
-    await this.segmentApi.getAllSegments();
+    await this.userApi.loadAllUsers();
+    await this.segmentApi.loadAllSegments();
     const headers = ['Performance', 'Ballet', 'Length', 'Position',
       'Selected Cast', 'Cast Number', 'Dancer Number',
       'Dancer First', 'Dancer Last'];
     const objs: any[][][][] = perf.step_3.perfSegments.filter(s =>
-      this.segmentApi.segments.get(s.segment).type === 'BALLET').map(seg =>
+      this.segmentApi.lookup(s.segment).type === 'BALLET').map(seg =>
         seg.custom_groups.map(filledPos =>
           filledPos.groups.map(g =>
             g.members.sort(
               (a, b) => a.position_number < b.position_number ? -1 : 1)
               .map(m => {
-                const segment = this.segmentApi.segments.get(seg.segment);
+                const segment = this.segmentApi.lookup(seg.segment);
                 const position = segment.positions.find(
                     pos => pos.uuid === filledPos.position_uuid);
-                const dancer = this.userAPI.users.get(m.uuid);
+                const dancer = this.userApi.lookup(m.uuid);
                 return {
                   Performance: perf.step_1.title,
                   Ballet: segment.name,

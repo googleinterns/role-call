@@ -13,13 +13,13 @@ import com.google.rolecall.restcontrollers.Annotations.Post;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
 import com.google.rolecall.services.UnavailabilityServices;
-//import com.google.rolecall.services.UserServices;
+// import com.google.rolecall.services.UserServices;
 
 import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
-import java.util.logging.Level;     // dbg
-import java.util.logging.Logger;    // dbg
+// import java.util.logging.Level;     // dbg
+// import java.util.logging.Logger;    // dbg
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Endpoint(Constants.Mappings.UNAVAILABILITY_MANAGEMENT)
 public class UnavailabilityManagement extends AsyncRestEndpoint {
 
-  private Logger logger = Logger.getLogger(UnavailabilityManagement.class.getName()); // debug
+  // private Logger logger = Logger.getLogger(UnavailabilityManagement.class.getName()); // debug
 
   private final UnavailabilityServices unavailabilityService;
-  //private final UserServices userService;
+  // private final UserServices userService;
 
   /**
    * Gets all {@link Unavailability} objects that overlap the provided date.
@@ -48,10 +48,6 @@ public class UnavailabilityManagement extends AsyncRestEndpoint {
       @RequestParam(value=Constants.RequestParameters.END_DATE, required=true) long endLong) {
     Date startDate = new Date(startLong);
     Date endDate = new Date(endLong);
-
-System.out.printf(      "_____________________________ Before\n");
-logger.log(Level.INFO, "_____________________________ UNAVAIABILITIES");
-System.out.printf(      "_____________________________ After\n");
 
     List<UnavailabilityInfo> allUnavailable = 
         unavailabilityService.getUnavailabilityByDateRange(startDate, endDate)

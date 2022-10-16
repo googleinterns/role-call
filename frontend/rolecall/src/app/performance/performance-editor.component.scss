@@ -245,13 +245,21 @@ $buttonRowHeight: 5rem;
                   border-left: 4px solid;
                   border-color: $offWhite;
                   margin-left: 3rem;
+                }
 
-                  .names {
-                    font-size: large;
-                    margin-bottom: 0;
-                    margin-right: 0.5em;
-                    padding-left: 1em;
-                  }
+                .dancer-list-absence {
+                  // border-left: 4px solid;
+                  // border-color: $offWhite;
+                  // margin-left: 3rem;
+                  color: $unavailFg;
+                  background: $unavailBg;
+                }                
+
+                .names {
+                  font-size: large;
+                  margin-bottom: 0;
+                  margin-right: 0.5em;
+                  padding-left: 1em;
                 }
               }
             }
@@ -636,13 +644,21 @@ $buttonRowHeight: 5rem;
                 border-left: 4px solid;
                 border-color: $offWhite;
                 margin-left: 3rem;
+              }
 
-                .names {
-                  font-size: large;
-                  margin-bottom: 0;
-                  margin-right: 0.5em;
-                  padding-left: 1em;
-                }
+              .dancer-list-absence {
+                // border-left: 4px solid;
+                // border-color: $offWhite;
+                // margin-left: 3rem;
+                color: $unavailFg;
+                background: $unavailBg;
+              }
+
+              .names {
+                font-size: large;
+                margin-bottom: 0;
+                margin-right: 0.5em;
+                padding-left: 1em;
               }
             }
           }

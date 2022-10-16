@@ -2,14 +2,19 @@
 <div class="std-panel-container">
   <div class="left-panel">
     <div class="app-card std-card-margins std-left-card">
-      <h1 class="std-left-card-title">
-        Users
-      </h1>
+      <button
+        mat-button
+        class="std-left-card-title"
+        attr.aria-label="Reload Users"
+        matTooltip="Reload User Data"
+        (click)="refreshData()"
+      >Users
+      </button>
       <div class="item-select-container">
         <div
           *ngFor="let user of renderingUsers"
           class="app-card item-select"
-          [ngClass]="user.uuid === currentSelectedUser.uuid ? 'selected-item' : ''"
+          [ngClass]="user.uuid === currentSelectedUser?.uuid ? 'selected-item' : ''"
           (click)="setCurrentUser({user : user, fromInputChange : false, shouldSetLastUser : true})"
         >
           <h2 class="item-name">
@@ -162,8 +167,8 @@
         <div class="bottom-right">
           <img
             class="pic"
-            [src]="image"
-            *ngIf="image"
+            [src]="currentSelectedUser?.image"
+            *ngIf="currentSelectedUser?.image"
           >
         </div>
 

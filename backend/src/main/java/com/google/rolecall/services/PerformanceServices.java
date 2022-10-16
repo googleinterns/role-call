@@ -11,14 +11,14 @@ import com.google.rolecall.models.PerformanceCastMember;
 import com.google.rolecall.models.PerformanceSection;
 import com.google.rolecall.models.Position;
 import com.google.rolecall.models.Section;
-import com.google.rolecall.models.Unavailability;
+//import com.google.rolecall.models.Unavailability;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.PerformanceRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
-import com.google.rolecall.util.CPSNotification;
+//import com.google.rolecall.util.CPSNotification;
 
-import java.sql.Date;
+//import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -32,11 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class)
 public class PerformanceServices {
   @Autowired
-  private org.springframework.core.env.Environment environment;
+  //private org.springframework.core.env.Environment environment;
   private final PerformanceRepository performanceRepo;
   private final SectionServices sectionService;
   private final UserServices userService;
-  private final UnavailabilityServices unavailabilityService;
+  //private final UnavailabilityServices unavailabilityService;
 
   public Performance getPerformance(Integer id)
       throws EntityNotFoundException, InvalidParameterException {
@@ -58,30 +58,29 @@ public class PerformanceServices {
     return allPerformances;
   }
 
-  public List<Performance> getAllPerformancesWithUnavs(Boolean checkUnavs) {
-    List<Performance> allPerformances = new ArrayList<>();
-    performanceRepo.findAll().forEach(allPerformances::add);
-    System.out.printf("getAllPerformancesWithUnavs checkUnavs = %b \n", checkUnavs);
-    if (checkUnavs) {
-      allPerformances.forEach(p -> p.setHasAbsence(this.checkAbs(p)));
-    }
-    return allPerformances;
-  }
+  // public List<Performance> getAllPerformancesWithUnavs(Boolean checkUnavs) {
+  //   List<Performance> allPerformances = new ArrayList<>();
+  //   performanceRepo.findAll().forEach(allPerformances::add);
+  //   if (checkUnavs) {
+  //     allPerformances.forEach(p -> p.setHasAbsence(this.checkAbs(p)));
+  //   }
+  //   return allPerformances;
+  // }
 
-  public boolean checkAbs(Performance p) {
-    List<Unavailability> uList = new ArrayList<>();
-    p.getProgram().forEach(program -> {
-      program.getPerformanceCastMembers().forEach(member -> {
-        Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser()
-            .getId(), new Date(p.getDate().getTime()));
-        if (unavailability != null) {
-          member.setHasAbsence(true);
-          uList.add(unavailability);
-        }
-      });
-    });
-    return uList.size() > 0;
-  }
+  // public boolean checkAbs(Performance p) {
+  //   List<Unavailability> uList = new ArrayList<>();
+  //   p.getProgram().forEach(program -> {
+  //     program.getPerformanceCastMembers().forEach(member -> {
+  //       Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser()
+  //           .getId(), new Date(p.getDate().getTime()));
+  //       if (unavailability != null) {
+  //         member.setHasAbsence(true);
+  //         uList.add(unavailability);
+  //       }
+  //     });
+  //   });
+  //   return uList.size() > 0;
+  // }
 
   public ServiceResult<Performance> createPerformance(PerformanceInfo newPerformance)
       throws InvalidParameterException, EntityNotFoundException {
@@ -100,30 +99,31 @@ public class PerformanceServices {
     List<String> warnings = verifyPerformance(performance);
 
     performance = performanceRepo.save(performance);
-    // CPS Notification
-    if (performance.getStatus().equals(Performance.Status.PUBLISHED)) {
-      String[] profiles = this.environment.getActiveProfiles();
-      String profile = profiles[0];
-      String message = performance.getDescription();
+    // Deactivate for now. This significantly slows down this method.
+    // // CPS Notification
+    // if (performance.getStatus().equals(Performance.Status.PUBLISHED)) {
+    //   String[] profiles = this.environment.getActiveProfiles();
+    //   String profile = profiles[0];
+    //   String message = performance.getDescription();
 
-      // get all performers
-      List<PerformanceSectionInfo> sections = performanceInfo.performanceSections();
-      for (PerformanceSectionInfo section : sections) {
-        List<PerformancePositionInfo> positions = section.positions();
-        for (PerformancePositionInfo position : positions) {
-          List<PerformanceCastInfo> casts = position.performanceCasts();
-          for (PerformanceCastInfo cast : casts) {
-            List<PerformanceCastMemberInfo> members = cast.performanceCastMembers();
-            for (PerformanceCastMemberInfo member : members) {
-              Integer userId = member.userId();
-              User castUser = userService.getUser(userId);
-              CPSNotification notification = new CPSNotification(castUser, message, profile);
-              notification.send();
-            }
-          }
-        }
-      }
-    }
+    //   // get all performers
+    //   List<PerformanceSectionInfo> sections = performanceInfo.performanceSections();
+    //   for (PerformanceSectionInfo section : sections) {
+    //     List<PerformancePositionInfo> positions = section.positions();
+    //     for (PerformancePositionInfo position : positions) {
+    //       List<PerformanceCastInfo> casts = position.performanceCasts();
+    //       for (PerformanceCastInfo cast : casts) {
+    //         List<PerformanceCastMemberInfo> members = cast.performanceCastMembers();
+    //         for (PerformanceCastMemberInfo member : members) {
+    //           Integer userId = member.userId();
+    //           User castUser = userService.getUser(userId);
+    //           CPSNotification notification = new CPSNotification(castUser, message, profile);
+    //           notification.send();
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     ServiceResult<Performance> result = new ServiceResult<>(performance, warnings);
     return result;
@@ -456,11 +456,11 @@ public class PerformanceServices {
   public PerformanceServices(
       PerformanceRepository performanceRepo,
       SectionServices sectionService,
-      UserServices userService,
-      UnavailabilityServices unavailabilityService) {
+      UserServices userService) {
+      //UnavailabilityServices unavailabilityService) {
     this.performanceRepo = performanceRepo;
     this.sectionService = sectionService;
     this.userService = userService;
-    this.unavailabilityService = unavailabilityService;
+    //this.unavailabilityService = unavailabilityService;
   }
 }

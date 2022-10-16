@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+// import javax.persistence.Transient;
 
 @Entity
 @Table
@@ -29,10 +29,9 @@ public class CastMember {
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private SubCast cast;
 
-  @Transient
-  private boolean hasAbsence;
+  // @Transient
+  // private boolean hasAbsence;
 
-  
   public Integer getId() {
     return id;
   }
@@ -40,10 +39,10 @@ public class CastMember {
   public User getUser() {
     return user;
   }
-  
-  public boolean getHasAbsence() {
-    return hasAbsence;
-  }
+
+  // public boolean getHasAbsence() {
+  //   return hasAbsence;
+  // }
 
   public Integer getOrder() {
     return order;
@@ -53,9 +52,9 @@ public class CastMember {
     return cast;
   }
 
-  public void setHasAbsence( boolean hasAbsence) {
-    this.hasAbsence = hasAbsence; 
-  }
+  // public void setHasAbsence( boolean hasAbsence) {
+  //   this.hasAbsence = hasAbsence; 
+  // }
 
   public CastMemberInfo toCastMemberInfo() {
     return CastMemberInfo.newBuilder()
@@ -64,7 +63,7 @@ public class CastMember {
         .setSubCastId(cast.getId())
         .setOrder(order)
         .setDelete(null)
-        .setHasAbsence(getHasAbsence())
+        // .setHasAbsence(getHasAbsence())
         .build();
   }
 

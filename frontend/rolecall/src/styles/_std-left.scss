@@ -35,14 +35,18 @@
 
 // Title styling
 .std-left-card-title {
-  margin: 1rem;
+  width: calc(100% - 1.5rem);
+  margin: 1rem .75rem;
   font-weight: 800;
-  font-size: xx-large;
+  //font-size: xx-large;
+  font-size: 1.6rem;
+  text-align: center;
 }
 
 .item-select-container {
+  margin-top: -.25rem;
   overflow-y: scroll;
-  height: calc(100% - 5rem);
+  height: calc(100% - 4.25rem);
   width: 100%;
 }
 

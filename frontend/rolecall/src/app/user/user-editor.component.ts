@@ -6,6 +6,7 @@ import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild,
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User, UserApi } from '../api/user-api.service';
+import { PictureApi, PictureInfo } from '../api/picture-api.service';
 
 /**
  * The view for the User Editor, allowing users to create other users
@@ -43,7 +44,7 @@ export class UserEditor implements OnInit, OnDestroy {
     manageRules: 'Manages Rules',
   };
 
-  image?: string | ArrayBuffer;
+  formData: FormData;
 
   canDelete = false;
   canSave = false;
@@ -115,8 +116,9 @@ export class UserEditor implements OnInit, OnDestroy {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly userAPI: UserApi,
     private readonly location: Location,
+    private readonly userApi: UserApi,
+    private readonly pictureApi: PictureApi,
   ) {
   }
 
@@ -126,10 +128,10 @@ export class UserEditor implements OnInit, OnDestroy {
     if (uuid) {
       this.urlPointingUUID = uuid;
     }
-    this.userSubscription = this.userAPI.userEmitter.subscribe(user => {
-      this.onUserLoad(user);
+    this.userSubscription = this.userApi.cache.loadedAll.subscribe(users => {
+      this.onUserLoad(users as User[]);
     });
-    this.userAPI.getAllUsers();
+    this.userApi.loadAllUsers();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -137,11 +139,16 @@ export class UserEditor implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
   }
 
-  setCurrentUser = ({user, fromInputChange, shouldSetLastUser}: {
+  refreshData = (): void => {
+    this.usersLoaded = false;
+    this.userApi.loadAllUsers(true);
+  };
+
+  setCurrentUser = async ({user, fromInputChange, shouldSetLastUser}: {
     user: User | undefined;
     fromInputChange?: boolean;
     shouldSetLastUser?: boolean;
-  }): void => {
+  }): Promise<void> => {
     if (shouldSetLastUser) {
       this.lastSelectedUserEmail = user.contact_info.email;
     }
@@ -152,11 +159,10 @@ export class UserEditor implements OnInit, OnDestroy {
       this.canDelete = true;
       this.canSave = false;
     }
-
     if (this.workingUser && user.uuid !== this.workingUser.uuid) {
       this.renderingUsers = this.renderingUsers.filter(
           renderingUser => renderingUser.uuid !== this.workingUser.uuid
-                           && this.userAPI.isValidUser(renderingUser));
+                           && this.userApi.isValidUser(renderingUser));
       if (this.prevWorkingState) {
         this.currentSelectedUser = this.prevWorkingState;
         this.renderingUsers.push(this.currentSelectedUser);
@@ -165,7 +171,6 @@ export class UserEditor implements OnInit, OnDestroy {
       this.workingUser = undefined;
     }
 
-    this.image = undefined;
     this.hasNewPicture = false;
     this.currentSelectedUser = user;
     if (!fromInputChange) {
@@ -199,44 +204,8 @@ export class UserEditor implements OnInit, OnDestroy {
     this.creatingUser = true;
     this.canSave = true;
     this.prevWorkingState = undefined;
-    this.image = undefined;
     this.hasNewPicture = false;
-    const newUser: User = {
-      first_name: '',
-      middle_name: '',
-      last_name: '',
-      suffix: '',
-      picture_file: undefined,
-      has_roles: {
-        isAdmin: false,
-        isChoreographer: false,
-        isDancer: false,
-        isOther: false,
-      },
-      has_permissions: {
-        canLogin: true,
-        canReceiveNotifications: true,
-        managePerformances: false,
-        manageCasts: false,
-        manageBallets: false,
-        manageRoles: false,
-        manageRules: false
-      },
-      date_joined: Date.now(),
-      contact_info: {
-        phone_number: '',
-        email: '',
-        notification_email: '',
-        emergency_contact: {
-          name: '',
-          phone_number: '',
-          email: '',
-        },
-      },
-      isAbsent: false,
-      knows_positions: [],
-      uuid: 'newUser:' + Date.now()
-    };
+    const newUser = this.userApi.newUser();
     this.currentSelectedUser = newUser;
     this.renderingUsers.push(newUser);
     this.workingUser = newUser;
@@ -253,7 +222,7 @@ export class UserEditor implements OnInit, OnDestroy {
         user => user.uuid !== this.currentSelectedUser.uuid);
 
     if (!this.creatingUser) {
-      this.userAPI.deleteUser(this.currentSelectedUser);
+      this.userApi.cache.delete(this.currentSelectedUser);
     }
     if (this.renderingUsers.length > 0) {
       this.setCurrentUser({user: this.renderingUsers[0]});
@@ -266,13 +235,24 @@ export class UserEditor implements OnInit, OnDestroy {
     this.canSave || this.hasNewPicture;
 
 
-  saveUser = (): void => {
+  saveUser = async (): Promise<void> => {
     if (this.hasNewPicture) {
-console.log('SAVE PICTURE');
+      // SAVE PICTURE
+      const ret = await this.pictureApi.setPicture(this.formData);
+      if (ret.ok.successful) {
+        const picInfo = ret.rawItem as PictureInfo;
+        this.workingUser.picture_file = `${picInfo.id}.${picInfo.fileType}`;
+        this.saveUserRecord();
+      }
     }
-    if (this.canSave) {
-      this.lastSelectedUserEmail = this.workingUser.contact_info.email;
-      this.userAPI.setUser(this.workingUser).then(async result => {
+    else if (this.canSave) {
+      this.saveUserRecord();
+    }
+  };
+
+  saveUserRecord = async (): Promise<void> => {
+    this.lastSelectedUserEmail = this.workingUser.contact_info.email;
+    await this.userApi.cache.set(this.workingUser).then(async result => {
         if (result.successful) {
           this.creatingUser = false;
           this.canDelete = true;
@@ -280,15 +260,14 @@ console.log('SAVE PICTURE');
           const prevUUID = this.workingUser.uuid;
           this.prevWorkingState = undefined;
           this.workingUser = undefined;
-          await this.userAPI.getAllUsers();
+          this.userApi.loadAllUsers();
           const foundSame = this.renderingUsers.find(
               user => user.uuid === prevUUID);
           if (foundSame && this.location.path().startsWith('user')) {
             this.setCurrentUser({user: foundSame});
           }
         }
-      });
-    }
+    });
   };
 
   getCurrentDate = (): number =>
@@ -316,15 +295,19 @@ console.log('SAVE PICTURE');
     const valueName = change[0];
     const value = change[1];
 
-    if (!this.workingUser) {
+    this.checkWorkingUser();
+
+    if (this.workingUser) {
+      this.setWorkingPropertyByKey(valueName, value);
+    }
+  };
+
+  checkWorkingUser = (): void => {
+    if (!this.workingUser && this.currentSelectedUser) {
       this.prevWorkingState =
           JSON.parse(JSON.stringify(this.currentSelectedUser));
       this.workingUser = JSON.parse(JSON.stringify(this.currentSelectedUser));
       this.setCurrentUser({user: this.workingUser, fromInputChange: true});
-    }
-
-    if (this.workingUser) {
-      this.setWorkingPropertyByKey(valueName, value);
     }
   };
 
@@ -337,12 +320,15 @@ console.log('SAVE PICTURE');
       alert('Only images are supported');
       return;
     }
+    this.checkWorkingUser();
+    this.formData = new FormData();
+    this.formData.append('userid', this.workingUser.uuid);
+    this.formData.append('file', file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = ((): void => {
-      this.image = reader.result;
+      this.currentSelectedUser.image = reader.result;
       this.hasNewPicture = true;
-      this.currentSelectedUser.picture_file = file.name;
       this.canSave = true;
     });
   };
@@ -358,7 +344,6 @@ console.log('SAVE PICTURE');
       this.renderingUsers = [];
       return;
     }
-
     if (this.renderingUsers) {
       const prevUserUUIDS = new Set(this.renderingUsers.map(user => user.uuid));
       const newUsers = [];

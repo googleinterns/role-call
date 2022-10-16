@@ -56,16 +56,20 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
 
   @Post
   public CompletableFuture<ResponseSchema<UserAssetInfo>> uploadFile(Principal principal,
+      @RequestParam(Constants.RequestParameters.USER_ID) int ownerId,
       @RequestParam(Constants.RequestParameters.FILE) MultipartFile file) {
     if (file == null) {
       return CompletableFuture.failedFuture(
           new InvalidParameterException("File is required."));
     }
     User currentUser = getUser(principal);
+    if (ownerId != currentUser.getId() && !getUser(principal).isAdmin()) {
+      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+    }
     UserAsset newAsset;
     try {
       newAsset = profilePictureServices.createProfilePicture(
-          currentUser.getId(), file);
+        ownerId, file);
     } catch(IOException e) {
       return CompletableFuture.failedFuture(e);
     } catch(Exception e) {

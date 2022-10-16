@@ -26,9 +26,9 @@ public abstract class CastMemberInfo {
   @JsonProperty("order")
   public abstract Integer order();
 
-  @Nullable
-  @JsonProperty("hasAbsence")
-  public abstract Boolean hasAbsence(); 
+  // @Nullable
+  // @JsonProperty("hasAbsence")
+  // public abstract Boolean hasAbsence(); 
 
   @Nullable
   @JsonIgnore
@@ -64,8 +64,8 @@ public abstract class CastMemberInfo {
     @JsonProperty("order")
     public abstract Builder setOrder(Integer order);
 
-    @JsonProperty("hasAbsence")
-    public abstract Builder setHasAbsence(Boolean hasAbsence);
+    // @JsonProperty("hasAbsence")
+    // public abstract Builder setHasAbsence(Boolean hasAbsence);
 
 
     @JsonProperty("delete")

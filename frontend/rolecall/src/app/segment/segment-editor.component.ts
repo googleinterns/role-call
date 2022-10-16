@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { COLORS } from 'src/constants';
-import * as APITypes from 'src/api-types';
+import { CacheRetCd } from '../utils/data-cache';
 
 import { Segment, SegmentApi, SegmentType, Position,
 } from '../api/segment-api.service';
@@ -76,12 +76,12 @@ export class SegmentEditor implements OnInit, OnDestroy {
   segmentPrettyNames: string[];
 
   constructor(
-      private route: ActivatedRoute,
-      private segmentApi: SegmentApi,
-      private location: Location,
-      private respHandler: ResponseStatusHandlerService,
-      private superBalletDisplay: SuperBalletDisplayService,
-      public leftList: SegmentDisplayListService,
+    private route: ActivatedRoute,
+    private location: Location,
+    private respHandler: ResponseStatusHandlerService,
+    private segmentApi: SegmentApi,
+    private superBalletDisplay: SuperBalletDisplayService,
+    public leftList: SegmentDisplayListService,
   ) {
     this.segmentPrettyNames = ['', ...this.segmentPrettyTypes];
   }
@@ -93,16 +93,21 @@ export class SegmentEditor implements OnInit, OnDestroy {
       this.urlPointingUUID = uuid;
     }
     this.segmentSubscription =
-      this.segmentApi.segmentEmitter.subscribe(segment => {
-        this.onSegmentLoad(segment);
+      this.segmentApi.cache.loadedAll.subscribe(items => {
+        this.onSegmentLoad(items as Segment[]);
       });
-    this.segmentApi.getAllSegments();
+    this.segmentApi.loadAllSegments();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnDestroy(): void {
     this.segmentSubscription.unsubscribe();
   }
+
+  refreshData = (): void => {
+    this.segmentsLoaded = false;
+    this.segmentApi.loadAllSegments(true);
+  };
 
   onSegmentLoad = (segments: Segment[]): void => {
     if (segments.length === 0) {
@@ -284,7 +289,7 @@ export class SegmentEditor implements OnInit, OnDestroy {
     }
     this.lastSelectedSegmentName = this.currentSelectedSegment.name;
     this.updateDragAndDropData(true);
-    this.segmentApi.setSegment(this.currentSelectedSegment)
+    this.segmentApi.cache.set(this.currentSelectedSegment)
         .then(async result => {
       if (result.successful) {
         this.currentSelectedSegment.addingPositions = [];
@@ -298,7 +303,7 @@ export class SegmentEditor implements OnInit, OnDestroy {
         const matchLength = superBallet ? superBallet.positions.length : -1;
         this.prevWorkingState = undefined;
         this.workingSegment = undefined;
-        await this.segmentApi.getAllSegments();
+        await this.segmentApi.loadAllSegments();
         let foundSame: WorkingSegment = null;
         for (let i = this.workingSegments.length; 0 < i--;) {
           const segment = this.workingSegments[i];
@@ -333,14 +338,13 @@ export class SegmentEditor implements OnInit, OnDestroy {
 
 
   deleteSegment = async (): Promise<void> => {
-    let successIndicator: APITypes.SuccessIndicator = {successful: false};
+    let ret: CacheRetCd = CacheRetCd.error;
     if (!this.creatingSegment) {
       this.superBalletDisplay.removeFromDisplayList(
           this.currentSelectedSegment.uuid);
-      successIndicator =
-          await this.segmentApi.deleteSegment(this.currentSelectedSegment);
+      ret = await this.segmentApi.cache.delete(this.currentSelectedSegment);
     }
-    if (successIndicator.successful === true) {
+    if (ret === CacheRetCd.ok) {
       this.workingSegments = this.workingSegments.filter(
           segment => segment.uuid !== this.currentSelectedSegment.uuid);
       this.buildLeftList();

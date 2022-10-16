@@ -61,12 +61,13 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.state = this.createNewUnavailability();
     this.unavSubscription =
-        this.unavApi.unavailabilityEmitter.subscribe(vals =>
-            this.onUnavsLoad(vals));
-    this.unavApi.getAllUnavailabilities();
+        this.unavApi.cache.loadedAll.subscribe(vals =>
+            this.onUnavsLoad(vals as Unavailability[]));
+    this.unavApi.loadAllUnavailabilities();
     this.userSubscription =
-        this.userApi.userEmitter.subscribe(vals => this.onUsersLoad(vals));
-    this.userApi.getAllUsers();
+        this.userApi.cache.loadedAll.subscribe(vals =>
+            this.onUsersLoad(vals as User[]));
+    this.userApi.loadAllUsers();
   }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -86,8 +87,9 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   onUsersLoad = (
     users: User[],
   ): void => {
-    this.allUsers = users.sort((a, b) =>
-      a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
+    // this.allUsers = users.sort((a, b) =>
+    //   a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
+    this.allUsers = users;
     this.usersLoaded = true;
     this.checkDataLoaded();
   };
@@ -103,7 +105,7 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   afterAllDataLoaded = (): void => {
     this.processedUnavs = this.unavs.map(ua => ({
         unav: ua,
-        user: this.userApi.users.get(String(ua.userId)),
+        user: this.userApi.lookup(String(ua.userId)),
         fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
         toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
       })
@@ -116,23 +118,28 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
       ua.unav.endDate > this.listStart);
   };
 
+  resetData = (): void => {
+    this.dataLoaded = false;
+    this.usersLoaded = false;
+    this.unavsLoaded = false;
+    this.userApi.loadAllUsers(true);
+    this.unavApi.loadAllUnavailabilities(true);
+  };
+
   changeListStartDate = (newDate: Date): string => {
-    this.listStartDate = newDate;
-    this.listStart = this.listStartDate.getTime();
-    this.filterOnDate();
+    if (newDate.getTime() === new Date(0).getTime()) {
+      this.resetData();
+    } else {
+      this.listStartDate = newDate;
+      this.listStart = this.listStartDate.getTime();
+      this.filterOnDate();
+    }
     return `Unavailabilites After ${this.listStartDate.toLocaleDateString()}`;
   };
 
   createNewUnavailability = (): Unavailability => {
     this.canDelete = false;
-    return {
-      id: Date.now(),
-      reason: 'UNDEF',
-      description: '',
-      userId: 0,
-      startDate: Date.now(),
-      endDate: Date.now(),
-    };
+    return this.unavApi.newUnavailability();
   };
 
   updateCanSave = (): void => {
@@ -192,7 +199,6 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   canAddUnav = (): boolean =>
     true;
 
-
   onNewUnav = (): void => {
     this.state = this.createNewUnavailability();
     this.initialSelectedReason = '';
@@ -204,7 +210,7 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   ): void => {
     this.resetCompState();
     this.state = JSON.parse(JSON.stringify(unav));
-    this.selectedUser = this.userApi.users.get(String(this.state.userId));
+    this.selectedUser = this.userApi.lookup(String(this.state.userId));
     this.selectedReason = unav.reason;
     this.initialSelectedReason = this.makeTypePretty(this.selectedReason);
     this.startDate = new Date(unav.startDate);
@@ -217,11 +223,11 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
     this.doSetUnav().then(() => {
       this.onNewUnav();
     });
+    this.unavApi.loadAllUnavailabilities();
   };
 
   canDeleteUnav = (): boolean =>
     this.canDelete;
-
 
   onDeleteUnav = (): void => {
     this.doDeleteUnav(this.state);
@@ -230,22 +236,17 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   canSaveUnav = (): boolean =>
     this.canSave;
 
-
   doSetUnav = async (): Promise<APITypes.SuccessIndicator> =>
-    this.unavApi.setUnavailability(this.state);
-
+    this.unavApi.cache.set(this.state);
 
   doDeleteUnav = async (
     ua: Unavailability,
-  ): Promise<APITypes.SuccessIndicator> => {
-    const success = this.unavApi.deleteUnavailability(ua);
+  ): Promise<void> => {
+    this.unavApi.cache.delete(ua);
     this.onNewUnav();
-    return success;
   };
-
 
   makeTypePretty = (type: UnavailabilityReason): string =>
     !!type ? type.slice(0, 1) + type.slice(1).toLowerCase() : '';
-
 
 }

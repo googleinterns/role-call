@@ -2,9 +2,14 @@
 <div class="std-panel-container">
   <div class="left-panel">
     <div class="app-card std-card-margins std-left-card">
-      <h1 class="std-left-card-title">
-        Segments
-      </h1>
+      <button
+        mat-button
+        class="std-left-card-title"
+        attr.aria-label="Reload Segments"
+        matTooltip="Reload Segment Data"
+        (click)="refreshData()"
+      >Segments
+      </button>
       <div class="item-select-container">
         <div
             *ngFor="let item of leftList.visibleItems"

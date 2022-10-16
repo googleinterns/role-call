@@ -1,18 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { CrudApi } from './crud-api.service';
 import * as APITypes from 'src/api-types';
-import { environment } from 'src/environments/environment';
-import { lastValueFrom } from 'rxjs';
 
 import { MockPerformanceBackend } from '../mocks/mock-performance-backend';
-import { HeaderUtilityService } from '../services/header-utility.service';
-import { LoggingService } from '../services/logging.service';
-import { ResponseStatusHandlerService,
-} from '../services/response-status-handler.service';
 import { ContextService } from '../services/context.service';
 import { SegmentType } from './segment-api.service';
+import { DataCache } from '../utils/data-cache';
+
 
 type Group = {
   group_index: number;
@@ -71,10 +67,10 @@ export type Performance = {
   hasAbsence?: boolean;
 };
 
-export type RawAllPerformancesResponse = {
-  data: RawPerformance[];
-  warnings: string[];
-};
+// export type RawAllPerformancesResponse = {
+//   data: RawPerformance[];
+//   warnings: string[];
+// };
 
 export type RawPerformance = {
   id: number;
@@ -131,25 +127,38 @@ export type OnePerformanceResponse = {
  */
 @Injectable({providedIn: 'root'})
 export class PerformanceApi {
-  /** Mock backend. */
-  mockBackend: MockPerformanceBackend = new MockPerformanceBackend();
 
-  /** All the loaded performances mapped by UUID. */
-  performances: Map<APITypes.PerformanceUUID, Performance> =
-      new Map<APITypes.PerformanceUUID, Performance>();
-
-  /** Emitter that is called whenever performances are loaded. */
-  performanceEmitter: EventEmitter<Performance[]> = new EventEmitter();
+  cache: DataCache<APITypes.PerformanceUUID>;
 
   constructor(
-      private loggingService: LoggingService,
-      private http: HttpClient,
-      private headerUtil: HeaderUtilityService,
-      private respHandler: ResponseStatusHandlerService,
-
       public g: ContextService,
+      public crudApi: CrudApi<APITypes.PerformanceUUID>,
   ) {
+    this.cache = new DataCache<APITypes.PerformanceUUID>({
+      name: 'Performance',
+      apiName: 'api/performance',
+      ixName: 'performanceid',
+      crudApi: this.crudApi,
+      getIx: this.getIx,
+      fromRaw: this.convertRawToPerformance,
+      toRaw: this.convertPerformanceToRaw,
+      sortCmp: this.performanceCmp,
+      mockBackend: new MockPerformanceBackend(),
+      // loadAllParams: this.loadAllPerformanceParams,
+      preUpdateCleanup: this.deletePreviousGroups,
+    });
   }
+
+  getIx = (item: unknown): APITypes.PerformanceUUID =>
+    ( item as Performance ).uuid;
+
+
+  performanceCmp = (a: unknown, b: unknown): number =>
+      ( a as Performance ).step_1.date >
+      ( b as Performance ).step_1.date ? -1 : 1;
+
+  // loadAllPerformanceParams = (): HttpParams =>
+  //   new HttpParams().append('checkUnavs', `${this.g.checkUnavs}`);
 
   /**
    * Converts a raw performance response to the performance structure
@@ -157,7 +166,9 @@ export class PerformanceApi {
    *
    * @param raw The raw performance from the backend
    */
-  convertRawToPerformance = (raw: RawPerformance): Performance => ({
+  convertRawToPerformance = (rawItem: unknown): unknown => {
+    const raw = rawItem as RawPerformance;
+    return {
       uuid: String(raw.id),
       dateTime: raw.dateTime,
       hasAbsence: raw.hasAbsence,
@@ -208,8 +219,8 @@ export class PerformanceApi {
           })
         )
       }
-    });
-
+    };
+  };
 
   /**
    * Converts a performance editor performance into a
@@ -217,7 +228,9 @@ export class PerformanceApi {
    *
    * @param perf The performance editor performance state
    */
-  convertPerformanceToRaw = (perf: Performance): RawPerformance => ({
+  convertPerformanceToRaw = (item: unknown): unknown => {
+    const perf = item as Performance;
+    return {
       id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
       title: perf.step_1.title,
       description: perf.step_1.description,
@@ -249,8 +262,8 @@ export class PerformanceApi {
           )
         })
       )
-    });
-
+    };
+  };
 
   /**
    * Takes a raw performance and calculates which performance sections
@@ -261,7 +274,10 @@ export class PerformanceApi {
    *
    * @param rawPerf The raw performance being patched
    */
-  deletePreviousGroups = (rawPerf: RawPerformance): RawPerformance => {
+  deletePreviousGroups = (
+    rawItem: unknown,
+  ): RawPerformance => {
+    const rawPerf = rawItem as RawPerformance;
     rawPerf.performanceSections.push(
         ...(rawPerf.performanceSections.map(sec => {
           const copy = JSON.parse(JSON.stringify(sec));
@@ -273,7 +289,7 @@ export class PerformanceApi {
     );
     // Using the original data in the map, find the deleted sections
     // in the performance
-    const deletedSections = this.performances.get(String(rawPerf.id))
+    const deletedSections = this.lookup(String(rawPerf.id))
         .step_3
         .perfSegments
         .filter(val =>
@@ -320,206 +336,19 @@ export class PerformanceApi {
     return rawPerf;
   };
 
-  /** Hits backend with all performances GET request. */
-  requestAllPerformances = async (
-  ): Promise<AllPerformancesResponse> => {
-    if (environment.mockBackend) {
-      return this.mockBackend.requestAllPerformances();
+  loadAllPerformances = async (
+    forceDbRead: boolean = false,
+  ): Promise<Performance[]> => {
+    if (forceDbRead || !this.cache.isLoaded) {
+      return await this.cache.loadAll() as Performance[];
     }
-    const header = await this.headerUtil.generateHeader();
-    const params = new HttpParams().append('checkUnavs',
-        `${this.g.checkUnavs}`);
-    return lastValueFrom(this.http.get<RawAllPerformancesResponse>(
-        environment.backendURL + 'api/performance', {
-          headers: header,
-          observe: 'response',
-          withCredentials: true,
-          params,
-        }))
-        .catch(errorResp => errorResp)
-        .then(resp =>
-            this.respHandler.checkResponse<RawAllPerformancesResponse>(
-                resp))
-        .then(rawAllPerformancesResponse => ({
-            data: {
-              performances: rawAllPerformancesResponse.data.map(
-                  rawPerformance =>
-                    this.convertRawToPerformance(rawPerformance)
-                  )
-            }, warnings: rawAllPerformancesResponse.warnings
-          })
-        );
+    return this.cache.refreshData() as Performance[];
+    // const arr = Array.from(this.cache.arr.values());
+    // this.cache.loadedAll.emit(arr);
+    // return arr as Performance[];
   };
 
-  /** Hits backend with one performance GET request. */
-  requestOnePerformance = async (
-    uuid: APITypes.UserUUID,
-  ): Promise<OnePerformanceResponse> =>
-    this.mockBackend.requestOnePerformance(uuid);
-
-
-  /** Hits backend with create/edit performance POST request. */
-  requestPerformanceSet = async (
-    performance: Performance,
-  ): Promise<HttpResponse<any>> => {
-    if (environment.mockBackend) {
-      return this.mockBackend.requestPerformanceSet(performance);
-    }
-    if (this.performances.has(performance.uuid)) {
-      const header = await this.headerUtil.generateHeader();
-      return lastValueFrom(this.http.patch<HttpResponse<any>>(
-          environment.backendURL + 'api/performance',
-          this.deletePreviousGroups(this.convertPerformanceToRaw(performance)),
-          {
-            headers: header,
-            observe: 'response',
-            withCredentials: true
-          }))
-          .catch(errorResp => errorResp)
-          .then(resp => this.respHandler.checkResponse<HttpResponse<any>>(resp))
-          .then(val =>
-            this.getAllPerformances().then(() => val)
-          );
-    } else {
-      const header = await this.headerUtil.generateHeader();
-      return lastValueFrom(this.http.post<HttpResponse<any>>(
-          environment.backendURL + 'api/performance',
-          this.convertPerformanceToRaw(performance),
-          {
-            headers: header,
-            observe: 'response',
-            withCredentials: true
-          }))
-          .catch(errorResp => errorResp)
-          .then(resp => this.respHandler.checkResponse<HttpResponse<any>>(resp))
-          .then(val =>
-            this.getAllPerformances().then(() => val)
-          );
-    }
-  };
-
-  /** Hits backend with delete performance POST request. */
-  requestPerformanceDelete = async (
-    performance: Performance,
-  ): Promise<HttpResponse<any>> => {
-    if (environment.mockBackend) {
-      return this.mockBackend.requestPerformanceDelete(performance);
-    }
-    const header = await this.headerUtil.generateHeader();
-    return lastValueFrom(this.http.delete(
-        environment.backendURL + 'api/performance?performanceid='
-        + performance.uuid,
-        {
-          headers: header,
-          observe: 'response',
-          withCredentials: true
-        }))
-        .catch(errorResp => errorResp)
-        .then(resp => this.respHandler.checkResponse<any>(resp));
-  };
-
-  /** Gets all the performances from the backend and returns them. */
-  getAllPerformances = async (): Promise<Performance[]> =>
-    this.getAllPerformancesResponse().then(val => {
-      this.performanceEmitter.emit(Array.from(this.performances.values()));
-      return val;
-    }).then(val => val.data.performances).catch(() =>
-      []
-    );
-
-
-  /** Gets a specific performance from the backend by UUID and returns it. */
-  getPerformance = async (
-    uuid: APITypes.PerformanceUUID,
-  ): Promise<Performance> =>
-    this.getOnePerformanceResponse(uuid).then(val => {
-      this.performanceEmitter.emit(Array.from(this.performances.values()));
-      return val;
-    }).then(val => val.data.performance);
-
-
-  /**
-   * Requests an update to the backend which may or may not be successful,
-   * depending on whether or not the performance is valid, as well as if the
-   * backend request fails for some other reason.
-   */
-  setPerformance = async (
-    performance: Performance,
-  ): Promise<APITypes.SuccessIndicator> =>
-    this.setPerformanceResponse(performance).then(async () => {
-      await this.getAllPerformances();
-      return {
-        successful: true
-      };
-    }).catch(reason => ({
-        successful: false,
-        error: reason
-      })
-    );
-
-
-  /** Requests for the backend to delete the performance. */
-  deletePerformance = async (
-    performance: Performance,
-  ): Promise<APITypes.SuccessIndicator> =>
-    this.deletePerformanceResponse(performance).then(() => {
-      this.getAllPerformances();
-      return {
-        successful: true
-      };
-    }).catch(reason => ({
-        successful: false,
-        error: reason
-      })
-    );
-
-
-  // Private methods
-
-  /** Takes backend response, updates data structures for all performances. */
-  private getAllPerformancesResponse = async (
-  ): Promise<AllPerformancesResponse> =>
-    this.requestAllPerformances().then(val => {
-      // Update the performances map
-      this.performances.clear();
-      for (const performance of val.data.performances) {
-        this.performances.set(performance.uuid, performance);
-      }
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-
-
-  /** Takes backend response, updates data structure for one performance. */
-  private getOnePerformanceResponse = async (
-    uuid: APITypes.PerformanceUUID,
-  ): Promise<OnePerformanceResponse> =>
-    this.requestOnePerformance(uuid).then(val => {
-      // Update performance in map
-      this.performances.set(val.data.performance.uuid, val.data.performance);
-      // Log any warnings
-      for (const warning of val.warnings) {
-        this.loggingService.logWarn(warning);
-      }
-      return val;
-    });
-
-
-  /** Sends backend request and awaits response. */
-  private setPerformanceResponse = async (
-    performance: Performance,
-  ): Promise<HttpResponse<any>> =>
-    this.requestPerformanceSet(performance);
-
-
-  /** Sends backend request and awaits response. */
-  private deletePerformanceResponse = async (
-    performance: Performance,
-  ): Promise<HttpResponse<any>> =>
-    this.requestPerformanceDelete(performance);
-
+  lookup = (ix: APITypes.PerformanceUUID): Performance =>
+    this.cache.map.get(ix) as Performance;
 
 }
