@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { User, UserApi } from '../api/user-api.service';
 import { PictureApi, PictureInfo } from '../api/picture-api.service';
 import {NgxImageCompressService} from "ngx-image-compress";
+
 /**
  * The view for the User Editor, allowing users to create other users
  * and view user information.
@@ -265,8 +266,11 @@ export class UserEditor implements OnInit, OnDestroy {
           const foundSame = this.renderingUsers.find(
               user => user.uuid === prevUUID);
           if (foundSame && this.location.path().startsWith('user')) {
-            this.setCurrentUser({user: foundSame});
+            this.setCurrentUser({user: foundSame});                  
           }
+          if (!!foundSame.picture_file) {
+            this.userApi.loadOnePicture(this.currentSelectedUser);
+           }     
         }
     });
   };
