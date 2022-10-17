@@ -233,9 +233,15 @@ export class UserApi {
     forceDbRead: boolean = false,
   ): Promise<User[]> => {
     if (forceDbRead || !this.cache.isLoaded) {
-      return await this.cache.loadAll() as User[];
+      //return await this.cache.loadAll() as User[];
+      const users = await this.cache.loadAll() as User[];
+console.log('USERS', users);
+      return users;
     }
-    return this.cache.refreshData() as User[];
+    //return this.cache.refreshData() as User[];
+    const cached = this.cache.refreshData() as User[];
+console.log('CACHED USERS', cached);
+    return cached;
   };
 
   lookup = (ix: APITypes.UserUUID): User =>
