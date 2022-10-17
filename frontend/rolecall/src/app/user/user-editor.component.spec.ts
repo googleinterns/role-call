@@ -42,6 +42,7 @@ import { EmptyStringIfUndefinedPipe,
 } from '../common-components/empty-string-if-undefined.pipe';
 import { UserApi } from '../api/user-api.service';
 import { PictureApi } from '../api/picture-api.service';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 import { UserEditor } from './user-editor.component';
 import { ActionButtonsComponent,
@@ -53,6 +54,7 @@ describe('UserEditorComponent', () => {
     } as unknown as ActivatedRoute;
   const fakeLocation = {} as Location;
   const fakePictureApi = {} as PictureApi;
+  const fakeImageCompress = {} as NgxImageCompressService;
 
   // const mockCache = createSpyObjWithProps<DataCache<APITypes.UserUUID>>({
   //   baseName: 'mockCache',
@@ -122,6 +124,7 @@ describe('UserEditorComponent', () => {
       fakeLocation,
       userApi,
       fakePictureApi,
+      fakeImageCompress,
     );
   });
 
