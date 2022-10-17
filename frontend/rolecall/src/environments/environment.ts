@@ -11,7 +11,8 @@ export const environment = {
   logRequests: true,
   devEmail: 'admin@rolecall.com',
   useDevEmail: true,
-  backendURL: 'http://localhost:9091/'
+  backendURL: 'http://localhost:9091/',
+  picPath: 'api/profile_picture/'
 };
 
 /*

@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
@@ -46,7 +47,7 @@ public class LocalStorageService implements StorageService {
         // else {
         //   System.out.println(type.toString() + " directory exists: " + subDir.toString());
         // }
-    }
+    }    
   }
 
   @Override
@@ -78,6 +79,11 @@ public class LocalStorageService implements StorageService {
       throw new FileNotFoundException("No file found for " + filename + ".");
     }
     return resource;
+  }
+
+  @Override
+  public String loadAsUrl(AssetType type, String filename) throws NotImplementedException {
+    throw new NotImplementedException();
   }
 
   @Override

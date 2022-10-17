@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonComponentsModule,
 } from '../common-components/common-components.module';
 import { UserEditor } from './user-editor.component';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @NgModule({
   declarations: [UserEditor],
@@ -17,7 +18,8 @@ import { UserEditor } from './user-editor.component';
     MatIconModule,
     MatTooltipModule,
     MatInputModule,
-  ]
+  ],
+  providers: [NgxImageCompressService],
 })
 export class UserModule {
 }

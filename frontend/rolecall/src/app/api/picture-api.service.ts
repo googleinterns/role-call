@@ -60,7 +60,7 @@ export class PictureApi {
       ? HeaderType.png : HeaderType.jpg;
     const header = await this.headerUtil.generateHeader(fileType);
     return lastValueFrom(this.http.get<OnePictureResponse>(
-        environment.backendURL + 'api/profile_picture/' + fileName, {
+        environment.backendURL + environment.picPath + fileName, {
           headers: header,
           observe: 'response',
           withCredentials: true,

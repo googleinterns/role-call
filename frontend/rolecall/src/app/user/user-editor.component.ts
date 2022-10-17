@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User, UserApi } from '../api/user-api.service';
 import { PictureApi, PictureInfo } from '../api/picture-api.service';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 /**
  * The view for the User Editor, allowing users to create other users
@@ -119,6 +120,7 @@ export class UserEditor implements OnInit, OnDestroy {
     private readonly location: Location,
     private readonly userApi: UserApi,
     private readonly pictureApi: PictureApi,
+    private imageCompress: NgxImageCompressService
   ) {
   }
 
@@ -266,6 +268,9 @@ export class UserEditor implements OnInit, OnDestroy {
           if (foundSame && this.location.path().startsWith('user')) {
             this.setCurrentUser({user: foundSame});
           }
+          if (!!foundSame.picture_file) {
+            this.userApi.loadOnePicture(this.currentSelectedUser);
+          }
         }
     });
   };
@@ -320,17 +325,38 @@ export class UserEditor implements OnInit, OnDestroy {
       alert('Only images are supported');
       return;
     }
+
     this.checkWorkingUser();
     this.formData = new FormData();
     this.formData.append('userid', this.workingUser.uuid);
-    this.formData.append('file', file);
+   // this.formData.append('file', file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = ((): void => {
       this.currentSelectedUser.image = reader.result;
       this.hasNewPicture = true;
       this.canSave = true;
-    });
+
+      this.imageCompress.compressFile(reader.result as string, null,
+          100, 100, 320, 320) // 50% ratio, 50% quality
+        .then(compressedImage => {
+            this.formData.append('file', this.dataURItoBlob(compressedImage),
+                file.name);
+          }
+        );
+    }).bind(this) ;
+  };
+
+  dataURItoBlob = (dataURI: string): Blob => {
+    const arr = dataURI.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type:mime });
   };
 
   getPicture = (): void => {
