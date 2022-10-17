@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginApi } from '../api/login-api.service';
 
+
 @Injectable({providedIn: 'root'})
 export class RequestInterceptorService implements HttpInterceptor {
 
@@ -17,6 +18,7 @@ export class RequestInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> => {
     // Ensures fresh Google OAuth token
     this.loginApi.login();
+console.log(req);
     if (environment.logRequests) {
       console.log(req);
     }

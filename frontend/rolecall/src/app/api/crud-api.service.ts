@@ -65,12 +65,20 @@ export class CrudApi<IXT> {
       ))
       .catch(errorResp => errorResp)
       .then(resp => this.respHandler.checkResponse<RawAllItemsResponse>(resp))
-      .then(rawAllUsersResponse => ({
+      // .then(rawAllUsersResponse => ({
+      //     items: rawAllUsersResponse.data.map(rawItem =>
+      //         fromRaw ? fromRaw(rawItem) : rawItem),
+      //     warnings: rawAllUsersResponse.warnings
+      //   })
+      .then(rawAllUsersResponse => {
+          const data = {
           items: rawAllUsersResponse.data.map(rawItem =>
               fromRaw ? fromRaw(rawItem) : rawItem),
           warnings: rawAllUsersResponse.warnings
-        })
-      );
+        };
+console.log('Loading', data.items);
+        return data;
+      });
   };
 
   requestOneItem = async (
