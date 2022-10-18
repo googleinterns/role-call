@@ -60,26 +60,16 @@ export class CrudApi<IXT> {
     } else {
       httpParams = { headers, observe, withCredentials, };
     }
-console.log('GETALL', reqUrl);
     return lastValueFrom(this.http.get<RawAllItemsResponse>(
       reqUrl, httpParams,
       ))
       .catch(errorResp => errorResp)
       .then(resp => this.respHandler.checkResponse<RawAllItemsResponse>(resp))
-      // .then(rawAllUsersResponse => ({
-      //     items: rawAllUsersResponse.data.map(rawItem =>
-      //         fromRaw ? fromRaw(rawItem) : rawItem),
-      //     warnings: rawAllUsersResponse.warnings
-      //   })
-      .then(rawAllUsersResponse => {
-          const data = {
+      .then(rawAllUsersResponse => ({
           items: rawAllUsersResponse.data.map(rawItem =>
               fromRaw ? fromRaw(rawItem) : rawItem),
           warnings: rawAllUsersResponse.warnings
-        };
-console.log('Loading', data.items);
-        return data;
-      });
+        }));
   };
 
   requestOneItem = async (
