@@ -60,6 +60,7 @@ export class CrudApi<IXT> {
     } else {
       httpParams = { headers, observe, withCredentials, };
     }
+console.log('GETALL', reqUrl);
     return lastValueFrom(this.http.get<RawAllItemsResponse>(
       reqUrl, httpParams,
       ))
