@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { LoginApi } from '../api/login-api.service';
 import { UserApi } from '../api/user-api.service';
 import { SideNav } from './side-nav.component';
-import { environment } from '../../environments/environment';
+
 
 /**
  * The site-wide header that holds the menu bar, login information,
@@ -63,7 +63,6 @@ export class SiteHeader implements OnInit, OnDestroy, AfterViewInit {
   }
 
   doStartup = async (): Promise<void> => {
-console.log('Environment', environment);
     //await this.userApi.cache.loadAll();
     await this.userApi.loadAllUsers();
     this.userApi.loadAllPictures();
