@@ -9,7 +9,6 @@ public class Constants {
     public static final String SECTION_MANAGEMENT = "/api/section";
     public static final String CAST_MANAGEMENT = "/api/cast";
     public static final String PERFORMANCE_MANAGEMENT = "/api/performance";
-    public static final String DASHBOARD_MANAGEMENT = "/api/dashboard";
     public static final String UNAVAILABILITY_MANAGEMENT = "/api/unavailable";
     public static final String PROFILE_PICTURE_MANAGEMENT = "/api/profile_picture";
   }
