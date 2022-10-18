@@ -107,7 +107,7 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
     this.castSubscription = this.castApi.cache.loadedAll.subscribe(() => {
       this.onCastLoad();
     });
-    this.perfDate = this.performanceDate.getTime();
+    this.perfDate = this.performanceDate?.getTime() ?? 0;
     if (this.perfDate) {
       this.castApi.loadAllCasts();
     }
