@@ -170,10 +170,10 @@ export class DataCache<IXT> {
       if (this.loadAllRequestOverride) {
 console.log('loadAll A');
         lret = await this.loadAllRequestOverride(this);
-console.log('loadAll B'), lret;
+console.log('loadAll B', lret);
       } else {
         lret = await this.crudApi.stdLoadAllItems(this);
-console.log('loadAll C'), lret;
+console.log('loadAll C', lret);
       }
     } catch (_e) {
       return [];
