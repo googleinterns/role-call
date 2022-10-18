@@ -10,7 +10,7 @@ import { LoggingService } from '../services/logging.service';
 
 import { CrudApi } from '../api/crud-api.service';
 import { PictureApi } from '../api/picture-api.service';
-import { MockUserBackend } from '../mocks/mock-user-backend';
+// import { MockUserBackend } from '../mocks/mock-user-backend';
 // import { DataCache } from '../utils/data-cache';
 import * as APITypes from 'src/api-types';
 
@@ -20,7 +20,7 @@ import { UserApi } from './user-api.service';
 
 describe('UserApi', () => {
   let service: UserApi;
-  const mockBackend = new MockUserBackend<APITypes.UserUUID>();
+  // const mockBackend = new MockUserBackend<APITypes.UserUUID>();
   // let cache: DataCache<APITypes.UserUUID>;
   // let loggingService = new LoggingService();
 
@@ -91,8 +91,9 @@ describe('UserApi', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return all users', async () => {
-    const items = await service.cache.loadAll();
-    expect(items.length).toEqual(mockBackend.mockDb.length);
-  });
+  // Requires mock backend to be true
+  // it('should return all users', async () => {
+  //   const items = await service.cache.loadAll();
+  //   expect(items.length).toEqual(mockBackend.mockDb.length);
+  // });
 });
