@@ -222,8 +222,8 @@ export class UnavailabilityEditor implements OnInit, OnDestroy {
   onSaveUnav = (): void => {
     this.doSetUnav().then(() => {
       this.onNewUnav();
+      this.unavApi.loadAllUnavailabilities();
     });
-    this.unavApi.loadAllUnavailabilities();
   };
 
   canDeleteUnav = (): boolean =>
