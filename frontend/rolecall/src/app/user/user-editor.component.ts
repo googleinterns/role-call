@@ -238,41 +238,40 @@ export class UserEditor implements OnInit, OnDestroy {
 
 
   saveUser = async (): Promise<void> => {
-    if (this.hasNewPicture) {
-      // SAVE PICTURE
-      const ret = await this.pictureApi.setPicture(this.formData);
-      if (ret.ok.successful) {
-        const picInfo = ret.rawItem as PictureInfo;
-        this.workingUser.picture_file = `${picInfo.id}.${picInfo.fileType}`;
-        this.saveUserRecord();
+    if (this.canSave) {
+      const hasNewPicture = this.hasNewPicture;
+      const user = await this.saveUserRecord();
+      if (hasNewPicture && !!user) {
+        this.formData.append('userid', user.uuid);
+        const ret = await this.pictureApi.setPicture(this.formData);
+        if (ret.ok.successful) {
+          const picInfo = ret.rawItem as PictureInfo;
+          this.currentSelectedUser.picture_file = `${picInfo.id}.${picInfo.fileType}`;
+          this.userApi.loadOnePicture(user);
+        }
       }
-    }
-    else if (this.canSave) {
-      this.saveUserRecord();
     }
   };
 
-  saveUserRecord = async (): Promise<void> => {
+  saveUserRecord = async (): Promise<User> => {
+    let user: User;
     this.lastSelectedUserEmail = this.workingUser.contact_info.email;
     await this.userApi.cache.set(this.workingUser).then(async result => {
         if (result.successful) {
+          const hasNewPicture = this.hasNewPicture;
+          user = result.item as User;
+          if (!hasNewPicture && !!user.picture_file) {
+            this.userApi.loadOnePicture(user);
+          }
           this.creatingUser = false;
           this.canDelete = true;
-          this.canSave = false;
-          const prevUUID = this.workingUser.uuid;
           this.prevWorkingState = undefined;
           this.workingUser = undefined;
           this.userApi.loadAllUsers();
-          const foundSame = this.renderingUsers.find(
-              user => user.uuid === prevUUID);
-          if (foundSame && this.location.path().startsWith('user')) {
-            this.setCurrentUser({user: foundSame});
-          }
-          if (!!foundSame.picture_file) {
-            this.userApi.loadOnePicture(this.currentSelectedUser);
-          }
+          this.setCurrentUser({user});
         }
     });
+    return user;
   };
 
   getCurrentDate = (): number =>
@@ -325,18 +324,14 @@ export class UserEditor implements OnInit, OnDestroy {
       alert('Only images are supported');
       return;
     }
-
     this.checkWorkingUser();
     this.formData = new FormData();
-    this.formData.append('userid', this.workingUser.uuid);
-   // this.formData.append('file', file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = ((): void => {
       this.currentSelectedUser.image = reader.result;
       this.hasNewPicture = true;
       this.canSave = true;
-
       this.imageCompress.compressFile(reader.result as string, null,
           100, 100, 320, 320) // 50% ratio, 50% quality
         .then(compressedImage => {
@@ -344,7 +339,7 @@ export class UserEditor implements OnInit, OnDestroy {
                 file.name);
           }
         );
-    }).bind(this) ;
+    }).bind(this);
   };
 
   dataURItoBlob = (dataURI: string): Blob => {

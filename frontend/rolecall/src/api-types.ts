@@ -16,6 +16,7 @@ export type DashUUID = string;
 export type SuccessIndicator = {
   successful: boolean;
   error?: string;
+  item?: unknown;          // item returned from a POST operation
 };
 export type Roles = {
   isAdmin: boolean;
