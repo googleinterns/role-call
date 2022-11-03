@@ -30,23 +30,15 @@ public class LocalStorageService implements StorageService {
     if (!Files.exists(root)) {
       try {
         Files.createDirectories(root);
-        // System.out.println("Created new root directory: " + root.toString());
       } catch (IOException e) {
         throw new IOException("Could not initialize storage.");
       }
     }
-    // else {
-    //   System.out.println("Root directory exists: " + root.toRealPath().toString());
-    // }
     for (AssetType type : AssetType.values()) {
       Path subDir = Path.of(root.toString(), type.location);
       if (!Files.exists(subDir)) {
         Files.createDirectories(subDir);
-          // System.out.println(type.toString() + " directory created: " + subDir.toString());
         }
-        // else {
-        //   System.out.println(type.toString() + " directory exists: " + subDir.toString());
-        // }
     }    
   }
 

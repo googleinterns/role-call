@@ -251,6 +251,7 @@ export class DataCache<IXT> {
           this.arr = this.arr.sort(this.sortCmp);
         }
       }
+      sret.ok.item = savedItem;
     }
     return sret.ok;
   };

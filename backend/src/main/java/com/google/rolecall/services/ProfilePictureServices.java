@@ -66,7 +66,7 @@ public class ProfilePictureServices {
     }
 
     String previousPicture = userServices.getUser(ownerId).getPictureFile();
-    //userServices.setProfilePicture(ownerId, asset);
+    userServices.setProfilePicture(ownerId, asset);
     // Attempt to delete and ignore failure.
     if (previousPicture != null) {
       try {

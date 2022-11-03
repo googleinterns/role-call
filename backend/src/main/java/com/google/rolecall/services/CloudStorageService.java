@@ -32,11 +32,7 @@ public class CloudStorageService implements StorageService {
   public void init() throws IOException {
     if (storage.get(bucketName, Storage.BucketGetOption.fields()) == null) {
       storage.create(BucketInfo.of(bucketName));
-      // System.out.println("Bucket created: " + bucketName);
     }
-    // else {
-    //   System.out.println("Bucket exisits: " + bucketName);
-    // }
   }
 
   @Override

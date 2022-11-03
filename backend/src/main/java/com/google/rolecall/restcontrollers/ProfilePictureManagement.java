@@ -74,8 +74,9 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
 
   @Post
   public CompletableFuture<ResponseSchema<UserAssetInfo>> uploadFile(Principal principal,
-      @RequestParam(Constants.RequestParameters.USER_ID) int ownerId,
-      @RequestParam(Constants.RequestParameters.FILE) MultipartFile file) {
+      @RequestParam(Constants.RequestParameters.FILE) MultipartFile file,
+      @RequestParam(Constants.RequestParameters.USER_ID) int ownerId
+  ) {
     if (file == null) {
       return CompletableFuture.failedFuture(
           new InvalidParameterException("File is required."));

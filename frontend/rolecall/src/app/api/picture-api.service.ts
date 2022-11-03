@@ -81,7 +81,6 @@ export class PictureApi {
       return this.mockBackend.requestPictureSet(pictureFile);
     }
     // Do post
-console.log('POST', pictureFile);
     const header = await this.headerUtil.generateHeader(HeaderType.formData);
     return lastValueFrom(this.http.post(
       environment.backendURL + 'api/profile_picture',
