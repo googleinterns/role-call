@@ -13,10 +13,10 @@
   <name>role-call</name>
   <description>Role Call Project</description>
   <properties>
-    <java.version>17</java.version>
+    <java.version>11</java.version>
     <spring-cloud.version>Hoxton.SR5</spring-cloud.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <profiles>
@@ -121,12 +121,12 @@
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
-      <version>1.10</version>
+      <version>1.7.4</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
-      <version>1.10</version>
+      <version>1.7.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -225,12 +225,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
         <configuration>
-          <release>17</release>
+          <release>11</release>
           <annotationProcessorPaths>
             <path>
               <groupId>com.google.auto.value</groupId>
               <artifactId>auto-value</artifactId>
-              <version>1.10</version>
+              <version>1.7.4</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
