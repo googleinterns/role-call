@@ -246,7 +246,8 @@ export class UserEditor implements OnInit, OnDestroy {
         const ret = await this.pictureApi.setPicture(this.formData);
         if (ret.ok.successful) {
           const picInfo = ret.rawItem as PictureInfo;
-          this.currentSelectedUser.picture_file = `${picInfo.id}.${picInfo.fileType}`;
+          this.currentSelectedUser.picture_file =
+              `${picInfo.id}.${picInfo.fileType}`;
           this.userApi.loadOnePicture(user);
         }
       }

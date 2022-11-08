@@ -63,7 +63,6 @@ export class SiteHeader implements OnInit, OnDestroy, AfterViewInit {
   }
 
   doStartup = async (): Promise<void> => {
-    //await this.userApi.cache.loadAll();
     await this.userApi.loadAllUsers();
     this.userApi.loadAllPictures();
   };
