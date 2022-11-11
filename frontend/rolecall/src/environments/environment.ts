@@ -12,7 +12,7 @@ export const environment = {
   devEmail: 'admin@rolecall.com',
   useDevEmail: true,
   backendURL: 'http://localhost:9091/',
-  picPath: 'api/profile_picture/'
+  picPath: 'api/profile_picture/',
 };
 
 /*
