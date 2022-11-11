@@ -40,14 +40,22 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
       return CompletableFuture.failedFuture(
           new InvalidParameterException("Filename cannot be empty."));
     }
+    String[] parts = filename.split(",", 2);
+    Boolean errorIsOk = (parts[0].equals("ErrorOk"));
+    String wrkfilename = errorIsOk ? parts[1] : filename;
     try {
       InputStream stream = profilePictureServices
-          .getProfilePicture(filename).getInputStream();
+          .getProfilePicture(wrkfilename).getInputStream();
       MediaType mediaType = FileType.valueOf(
           extension.toUpperCase()).responseType;
       return CompletableFuture.completedFuture(ResponseEntity.ok().contentType(mediaType)
           .body(new InputStreamResource(stream)));
     } catch(FileNotFoundException e) {
+      if (errorIsOk) {
+        return CompletableFuture.completedFuture(ResponseEntity.ok()
+            .contentType(null)
+            .body(null));         
+      }
       return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
     } catch(Exception e) {
       return CompletableFuture.failedFuture(e);

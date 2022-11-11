@@ -246,11 +246,14 @@ export class UserApi {
 
   loadAllPictures = async (): Promise<void> => {
     this.cache.map.forEach(user => {
-      this.loadOnePicture(user as User);
+      this.loadOnePicture(user as User, true);
     });
   };
 
-  loadOnePicture = async (user: User): Promise<void> => {
+  loadOnePicture = async (
+    user: User,
+    errorOk: boolean = false,
+  ): Promise<void> => {
     if (user.picture_file) {
       // temporary cleanup
       if (user.picture_file.includes('/')) {
@@ -258,7 +261,7 @@ export class UserApi {
             user.picture_file);
         user.picture_file = '';
       } else {
-        this.pictureApi.getOnePicture(user.picture_file).then(img => {
+        this.pictureApi.getOnePicture(user.picture_file, errorOk).then(img => {
           if (!!img) {
             const reader = new FileReader();
             reader.onload = function(): void {

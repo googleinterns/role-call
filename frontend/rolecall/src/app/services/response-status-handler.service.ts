@@ -36,6 +36,7 @@ export class ResponseStatusHandlerService {
 
   showError = async (errorEvent: ErrorEvent): Promise<string> => {
     if (this.pendingErrors.has(errorEvent.url)) {
+console.log('Pending errors');
       // TODO: What should we return here?
       return Promise.resolve('');
     }
@@ -45,7 +46,7 @@ export class ResponseStatusHandlerService {
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
     const dialogRef = this.dialog.open(ErrorDialog,
-        { width: '50%', data: {errorEvent} });
+        { width: '50%', data: { errorEvent } });
     return lastValueFrom(dialogRef.afterClosed()).then(() => prom);
   };
 
@@ -65,6 +66,7 @@ export class ResponseStatusHandlerService {
     rej: (reason?: any) => void
   ): Promise<void> => {
 
+// Creates deadly embraces.
 //     if (response.status === 401) {
 //       rej('');
 //       this.LoginApi.signOut().then(() => {
@@ -80,7 +82,7 @@ export class ResponseStatusHandlerService {
       const rsp = response as any;
       const errorEvent: ErrorEvent = {
         url: response.url,
-        errorMessage: rsp.error
+        errorMessage: rsp.error && rsp.error.size > 0
           ? rsp.error.error
           : rsp.message,
         status: response.status,
@@ -120,14 +122,14 @@ export class ErrorDialog {
   };
 }
 
-@NgModule(
-    {
-      declarations: [ErrorDialog],
-      imports: [
-        CommonModule,
-        MatDialogModule,
-        MatButtonModule,
-      ]
-    })
+@NgModule({
+  declarations: [ErrorDialog],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+  ]
+})
+
 export class DialogModule {
 }
