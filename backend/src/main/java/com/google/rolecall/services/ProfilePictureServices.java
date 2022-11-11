@@ -35,8 +35,8 @@ public class ProfilePictureServices {
 
   public String getProfilePictureUrl(String fileName) 
       throws FileNotFoundException, IOException, InvalidParameterException {
-    return storage.loadAsUrl(
-      AssetType.PROFILEPICTURE, fileName);
+System.out.printf("getProfilePictureUrl fileName = %s \n", fileName);
+    return storage.loadAsUrl(AssetType.PROFILEPICTURE, fileName);
   }
 
   // Creates a new UsserAsset, copies the file locally, sets the new asset to

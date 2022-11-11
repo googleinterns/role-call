@@ -43,6 +43,7 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
     String[] parts = filename.split(",", 2);
     Boolean errorIsOk = (parts[0].equals("ErrorOk"));
     String wrkfilename = errorIsOk ? parts[1] : filename;
+System.out.printf("READ filename = %s, p1 = %s p2 = %s wrk = %s\n", filename, parts[0], parts[1], wrkfilename);
     try {
       InputStream stream = profilePictureServices
           .getProfilePicture(wrkfilename).getInputStream();
