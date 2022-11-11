@@ -37,8 +37,7 @@ public class ProfilePictureServices {
       throws FileNotFoundException, IOException, InvalidParameterException {
     return storage.loadAsUrl(
       AssetType.PROFILEPICTURE, fileName);
-}
-  
+  }
 
   // Creates a new UsserAsset, copies the file locally, sets the new asset to
   // the new profilePicture, and attempts to delete the old profile picture.

@@ -9,5 +9,5 @@ export const environment = {
   devEmail: 'admin@rolecall.com',
   useDevEmail: false,
   backendURL: 'https://backend-qa-dot-absolute-water-286821.uk.r.appspot.com/',
-  picPath: 'api/profile_picture/url/'
+  picPath: 'api/profile_picture/url/',
 };
