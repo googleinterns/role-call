@@ -51,16 +51,18 @@ export class PictureApi {
   /** Hits backend with all segments GET request. */
   requestOnePicture = async (
     fileName: APITypes.PictureUUID,
+    errorOk: boolean,
   ): Promise<OnePictureResponse> => {
+    const wrkFileName = errorOk ? 'ErrorOk,' + fileName : fileName;
     if (environment.mockBackend) {
       return this.mockBackend.requestOnePicture(fileName);
     }
-    const splits = fileName.split('.');
+    const splits = wrkFileName.split('.');
     const fileType = splits[1].toLowerCase() === 'png'
       ? HeaderType.png : HeaderType.jpg;
     const header = await this.headerUtil.generateHeader(fileType);
     return lastValueFrom(this.http.get<OnePictureResponse>(
-        environment.backendURL + environment.picPath + fileName, {
+        environment.backendURL + environment.picPath + wrkFileName, {
           headers: header,
           observe: 'response',
           withCredentials: true,
@@ -96,8 +98,9 @@ export class PictureApi {
   /** Gets all the picture from the backend and returns them. */
   getOnePicture = async (
     fileName: APITypes.PictureUUID,
+    errorOk: boolean = false,
   ): Promise<Blob> =>
-      this.getOnePictureResponse(fileName).then(val => val)
+      this.getOnePictureResponse(fileName, errorOk).then(val => val)
       .catch(() => {})
       .then(val => val ? val.picture : new Blob());
 
@@ -131,8 +134,9 @@ export class PictureApi {
   /** Takes backend response, updates data structures for all segments. */
   private getOnePictureResponse = async (
     id: APITypes.PictureUUID,
+    errorOk: boolean,
   ): Promise<OnePictureResponse> =>
-      this.requestOnePicture(id);
+      this.requestOnePicture(id, errorOk);
 
   /** Sends backend request and awaits response. */
   private setPictureResponse = async (
