@@ -36,7 +36,6 @@ export class ResponseStatusHandlerService {
 
   showError = async (errorEvent: ErrorEvent): Promise<string> => {
     if (this.pendingErrors.has(errorEvent.url)) {
-console.log('Pending errors');
       // TODO: What should we return here?
       return Promise.resolve('');
     }
