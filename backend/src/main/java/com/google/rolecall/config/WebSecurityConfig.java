@@ -1,6 +1,5 @@
 package com.google.rolecall.config;
 
-import com.google.rolecall.authentication.PreAuthTokenHeaderFilter;
 import com.google.rolecall.Constants;
 import com.google.rolecall.authentication.CustomResponseAttributesFilter;
 
@@ -13,11 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -26,43 +24,40 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
 /* Security Configuration for authenticating a request to the REST application. */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig /* extends WebSecurityConfigurerAdapter */ {
 
-  private final AuthenticationProvider authProvider;
-  private final Environment env;
+  private AuthenticationProvider authProvider;
+  private Environment env;
 
-  @Override
-  public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
-      throws Exception {
-    authenticationManagerBuilder.authenticationProvider(authProvider);
-  }
-
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.httpBasic()
         .and().cors()
-        .and().addFilter(getPreAuthenticationFilter())
-        .addFilterAfter(getCustomResponseAttributes(), BasicAuthenticationFilter.class)
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        .sessionFixation().migrateSession()
+        .and().apply(CustomDsl.customDsl(authProvider))
+        .and()
+          .addFilterAfter(getCustomResponseAttributes(), BasicAuthenticationFilter.class)
+          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+          .sessionFixation().migrateSession()
         .and().authorizeRequests().antMatchers("/api/**").authenticated()
         .and().logout()
-        .deleteCookies("SESSIONID").invalidateHttpSession(true)
-        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-        .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
-        .permitAll()
+          .deleteCookies("SESSIONID").invalidateHttpSession(true)
+          .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+          .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
+          .permitAll()
         .and().csrf().disable()
-        .exceptionHandling()
-        .authenticationEntryPoint((request, response, e) -> {
-          response.setContentType("application/json;charset=UTF-8");
-          response.setStatus(HttpStatus.UNAUTHORIZED.value());
-          response.setHeader(Constants.Headers.WWW_AUTHENTICATE, "Bearer");
-          response.getWriter().write("{\"error\": \"Access Denied\",\"status\": 401}");
-        });
+          .exceptionHandling()
+          .authenticationEntryPoint((request, response, e) -> {
+            response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setHeader(Constants.Headers.WWW_AUTHENTICATE, "Bearer");
+            response.getWriter().write("{\"error\": \"Access Denied\",\"status\": 401}");
+          });
+      return http.build();
   }
 
   @Bean
@@ -88,15 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
-
     return source;
-  }
-
-  /** Initializes the filter for Authentication header information. */
-  private PreAuthTokenHeaderFilter getPreAuthenticationFilter() throws Exception {
-    PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter();
-    filter.setAuthenticationManager(authenticationManager());
-    return filter;
   }
 
   private Filter getCustomResponseAttributes() throws Exception {
@@ -104,8 +91,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return filter;
   }
 
-  public WebSecurityConfig(AuthenticationProvider authProvider, Environment env) {
+  public WebSecurityConfig(
+    AuthenticationProvider authProvider,
+    Environment env
+  ) {
     this.authProvider = authProvider;
     this.env = env;
   }
 }
+
+

@@ -69,7 +69,7 @@ public class CloudStorageService implements StorageService {
         }
         return storage.signUrl(blob.toBuilder().setContentType("text/plain").build(), 1, TimeUnit.DAYS, SignUrlOption.withV4Signature()).toString();
   }
-
+  
   @Override
   public void delete(AssetType type, String filename) throws FileNotFoundException, IOException {
     Blob blob = storage.get(
