@@ -1,4 +1,4 @@
-runtime: java17
+runtime: java11
 
 # Deploy to backend service
 service: backend-prod
