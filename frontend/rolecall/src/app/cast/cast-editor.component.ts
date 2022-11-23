@@ -82,9 +82,9 @@ export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
     });
     this.userApi.loadAllUsers();
     this.segmentSubscription =
-    this.segmentApi.cache.loadedAll.subscribe(items => {
-      this.onSegmentLoad(items as Segment[]);
-    });
+        this.segmentApi.cache.loadedAll.subscribe(items => {
+            this.onSegmentLoad(items as Segment[]);
+        });
     // await below guarantees that segment db load doesn't happen twice.
     await this.segmentApi.loadAllSegments();
     this.castSubscription = this.castApi.cache.loadedAll.subscribe(casts => {
@@ -179,7 +179,7 @@ export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
         }),
       )
     };
-    this.canDelete = false;
+    this.canDelete = true;
     this.allCasts.push(newCast);
     this.selectedSegmentCasts.push(newCast);
     await this.castApi.setCast(newCast, true);
@@ -242,6 +242,9 @@ export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
     }
     if (autoSelectFirst) {
       this.onSetCurrentCast(this.selectedSegmentCasts[0]);
+    } else if (this.dragAndDrop) {
+      this.canDelete = false;
+      this.dragAndDrop.selectCast({uuid: '0'});
     }
   };
 
@@ -271,8 +274,8 @@ export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
     if (segment.type !== 'BALLET') {
       return false;
     }
-    const existingCasts = this.allCasts.filter(
-      cast => cast.segment === segment.uuid);
+    const existingCasts = this.allCasts.filter(cast =>
+        cast.segment === segment.uuid);
     return existingCasts.length === 0;
   };
 
@@ -310,8 +313,8 @@ export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
     }
     // The first load, the casts may not have been loaded,
     // causing all ballets to get stars. This statement prevents all stars.
-    this.buildLeftList();
     this.allCasts = casts;
+    this.buildLeftList();
     this.updateFilteredCasts();
     if (casts.length === 0) {
       this.selectedCast = undefined;
@@ -353,7 +356,9 @@ export class CastEditor implements OnInit, AfterViewInit, OnDestroy {
           this.selectedCast = casts[0];
         }
       }
-      this.onSetCurrentCast(this.selectedCast);
+      if (this.selectedSegmentCasts.length > 0) {
+        this.onSetCurrentCast(this.selectedCast);
+      }
     } else {
       this.urlUUID = this.dragAndDrop.selectedCastUUID;
       this.setCurrentCast({cast: this.castApi.castFromUUID(this.urlUUID)});

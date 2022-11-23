@@ -13,7 +13,9 @@ export enum CacheTp {
   readWrite,
 }
 
-export type FromRaw = undefined | ( (rawItem: unknown) => unknown );
+export type FromRaw = undefined |
+  ( (rawItem: unknown, data: unknown) => unknown );
+export type FromRawInit = undefined | ( () => unknown );
 export type ToRaw = undefined | ( (item: unknown, exists: boolean) => unknown );
 
 export enum CacheRetCd {
@@ -89,6 +91,8 @@ export class DataCache<IXT> {
   public getIx: (item: unknown) => IXT;
   /** Converts from a raw record into a client workspace record. */
   public fromRaw?: FromRaw;
+  /** Initializes the conversion from a raw record */
+  public fromRawInit?: FromRawInit;
   /** Converts from a client workspace record into a raw record. */
   public toRaw?: ToRaw;
   /** Sort comparison method. If missing no sort is executed. */
@@ -114,6 +118,7 @@ export class DataCache<IXT> {
     getIx,
     // Optional below
     fromRaw,
+    fromRawInit,
     toRaw,
     sortCmp,
     mockBackend,
@@ -128,6 +133,7 @@ export class DataCache<IXT> {
     crudApi: CrudApi<IXT>;
     getIx: (item: unknown) => IXT;
     fromRaw?: FromRaw;
+    fromRawInit?: FromRawInit;
     toRaw?: ToRaw;
     sortCmp?: CacheSortCmp;
     mockBackend?: undefined | MockBackend<IXT>;
@@ -142,6 +148,7 @@ export class DataCache<IXT> {
     this.crudApi = crudApi;
     this.getIx = getIx;
     if (fromRaw) { this.fromRaw = fromRaw; }
+    if (fromRawInit) { this.fromRawInit = fromRawInit; }
     if (toRaw) { this.toRaw = toRaw; }
     if (sortCmp) { this.sortCmp = sortCmp; }
     if (mockBackend) { this.mockBackend = mockBackend; }
@@ -233,8 +240,13 @@ export class DataCache<IXT> {
       this.crudApi.loggingService.logWarn(warning);
     }
     if (sret.ok.successful) {
-      const savedItem = this.fromRaw
-          ? this.fromRaw(sret.rawItem) : sret.rawItem;
+      let savedItem: unknown;
+      if (this.fromRaw) {
+        const data = this.fromRawInit ? this.fromRawInit() : undefined;
+        savedItem = this.fromRaw(sret.rawItem, data);
+      } else {
+        savedItem = sret.rawItem;
+      }
       if (this.map.has(ix)) {
         // Replace with delete&set for change detection
         // Object.assign(current, item);

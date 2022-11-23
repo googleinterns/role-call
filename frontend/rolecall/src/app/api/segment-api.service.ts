@@ -83,7 +83,7 @@ export class SegmentApi {
     this.cache = new DataCache<APITypes.UserUUID>({
       name: 'Segment',
       apiName: 'api/section',
-      ixName: 'segmentid',
+      ixName: 'sectionid',
       crudApi: this.crudApi,
       getIx: this.getIx,
       fromRaw: this.fromRawSegment,

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit,
-  Output,
+  Output, // OnChanges, SimpleChanges,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as APITypes from 'src/api-types';
@@ -43,7 +44,13 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
   @Input() users: User[];
 
   /** Input that specifies the currently selected segment */
-  @Input() selectedSegment: Segment;
+  @Input() set selectedSegment(segment: Segment) {
+    this.#selectedSegment = segment;
+  }
+
+  get selectedSegment(): Segment {
+    return this.#selectedSegment;
+  }
 
   /** Input that specifies if the cast has been saved before */
   @Input() canDelete: boolean;
@@ -90,6 +97,8 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
   // This variable helps avoid 'deadly embraces'.
   private dropHandling = false;
 
+  #selectedSegment: Segment;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private g: ContextService,
@@ -112,6 +121,13 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
       this.castApi.loadAllCasts();
     }
   }
+
+  // // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes.selectedSegment) {
+  // console.log('BB SELECTED SEGMENT', changes.selectedSegment.currentValue);
+  //   }
+  // }
 
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnDestroy(): void {
@@ -140,6 +156,11 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
     saveDeleteEnabled?: boolean;
     perfDate?: number;
   }): void => {
+    if (uuid === '0') {
+      this.castSelected = false;
+      this.selectedCastUUID = uuid;
+      return;
+    }
     this.selectCastHasBeenCalled = true;
     if (perfDate > 0 && this.g.checkUnavs) {
       this.perfDate = perfDate;
@@ -268,9 +289,11 @@ export class CastDragAndDrop implements OnInit, OnDestroy {
 
   saveCast = async (): Promise<void> => {
     this.cast = this.dataToCast();
-    return this.castApi.setCast(this.cast).then(() => {
-      this.selectedCastUUID = String(this.castApi.lastSavedCastId);
+    return this.castApi.setCast(this.cast).then((ret) => {
       this.canSave = false;
+      this.cast = ret.item as Cast;
+      this.selectedCastUUID = this.cast.uuid;
+      this.castApi.loadAllCasts();
     });
   };
 

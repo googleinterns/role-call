@@ -50,6 +50,13 @@
   width: 100%;
 }
 
+.item-with-icon-select-container {
+  margin-top: .25rem;
+  overflow-y: scroll;
+  height: calc(100% - 4.25rem);
+  width: 100%;
+}
+
 .item-select {
   display: flex;
   flex-direction: column;
