@@ -29,7 +29,8 @@ export class SegmentDisplayListService {
     starTest: (segment: Segment) => boolean,
   ): void => {
     // Remove Super Ballet children
-    this.topLevelSegments = allSegments.filter(segment => !segment.siblingId);
+    this.topLevelSegments = allSegments.filter(segment =>
+        segment && !segment.siblingId);
     this.topLevelSegments.sort((a, b) => a.name < b.name ? -1 : 1);
     for (let i = 0; i < this.topLevelSegments.length; i++) {
       const displaySegment = this.topLevelSegments[i];

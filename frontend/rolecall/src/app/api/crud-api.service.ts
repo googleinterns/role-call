@@ -65,11 +65,14 @@ export class CrudApi<IXT> {
       ))
       .catch(errorResp => errorResp)
       .then(resp => this.respHandler.checkResponse<RawAllItemsResponse>(resp))
-      .then(rawAllUsersResponse => ({
-          items: rawAllUsersResponse.data.map(rawItem =>
-              fromRaw ? fromRaw(rawItem) : rawItem),
+      .then(rawAllUsersResponse => {
+          const data = cache.fromRawInit ? cache.fromRawInit() : undefined;
+          return {
+            items: rawAllUsersResponse.data.map(rawItem =>
+              fromRaw ? fromRaw(rawItem, data) : rawItem),
           warnings: rawAllUsersResponse.warnings
-        }));
+        };
+      });
   };
 
   requestOneItem = async (
@@ -90,12 +93,14 @@ export class CrudApi<IXT> {
         }))
       .catch(errorResp => errorResp)
       .then(resp => this.respHandler.checkResponse<RawOneItemResponse>(resp))
-      .then(rawResponse => ({
-          ok: { successful: true, },
-          item: fromRaw ? fromRaw(rawResponse.data) : rawResponse.data,
-          warnings: rawResponse.warnings,
-        } as CacheGetReturn)
-      );
+      .then(rawResponse => {
+          const data = cache.fromRawInit ? cache.fromRawInit() : undefined;
+          return {
+            ok: { successful: true, },
+            item: fromRaw ? fromRaw(rawResponse.data, data) : rawResponse.data,
+            warnings: rawResponse.warnings,
+          } as CacheGetReturn;
+      });
   };
 
   /** Hits backend with create/edit user POST request. */

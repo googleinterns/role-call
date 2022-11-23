@@ -430,23 +430,28 @@ public class PerformanceServices {
         orders.add(member.getOrder());
 
         // Warnings Check
-        HashSet<Integer> cast;
-        if (uniqueMembersByCastNumber.containsKey(castNumber)) {
-          cast = uniqueMembersByCastNumber.get(castNumber);
-        } else {
-          cast = new HashSet<>();
-          uniqueMembersByCastNumber.put(castNumber, cast);
-        }
+        // The below check is wrong. The cast number comparison needs to be limited to
+        // individual ballets, not the whole performance (as is done in the cast section).
+        // It is possible that logic should be added so that adjacent ballets should have
+        // limitations on dancers (regardles of cast numbers) but at this time we don't
+        // know the rules, so we deactivate this test for now.
+        // HashSet<Integer> cast;
+        // if (uniqueMembersByCastNumber.containsKey(castNumber)) {
+        //   cast = uniqueMembersByCastNumber.get(castNumber);
+        // } else {
+        //   cast = new HashSet<>();
+        //   uniqueMembersByCastNumber.put(castNumber, cast);
+        // }
 
-        User user = member.getUser();
-        if (cast.contains(user.getId())) {
-          warnings.add(
-              String.format(
-                  "User %s %s appears multiple times in cast %d",
-                  user.getFirstName(), user.getLastName(), castNumber));
-        } else {
-          cast.add(user.getId());
-        }
+        // User user = member.getUser();
+        // if (cast.contains(user.getId())) {
+        //   warnings.add(
+        //       String.format(
+        //           "User %s %s appears multiple times in cast %d",
+        //           user.getFirstName(), user.getLastName(), castNumber));
+        // } else {
+        //   cast.add(user.getId());
+        // }
       }
     }
 

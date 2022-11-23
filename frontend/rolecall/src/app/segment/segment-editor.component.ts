@@ -289,6 +289,7 @@ export class SegmentEditor implements OnInit, OnDestroy {
     }
     this.lastSelectedSegmentName = this.currentSelectedSegment.name;
     this.updateDragAndDropData(true);
+    const isSuper = this.currentSelectedSegment.type === 'SUPER';
     this.segmentApi.cache.set(this.currentSelectedSegment)
         .then(async result => {
       if (result.successful) {
@@ -297,13 +298,13 @@ export class SegmentEditor implements OnInit, OnDestroy {
         this.canDelete = true;
         this.creatingSegment = false;
         const prevUUID = this.currentSelectedSegment.uuid;
-        const superBallet = prevUUID.startsWith('segment:')
+        const newBallet = prevUUID.startsWith('segment:')
             ? this.currentSelectedSegment : null;
-        const matchName = superBallet ? superBallet.name : '';
-        const matchLength = superBallet ? superBallet.positions.length : -1;
+        const matchName = newBallet ? newBallet.name : '';
+        const matchLength = newBallet ? newBallet.positions.length : -1;
         this.prevWorkingState = undefined;
         this.workingSegment = undefined;
-        await this.segmentApi.loadAllSegments();
+        await this.segmentApi.loadAllSegments(isSuper);
         let foundSame: WorkingSegment = null;
         for (let i = this.workingSegments.length; 0 < i--;) {
           const segment = this.workingSegments[i];
@@ -604,9 +605,13 @@ export class SegmentEditor implements OnInit, OnDestroy {
 
   // Private methods
 
-  private starTest = (segment: Segment): boolean =>
-    segment.type === 'SEGMENT' ? false : segment.positions.length === 0;
-
+  private starTest = (segment: Segment): boolean => {
+    if (!segment) {
+      return false;
+    }
+    return segment.type === 'SEGMENT' ?
+        false : segment.positions.length === 0;
+  };
 
   private buildLeftList = (): void => {
     this.leftList.buildDisplayList(this.workingSegments, this.starTest);

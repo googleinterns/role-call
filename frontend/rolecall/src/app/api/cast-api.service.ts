@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CrudApi } from './crud-api.service';
 import * as APITypes from 'src/api-types';
@@ -13,9 +13,8 @@ import { ResponseStatusHandlerService,
 } from '../services/response-status-handler.service';
 import { SegmentApi, Segment, Position } from './segment-api.service';
 import { ContextService } from '../services/context.service';
-import { DataCache, CacheLoadReturn, CacheSetReturn, ItemStdReturn,
+import { DataCache, CacheSetReturn, ItemStdReturn,
 } from '../utils/data-cache';
-import { RawAllItemsResponse } from './crud-api.service';
 
 
 type RawCastMember = {
@@ -78,20 +77,6 @@ export type Cast = {
   filled_positions: CastPosition[];
 };
 
-// export type AllCastsResponse = {
-//   data: {
-//     casts: Cast[];
-//   };
-//   warnings: string[];
-// };
-
-// export type OneCastResponse = {
-//   data: {
-//     cast: Cast;
-//   };
-//   warnings: string[];
-// };
-
 /**
  * A service responsible for interfacing with the Cast APIs,
  * and maintaining all cast objects in the system, including those
@@ -99,8 +84,6 @@ export type Cast = {
  */
 @Injectable({providedIn: 'root'})
 export class CastApi {
-  /** The last saved id (every time a cast is saved it receives a new id). */
-  lastSavedCastId: number;
 
   /** True if the cached data was calculated with performance dates. */
   hasPerformanceDates = false;
@@ -115,15 +98,6 @@ export class CastApi {
    * editor, since these casts will be set as performance groups, not casts.
    */
   workingCasts: Map<APITypes.CastUUID, Cast> = new Map();
-
-  /** The raw casts handed over by the backend. */
-  rawCasts: RawCast[] = [];
-
-  // /** All the loaded casts mapped by UUID. */
-  // casts: Map<APITypes.CastUUID, Cast> = new Map<APITypes.CastUUID, Cast>();
-
-  // /** Emitter that is called whenever casts are loaded. */
-  // castEmitter: EventEmitter<Cast[]> = new EventEmitter();
 
   cache: DataCache<APITypes.CastUUID>;
 
@@ -142,13 +116,15 @@ export class CastApi {
       ixName: 'castid',
       crudApi: this.crudApi,
       getIx: this.getIx,
+      fromRawInit: this.convertRawToCastInit,
+      fromRaw: this.convertRawToCast,
+      toRaw: this.castToPostRaw,
       // sortCmp: this.castCmp,
       mockBackend: new MockCastBackend(),
       // loadAllParams: this.loadAllCastsParams,
       loadAllEmitItems: this.loadAllEmitCasts,
     });
-    this.cache.loadAllRequestOverride = this.stdLoadAllCasts;
-    this.cache.setRequestOverride = this.stdSetCast;
+    this.cache.setRequestOverride = this.setCastCallback;
   }
 
   public getIx = (item: unknown): APITypes.CastUUID =>
@@ -162,130 +138,140 @@ export class CastApi {
     await this.segmentApi.loadAllSegments();
   };
 
-  // public loadAllCastsParams = (): HttpParams => {
-  //   const perfDate = this.g.checkUnavs ? this.g.checUnavDate : 0;
-  //   return new HttpParams().append('perfdate', '' + perfDate);
-  // };
-
-  public loadAllEmitCasts = (): unknown[] =>
-    Array.from(this.cache.arr).concat(...this.workingCasts.values());
-
-  /** Hits backend with all casts GET request. */
-  public stdLoadAllCasts = async (
-    cache: DataCache<APITypes.CastUUID>,
-  ): Promise<CacheLoadReturn> => {
-    const api = cache.apiName;
-    if (environment.mockBackend) {
-      return cache.mockBackend.requestAllMocks();
-    }
-    await this.segmentApi.loadAllSegments();
-    const headers = await this.headerUtil.generateHeader();
-    let params: HttpParams;
-    if (cache.loadAllParams) {
-      params = cache.loadAllParams();
-    }
-    return lastValueFrom(this.http.get<RawAllItemsResponse>(
-        environment.backendURL + api, {
-          headers,
-          observe: 'response',
-          withCredentials: true,
-          params,
-        }))
-        .catch(errorResp => errorResp)
-        .then(resp => this.respHandler.checkResponse<RawAllItemsResponse>(resp))
-        .then(result => {
-          this.rawCasts = result.data as RawCast[];
-          const allPositions: Position[] = [];
-          Array.from(this.segmentApi.cache.map.values()).forEach(segment => {
-            allPositions.push(...( segment as Segment ).positions);
-          });
-          return {
-            items: result.data.map(rawItem => {
-              const rawCast = rawItem as RawCast;
-              let highestCastNumber = 0;
-              const groups: CastGroup[] = [];
-              for (const rawSubCast of rawCast.subCasts) {
-                const foundGroup = groups.find(
-                    g => g.position_uuid === String(
-                        allPositions.find(pos =>
-                          Number(pos.uuid) === rawSubCast.positionId).uuid));
-                if (foundGroup) {
-                  const foundGroupIndex = groups.find(
-                      g => g.position_uuid === String(allPositions.find(
-                          pos => Number(pos.uuid)
-                                  === rawSubCast.positionId).uuid)
-                            && g.group_index === rawSubCast.castNumber);
-                  if (foundGroupIndex) {
-                    foundGroupIndex.members = foundGroupIndex.members.concat(
-                        rawSubCast.members.map(rawMem => ({
-                            uuid: String(rawMem.userId),
-                            position_number: rawMem.order,
-                            hasAbsence: rawMem.hasAbsence ?? false,
-                          })
-                        ));
-                  } else {
-                    // Note: This is duplicated with the following else-block
-                    groups.push({
-                      position_uuid: String(allPositions.find(
-                          pos => Number(pos.uuid)
-                                  === rawSubCast.positionId).uuid),
-                      group_index: rawSubCast.castNumber,
-                      members: rawSubCast.members.map(rawMem => ({
-                          uuid: String(rawMem.userId),
-                          position_number: rawMem.order,
-                          hasAbsence: rawMem.hasAbsence ?? false,
-                        })
-                      )
-                    });
-                  }
-                } else {
-                  // Note: This is the same code as the preceding else-block
-                  groups.push({
-                    position_uuid: String(allPositions.find(
-                        pos => Number(pos.uuid)
-                                === rawSubCast.positionId).uuid),
-                    group_index: rawSubCast.castNumber,
-                    members: rawSubCast.members.map(rawMem => ({
-                        uuid: String(rawMem.userId),
-                        position_number: rawMem.order,
-                        hasAbsence: rawMem.hasAbsence ?? false,
-                      })
-                    )
-                  });
-                }
-                if (highestCastNumber < rawSubCast.castNumber) {
-                  highestCastNumber = rawSubCast.castNumber;
-                }
-              }
-              const uniquePositionIDs = new Set<number>();
-              rawCast.subCasts.forEach(
-                  val => uniquePositionIDs.add(val.positionId));
-              return {
-                uuid: String(rawCast.id),
-                name: rawCast.name,
-                segment: String(rawCast.sectionId),
-                castCount: highestCastNumber + 1,
-                filled_positions: Array.from(uniquePositionIDs.values())
-                    .map(positionID => ({
-                        position_uuid: String(allPositions.find(pos =>
-                            Number(pos.uuid) === positionID).uuid),
-                        groups: groups.filter(g => g.position_uuid === String(
-                            allPositions.find(pos =>
-                                Number(pos.uuid) === positionID).uuid)),
-                        hasAbsence: false,
-                      })
-                    )
-              };
-            }),
-            warnings: result.warnings
-          };
-        });
+  public convertRawToCastInit = (): unknown => {
+    const allPositions: Position[] = [];
+    Array.from(this.segmentApi.cache.map.values()).forEach(segment => {
+      allPositions.push(...( segment as Segment ).positions);
+    });
+    return allPositions;
   };
 
-  // No special implementation for requestOneCast is provided as
-  // it is not needed for the client. If called the generic CRUD
-  // function will be used. It will either retirieve a Mock value
-  // or a Raw database value.
+  public convertRawToCast = (
+    rawItem: unknown,
+    data: unknown,
+  ): unknown => {
+    const allPositions = data as Position[];
+    const rawCast = rawItem as RawCast;
+    let highestCastNumber = 0;
+    const groups: CastGroup[] = [];
+    for (const rawSubCast of rawCast.subCasts) {
+      const foundGroup = groups.find(
+          g => g.position_uuid === String(
+              allPositions.find(pos =>
+                Number(pos.uuid) === rawSubCast.positionId).uuid));
+      if (foundGroup) {
+        const foundGroupIndex = groups.find(
+            g => g.position_uuid === String(allPositions.find(
+                pos => Number(pos.uuid)
+                        === rawSubCast.positionId).uuid)
+                  && g.group_index === rawSubCast.castNumber);
+        if (foundGroupIndex) {
+          foundGroupIndex.members = foundGroupIndex.members.concat(
+              rawSubCast.members.map(rawMem => ({
+                  uuid: String(rawMem.userId),
+                  position_number: rawMem.order,
+                  hasAbsence: rawMem.hasAbsence ?? false,
+                })
+              ));
+        } else {
+          // Note: This is duplicated with the following else-block
+          groups.push({
+            position_uuid: String(allPositions.find(
+                pos => Number(pos.uuid)
+                        === rawSubCast.positionId).uuid),
+            group_index: rawSubCast.castNumber,
+            members: rawSubCast.members.map(rawMem => ({
+                uuid: String(rawMem.userId),
+                position_number: rawMem.order,
+                hasAbsence: rawMem.hasAbsence ?? false,
+              })
+            )
+          });
+        }
+      } else {
+        // Note: This is the same code as the preceding else-block
+        groups.push({
+          position_uuid: String(allPositions.find(
+              pos => Number(pos.uuid)
+                      === rawSubCast.positionId).uuid),
+          group_index: rawSubCast.castNumber,
+          members: rawSubCast.members.map(rawMem => ({
+              uuid: String(rawMem.userId),
+              position_number: rawMem.order,
+              hasAbsence: rawMem.hasAbsence ?? false,
+            })
+          )
+        });
+      }
+      if (highestCastNumber < rawSubCast.castNumber) {
+        highestCastNumber = rawSubCast.castNumber;
+      }
+    }
+    const uniquePositionIDs = new Set<number>();
+    rawCast.subCasts.forEach(
+        val => uniquePositionIDs.add(val.positionId));
+    return {
+      uuid: this.uuidFromRawCast(rawCast),
+      name: rawCast.name,
+      segment: String(rawCast.sectionId),
+      castCount: highestCastNumber + 1,
+      filled_positions: Array.from(uniquePositionIDs.values())
+          .map(positionID => ({
+              position_uuid: String(allPositions.find(pos =>
+                  Number(pos.uuid) === positionID).uuid),
+              groups: groups.filter(g => g.position_uuid === String(
+                  allPositions.find(pos =>
+                      Number(pos.uuid) === positionID).uuid)),
+              hasAbsence: false,
+            })
+          )
+    };
+  };
+
+  // public convertRawToCast = (item: unknown): unknown => {
+  //   const perf = item as Cast;
+  //   return {
+  //     id: isNaN(Number(perf.uuid)) ? null : Number(perf.uuid),
+  //   };
+  // };
+
+  /** Turns a cast to be patched into a raw cast to be posted. */
+  public castToPostRaw = (item: unknown): unknown => {
+    const cast = item as Cast;
+    const allSubCasts: RawSubCast[] = [];
+    const allPositions: Position[] = [];
+    Array.from(this.segmentApi.cache.map.values()).forEach(segment => {
+      allPositions.push(...( segment as Segment ).positions);
+    });
+    for (const filledPos of cast.filled_positions) {
+      for (const group of filledPos.groups) {
+        allSubCasts.push({
+          id: undefined,
+          positionId: Number(allPositions.find(
+              position => position.uuid === filledPos.position_uuid).uuid),
+          castNumber: group.group_index,
+          members: group.members.map(mem => ({
+              id: undefined,
+              userId: Number(mem.uuid),
+              order: mem.position_number
+            })
+          ),
+        });
+      }
+    }
+
+    return {
+      id: undefined,
+      name: cast.name,
+      notes: '',
+      sectionId: Number(cast.segment),
+      subCasts: allSubCasts,
+    };
+  };
+
+  public loadAllEmitCasts = (): unknown[] =>
+      Array.from(this.cache.arr).concat(...this.workingCasts.values());
+
 
   /** Hits backend with create/edit cast POST request. */
   requestCastSet = async (
@@ -358,7 +344,7 @@ export class CastApi {
     this.cache.map.get(ix) as Cast;
 
 
-  stdSetCast = async (
+  setCastCallback = async (
     cache: DataCache<APITypes.CastUUID>,
     item: unknown,
   ): Promise<CacheSetReturn> =>
@@ -430,37 +416,7 @@ export class CastApi {
 
   // Private methods
 
-  /** Turns a cast to be patched into a raw cast to be posted. */
-  private castToPostRaw = (cast: Cast): RawCast => {
-    const allSubCasts: RawSubCast[] = [];
-    const allPositions: Position[] = [];
-    Array.from(this.segmentApi.cache.map.values()).forEach(segment => {
-      allPositions.push(...( segment as Segment ).positions);
-    });
-    for (const filledPos of cast.filled_positions) {
-      for (const group of filledPos.groups) {
-        allSubCasts.push({
-          id: undefined,
-          positionId: Number(allPositions.find(
-              position => position.uuid === filledPos.position_uuid).uuid),
-          castNumber: group.group_index,
-          members: group.members.map(mem => ({
-              id: undefined,
-              userId: Number(mem.uuid),
-              order: mem.position_number
-            })
-          ),
-        });
-      }
-    }
-
-    return {
-      id: undefined,
-      name: cast.name,
-      notes: '',
-      sectionId: Number(cast.segment),
-      subCasts: allSubCasts,
-    };
-  };
+  private uuidFromRawCast = (rawCast: RawCast): string =>
+    String(rawCast.id);
 
 }
