@@ -64,7 +64,6 @@ export class ResponseStatusHandlerService {
     res: (value?: T | PromiseLike<T>) => void,
     rej: (reason?: any) => void
   ): Promise<void> => {
-
 // Creates deadly embraces.
 //     if (response.status === 401) {
 //       rej('');
@@ -76,7 +75,6 @@ export class ResponseStatusHandlerService {
 //       });
 //       return;
 //     }
-
     if (response.status < 200 || response.status > 299) {
       const rsp = response as any;
       const errorEvent: ErrorEvent = {
