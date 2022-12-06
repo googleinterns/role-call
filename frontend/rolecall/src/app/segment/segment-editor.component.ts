@@ -133,18 +133,12 @@ export class SegmentEditor implements OnInit, OnDestroy {
       }
     };
 
-    const workSegments = segments.map(segment => {
-      if (segment.type === 'SUPER' &&
-          !this.superBalletDisplay.isInDisplayList(segment.uuid)) {
-        this.superBalletDisplay.setOpenState(segment.uuid, false);
-      }
-      return {
+    const workSegments = segments.map(segment => ({
         ...segment,
         addingPositions: [],
         originalName: String(segment.name),
         isOpen: false,
-      };
-    });
+      }));
     this.workingSegments = workSegments;
 
     if (!this.urlPointingUUID) {
@@ -212,6 +206,14 @@ export class SegmentEditor implements OnInit, OnDestroy {
     this.updateDragAndDropData();
     this.selectedSegmentType = this.currentSelectedSegment
         ? this.currentSelectedSegment.type : 'SEGMENT';
+
+    if (segment.siblingId > 0) {
+      const parent = this.findSuperParent(segment);
+      if (!parent.isOpen) {
+        parent.isOpen = true;
+        this.superBalletDisplay.setOpenState(parent.uuid, parent.isOpen);
+      }
+    }
   };
 
   canAddSegment = (): boolean =>
@@ -601,6 +603,17 @@ export class SegmentEditor implements OnInit, OnDestroy {
           superBallet.uuid, superBallet.isOpen);
     }
     this.buildLeftList();
+  };
+
+  findSuperParent = (childBallet: Segment): Segment | null => {
+    const sid = childBallet.siblingId;
+    const parent = this.workingSegments.find(tls => {
+      const val = tls.type === 'SUPER'
+        ? tls.positions.find(pos => pos.id === sid)
+        : false;
+      return val;
+    });
+    return parent;
   };
 
   // Private methods

@@ -99,12 +99,12 @@ public class ProfilePictureManagement extends AsyncRestEndpoint  {
     }
     User currentUser = getUser(principal);
     if (ownerId != currentUser.getId() && !getUser(principal).isAdmin()) {
-      return  CompletableFuture.failedFuture(insufficientPrivileges(Constants.Roles.ADMIN));
+      return CompletableFuture.failedFuture(insufficientPrivileges(
+          Constants.Roles.ADMIN));
     }
     UserAsset newAsset;
     try {
-      newAsset = profilePictureServices.createProfilePicture(
-        ownerId, file);
+      newAsset = profilePictureServices.createProfilePicture(ownerId, file);
     } catch(IOException e) {
       return CompletableFuture.failedFuture(e);
     } catch(Exception e) {

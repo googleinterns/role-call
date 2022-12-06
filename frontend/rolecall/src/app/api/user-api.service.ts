@@ -7,6 +7,7 @@ import * as APITypes from 'src/api-types';
 import { environment } from 'src/environments/environment';
 import { MockUserBackend } from '../mocks/mock-user-backend';
 import { DataCache } from '../utils/data-cache';
+import { SuccessIndicator } from 'src/api-types';
 
 export type User = {
   uuid: APITypes.UserUUID;
@@ -188,7 +189,8 @@ export class UserApi {
       email: user.contact_info.email,
       notificationEmail: user.contact_info.notification_email,
       phoneNumber: user.contact_info.phone_number,
-      dateJoined: new Date(user.date_joined).toISOString(),
+      dateJoined: new Date(user.date_joined).toJSON().slice(0, 19)
+          .replace('T', ' '),
       // Roles
       isAdmin: user.has_roles.isAdmin,
       isChoreographer: user.has_roles.isChoreographer,
@@ -240,6 +242,12 @@ export class UserApi {
 
   lookup = (ix: APITypes.UserUUID): User =>
     this.cache.map.get(ix) as User;
+
+
+  saveUser = async (
+    user: User,
+  ): Promise<SuccessIndicator> =>
+      this.cache.set(user);
 
 
   // Picture load methods

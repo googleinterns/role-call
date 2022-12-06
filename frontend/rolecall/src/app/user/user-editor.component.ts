@@ -257,7 +257,7 @@ export class UserEditor implements OnInit, OnDestroy {
   saveUserRecord = async (): Promise<User> => {
     let user: User;
     this.lastSelectedUserEmail = this.workingUser.contact_info.email;
-    await this.userApi.cache.set(this.workingUser).then(async result => {
+    await this.userApi.saveUser(this.workingUser).then(async result => {
         if (result.successful) {
           const hasNewPicture = this.hasNewPicture;
           user = result.item as User;
@@ -346,7 +346,7 @@ export class UserEditor implements OnInit, OnDestroy {
   dataURItoBlob = (dataURI: string): Blob => {
     const arr = dataURI.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
+    const bstr = window.atob(arr[1]);   // window. to avoid deprecation warning
     let n = bstr.length;
     const u8arr = new Uint8Array(n);
     while (n--) {
@@ -392,9 +392,16 @@ export class UserEditor implements OnInit, OnDestroy {
     }
   };
 
+  private setCurrentUserWrapper = (): void => {
+    this.setCurrentUser({ user: this.renderingUsers[0] });
+  };
+
   private onDataLoaded = (): void => {
     if (!this.urlPointingUUID) {
-      this.setCurrentUser({user: this.renderingUsers[0]});
+      // Delay function to make the roles and permissions popups
+      // get updated properly
+      setTimeout(this.setCurrentUserWrapper, 0);
+      // this.setCurrentUser({user: this.renderingUsers[0]});
     } else {
       const foundUser = this.renderingUsers.find(
           user => user.uuid === this.urlPointingUUID);
@@ -418,9 +425,13 @@ export class UserEditor implements OnInit, OnDestroy {
     if (!user) {
       return [];
     }
-
     return Object.entries(user.has_roles)
+        // the abowe line gives us the roles key value pairs
+        // { [isAdmin, false], ... [isDancer, true], ... }
+        // the below statement says filter on value being true
+        // this will select all selected (true) pairs
         .filter(([, selected]) => selected)
+        // this will create an arrau of the selected keys
         .map(([role]) => role);
   };
 

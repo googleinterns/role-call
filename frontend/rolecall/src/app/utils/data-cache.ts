@@ -182,8 +182,10 @@ export class DataCache<IXT> {
     } catch (_e) {
       return [];
     }
-    for (const warning of lret.warnings) {
-      this.crudApi.loggingService.logWarn(warning);
+    if (lret.warnings) {
+      for (const warning of lret.warnings) {
+        this.crudApi.loggingService.logWarn(warning);
+      }
     }
     let items = lret.items;
     if (this.sortCmp) {
@@ -214,16 +216,18 @@ export class DataCache<IXT> {
     } else {
       gret = await this.crudApi.stdGetItem(this, ix);
     }
+    if (gret.warnings) {
       for (const warning of gret.warnings) {
         this.crudApi.loggingService.logWarn(warning);
       }
-      const item = gret.item;
-      this.arr.push(item);
-      if (this.sortCmp) {
-        this.arr = this.arr.sort(this.sortCmp);
-      }
-      this.loadedOne.emit(item);
-      return item;
+    }
+    const item = gret.item;
+    this.arr.push(item);
+    if (this.sortCmp) {
+      this.arr = this.arr.sort(this.sortCmp);
+    }
+    this.loadedOne.emit(item);
+    return item;
   };
 
   set = async (
@@ -236,8 +240,10 @@ export class DataCache<IXT> {
     } else {
       sret = await this.crudApi.stdSetItem(this, item);
     }
-    for (const warning of sret.warnings) {
-      this.crudApi.loggingService.logWarn(warning);
+    if (sret.warnings) {
+      for (const warning of sret.warnings) {
+        this.crudApi.loggingService.logWarn(warning);
+      }
     }
     if (sret.ok.successful) {
       let savedItem: unknown;
