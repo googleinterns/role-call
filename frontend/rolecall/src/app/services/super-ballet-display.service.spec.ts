@@ -1,4 +1,4 @@
-import {SuperBalletDisplayService} from './super-ballet-display.service';
+import { SuperBalletDisplayService } from './super-ballet-display.service';
 
 describe('SuperBalletDisplayService', () => {
   let service: SuperBalletDisplayService;

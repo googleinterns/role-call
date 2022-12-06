@@ -38,9 +38,18 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     return CompletableFuture.completedFuture(response);
   }
 
-  public PerformanceManagement(PerformanceServices performanceService) {
-    this.performanceService = performanceService;
-  }
+  // @Get(Constants.RequestParameters.CHECK_UNAVS)
+  // public CompletableFuture<ResponseSchema<List<PerformanceInfo>>> getAllPerformancesWithUnavs(
+  //   @RequestParam(value=Constants.RequestParameters.CHECK_UNAVS, required=false) Boolean checkUnavs) {
+  //   List<Performance> allPerformances = performanceService.getAllPerformancesWithUnavs(checkUnavs);
+
+  //   List<PerformanceInfo> performances = allPerformances.stream().map(p ->
+  //       p.toPerformanceInfo()
+  //       ).collect(Collectors.toList());
+
+  //   ResponseSchema<List<PerformanceInfo>> response = new ResponseSchema<>(performances);
+  //   return CompletableFuture.completedFuture(response);
+  // }
 
   @Get(Constants.RequestParameters.PERFORMANCE_ID)
   public CompletableFuture<ResponseSchema<PerformanceInfo>> getSingleSection(
@@ -85,7 +94,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
 
   @Patch
   public CompletableFuture<ResponseSchema<PerformanceInfo>> editCast(Principal principal,
-      @RequestBody PerformanceInfo newPerformance) {
+      @RequestBody PerformanceInfo performance) {
     User currentUser = getUser(principal);
     if(!currentUser.isAdmin() && !currentUser.canManagePerformances()) {
       return CompletableFuture.failedFuture(
@@ -94,7 +103,7 @@ public class PerformanceManagement extends AsyncRestEndpoint {
 
     ServiceResult<Performance> result;
     try {
-      result = performanceService.editPerformance(newPerformance);
+      result = performanceService.editPerformance(performance);
     } catch(InvalidParameterException e) {
       return CompletableFuture.failedFuture(e);
     } catch(EntityNotFoundException e) {
@@ -124,5 +133,9 @@ public class PerformanceManagement extends AsyncRestEndpoint {
     }
     
     return CompletableFuture.completedFuture(null);
+  }
+
+  public PerformanceManagement(PerformanceServices performanceService) {
+    this.performanceService = performanceService;
   }
 }

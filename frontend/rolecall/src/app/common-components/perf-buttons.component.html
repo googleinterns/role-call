@@ -1,0 +1,108 @@
+
+<div class="std-action-container">
+
+  <div class="std-action-nav-div">
+    <button
+      mat-icon-button
+      class="std-action-button"
+      [attr.aria-label]="backAria"
+      [matTooltip]="backTip"
+      [disabled]="!backActivate()"
+      (click)="backHandle()"
+    >
+      <mat-icon
+        [inline]="true"
+        class="std-action-button-icon-nobg"
+        [ngClass]="backActivate() ? 'std-action-bgon' : ''"
+      >{{ backIcon }}
+      </mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      class="std-action-button std-action-nav-sep"
+      [attr.aria-label]="forwardAria"
+      [matTooltip]="forwardTip"
+      [disabled]="!forwardActivate()"
+      (click)="forwardHandle()"
+    >
+      <mat-icon
+        [inline]="true"
+        class="std-action-button-icon-nobg"
+        [ngClass]="forwardActivate() ? 'std-action-bgon' : ''"
+      >{{ forwardIcon }}
+      </mat-icon>
+    </button>
+
+  </div>
+
+  <div class="std-action-sep1"></div>
+
+  <ng-container *ngIf="aIcon; else noAbutton">
+    <button
+      mat-icon-button
+      class="std-action-button"
+      [attr.aria-label]="aAria"
+      [matTooltip]="aTip"
+      [disabled]="!aActivate()"
+      (click)="aHandle()"
+    >
+      <mat-icon
+        [inline]="true"
+        class="std-action-button-icon-nobg"
+        [ngClass]="aActivate() ? 'std-action-bgon' : ''"
+      >{{ aIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noAbutton>
+    <div class="std-action-place-holder"></div>      
+  </ng-template>
+
+  <div class="std-action-sep2"></div>
+
+  <ng-container *ngIf="bIcon; else noBbutton">
+    <button
+      mat-icon-button
+      class="std-action-button"
+      [attr.aria-label]="bAria"
+      [matTooltip]="bTip"
+      [disabled]="!bActivate()"
+      (click)="bHandle()"
+    >
+      <mat-icon
+        [inline]="true"
+        class="std-action-button-icon-nobg"
+        [ngClass]="bActivate() ? 'std-action-bgon' : ''"
+      >{{ bIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noBbutton>
+    <div class="std-action-place-holder"></div>      
+  </ng-template>
+
+  <div class="std-action-sep2"></div>
+
+  <ng-container *ngIf="cIcon; else noCbutton">
+    <button
+      mat-icon-button
+      class="std-action-button"
+      [attr.aria-label]="cAria"
+      [matTooltip]="cTip"
+      [disabled]="!cActivate()"
+      (click)="cHandle()"
+    >
+      <mat-icon
+        [inline]="true"
+        class="std-action-button-icon-nobg"
+        [ngClass]="cActivate() ? 'std-action-bgon' : ''"
+      >{{ cIcon }}
+      </mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #noCbutton>
+    <div class="std-action-place-holder"></div>      
+  </ng-template>
+
+</div>

@@ -1,28 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {LoginApi} from '../api/login_api.service';
+import { Component, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-welcome-page',
   templateUrl: './welcome-page.component.html',
   styleUrls: ['./welcome-page.component.scss']
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class WelcomePage implements OnInit {
 
-  constructor(private loginAPI: LoginApi, private router: Router) {
+  constructor(
+  ) {
   }
 
-  ngOnInit(): void {
-    if (this.loginAPI.isLoggedIn) {
-      this.redirectToDashboard();
-    }
-    this.loginAPI.loginPromise.then(() => {
-      this.redirectToDashboard();
-    });
-  }
-
-  redirectToDashboard() {
-    this.router.navigateByUrl('/dashboard');
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  async ngOnInit(): Promise<void> {
   }
 
 }

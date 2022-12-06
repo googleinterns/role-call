@@ -1,5 +1,5 @@
-import {SegmentDisplayListService} from './segment-display-list.service';
-import {SuperBalletDisplayService} from './super-ballet-display.service';
+import { SegmentDisplayListService } from './segment-display-list.service';
+import { SuperBalletDisplayService } from './super-ballet-display.service';
 
 describe('SegmentDisplayListService', () => {
   let service: SegmentDisplayListService;

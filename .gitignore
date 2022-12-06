@@ -5,5 +5,9 @@ backend/.vscode/*
 backend/.settings/*
 backend/.classpath
 backend/.factorypath
+stored-files/*
 .idea
 frontend/rolecall/.vscode/settings.json
+frontend/rolecall/.angular/cache/
+.DS_Store
+**/.DS_Store

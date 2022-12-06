@@ -1,0 +1,102 @@
+@import "src/styles/colors";
+@import "src/styles/constants";
+
+
+// The container that represents the entire nav bar card and is animated
+.nav-bar-container {
+  display: flex;
+  flex-direction: column;
+  height: $contentHeight;
+  justify-content: space-between;
+  position: absolute;
+  right: 100vw;
+  top: $menuBarHeight;
+  width: 25vw;
+  z-index: 10;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.25);
+  height: $contentHeight;
+  position: absolute;
+  left: 0;
+  top: $menuBarHeight;
+  width: 100vw;
+  z-index: 9;
+}
+
+// div styling to make the nav bar card
+.left-sharp-card {
+  background: white;
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 4px 8px 0 rgba($color: #000000, $alpha: 0.2);
+}
+
+.left-sharp-card:hover {
+  box-shadow: 0 8px 16px 0 rgba($color: #000000, $alpha: 0.2);
+}
+
+// The div that holds the nav content inside the card
+.nav-content {
+  margin: 1vh 2vh;
+}
+
+// The sideways menu button at the top of the nav bar
+.close-nav-button {
+  font-size: calc($menuBarHeight / 2);
+  height: calc($menuBarHeight / 1.3);
+  width: 10vh;
+}
+
+.close-nav-button-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 95%;
+}
+
+.close-nav-button-icon {
+  float: right;
+  transform: rotate(90deg);
+}
+
+// The repeated child for each navigation link
+.nav-child {
+  background: $offWhite;
+  display: flex;
+  height: 10vh;
+  justify-content: space-between;
+  margin: 2%;
+  width: 96%;
+}
+
+// A nav-child content div that centers the content vertically
+.nav-child-content {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .title {
+    font-size: xx-large;
+    @media (max-width: $breakpoint-tablet) {
+      font-size: large;
+    }
+
+    font-weight: bold;
+    height: min-content;
+    line-height: 100%;
+    margin-bottom: auto;
+    margin-left: 2vh;
+    margin-top: auto;
+  }
+
+  .icon {
+    // needed to add next two lines when moving to ng14
+    height: 5vh;
+    line-height: 5vh;
+    
+    font-size: 5vh;
+    margin-right: 2vh;
+  }
+}

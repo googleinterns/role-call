@@ -1,5 +1,6 @@
-@import "../../styles/colors";
-@import "../../styles/constants";
+@import "src/styles/colors";
+@import "src/styles/constants";
+
 
 .page-container {
   display: flex;
@@ -8,29 +9,29 @@
   justify-content: space-evenly;
   width: 100%;
 
-  .notif-container {
-    height: 100%;
-    width: 30rem;
+  // .notif-container {
+  //   height: 100%;
+  //   width: 30rem;
 
-    .notif-card {
-      background: $offWhite;
-      height: calc(100% - 2rem);
-      margin: 1rem;
-      overflow-y: scroll;
+    // .notif-card {
+    //   background: $offWhite;
+    //   height: calc(100% - 2rem);
+    //   margin: 1rem;
+    //   overflow-y: scroll;
 
-      .content {
-        margin-bottom: 1rem;
-        margin-left: 1rem;
-        margin-right: 1rem;
+      // .content {
+      //   margin-bottom: 1rem;
+      //   margin-left: 1rem;
+      //   margin-right: 1rem;
 
-        .title {
-          font-size: 2rem;
-          font-weight: bold;
-          margin-top: 1rem;
-        }
-      }
-    }
-  }
+        // .title {
+        //   font-size: 2rem;
+        //   font-weight: bold;
+        //   margin-top: 1rem;
+        // }
+      //}
+    //}
+  //}
 
   .performances-container {
     display: flex;
@@ -38,14 +39,15 @@
     height: 100%;
     justify-content: space-evenly;
     width: 95%;
+
     .left-container {
       height: 100%;
-      min-width: 35rem;
-      flex-basis: 45%;
-      @media (max-width: $breakpoint-tablet) {
-        min-width: 25rem;
-        width: 25rem;
-      }
+      flex-basis: 49%;
+      // @media (max-width: $breakpoint-tablet) {
+      //   min-width: 25rem;
+      //   width: 25rem;
+      // }
+
       .left-card {
         background: $offWhite;
         height: calc(100% - 2rem);
@@ -53,30 +55,29 @@
 
         .content {
           height: inherit;
+          padding: 1rem;
 
           .title {
-            font-size: 2rem;
+            width: 100%;
+            font-size: 1.6rem;
             font-weight: bold;
             margin: 0;
-            padding-left: 1rem;
-            padding-top: 1rem;
+            text-align: center;
           }
 
           .children-container {
             height: inherit;
             overflow-y: scroll;
-            padding-bottom: 1rem;
+            margin-top: -.5rem;
             width: 100%;
 
             .child {
-              margin-left: 1rem;
-              margin-right: 1rem;
-              min-height: 8rem;
+              min-height: 6.5rem;
               margin-top: 1rem;
               position: relative;
 
               .child-content {
-                .title {
+                .child-title {
                   font-size: 1.5rem;
                   font-weight: bold;
                   height: fit-content;
@@ -94,7 +95,6 @@
                 .date {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -102,7 +102,6 @@
                 .time {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -110,14 +109,13 @@
                 .location {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
 
                 .action-button {
                   bottom: 1rem;
-                  background: $AAOrangeGradient;
+                  background: $aaOrangeGradient;
                   color: white;
                   font-size: 1.2rem;
                   font-weight: bold;
@@ -133,8 +131,7 @@
 
     .right-container {
       height: 100%;
-      min-width: 35rem;
-      flex-basis: 45%;
+      flex-basis: 49%;
 
       .right-card {
         background: $offWhite;
@@ -143,30 +140,29 @@
 
         .content {
           height: inherit;
+          padding: 1rem;
 
           .title {
-            font-size: 2rem;
+            width: 100%;
+            font-size: 1.6rem;
             font-weight: bold;
             margin: 0;
-            padding-left: 1rem;
-            padding-top: 1rem;
           }
 
           .children-container {
             height: inherit;
             overflow-y: scroll;
-            padding-bottom: 1rem;
+            //padding-bottom: 1rem;
+            margin-top: -.5rem;
             width: 100%;
 
             .child {
-              margin-left: 1rem;
-              margin-right: 1rem;
-              min-height: 8rem;
+              min-height: 6.5rem;
               margin-top: 1rem;
               position: relative;
 
               .child-content {
-                .title {
+                .child-title {
                   font-size: 1.5rem;
                   font-weight: bold;
                   height: fit-content;
@@ -184,7 +180,6 @@
                 .date {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -192,7 +187,6 @@
                 .time {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
@@ -200,14 +194,13 @@
                 .location {
                   color: $gray;
                   font-size: 1rem;
-                  // font-weight: bold;
                   margin-bottom: 0;
                   padding-left: 1rem;
                 }
 
                 .action-button {
                   bottom: 1rem;
-                  background: $AAOrangeGradient;
+                  background: $aaOrangeGradient;
                   color: white;
                   font-size: 1.2rem;
                   font-weight: bold;

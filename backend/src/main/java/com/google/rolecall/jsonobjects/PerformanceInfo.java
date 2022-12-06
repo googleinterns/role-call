@@ -48,6 +48,10 @@ public abstract class PerformanceInfo {
   @JsonProperty("status")
   public abstract Status status();
 
+  // @Nullable
+  // @JsonProperty("hasAbsence")
+  // public abstract Boolean hasAbsence();
+
   @Nullable
   @JsonProperty("performanceSections")
   public abstract List<PerformanceSectionInfo> performanceSections();
@@ -96,6 +100,9 @@ public abstract class PerformanceInfo {
     
     @JsonProperty("status")
     public abstract Builder setStatus(Status status);
+
+    // @JsonProperty("hasAbsence")
+    // public abstract Builder setHasAbsence(Boolean hasAbsence);
 
     @JsonProperty("performanceSections")
     public abstract Builder setPerformanceSections(List<PerformanceSectionInfo> performanceSections);

@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 /**
- * Configures the database connection as a DataSource object through profile specific inititializing
+ * Configures the database connection as a DataSource object through profile
+ * specific inititializing
  * functions.
  */
 @Configuration
@@ -42,7 +43,7 @@ public class DataSourceConfig {
     String userName = env.getProperty("spring.datasource.username");
     String password = env.getProperty("spring.datasource.password");
 
-    DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+    DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
 
     dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
     dataSourceBuilder.url(url);
@@ -60,7 +61,7 @@ public class DataSourceConfig {
    * spring.cloud.gcp.sql.instance-connection-name found through
    * application-prod.properties.
    */
-  @Profile({"prod", "qa"})
+  @Profile({ "prod", "qa" })
   @Bean
   public DataSource getDataSourceCloudSql() {
     return new HikariDataSource(getCloudConfig());
@@ -116,10 +117,13 @@ public class DataSourceConfig {
   @VisibleForTesting
   AccessSecretVersionResponse getSecretResponse(String projectId, String secretName)
       throws Exception {
-    SecretManagerServiceClient client = SecretManagerServiceClient.create();
-    SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
+    AccessSecretVersionResponse response;
+    try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
+      SecretVersionName name = SecretVersionName.of(projectId, secretName, "latest");
+      response = client.accessSecretVersion(name);
+    }
 
-    return client.accessSecretVersion(name);
+    return response;
   }
 
   @Autowired

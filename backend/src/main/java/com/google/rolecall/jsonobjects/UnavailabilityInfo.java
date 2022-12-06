@@ -16,6 +16,11 @@ public abstract class UnavailabilityInfo {
   @Nullable
   @JsonProperty("userId")
   public abstract Integer userId();
+
+  @Nullable
+  @JsonProperty("reason")
+  public abstract String reason();
+
   @Nullable
   @JsonProperty("description")
   public abstract String description();
@@ -45,12 +50,15 @@ public abstract class UnavailabilityInfo {
   }
 
   @AutoValue.Builder
-  public abstract static class  Builder {
+  public abstract static class Builder {
     @JsonProperty("id")
     public abstract Builder setId(Integer id);
 
     @JsonProperty("userId")
     public abstract Builder setUserId(Integer userId);
+
+    @JsonProperty("reason")
+    public abstract Builder setReason(String reason);
 
     @JsonProperty("description")
     public abstract Builder setDescription(String description);

@@ -1,15 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
-import {MatSelectChange} from '@angular/material/select';
-import {isNullOrUndefined} from 'util';
-import {Unavailability, UnavailabilityApi} from '../api/unavailability-api.service';
-import {User, UserApi} from '../api/user_api.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSelectChange } from '@angular/material/select';
+import { Unavailability, UnavailabilityApi, UnavailabilityReason,
+} from '../api/unavailability-api.service';
+import { User, UserApi } from '../api/user-api.service';
+import * as APITypes from 'src/api-types';
+import { Subscription } from 'rxjs';
+
 
 type ProcessedUnav = {
-  unav: Unavailability,
-  user: User,
-  fromDateStr: string,
-  toDateStr: string
+  unav: Unavailability;
+  user: User;
+  fromDateStr: string;
+  toDateStr: string;
 };
 
 @Component({
@@ -17,160 +20,233 @@ type ProcessedUnav = {
   templateUrl: './unavailability-editor.component.html',
   styleUrls: ['./unavailability-editor.component.scss']
 })
-export class UnavailabilityEditor implements OnInit {
+// eslint-disable-next-line @angular-eslint/component-class-suffix
+export class UnavailabilityEditor implements OnInit, OnDestroy {
 
-  currentUnavailabilities: Unavailability[] = [];
-  pastUnavailabilities: Unavailability[] = [];
-  processedCurrUnavs: ProcessedUnav[] = [];
-  processedPastUnavs: ProcessedUnav[] = [];
-  isEditingPrevious = false;
+  unavs: Unavailability[] = [];
+  processedUnavs: ProcessedUnav[] = [];
+  displayedUnavs: ProcessedUnav[] = [];
   state: Unavailability;
 
+  listStartDate: Date = new Date();
+  listStart: number;
+
   selectedUser: User;
+  selectedReason: UnavailabilityReason;
   startDate: Date;
   endDate: Date;
   canSave = false;
+  canDelete = false;
+
+  initialSelectedReason = '';
 
   allUsers: User[];
+
+  userSubscription: Subscription;
+  unavSubscription: Subscription;
+
   dataLoaded = false;
   unavsLoaded = false;
   usersLoaded = false;
 
-  constructor(private unavAPI: UnavailabilityApi, private userAPI: UserApi) {
+  constructor(
+    private userApi: UserApi,
+
+    public unavApi: UnavailabilityApi,
+  ) {
+    this.listStart = this.listStartDate.getTime();
   }
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   ngOnInit(): void {
     this.state = this.createNewUnavailability();
-    this.unavAPI.unavailabilityEmitter.subscribe(val => this.onUnavsLoad(val));
-    this.userAPI.userEmitter.subscribe(val => this.onUsersLoad(val));
-    this.unavAPI.getAllUnavailabilities();
-    this.userAPI.getAllUsers();
+    this.unavSubscription =
+        this.unavApi.cache.loadedAll.subscribe(vals =>
+            this.onUnavsLoad(vals as Unavailability[]));
+    this.unavApi.loadAllUnavailabilities();
+    this.userSubscription =
+        this.userApi.cache.loadedAll.subscribe(vals =>
+            this.onUsersLoad(vals as User[]));
+    this.userApi.loadAllUsers();
   }
 
-  onUnavsLoad(unavs: Unavailability[]) {
-    const dateOldToNewComp = (a: Unavailability, b: Unavailability) => {
-      return a.startDate - b.startDate;
-    };
-    const dateNewToOldComp = (a: Unavailability, b: Unavailability) => {
-      return b.startDate - a.startDate;
-    };
-    const now = Date.now();
-    this.currentUnavailabilities =
-        unavs.filter(ua => ua.endDate > now).sort(dateOldToNewComp);
-    this.pastUnavailabilities =
-        unavs.filter(ua => ua.endDate <= now).sort(dateNewToOldComp);
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  ngOnDestroy(): void {
+    this.unavSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
+  }
+
+  onUnavsLoad = (
+    unavs: Unavailability[],
+  ): void => {
+    this.unavs = Array.from(unavs).sort((ua, ub) => ua.endDate - ub.endDate);
     this.unavsLoaded = true;
     this.checkDataLoaded();
-  }
+  };
 
-  onUsersLoad(users: User[]) {
-    this.allUsers = users.sort((a, b) => a.last_name < b.last_name ? -1 : 1);
+  onUsersLoad = (
+    users: User[],
+  ): void => {
+    // this.allUsers = users.sort((a, b) =>
+    //   a.last_name.toLowerCase() < b.last_name.toLowerCase() ? -1 : 1);
+    this.allUsers = users;
     this.usersLoaded = true;
     this.checkDataLoaded();
-  }
+  };
 
-  checkDataLoaded(): boolean {
+  checkDataLoaded = (): boolean => {
     this.dataLoaded = this.unavsLoaded && this.usersLoaded;
     if (this.dataLoaded) {
       this.afterAllDataLoaded();
     }
     return this.dataLoaded;
-  }
+  };
 
-  afterAllDataLoaded() {
-    this.processedCurrUnavs = this.currentUnavailabilities.map(ua => {
-      return {
+  afterAllDataLoaded = (): void => {
+    this.processedUnavs = this.unavs.map(ua => ({
         unav: ua,
-        user: this.userAPI.users.get(String(ua.userId)),
+        user: this.userApi.lookup(String(ua.userId)),
         fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
         toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
-      };
-    });
-    this.processedPastUnavs = this.pastUnavailabilities.map(ua => {
-      return {
-        unav: ua,
-        user: this.userAPI.users.get(String(ua.userId)),
-        fromDateStr: new Date(ua.startDate).toLocaleDateString('en-US'),
-        toDateStr: new Date(ua.endDate).toLocaleDateString('en-US')
-      };
-    });
-  }
+      })
+    );
+    this.filterOnDate();
+  };
 
-  createNewUnavailability(): Unavailability {
-    return {
-      id: Date.now(),
-      description: '',
-      userId: undefined,
-      startDate: Date.now(),
-      endDate: Date.now()
-    };
-  }
+  filterOnDate = (): void => {
+    this.displayedUnavs = this.processedUnavs.filter(ua =>
+      ua.unav.endDate > this.listStart);
+  };
 
-  updateCanSave() {
-    this.canSave = (!isNullOrUndefined(this.startDate)
-                    && !isNullOrUndefined(this.endDate)
-                    && !isNullOrUndefined(this.selectedUser));
-  }
+  resetData = (): void => {
+    this.dataLoaded = false;
+    this.usersLoaded = false;
+    this.unavsLoaded = false;
+    this.userApi.loadAllUsers(true);
+    this.unavApi.loadAllUnavailabilities(true);
+  };
 
-  resetCompState() {
+  changeListStartDate = (newDate: Date): string => {
+    if (newDate.getTime() === new Date(0).getTime()) {
+      this.resetData();
+    } else {
+      this.listStartDate = newDate;
+      this.listStart = this.listStartDate.getTime();
+      this.filterOnDate();
+    }
+    return `Unavailabilites After ${this.listStartDate.toLocaleDateString()}`;
+  };
+
+  createNewUnavailability = (): Unavailability => {
+    this.canDelete = false;
+    return this.unavApi.newUnavailability();
+  };
+
+  updateCanSave = (): void => {
+    this.canSave = (
+      !!this.startDate
+      && !!this.endDate
+      && !!this.selectedUser
+      && (!!this.selectedReason && this.selectedReason !== 'UNDEF')
+    );
+  };
+
+  resetCompState = (): void => {
     this.selectedUser = undefined;
+    this.selectedReason = 'UNDEF';
     this.startDate = undefined;
     this.endDate = undefined;
     this.updateCanSave();
-  }
+  };
 
-  onSelectUser(event: MatSelectChange) {
+  onSelectUser = (
+    event: MatSelectChange,
+  ): void => {
     this.state.userId = Number(event.value.uuid);
     this.selectedUser = event.value;
     this.updateCanSave();
-  }
+  };
 
-  onFromDateChange(event: MatDatepickerInputEvent<Date>) {
+  onSelectReason = (
+    event: MatSelectChange,
+  ): void => {
+    this.selectedReason =
+      ( event.value as string ).toUpperCase() as UnavailabilityReason;
+    this.state.reason = this.selectedReason;
+    this.updateCanSave();
+  };
+
+  onFromDateChange = (
+    event: MatDatepickerInputEvent<Date>,
+  ): void => {
     this.state.startDate = event.value.getTime();
     this.updateCanSave();
-  }
+  };
 
-  onToDateChange(event: MatDatepickerInputEvent<Date>) {
+  onToDateChange = (
+    event: MatDatepickerInputEvent<Date>,
+  ): void => {
     this.state.endDate = event.value.getTime();
     this.updateCanSave();
-  }
+  };
 
-  onDescChange(event) {
-    this.state.description = event.target.value;
-  }
+  onDescChange = (
+    event: Event,
+  ): void => {
+    this.state.description = ( event.target as HTMLInputElement ).value;
+  };
 
-  onNewUnav() {
-    this.isEditingPrevious = false;
+  canAddUnav = (): boolean =>
+    true;
+
+  onNewUnav = (): void => {
     this.state = this.createNewUnavailability();
+    this.initialSelectedReason = '';
     this.resetCompState();
-  }
+  };
 
-  onEditUnav(unav: Unavailability) {
+  onEditUnav = (
+    unav: Unavailability,
+  ): void => {
     this.resetCompState();
-    this.isEditingPrevious = true;
     this.state = JSON.parse(JSON.stringify(unav));
-    this.selectedUser = this.userAPI.users.get(String(this.state.userId));
+    this.selectedUser = this.userApi.lookup(String(this.state.userId));
+    this.selectedReason = unav.reason;
+    this.initialSelectedReason = this.makeTypePretty(this.selectedReason);
     this.startDate = new Date(unav.startDate);
     this.endDate = new Date(unav.endDate);
     this.updateCanSave();
-  }
+    this.canDelete = true;
+  };
 
-  onSaveUnav() {
+  onSaveUnav = (): void => {
     this.doSetUnav().then(() => {
       this.onNewUnav();
+      this.unavApi.loadAllUnavailabilities();
     });
-  }
+  };
 
-  onDeleteUnav(ua: Unavailability) {
-    this.doDeleteUnav(ua);
-  }
+  canDeleteUnav = (): boolean =>
+    this.canDelete;
 
-  doSetUnav() {
-    return this.unavAPI.setUnavailability(this.state);
-  }
+  onDeleteUnav = (): void => {
+    this.doDeleteUnav(this.state);
+  };
 
-  doDeleteUnav(ua: Unavailability) {
-    return this.unavAPI.deleteUnavailability(ua);
-  }
+  canSaveUnav = (): boolean =>
+    this.canSave;
+
+  doSetUnav = async (): Promise<APITypes.SuccessIndicator> =>
+    this.unavApi.cache.set(this.state);
+
+  doDeleteUnav = async (
+    ua: Unavailability,
+  ): Promise<void> => {
+    this.unavApi.cache.delete(ua);
+    this.onNewUnav();
+  };
+
+  makeTypePretty = (type: UnavailabilityReason): string =>
+    !!type ? type.slice(0, 1) + type.slice(1).toLowerCase() : '';
 
 }

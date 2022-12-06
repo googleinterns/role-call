@@ -6,7 +6,7 @@
       "jasmine",
       "node",
       "gapi",
-      "gapi.auth2"
+      "google.accounts",
     ]
   },
   "files": [

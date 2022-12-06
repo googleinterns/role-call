@@ -1,0 +1,18 @@
+<div class="app-card card-style">
+  <mat-form-field [appearance]="appearance" class="input-margins fit-form">
+    <input
+        matInput
+        [(ngModel)]="currentValue"
+        (ngModelChange)="onValueChange($event)"
+        [value]="initValue"
+        [placeholder]="valueName"
+        [type]="type"
+        [matAutocomplete]="auto"
+        [disabled]="isDisabled ? isDisabled : false">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+          *ngFor="let option of autoCompleteOptions"
+          [value]="option">{{option}}</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

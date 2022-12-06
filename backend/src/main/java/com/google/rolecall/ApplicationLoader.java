@@ -3,6 +3,8 @@ package com.google.rolecall;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+import com.google.rolecall.util.StorageService;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,11 +27,12 @@ public class ApplicationLoader implements ApplicationRunner {
 
   private final Environment environment;
   private final UserRepository userRepo;
+  private final StorageService storageService;
   private String adminFirstName;
   private String adminLastName;
   private String adminEmail;
 
-  @Profile({"dev", "prod", "qa"})
+  @Profile({ "dev", "prod", "qa" })
   @Override
   public void run(ApplicationArguments args) throws Exception {
     // Initialize admin if exists, or create one with given information.
@@ -40,6 +43,8 @@ public class ApplicationLoader implements ApplicationRunner {
     Optional<User> possibleAdmin = userRepo.findByEmailIgnoreCase(adminEmail);
 
     possibleAdmin.ifPresentOrElse(this::adminExists, this::createAdmin);
+
+    storageService.init();
   }
 
   private void adminExists(User user) {
@@ -53,17 +58,16 @@ public class ApplicationLoader implements ApplicationRunner {
   private void createAdmin() {
     User admin;
     try {
-      admin =
-          User.newBuilder()
-              .setFirstName(adminFirstName)
-              .setMiddleName("")
-              .setLastName(adminLastName)
-              .setSuffix("")
-              .setEmail(adminEmail)
-              .setIsActive(true)
-              .setCanLogin(true)
-              .setIsAdmin(true)
-              .build();
+      admin = User.newBuilder()
+          .setFirstName(adminFirstName)
+          .setMiddleName("")
+          .setLastName(adminLastName)
+          .setSuffix("")
+          .setEmail(adminEmail)
+          .setIsActive(true)
+          .setCanLogin(true)
+          .setIsAdmin(true)
+          .build();
     } catch (InvalidParameterException e) {
       logger.log(Level.SEVERE, "Unable to Create admin. Insufficient Properties.");
       return;
@@ -95,18 +99,17 @@ public class ApplicationLoader implements ApplicationRunner {
 
     cal.setTime(sdf.parse(dateJoined));
 
-    user =
-        User.newBuilder()
-            .setFirstName(fName)
-            .setMiddleName(mName)
-            .setLastName(lName)
-            .setSuffix(suffix)
-            .setEmail(email)
-            .setDateJoined(cal)
-            .setIsActive(true)
-            .setCanLogin(true)
-            .setIsDancer(true)
-            .build();
+    user = User.newBuilder()
+        .setFirstName(fName)
+        .setMiddleName(mName)
+        .setLastName(lName)
+        .setSuffix(suffix)
+        .setEmail(email)
+        .setDateJoined(cal)
+        .setIsActive(true)
+        .setCanLogin(true)
+        .setIsDancer(true)
+        .build();
     userRepo.save(user);
   }
 
@@ -152,8 +155,9 @@ public class ApplicationLoader implements ApplicationRunner {
   }
 
   @Autowired
-  public ApplicationLoader(Environment env, UserRepository userRepo) {
+  public ApplicationLoader(Environment env, UserRepository userRepo, StorageService storageService) {
     this.environment = env;
     this.userRepo = userRepo;
+    this.storageService = storageService;
   }
 }

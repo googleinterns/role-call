@@ -8,10 +8,13 @@ import com.google.rolecall.models.CastMember;
 import com.google.rolecall.models.Position;
 import com.google.rolecall.models.Section;
 import com.google.rolecall.models.SubCast;
+// import com.google.rolecall.models.Unavailability;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.CastRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.EntityNotFoundException;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+
+// import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -28,6 +31,7 @@ public class CastServices {
   private final CastRepository castRepo;
   private final UserServices userService;
   private final SectionServices sectionService;
+  // private final UnavailabilityServices unavailabilityService;
 
   public Cast getCast(Integer id) throws EntityNotFoundException, InvalidParameterException {
     if(id == null) {
@@ -43,11 +47,25 @@ public class CastServices {
   }
 
   public List<Cast> getAllCasts() {
+  // public List<Cast> getAllCasts(long perfdate) {
     List<Cast> allCasts = new ArrayList<>();
     castRepo.findAll().forEach(allCasts::add);
-
+    // if (perfdate != 0) {
+    //   allCasts.forEach(cast -> checkAbs(cast, perfdate));
+    // }
     return allCasts;
   }
+
+  // public void checkAbs(Cast p, long perfdate) {
+  //   p.getSubCasts().forEach( subcast -> {
+  //     subcast.getCastMembers().forEach(member -> {        
+  //        Unavailability unavailability = unavailabilityService.getUnavailabilityByUserAndDate(member.getUser().getId(), new Date(perfdate));
+  //        if (unavailability != null) {          
+  //         member.setHasAbsence(true);
+  //        }
+  //     });
+  //   });    
+  // }
 
   public List<Cast> getCastsBySectionId(int id) throws EntityNotFoundException, InvalidParameterException {
     Section section = sectionService.getSection(id);
@@ -267,8 +285,10 @@ public class CastServices {
 
   public CastServices(CastRepository castRepo, SectionServices sectionService,
       UserServices userService) {
+      // UserServices userService, UnavailabilityServices unavailabilityService) {
     this.castRepo = castRepo;
     this.userService = userService;
     this.sectionService = sectionService;
+    // this.unavailabilityService = unavailabilityService;
   }
 }

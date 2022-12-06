@@ -3,7 +3,9 @@ package com.google.rolecall;
 import com.google.rolecall.models.User;
 import com.google.rolecall.repos.UserRepository;
 import com.google.rolecall.restcontrollers.exceptionhandling.RequestExceptions.InvalidParameterException;
+import com.google.rolecall.util.StorageService;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -29,12 +32,14 @@ public class ApplicationLoaderUnitTests {
   private Environment env;
   private UserRepository userRepo;
   private ApplicationLoader loader;
+  private StorageService storage;
 
   @BeforeEach
-  public void init() {
+  public void init() throws IOException {
     userRepo = mock(UserRepository.class);
     env = mock(Environment.class);
-    loader = new ApplicationLoader(env, userRepo);
+    storage = mock(StorageService.class);
+    loader = new ApplicationLoader(env, userRepo, storage);
     User.Builder builder = User.newBuilder()
         .setFirstName("admin")
         .setLastName("admin")
@@ -48,6 +53,7 @@ public class ApplicationLoaderUnitTests {
     }
     lenient().when(userRepo.findByEmailIgnoreCase("adminEmail")).thenReturn(Optional.of(user));
     lenient().when(userRepo.findByEmailIgnoreCase("newEmail")).thenReturn(Optional.empty());
+    doNothing().when(storage).init();
   }
 
   @Test
