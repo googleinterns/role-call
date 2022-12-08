@@ -79,7 +79,7 @@ export class ResponseStatusHandlerService {
       const rsp = response as any;
       const errorEvent: ErrorEvent = {
         url: response.url,
-        errorMessage: rsp.error && rsp.error.size > 0
+        errorMessage: rsp.error?.error?.length > 0
           ? rsp.error.error
           : rsp.message,
         status: response.status,
