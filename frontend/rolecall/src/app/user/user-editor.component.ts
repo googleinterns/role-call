@@ -325,6 +325,11 @@ export class UserEditor implements OnInit, OnDestroy {
       alert('Only images are supported');
       return;
     }
+    let fileName = file.name;
+    let parts = fileName.split('.');
+    if (parts[1].toLowerCase() === 'jpeg') {
+      fileName = parts[1] = '.jpg';
+    }
     this.checkWorkingUser();
     this.formData = new FormData();
     const reader = new FileReader();
@@ -337,7 +342,7 @@ export class UserEditor implements OnInit, OnDestroy {
           100, 100, 320, 320) // 50% ratio, 50% quality
         .then(compressedImage => {
             this.formData.append('file', this.dataURItoBlob(compressedImage),
-                file.name);
+                fileName);
           }
         );
     }).bind(this);
