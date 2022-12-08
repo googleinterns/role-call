@@ -2,11 +2,11 @@
 
 <div mat-dialog-content>
   <br>
-  <p class="subheader" style="font-weight: normal;">{{ data.errorEvent.url }}</p>
+  <p class="content">{{ data.errorEvent.errorMessage }}</p>
   <br>
   <p class="subheader">{{ "Status " + data.errorEvent.status + ": "
   + data.errorEvent.statusText }} </p>
-  <p class="content">{{ data.errorEvent.errorMessage }}</p>
+  <p class="subheader" style="font-weight: normal;">{{ data.errorEvent.url }}</p>
   <br>
   <br>
 </div>
