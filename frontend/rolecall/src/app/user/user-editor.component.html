@@ -35,7 +35,7 @@
       <div class="line-container">
         <div class="std-left">
           <app-text-input
-            valueName="First Name"
+            valueName="First Name *"
             appearance="standard"
             (valueChange)="onInputChange($event)"
             [initValue]="currentSelectedUser?.first_name || ''"
@@ -51,7 +51,7 @@
         </div>
         <div class="std">
           <app-text-input
-            valueName="Last Name"
+            valueName="Last Name *"
             appearance="standard"
             (valueChange)="onInputChange($event)"
             [initValue]="currentSelectedUser?.last_name || ''"
@@ -70,7 +70,7 @@
       <div class="line-container">
         <div class="std-left">
           <app-text-input
-            valueName="Email"
+            valueName="Email *"
             appearance="standard"
             [isDisabled]="!creatingUser"
             [initValue]="currentSelectedUser?.contact_info?.email || ''"
@@ -120,7 +120,7 @@
           <div class="short-line-container">
             <div class="short-left">
               <app-date-input
-                valueName="Date Joined"
+                valueName="Date Joined *"
                 appearance="fill"
                 [initValue]="currentSelectedUser?.date_joined || getCurrentDate()"
                 (valueChange)="onInputChange($event)"
