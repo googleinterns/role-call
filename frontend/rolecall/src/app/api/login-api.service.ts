@@ -37,6 +37,7 @@ export class LoginApi {
 
   /** Google login button */
   loginBtn?: HTMLElement;
+  loginBtnIsShown = false;
 
   /** Promise that resolves when logged in. */
   loginPromise = new Promise(res => {
@@ -63,17 +64,13 @@ export class LoginApi {
 
     this.ticks = this.seconds.subscribe(() => this.loginWrapper());
 
-    // this code guarantees that the login button is shown
-    this.isAuthLoaded$.subscribe((isAuthLoaded: boolean) => {
-      if (isAuthLoaded) {
-        this.showLoginButton();
-      }
+    this.isAuthLoaded$.subscribe((_: boolean) => {
       this.refresh();
     });
   }
 
   scheduleLogin = (): void => {
-    // this.isAuthLoaded = false;
+    this.loginBtnIsShown = false;
     this.ticks = this.seconds.subscribe(() => this.loginWrapper());
   };
 
@@ -87,7 +84,7 @@ export class LoginApi {
           cancel_on_tap_outside: false,
           callback: (res) => {
             this.credential = res.credential;
-            this.user = JSON.parse(atob(res.credential.split('.')[1]));
+            this.user = JSON.parse(window.atob(res.credential.split('.')[1]));
             resolve();
             this.saveLoginParams(true, this.user);
           },
@@ -102,7 +99,7 @@ export class LoginApi {
 
   /** Determine whether or not login is needed and return. */
   public login = async (): Promise<LoginResponse> => {
-    const resp: LoginResponse = { isLoggedIn: false, user: undefined };
+    const resp: LoginResponse = { isLoggedIn: undefined, user: undefined };
     if (environment.mockBackend) {
       this.isAuthLoaded = true;
       this.isLoggedIn = true;
@@ -199,11 +196,14 @@ export class LoginApi {
   /** Calls login. If login successfule, ends login loop */
   private loginWrapper = (
   ): void => {
+    if (!this.loginBtnIsShown) {
+      this.showLoginButton();
+      this.loginBtnIsShown = true;
+    }
     this.login();
-    if (this.isAuthLoaded) {
+    if (this.isAuthLoaded && this.isLoggedIn) {
       this.ticks.unsubscribe();
     }
-    // console.log('Login Delay', time);
   };
 
   /** Constructs a login response and updates appropriate state. */
