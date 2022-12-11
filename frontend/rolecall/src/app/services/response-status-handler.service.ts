@@ -77,6 +77,7 @@ export class ResponseStatusHandlerService {
 //     }
     if (response.status < 200 || response.status > 299) {
       const rsp = response as any;
+console.log('ERROR RESPONSE', rsp);
       const errorEvent: ErrorEvent = {
         url: response.url,
         errorMessage: rsp.error?.error?.length > 0
