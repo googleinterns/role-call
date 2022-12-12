@@ -30,40 +30,27 @@ export class HeaderUtilityService {
     headerType: HeaderType = HeaderType.json,
   ): Promise<HttpHeaders> => {
     this.updateSentToken();
+    const email = environment.useDevEmail ? environment.devEmail :
+        this.loginApi.email;
     return this.loginApi.loginPromise.then(() => {
       if (this.sentToken) {
         if (headerType === HeaderType.jpg) {
-          return new HttpHeaders({
-            'Content-Type': 'image/jpg',
-            EMAIL: environment.useDevEmail ? environment.devEmail :
-                this.loginApi.email,
-          });
+          return new HttpHeaders({ 'Content-Type': 'image/jpg', email });
         }
         if (headerType === HeaderType.png) {
-          return new HttpHeaders({
-            'Content-Type': 'image/png',
-            EMAIL: environment.useDevEmail ? environment.devEmail :
-                this.loginApi.email,
-          });
+          return new HttpHeaders({ 'Content-Type': 'image/png', email });
         }
         if (headerType === HeaderType.formData) {
-          return new HttpHeaders({
-            EMAIL: environment.useDevEmail ? environment.devEmail :
-                this.loginApi.email,
-          });
+          return new HttpHeaders({ email });
         }
         return new HttpHeaders({
-          'Content-Type': 'application/json; charset=utf-8',
-          EMAIL: environment.useDevEmail ? environment.devEmail :
-              this.loginApi.email,
-        });
+          'Content-Type': 'application/json; charset=utf-8', email });
       } else {
         this.sentToken = true;
         return new HttpHeaders({
           'Content-Type': 'application/json; charset=utf-8',
-          EMAIL: environment.useDevEmail ? environment.devEmail :
-              this.loginApi.email,
-          AUTHORIZATION: 'Bearer ' + this.loginApi.credential,
+          email,
+          authorization: 'Bearer ' + this.loginApi.credential,
         });
       }
     });
