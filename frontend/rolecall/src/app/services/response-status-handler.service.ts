@@ -17,10 +17,9 @@ export type ErrorEvent = {
 @Injectable({providedIn: 'root'})
 export class ResponseStatusHandlerService {
 
-  pendingErrors:
-    Map<string,
-        [Promise<string>, (value?: string | PromiseLike<string>) => void]> =
-    new Map();
+  pendingErrors: Map<string,
+      [Promise<string>, (value?: string | PromiseLike<string>) => void]> =
+          new Map();
 
   constructor(
     public dialog: MatDialog,
@@ -37,6 +36,7 @@ export class ResponseStatusHandlerService {
   showError = async (errorEvent: ErrorEvent): Promise<string> => {
     if (this.pendingErrors.has(errorEvent.url)) {
       // TODO: What should we return here?
+console.log('EARLY RETURN', errorEvent.url);
       return Promise.resolve('');
     }
     let resFunc;
@@ -44,6 +44,7 @@ export class ResponseStatusHandlerService {
       resFunc = res;
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
+console.log('ERROR EVENT', errorEvent);
     const dialogRef = this.dialog.open(ErrorDialog,
         { width: '50%', data: { errorEvent } });
     return lastValueFrom(dialogRef.afterClosed()).then(() => prom);
@@ -52,10 +53,12 @@ export class ResponseStatusHandlerService {
   resolveError = (errEv: ErrorEvent, userResp: string): void => {
     const resolveThis = this.pendingErrors.get(errEv.url);
     if (resolveThis) {
+console.log('RESOLVING', this.pendingErrors.size, this.pendingErrors);
       resolveThis[1](userResp);
       this.pendingErrors.delete(errEv.url);
     }
-  };
+  }
+
 
   // Private methods
 
@@ -64,17 +67,17 @@ export class ResponseStatusHandlerService {
     res: (value?: T | PromiseLike<T>) => void,
     rej: (reason?: any) => void
   ): Promise<void> => {
-// Creates deadly embraces.
-//     if (response.status === 401) {
-//       rej('');
-//       this.LoginApi.signOut().then(() => {
-// console.log('Loggong out and in again');
-//         //this.LoginApi.login();
-//         this.LoginApi.isAuthLoaded = false;
-//         this.LoginApi.scheduleLogin();
-//       });
-//       return;
-//     }
+    // Creates deadly embraces.
+    // if (response.status === 401) {
+    //   rej('');
+    //   this.LoginApi.signOut().then(() => {
+    //     console.log('Loggong out and in again');
+    //     //this.LoginApi.login();
+    //     this.LoginApi.isAuthLoaded = false;
+    //     this.LoginApi.scheduleLogin();
+    //   });
+    //   return;
+    // }
     if (response.status < 200 || response.status > 299) {
       const rsp = response as any;
 console.log('ERROR RESPONSE', rsp);
