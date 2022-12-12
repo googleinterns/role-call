@@ -36,7 +36,6 @@ export class ResponseStatusHandlerService {
   showError = async (errorEvent: ErrorEvent): Promise<string> => {
     if (this.pendingErrors.has(errorEvent.url)) {
       // TODO: What should we return here?
-console.log('EARLY RETURN', errorEvent.url);
       return Promise.resolve('');
     }
     let resFunc;
@@ -44,7 +43,6 @@ console.log('EARLY RETURN', errorEvent.url);
       resFunc = res;
     });
     this.pendingErrors.set(errorEvent.url, [prom, resFunc]);
-console.log('ERROR EVENT', errorEvent);
     const dialogRef = this.dialog.open(ErrorDialog,
         { width: '50%', data: { errorEvent } });
     return lastValueFrom(dialogRef.afterClosed()).then(() => prom);
@@ -53,7 +51,6 @@ console.log('ERROR EVENT', errorEvent);
   resolveError = (errEv: ErrorEvent, userResp: string): void => {
     const resolveThis = this.pendingErrors.get(errEv.url);
     if (resolveThis) {
-console.log('RESOLVING', this.pendingErrors.size, this.pendingErrors);
       resolveThis[1](userResp);
       this.pendingErrors.delete(errEv.url);
     }
@@ -80,7 +77,6 @@ console.log('RESOLVING', this.pendingErrors.size, this.pendingErrors);
     // }
     if (response.status < 200 || response.status > 299) {
       const rsp = response as any;
-console.log('ERROR RESPONSE', rsp);
       const errorEvent: ErrorEvent = {
         url: response.url,
         errorMessage: rsp.error?.error?.length > 0
