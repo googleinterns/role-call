@@ -28,7 +28,7 @@
   "dependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^12.11.1",
-    "express": "^4.17.13",
+    "express": "^4.19.2",
     "rxjs": "~7.5.5",
     "ts-node": "^8.10.2",
     "tslib": "^2.4.0",
